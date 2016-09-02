@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>YmsManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yms.app.ymsm</a> &gt; <span class="el_source">YmsManager.java</span></div><h1>YmsManager.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yms.app.ymsm;
+
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import org.apache.felix.scr.annotations.Activate;
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Deactivate;
+import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.ReferenceCardinality;
+import org.apache.felix.scr.annotations.Service;
+import org.onosproject.core.ApplicationId;
+import org.onosproject.core.CoreService;
+import org.onosproject.yms.app.yab.YangApplicationBroker;
+import org.onosproject.yms.app.ydt.DefaultYdtWalker;
+import org.onosproject.yms.app.ydt.YangRequestWorkBench;
+import org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry;
+import org.onosproject.yms.app.ysr.YangSchemaRegistry;
+import org.onosproject.yms.ych.YangCodecHandler;
+import org.onosproject.yms.ych.YangDataTreeCodec;
+import org.onosproject.yms.ych.YangProtocolEncodingFormat;
+import org.onosproject.yms.ydt.YdtBuilder;
+import org.onosproject.yms.ydt.YdtResponse;
+import org.onosproject.yms.ydt.YdtWalker;
+import org.onosproject.yms.ydt.YmsOperationType;
+import org.onosproject.yms.ymsm.YmsService;
+import org.onosproject.yms.ynh.YangNotificationService;
+import org.onosproject.yms.ysr.YangModuleIdentifier;
+import org.onosproject.yms.ysr.YangModuleLibrary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.onlab.util.Tools.groupedThreads;
+
+/**
+ * Represents implementation of YANG application management system manager.
+ */
+@Service
+@Component(immediate = true)
+<span class="nc" id="L57">public class YmsManager</span>
+        implements YmsService {
+
+<span class="nc" id="L60">    private final Logger log = LoggerFactory.getLogger(getClass());</span>
+
+    private ApplicationId appId;
+    private YangSchemaRegistry schemaRegistry;
+    private ExecutorService schemaRegistryExecutor;
+    private static final String APP_ID = &quot;org.onosproject.app.yms&quot;;
+
+    @Reference(cardinality = ReferenceCardinality.MANDATORY_UNARY)
+    protected CoreService coreService;
+
+    @Activate
+    public void activate() {
+<span class="nc" id="L72">        appId = coreService.registerApplication(APP_ID);</span>
+<span class="nc" id="L73">        schemaRegistry = new DefaultYangSchemaRegistry();</span>
+<span class="nc" id="L74">        schemaRegistryExecutor = Executors.newSingleThreadExecutor(</span>
+<span class="nc" id="L75">                groupedThreads(</span>
+                        &quot;onos/apps/yang-management-system/schema-registry&quot;,
+                        &quot;schema-registry-handler&quot;, log));
+        // TODO implementation.
+<span class="nc" id="L79">        log.info(&quot;Started&quot;);</span>
+<span class="nc" id="L80">    }</span>
+
+    @Deactivate
+    public void deactivate() {
+        // TODO implementation.
+<span class="nc" id="L85">        log.info(&quot;Stopped&quot;);</span>
+<span class="nc" id="L86">    }</span>
+
+    @Override
+    public YdtBuilder getYdtBuilder(String logicalRootName,
+                                    String rootNamespace,
+                                    YmsOperationType operationType) {
+<span class="nc" id="L92">        return new YangRequestWorkBench(logicalRootName, rootNamespace,</span>
+                                        operationType, schemaRegistry, true);
+    }
+
+    @Override
+    public YdtBuilder getYdtBuilder(String logicalRootName,
+                                    String rootNamespace,
+                                    YmsOperationType operationType,
+                                    Object schemaRegistryForYdt) {
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        if (schemaRegistryForYdt != null) {</span>
+<span class="nc" id="L102">            return new YangRequestWorkBench(logicalRootName, rootNamespace,</span>
+                                            operationType,
+                                            (YangSchemaRegistry)
+                                                    schemaRegistryForYdt,
+                                            false);
+        } else {
+<span class="nc" id="L108">            return new YangRequestWorkBench(logicalRootName, rootNamespace,</span>
+                                            operationType, this.schemaRegistry,
+                                            true);
+        }
+    }
+
+    @Override
+    public YdtWalker getYdtWalker() {
+<span class="nc" id="L116">        return new DefaultYdtWalker();</span>
+    }
+
+    @Override
+    public YdtResponse executeOperation(YdtBuilder operationRequest) {
+<span class="nc" id="L121">        YangApplicationBroker requestBroker =</span>
+                new YangApplicationBroker(schemaRegistry);
+<span class="nc bnc" id="L123" title="All 4 branches missed.">        switch (operationRequest.getYmsOperationType()) {</span>
+            case EDIT_CONFIG_REQUEST:
+                try {
+<span class="nc" id="L126">                    return requestBroker.processEdit(operationRequest);</span>
+<span class="nc" id="L127">                } catch (CloneNotSupportedException e) {</span>
+<span class="nc" id="L128">                    log.error(&quot;YAB: failed to process edit request.&quot;);</span>
+                }
+            case QUERY_CONFIG_REQUEST:
+                // TODO : to be implemented
+            case QUERY_REQUEST:
+<span class="nc" id="L133">                return requestBroker.processQuery(operationRequest);</span>
+            case RPC_REQUEST:
+<span class="nc" id="L135">                return requestBroker.processOperation(operationRequest);</span>
+            default:
+                // TODO : throw exception
+        }
+<span class="nc" id="L139">        return null;</span>
+    }
+
+    @Override
+    public YangNotificationService getYangNotificationService() {
+<span class="nc" id="L144">        return null;</span>
+    }
+
+    @Override
+    public YangModuleLibrary getYangModuleLibrary() {
+<span class="nc" id="L149">        return null;</span>
+    }
+
+    @Override
+    public String getYangFile(YangModuleIdentifier moduleIdentifier) {
+<span class="nc" id="L154">        return null;</span>
+    }
+
+    @Override
+    public void registerDefaultCodec(YangDataTreeCodec defaultCodec,
+                                     YangProtocolEncodingFormat dataFormat) {
+
+<span class="nc" id="L161">    }</span>
+
+    @Override
+    public void registerService(Object yangManager, Class&lt;?&gt; yangService,
+                                List&lt;String&gt; supportedFeatureList) {
+<span class="nc" id="L166">        schemaRegistryExecutor.execute(() -&gt; schemaRegistry</span>
+<span class="nc" id="L167">                .registerApplication(yangManager, yangService));</span>
+
+        //For notification handler.
+<span class="nc" id="L170">        DefaultYangSchemaRegistry defaultYangSchemaRegistry =</span>
+                (DefaultYangSchemaRegistry) schemaRegistry;
+<span class="nc bnc" id="L172" title="All 2 branches missed.">        if (defaultYangSchemaRegistry.verifyNotificationObject(yangService)) {</span>
+            //TODO: register notification handler.
+        }
+
+<span class="nc" id="L176">    }</span>
+
+    @Override
+    public void unRegisterService(Object appManager, Class&lt;?&gt; yangService) {
+<span class="nc" id="L180">        schemaRegistry.unRegisterApplication(appManager, yangService);</span>
+<span class="nc" id="L181">    }</span>
+
+    @Override
+    public YangCodecHandler getYangCodecHandler() {
+<span class="nc" id="L185">        return null;</span>
+    }
+
+    /**
+     * Returns schema registry.
+     *
+     * @return schema registry
+     */
+    public YangSchemaRegistry getSchemaRegistry() {
+<span class="nc" id="L194">        return schemaRegistry;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

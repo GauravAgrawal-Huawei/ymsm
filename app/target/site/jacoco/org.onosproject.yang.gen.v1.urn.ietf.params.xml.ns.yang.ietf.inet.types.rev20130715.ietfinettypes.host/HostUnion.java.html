@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HostUnion.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.ietfinettypes.host</a> &gt; <span class="el_source">HostUnion.java</span></div><h1>HostUnion.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.ietfinettypes.host;
+
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.ietfinettypes.DomainName;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.ietfinettypes.IpAddress;
+import java.util.Objects;
+import com.google.common.base.MoreObjects;
+
+/**
+ * Represents the implementation of hostUnion.
+ */
+public final class HostUnion {
+
+    private IpAddress ipAddress;
+    private DomainName domainName;
+
+    /**
+     * Creates an instance of hostUnion.
+     */
+<span class="nc" id="L35">    private HostUnion() {</span>
+<span class="nc" id="L36">    }</span>
+
+    /**
+     * Creates an instance of hostUnionForTypeIpAddress.
+     *
+     * @param value value of hostUnionForTypeIpAddress
+     */
+<span class="nc" id="L43">    public HostUnion(IpAddress value) {</span>
+<span class="nc" id="L44">        this.ipAddress = value;</span>
+<span class="nc" id="L45">    }</span>
+
+    /**
+     * Creates an instance of hostUnionForTypeDomainName.
+     *
+     * @param value value of hostUnionForTypeDomainName
+     */
+<span class="nc" id="L52">    public HostUnion(DomainName value) {</span>
+<span class="nc" id="L53">        this.domainName = value;</span>
+<span class="nc" id="L54">    }</span>
+
+    /**
+     * Returns the object of hostUnionForTypeIpAddress.
+     *
+     * @param value value of hostUnionForTypeIpAddress
+     * @return Object of hostUnionForTypeIpAddress
+     */
+    public static HostUnion of(IpAddress value) {
+<span class="nc" id="L63">        return new HostUnion(value);</span>
+    }
+
+    /**
+     * Returns the object of hostUnionForTypeDomainName.
+     *
+     * @param value value of hostUnionForTypeDomainName
+     * @return Object of hostUnionForTypeDomainName
+     */
+    public static HostUnion of(DomainName value) {
+<span class="nc" id="L73">        return new HostUnion(value);</span>
+    }
+
+    /**
+     * Returns the attribute ipAddress.
+     *
+     * @return value of ipAddress
+     */
+    public IpAddress ipAddress() {
+<span class="nc" id="L82">        return ipAddress;</span>
+    }
+
+    /**
+     * Returns the attribute domainName.
+     *
+     * @return value of domainName
+     */
+    public DomainName domainName() {
+<span class="nc" id="L91">        return domainName;</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L96">        return Objects.hash(ipAddress, domainName);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L102">            return true;</span>
+        }
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        if (obj instanceof HostUnion) {</span>
+<span class="nc" id="L105">            HostUnion other = (HostUnion) obj;</span>
+<span class="nc" id="L106">            return</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">                 Objects.equals(ipAddress, other.ipAddress) &amp;&amp;</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">                 Objects.equals(domainName, other.domainName);</span>
+        }
+<span class="nc" id="L110">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L115">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L116">            .omitNullValues()</span>
+<span class="nc" id="L117">            .add(&quot;ipAddress&quot;, ipAddress)</span>
+<span class="nc" id="L118">            .add(&quot;domainName&quot;, domainName)</span>
+<span class="nc" id="L119">            .toString();</span>
+    }
+
+    /**
+     * Returns the object of hostUnion fromString input String.
+     *
+     * @param valInString input String
+     * @return Object of hostUnion
+     */
+    public static HostUnion fromString(String valInString) {
+        try {
+<span class="nc" id="L130">            IpAddress tmpVal = IpAddress.fromString(valInString);</span>
+<span class="nc" id="L131">            return of(tmpVal);</span>
+<span class="nc" id="L132">        } catch (Exception e) {</span>
+        }
+        try {
+<span class="nc" id="L135">            DomainName tmpVal = DomainName.fromString(valInString);</span>
+<span class="nc" id="L136">            return of(tmpVal);</span>
+<span class="nc" id="L137">        } catch (Exception e) {</span>
+        }
+<span class="nc" id="L139">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

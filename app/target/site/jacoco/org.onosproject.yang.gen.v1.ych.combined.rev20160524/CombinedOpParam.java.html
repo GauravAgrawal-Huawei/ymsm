@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CombinedOpParam.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.ych.combined.rev20160524</a> &gt; <span class="el_source">CombinedOpParam.java</span></div><h1>CombinedOpParam.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.ych.combined.rev20160524;
+
+import com.google.common.base.MoreObjects;
+import java.util.Objects;
+import org.onosproject.yang.gen.v1.ych.combined.rev20160524.combined.Attributes;
+
+/**
+ * Represents the implementation of combined.
+ */
+public class CombinedOpParam implements Combined {
+
+    protected Attributes attributes;
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, not applicable in query operation
+     */
+<span class="nc" id="L34">    public enum OnosYangNodeOperationType {</span>
+<span class="nc" id="L35">        MERGE,</span>
+<span class="nc" id="L36">        REPLACE,</span>
+<span class="nc" id="L37">        CREATE,</span>
+<span class="nc" id="L38">        DELETE,</span>
+<span class="nc" id="L39">        REMOVE,</span>
+<span class="nc" id="L40">        NONE</span>
+    }
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, will be ignored in query operation
+     */
+    private OnosYangNodeOperationType onosYangNodeOperationType;
+
+    public Attributes attributes() {
+<span class="fc" id="L50">        return attributes;</span>
+    }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L58">        return onosYangNodeOperationType;</span>
+    }
+
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L64">        return Objects.hash(attributes);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L70">            return true;</span>
+        }
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (obj instanceof CombinedOpParam) {</span>
+<span class="nc" id="L73">            CombinedOpParam other = (CombinedOpParam) obj;</span>
+<span class="nc" id="L74">            return</span>
+<span class="nc" id="L75">                 Objects.equals(attributes, other.attributes);</span>
+        }
+<span class="nc" id="L77">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L82">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L83">            .add(&quot;attributes&quot;, attributes)</span>
+<span class="nc" id="L84">            .toString();</span>
+    }
+
+    /**
+     * Creates an instance of combined.
+     *
+     * @param builderObject builder object of combined
+     */
+<span class="fc" id="L92">    protected CombinedOpParam(CombinedBuilder builderObject) {</span>
+<span class="fc" id="L93">        this.attributes = builderObject.attributes();</span>
+<span class="fc" id="L94">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="fc" id="L95">    }</span>
+
+    @Override
+    public Combined processSubtreeFiltering(Combined appInstance, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L99">        CombinedBuilder subTreeFilteringResultBuilder = new CombinedBuilder();</span>
+<span class="nc" id="L100">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        if (!processChildNodesSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L103">            return null;</span>
+        }
+<span class="nc bnc" id="L105" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L106">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L108">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processChildNodesSubTreeFiltering(Combined appInstance, CombinedBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (attributes()  != null) {</span>
+<span class="nc" id="L114">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">            if (appInstance.attributes() != null) {</span>
+<span class="nc" id="L116">                Attributes result = attributes.processSubtreeFiltering(appInstance.attributes(), false);</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">                if (result != null) {</span>
+<span class="nc" id="L118">                    subTreeFilteringResultBuilder.attributes(result);</span>
+                }
+            }
+        }
+
+<span class="nc" id="L123">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of combinedOpParam.
+     */
+<span class="nc" id="L130">    protected CombinedOpParam() {</span>
+<span class="nc" id="L131">    }</span>
+
+    /**
+     * Returns the attribute CombinedBuilder.
+     *
+     * @return value of CombinedBuilder
+     */
+    public static CombinedBuilder builder() {
+<span class="fc" id="L139">        return new CombinedBuilder();</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of combined.
+     */
+    public static class CombinedBuilder {
+
+        protected Attributes attributes;
+
+        /**
+         * Specify the node specific operation in protocols like NETCONF.
+         * Applicable in protocol edit operation, will be ignored in query operation
+         */
+        private OnosYangNodeOperationType onosYangNodeOperationType;
+
+
+        public Attributes attributes() {
+<span class="fc" id="L158">            return attributes;</span>
+        }
+
+        /**
+         * Returns the builder object of attributes.
+         *
+         * @param attributes value of attributes
+         * @return builder object of attributes
+         */
+        public CombinedBuilder attributes(Attributes attributes) {
+<span class="fc" id="L168">            this.attributes = attributes;</span>
+<span class="fc" id="L169">            return this;</span>
+        }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L177">            return onosYangNodeOperationType;</span>
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public CombinedBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+<span class="nc" id="L187">           this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L188">           return this;</span>
+        }
+
+
+        public Combined build() {
+<span class="fc" id="L193">            return new CombinedOpParam(this);</span>
+        }
+
+        /**
+         * Creates an instance of combinedBuilder.
+         */
+<span class="fc" id="L199">        public CombinedBuilder() {</span>
+<span class="fc" id="L200">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

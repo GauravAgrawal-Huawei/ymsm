@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultList2.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.ydt.test6.rev20160524.test6</a> &gt; <span class="el_source">DefaultList2.java</span></div><h1>DefaultList2.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.ydt.test6.rev20160524.test6;
+
+import com.google.common.base.MoreObjects;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+/**
+ * Represents the implementation of list2.
+ */
+public class DefaultList2 implements List2 {
+
+<span class="pc" id="L33">    protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+    protected String leaf5;
+    protected String leaf6;
+    protected String leaf7;
+<span class="pc" id="L37">    protected List&lt;String&gt; leaflist8 = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, not applicable in query operation
+     */
+<span class="fc" id="L43">    public enum OnosYangNodeOperationType {</span>
+<span class="fc" id="L44">        MERGE,</span>
+<span class="fc" id="L45">        REPLACE,</span>
+<span class="fc" id="L46">        CREATE,</span>
+<span class="fc" id="L47">        DELETE,</span>
+<span class="fc" id="L48">        REMOVE,</span>
+<span class="fc" id="L49">        NONE</span>
+    }
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, will be ignored in query operation
+     */
+    private OnosYangNodeOperationType onosYangNodeOperationType;
+
+    /**
+     * Identify the leafs whose value are explicitly set
+     * Applicable in protocol edit and query operation
+     */
+<span class="pc" id="L62">    private BitSet valueLeafFlags = new BitSet();</span>
+
+    /**
+     * Identify the leafs to be selected, in a query operation
+     */
+<span class="pc" id="L67">    private BitSet selectLeafFlags = new BitSet();</span>
+
+    @Override
+    public String leaf5() {
+<span class="nc" id="L71">        return leaf5;</span>
+    }
+
+    @Override
+    public String leaf6() {
+<span class="nc" id="L76">        return leaf6;</span>
+    }
+
+    @Override
+    public String leaf7() {
+<span class="nc" id="L81">        return leaf7;</span>
+    }
+
+    @Override
+    public List&lt;String&gt; leaflist8() {
+<span class="nc" id="L86">        return leaflist8;</span>
+    }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L94">        return onosYangNodeOperationType;</span>
+    }
+
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L100">        return Objects.hash(leaf5, leaf6, leaf7, leaflist8);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L106">            return true;</span>
+        }
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (obj instanceof DefaultList2) {</span>
+<span class="nc" id="L109">            DefaultList2 other = (DefaultList2) obj;</span>
+<span class="nc" id="L110">            return</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">                 Objects.equals(leaf5, other.leaf5) &amp;&amp;</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">                 Objects.equals(leaf6, other.leaf6) &amp;&amp;</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">                 Objects.equals(leaf7, other.leaf7) &amp;&amp;</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">                 Objects.equals(leaflist8, other.leaflist8);</span>
+        }
+<span class="nc" id="L116">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L121">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L122">            .add(&quot;leaf5&quot;, leaf5)</span>
+<span class="nc" id="L123">            .add(&quot;leaf6&quot;, leaf6)</span>
+<span class="nc" id="L124">            .add(&quot;leaf7&quot;, leaf7)</span>
+<span class="nc" id="L125">            .add(&quot;leaflist8&quot;, leaflist8)</span>
+<span class="nc" id="L126">            .toString();</span>
+    }
+
+    @Override
+    public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L131">        return yangAugmentedInfoMap.get(classObject);</span>
+    }
+
+    @Override
+    public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="nc" id="L136">        return yangAugmentedInfoMap;</span>
+    }
+
+    /**
+     * Creates an instance of list2.
+     *
+     * @param builderObject builder object of list2
+     */
+<span class="fc" id="L144">    protected DefaultList2(List2Builder builderObject) {</span>
+<span class="fc" id="L145">        this.leaf5 = builderObject.leaf5();</span>
+<span class="fc" id="L146">        this.leaf6 = builderObject.leaf6();</span>
+<span class="fc" id="L147">        this.leaf7 = builderObject.leaf7();</span>
+<span class="fc" id="L148">        this.leaflist8 = builderObject.leaflist8();</span>
+<span class="fc" id="L149">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="fc" id="L150">        this.valueLeafFlags = builderObject.getValueLeafFlags();</span>
+<span class="fc" id="L151">        this.selectLeafFlags = builderObject.getSelectLeafFlags();</span>
+<span class="fc" id="L152">        this.yangAugmentedInfoMap = builderObject.yangAugmentedInfoMap();</span>
+<span class="fc" id="L153">    }</span>
+
+    @Override
+    public List2 processSubtreeFiltering(List2 appInstance, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L157">        List2Builder subTreeFilteringResultBuilder = new List2Builder();</span>
+<span class="nc" id="L158">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">        if (!processLeafSubtreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L161">            return null;</span>
+        }
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        if (!processLeafListSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L165">            return null;</span>
+        }
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        for (Object yangAugmentedInfo : this.yangAugmentedInfoMap().values()) {</span>
+<span class="nc" id="L168">            Object yangAugmentedOpParamInfo = appInstance.yangAugmentedInfo(yangAugmentedInfo.getClass());</span>
+            Object processSubtreeFiltering;
+            try {
+<span class="nc" id="L171">                Class&lt;?&gt;[] interfaces = yangAugmentedInfo.getClass().getInterfaces();</span>
+<span class="nc" id="L172">                processSubtreeFiltering = yangAugmentedInfo.getClass()</span>
+<span class="nc" id="L173">                    .getMethod(&quot;processSubtreeFiltering&quot;, interfaces[0]).invoke(yangAugmentedInfo,</span>
+                        yangAugmentedOpParamInfo);
+<span class="nc bnc" id="L175" title="All 2 branches missed.">                if (processSubtreeFiltering != null) {</span>
+<span class="nc" id="L176">                    subTreeFilteringResultBuilder</span>
+<span class="nc" id="L177">            .addYangAugmentedInfo(processSubtreeFiltering, processSubtreeFiltering.getClass());</span>
+                }
+<span class="nc" id="L179">            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {</span>
+<span class="nc" id="L180">                continue;</span>
+<span class="nc" id="L181">            }</span>
+<span class="nc" id="L182">        }</span>
+<span class="nc bnc" id="L183" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L184">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L186">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processLeafSubtreeFiltering(List2 appInstance, List2Builder subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L190" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.LEAF5.getLeafIndex())) {</span>
+<span class="nc bnc" id="L191" title="All 4 branches missed.">            if (appInstance.leaf5() == null || !(leaf5().equals(appInstance.leaf5()))) {</span>
+<span class="nc" id="L192">                return false;</span>
+            } else {
+<span class="nc" id="L194">                subTreeFilteringResultBuilder.leaf5(appInstance.leaf5());</span>
+            }
+<span class="nc bnc" id="L196" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.LEAF5.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L197">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L198">            subTreeFilteringResultBuilder.leaf5(appInstance.leaf5());</span>
+        }
+
+<span class="nc bnc" id="L201" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.LEAF6.getLeafIndex())) {</span>
+<span class="nc bnc" id="L202" title="All 4 branches missed.">            if (appInstance.leaf6() == null || !(leaf6().equals(appInstance.leaf6()))) {</span>
+<span class="nc" id="L203">                return false;</span>
+            } else {
+<span class="nc" id="L205">                subTreeFilteringResultBuilder.leaf6(appInstance.leaf6());</span>
+            }
+<span class="nc bnc" id="L207" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.LEAF6.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L208">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L209">            subTreeFilteringResultBuilder.leaf6(appInstance.leaf6());</span>
+        }
+
+<span class="nc bnc" id="L212" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.LEAF7.getLeafIndex())) {</span>
+<span class="nc bnc" id="L213" title="All 4 branches missed.">            if (appInstance.leaf7() == null || !(leaf7().equals(appInstance.leaf7()))) {</span>
+<span class="nc" id="L214">                return false;</span>
+            } else {
+<span class="nc" id="L216">                subTreeFilteringResultBuilder.leaf7(appInstance.leaf7());</span>
+            }
+<span class="nc bnc" id="L218" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.LEAF7.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L219">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L220">            subTreeFilteringResultBuilder.leaf7(appInstance.leaf7());</span>
+        }
+
+<span class="nc" id="L223">        return true;</span>
+    }
+
+    private boolean processLeafListSubTreeFiltering(List2 appInstance, List2Builder subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L228" title="All 2 branches missed.">        if (isSelectAllSchemaChild) {</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">            for (String leaflist8 : appInstance.leaflist8()) {</span>
+<span class="nc" id="L230">                subTreeFilteringResultBuilder.addToLeaflist8(leaflist8);</span>
+<span class="nc" id="L231">            }</span>
+<span class="nc bnc" id="L232" title="All 2 branches missed.">        } else if (leaflist8() != null) {</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">            if (!leaflist8().isEmpty()) {</span>
+<span class="nc bnc" id="L234" title="All 4 branches missed.">                if (appInstance.leaflist8() == null || appInstance.leaflist8().isEmpty()) {</span>
+<span class="nc" id="L235">                    return false;</span>
+                }
+<span class="nc bnc" id="L237" title="All 2 branches missed.">                for (String leaflist8 : leaflist8()) {</span>
+<span class="nc" id="L238">                    boolean flag = false;</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">                    for (String leaflist82 : appInstance.leaflist8()) {</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">                        if (leaflist8.equals(leaflist82)) {</span>
+<span class="nc" id="L241">                            flag = true;</span>
+<span class="nc" id="L242">                            subTreeFilteringResultBuilder.addToLeaflist8(leaflist82);</span>
+<span class="nc" id="L243">                            break;</span>
+                        }
+<span class="nc" id="L245">                    }</span>
+<span class="nc bnc" id="L246" title="All 2 branches missed.">                    if (!flag) {</span>
+<span class="nc" id="L247">                        return false;</span>
+                    }
+<span class="nc" id="L249">                }</span>
+            } else {
+<span class="nc" id="L251">                isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L252" title="All 4 branches missed.">                if (appInstance.leaflist8() != null &amp;&amp; !appInstance.leaflist8().isEmpty()) {</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">                    for (String leaflist8 : appInstance.leaflist8()) {</span>
+<span class="nc" id="L254">                        subTreeFilteringResultBuilder.addToLeaflist8(leaflist8);</span>
+<span class="nc" id="L255">                    }</span>
+                }
+            }
+        }
+
+<span class="nc" id="L260">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of defaultList2.
+     */
+<span class="nc" id="L267">    protected DefaultList2() {</span>
+<span class="nc" id="L268">    }</span>
+
+    /**
+     * Returns the attribute List2Builder.
+     *
+     * @return value of List2Builder
+     */
+    public static List2Builder builder() {
+<span class="nc" id="L276">        return new List2Builder();</span>
+    }
+
+    /**
+     * Returns the valueLeafFlags.
+     *
+     * @return value of valueLeafFlags
+     */
+    public BitSet getValueLeafFlags() {
+<span class="nc" id="L285">        return valueLeafFlags;</span>
+    }
+
+    /**
+     * Returns the selectLeafFlags.
+     *
+     * @return value of selectLeafFlags
+     */
+    public BitSet getSelectLeafFlags() {
+<span class="nc" id="L294">        return selectLeafFlags;</span>
+    }
+
+
+    @Override
+    public boolean isLeafValueSet(LeafIdentifier leaf) {
+<span class="nc" id="L300">        return getValueLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+    @Override
+    public boolean isSelectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L305">        return getSelectLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of list2.
+     */
+    public static class List2Builder implements List2.List2Builder {
+
+<span class="fc" id="L314">        protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+        protected String leaf5;
+        protected String leaf6;
+        protected String leaf7;
+<span class="fc" id="L318">        protected List&lt;String&gt; leaflist8 = new ArrayList&lt;&gt;();</span>
+
+        /**
+         * Specify the node specific operation in protocols like NETCONF.
+         * Applicable in protocol edit operation, will be ignored in query operation
+         */
+        private OnosYangNodeOperationType onosYangNodeOperationType;
+
+        /**
+         * Identify the leafs whose value are explicitly set
+         * Applicable in protocol edit and query operation
+         */
+<span class="fc" id="L330">        private BitSet valueLeafFlags = new BitSet();</span>
+
+        /**
+         * Identify the leafs to be selected, in a query operation
+         */
+<span class="fc" id="L335">        private BitSet selectLeafFlags = new BitSet();</span>
+
+
+        @Override
+        public String leaf5() {
+<span class="fc" id="L340">            return leaf5;</span>
+        }
+
+        @Override
+        public String leaf6() {
+<span class="fc" id="L345">            return leaf6;</span>
+        }
+
+        @Override
+        public String leaf7() {
+<span class="fc" id="L350">            return leaf7;</span>
+        }
+
+        @Override
+        public List&lt;String&gt; leaflist8() {
+<span class="fc" id="L355">            return leaflist8;</span>
+        }
+
+        @Override
+        public List2Builder leaf5(String leaf5) {
+<span class="fc" id="L360">            getValueLeafFlags().set(LeafIdentifier.LEAF5.getLeafIndex());</span>
+<span class="fc" id="L361">            this.leaf5 = leaf5;</span>
+<span class="fc" id="L362">            return this;</span>
+        }
+
+        @Override
+        public List2Builder leaf6(String leaf6) {
+<span class="fc" id="L367">            getValueLeafFlags().set(LeafIdentifier.LEAF6.getLeafIndex());</span>
+<span class="fc" id="L368">            this.leaf6 = leaf6;</span>
+<span class="fc" id="L369">            return this;</span>
+        }
+
+        @Override
+        public List2Builder leaf7(String leaf7) {
+<span class="fc" id="L374">            getValueLeafFlags().set(LeafIdentifier.LEAF7.getLeafIndex());</span>
+<span class="fc" id="L375">            this.leaf7 = leaf7;</span>
+<span class="fc" id="L376">            return this;</span>
+        }
+
+        @Override
+        public List2Builder leaflist8(List&lt;String&gt; leaflist8) {
+<span class="nc" id="L381">            this.leaflist8 = leaflist8;</span>
+<span class="nc" id="L382">            return this;</span>
+        }
+
+        @Override
+        public List2Builder addToLeaflist8(String value) {
+<span class="fc" id="L387">            leaflist8().add(value);</span>
+<span class="fc" id="L388">            return this;</span>
+        }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L396">            return onosYangNodeOperationType;</span>
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public List2Builder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+<span class="nc" id="L406">           this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L407">           return this;</span>
+        }
+
+
+        /**
+         * Returns the valueLeafFlags.
+         *
+         * @return value of valueLeafFlags
+         */
+        public BitSet getValueLeafFlags() {
+<span class="fc" id="L417">            return valueLeafFlags;</span>
+        }
+
+        /**
+         * Returns the selectLeafFlags.
+         *
+         * @return value of selectLeafFlags
+         */
+        public BitSet getSelectLeafFlags() {
+<span class="fc" id="L426">            return selectLeafFlags;</span>
+        }
+
+
+
+        @Override
+        public List2Builder selectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L433">            getSelectLeafFlags().set(leaf.getLeafIndex());</span>
+<span class="nc" id="L434">            return this;</span>
+        }
+
+        @Override
+        public void addYangAugmentedInfo(Object value, Class classObject) {
+<span class="nc" id="L439">            yangAugmentedInfoMap.put(classObject, value);</span>
+<span class="nc" id="L440">        }</span>
+
+        @Override
+        public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L444">            return yangAugmentedInfoMap.get(classObject);</span>
+        }
+
+        @Override
+        public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="fc" id="L449">            return yangAugmentedInfoMap;</span>
+        }
+        @Override
+        public List2 build() {
+<span class="fc" id="L453">            return new DefaultList2(this);</span>
+        }
+
+        /**
+         * Creates an instance of list2Builder.
+         */
+<span class="fc" id="L459">        public List2Builder() {</span>
+<span class="fc" id="L460">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

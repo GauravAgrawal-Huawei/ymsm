@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultEnumList.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.ydt.enumtest.rev20160524.enumtest</a> &gt; <span class="el_source">DefaultEnumList.java</span></div><h1>DefaultEnumList.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.ydt.enumtest.rev20160524.enumtest;
+
+import com.google.common.base.MoreObjects;
+import java.lang.reflect.InvocationTargetException;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import org.onosproject.yang.gen.v1.ydt.enumtest.rev20160524.enumtest.enumlist.EnumleafEnum;
+
+/**
+ * Represents the implementation of enumList.
+ */
+public class DefaultEnumList implements EnumList {
+
+<span class="pc" id="L32">    protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+    protected EnumleafEnum enumleaf;
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, not applicable in query operation
+     */
+<span class="fc" id="L39">    public enum OnosYangNodeOperationType {</span>
+<span class="fc" id="L40">        MERGE,</span>
+<span class="fc" id="L41">        REPLACE,</span>
+<span class="fc" id="L42">        CREATE,</span>
+<span class="fc" id="L43">        DELETE,</span>
+<span class="fc" id="L44">        REMOVE,</span>
+<span class="fc" id="L45">        NONE</span>
+    }
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, will be ignored in query operation
+     */
+    private OnosYangNodeOperationType onosYangNodeOperationType;
+
+    /**
+     * Identify the leafs whose value are explicitly set
+     * Applicable in protocol edit and query operation
+     */
+<span class="pc" id="L58">    private BitSet valueLeafFlags = new BitSet();</span>
+
+    /**
+     * Identify the leafs to be selected, in a query operation
+     */
+<span class="pc" id="L63">    private BitSet selectLeafFlags = new BitSet();</span>
+
+    @Override
+    public EnumleafEnum enumleaf() {
+<span class="nc" id="L67">        return enumleaf;</span>
+    }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L75">        return onosYangNodeOperationType;</span>
+    }
+
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L81">        return Objects.hash(enumleaf);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L87">            return true;</span>
+        }
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        if (obj instanceof DefaultEnumList) {</span>
+<span class="nc" id="L90">            DefaultEnumList other = (DefaultEnumList) obj;</span>
+<span class="nc" id="L91">            return</span>
+<span class="nc" id="L92">                 Objects.equals(enumleaf, other.enumleaf);</span>
+        }
+<span class="nc" id="L94">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L99">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L100">            .add(&quot;enumleaf&quot;, enumleaf)</span>
+<span class="nc" id="L101">            .toString();</span>
+    }
+
+    @Override
+    public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L106">        return yangAugmentedInfoMap.get(classObject);</span>
+    }
+
+    @Override
+    public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="nc" id="L111">        return yangAugmentedInfoMap;</span>
+    }
+
+    /**
+     * Creates an instance of enumList.
+     *
+     * @param builderObject builder object of enumList
+     */
+<span class="fc" id="L119">    protected DefaultEnumList(EnumListBuilder builderObject) {</span>
+<span class="fc" id="L120">        this.enumleaf = builderObject.enumleaf();</span>
+<span class="fc" id="L121">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="fc" id="L122">        this.valueLeafFlags = builderObject.getValueLeafFlags();</span>
+<span class="fc" id="L123">        this.selectLeafFlags = builderObject.getSelectLeafFlags();</span>
+<span class="fc" id="L124">        this.yangAugmentedInfoMap = builderObject.yangAugmentedInfoMap();</span>
+<span class="fc" id="L125">    }</span>
+
+    @Override
+    public EnumList processSubtreeFiltering(EnumList appInstance, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L129">        EnumListBuilder subTreeFilteringResultBuilder = new EnumListBuilder();</span>
+<span class="nc" id="L130">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (!processLeafSubtreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L133">            return null;</span>
+        }
+<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (!processChildNodesSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L137">            return null;</span>
+        }
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        for (Object yangAugmentedInfo : this.yangAugmentedInfoMap().values()) {</span>
+<span class="nc" id="L140">            Object yangAugmentedOpParamInfo = appInstance.yangAugmentedInfo(yangAugmentedInfo.getClass());</span>
+            Object processSubtreeFiltering;
+            try {
+<span class="nc" id="L143">                Class&lt;?&gt;[] interfaces = yangAugmentedInfo.getClass().getInterfaces();</span>
+<span class="nc" id="L144">                processSubtreeFiltering = yangAugmentedInfo.getClass()</span>
+<span class="nc" id="L145">                    .getMethod(&quot;processSubtreeFiltering&quot;, interfaces[0]).invoke(yangAugmentedInfo,</span>
+                        yangAugmentedOpParamInfo);
+<span class="nc bnc" id="L147" title="All 2 branches missed.">                if (processSubtreeFiltering != null) {</span>
+<span class="nc" id="L148">                    subTreeFilteringResultBuilder</span>
+<span class="nc" id="L149">            .addYangAugmentedInfo(processSubtreeFiltering, processSubtreeFiltering.getClass());</span>
+                }
+<span class="nc" id="L151">            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {</span>
+<span class="nc" id="L152">                continue;</span>
+<span class="nc" id="L153">            }</span>
+<span class="nc" id="L154">        }</span>
+<span class="nc bnc" id="L155" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L156">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L158">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processLeafSubtreeFiltering(EnumList appInstance, EnumListBuilder subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.ENUMLEAF.getLeafIndex())) {</span>
+<span class="nc bnc" id="L163" title="All 4 branches missed.">            if (appInstance.enumleaf() == null || !(enumleaf().equals(appInstance.enumleaf()))) {</span>
+<span class="nc" id="L164">                return false;</span>
+            } else {
+<span class="nc" id="L166">                subTreeFilteringResultBuilder.enumleaf(appInstance.enumleaf());</span>
+            }
+<span class="nc bnc" id="L168" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.ENUMLEAF.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L169">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L170">            subTreeFilteringResultBuilder.enumleaf(appInstance.enumleaf());</span>
+        }
+
+<span class="nc" id="L173">        return true;</span>
+    }
+
+    private boolean processChildNodesSubTreeFiltering(EnumList appInstance, EnumListBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L179">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of defaultEnumList.
+     */
+<span class="nc" id="L186">    protected DefaultEnumList() {</span>
+<span class="nc" id="L187">    }</span>
+
+    /**
+     * Returns the attribute EnumListBuilder.
+     *
+     * @return value of EnumListBuilder
+     */
+    public static EnumListBuilder builder() {
+<span class="nc" id="L195">        return new EnumListBuilder();</span>
+    }
+
+    /**
+     * Returns the valueLeafFlags.
+     *
+     * @return value of valueLeafFlags
+     */
+    public BitSet getValueLeafFlags() {
+<span class="nc" id="L204">        return valueLeafFlags;</span>
+    }
+
+    /**
+     * Returns the selectLeafFlags.
+     *
+     * @return value of selectLeafFlags
+     */
+    public BitSet getSelectLeafFlags() {
+<span class="nc" id="L213">        return selectLeafFlags;</span>
+    }
+
+
+    @Override
+    public boolean isLeafValueSet(LeafIdentifier leaf) {
+<span class="nc" id="L219">        return getValueLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+    @Override
+    public boolean isSelectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L224">        return getSelectLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of enumList.
+     */
+    public static class EnumListBuilder implements EnumList.EnumListBuilder {
+
+<span class="fc" id="L233">        protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+        protected EnumleafEnum enumleaf;
+
+        /**
+         * Specify the node specific operation in protocols like NETCONF.
+         * Applicable in protocol edit operation, will be ignored in query operation
+         */
+        private OnosYangNodeOperationType onosYangNodeOperationType;
+
+        /**
+         * Identify the leafs whose value are explicitly set
+         * Applicable in protocol edit and query operation
+         */
+<span class="fc" id="L246">        private BitSet valueLeafFlags = new BitSet();</span>
+
+        /**
+         * Identify the leafs to be selected, in a query operation
+         */
+<span class="fc" id="L251">        private BitSet selectLeafFlags = new BitSet();</span>
+
+
+        @Override
+        public EnumleafEnum enumleaf() {
+<span class="fc" id="L256">            return enumleaf;</span>
+        }
+
+        @Override
+        public EnumListBuilder enumleaf(EnumleafEnum enumleaf) {
+<span class="fc" id="L261">            getValueLeafFlags().set(LeafIdentifier.ENUMLEAF.getLeafIndex());</span>
+<span class="fc" id="L262">            this.enumleaf = enumleaf;</span>
+<span class="fc" id="L263">            return this;</span>
+        }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L271">            return onosYangNodeOperationType;</span>
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public EnumListBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+<span class="nc" id="L281">           this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L282">           return this;</span>
+        }
+
+
+        /**
+         * Returns the valueLeafFlags.
+         *
+         * @return value of valueLeafFlags
+         */
+        public BitSet getValueLeafFlags() {
+<span class="fc" id="L292">            return valueLeafFlags;</span>
+        }
+
+        /**
+         * Returns the selectLeafFlags.
+         *
+         * @return value of selectLeafFlags
+         */
+        public BitSet getSelectLeafFlags() {
+<span class="fc" id="L301">            return selectLeafFlags;</span>
+        }
+
+
+
+        @Override
+        public EnumListBuilder selectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L308">            getSelectLeafFlags().set(leaf.getLeafIndex());</span>
+<span class="nc" id="L309">            return this;</span>
+        }
+
+        @Override
+        public void addYangAugmentedInfo(Object value, Class classObject) {
+<span class="nc" id="L314">            yangAugmentedInfoMap.put(classObject, value);</span>
+<span class="nc" id="L315">        }</span>
+
+        @Override
+        public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L319">            return yangAugmentedInfoMap.get(classObject);</span>
+        }
+
+        @Override
+        public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="fc" id="L324">            return yangAugmentedInfoMap;</span>
+        }
+        @Override
+        public EnumList build() {
+<span class="fc" id="L328">            return new DefaultEnumList(this);</span>
+        }
+
+        /**
+         * Creates an instance of enumListBuilder.
+         */
+<span class="fc" id="L334">        public EnumListBuilder() {</span>
+<span class="fc" id="L335">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
