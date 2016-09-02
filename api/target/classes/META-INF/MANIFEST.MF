@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1472801663302
-Build-Jdk: 1.8.0_102
-Built-By: v70786
+Bnd-LastModified: 1472807633616
+Build-Jdk: 1.8.0_101
+Built-By: root1
 Bundle-Description: YANG Management System API
 Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
 Bundle-ManifestVersion: 2
@@ -11,13 +11,14 @@ Bundle-Version: 1.7.0.SNAPSHOT
 Created-By: Apache Maven Bundle Plugin
 Export-Package: 
  org.onosproject.yms.ysr;version="1.7.0",
+ org.onosproject.yms.ych;uses:="org.onosproject.yms.ydt";version="1.7.0"
+ ,
  org.onosproject.yms.ydt;version="1.7.0",
  org.onosproject.yms.ynh;uses:="org.onosproject.event,org.onosproject.ym
  s.ydt";version="1.7.0",
  org.onosproject.yms.ymsm;uses:="org.onosproject.yms.ych,org.onosproject
  .yms.ydt,org.onosproject.yms.ynh,org.onosproject.yms.ysr";version="1.7.
- 0",
- org.onosproject.yms.ych;uses:="org.onosproject.yms.ydt";version="1.7.0"
+ 0"
 Import-Package: 
  org.onosproject.event;version="[1.7,2)",
  org.onosproject.yms.ych,

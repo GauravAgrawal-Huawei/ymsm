@@ -28,9 +28,12 @@ import org.apache.felix.scr.annotations.ReferenceCardinality;
 import org.apache.felix.scr.annotations.Service;
 import org.onosproject.core.ApplicationId;
 import org.onosproject.core.CoreService;
+import org.onosproject.event.ListenerService;
 import org.onosproject.yms.app.yab.YangApplicationBroker;
 import org.onosproject.yms.app.ydt.DefaultYdtWalker;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
+import org.onosproject.yms.app.ynh.YangNotificationExtendedService;
+import org.onosproject.yms.app.ynh.YangNotificationManager;
 import org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.onosproject.yms.ych.YangCodecHandler;
@@ -63,6 +66,7 @@ public class YmsManager
     private YangSchemaRegistry schemaRegistry;
     private ExecutorService schemaRegistryExecutor;
     private static final String APP_ID = "org.onosproject.app.yms";
+    private YangNotificationExtendedService yangNotificationExtendedService;
 
     @Reference(cardinality = ReferenceCardinality.MANDATORY_UNARY)
     protected CoreService coreService;
@@ -75,7 +79,8 @@ public class YmsManager
                 groupedThreads(
                         "onos/apps/yang-management-system/schema-registry",
                         "schema-registry-handler", log));
-        // TODO implementation.
+        yangNotificationExtendedService =
+                new YangNotificationManager(schemaRegistry);
         log.info("Started");
     }
 
@@ -141,7 +146,17 @@ public class YmsManager
 
     @Override
     public YangNotificationService getYangNotificationService() {
-        return null;
+        return yangNotificationExtendedService;
+    }
+
+    /**
+     * Returns YANG notification extended service.
+     *
+     * @return YANG notification extended service
+     */
+    public YangNotificationExtendedService getYangNotificationExtendedService
+    () {
+        return yangNotificationExtendedService;
     }
 
     @Override
@@ -170,6 +185,8 @@ public class YmsManager
         DefaultYangSchemaRegistry defaultYangSchemaRegistry =
                 (DefaultYangSchemaRegistry) schemaRegistry;
         if (defaultYangSchemaRegistry.verifyNotificationObject(yangService)) {
+            getYangNotificationExtendedService().registerAsListener(
+                    (ListenerService) yangManager);
             //TODO: register notification handler.
         }
 
