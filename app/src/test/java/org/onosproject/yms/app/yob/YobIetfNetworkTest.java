@@ -42,7 +42,7 @@ public class YobIetfNetworkTest {
 
         DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
 
-        Object yangObject = defaultYobBuilder.getYangObject((YdtExtendedContext) ydtContext1);
+        Object yangObject = defaultYobBuilder.getYangObject((YdtExtendedContext) ydtContext1, YdtTestUtils.getSchemaRegistry());
         assertNotNull(yangObject);
         //TODO yangObject need to verify
     }

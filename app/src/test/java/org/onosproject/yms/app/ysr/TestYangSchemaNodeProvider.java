@@ -22,8 +22,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
+import static org.onosproject.yangutils.utils.UtilConstants.PERIOD;
 import static org.onosproject.yangutils.utils.UtilConstants.TEMP;
 import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.deleteDirectory;
+import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
 
 /**
  * Represents mock bundle context. provides bundle context for YSR to do unit testing.
@@ -54,13 +56,27 @@ public class TestYangSchemaNodeProvider {
         defaultYangSchemaRegistry.ysrRegisteredAppContext(ysrRegisteredAppContext);
 
         Set<YangSchemaNode> appNode = defaultYangSchemaRegistry.deSerializeDataModel(PATH + SER_FILE_PATH);
+
         for (YangSchemaNode node : appNode) {
             defaultYangSchemaRegistry.processApplicationContext(node, appObject);
+            storeClasses(node);
         }
 
         try {
             deleteDirectory(TEMP_FOLDER_PATH);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void storeClasses(YangSchemaNode node) {
+        String name = node.getJavaPackage() + PERIOD +
+                getCapitalCase(node.getJavaClassNameOrBuiltInType());
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        try {
+            Class<?> nodeClass = classLoader.loadClass(name);
+            getDefaultYangSchemaRegistry().updateServiceClass(nodeClass);
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

@@ -17,9 +17,9 @@
 package org.onosproject.yms.app.yob;
 
 import org.junit.Test;
-import org.onosproject.yms.app.ydt.YdtTestUtils;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
+import org.onosproject.yms.app.ydt.YdtTestUtils;
 import org.onosproject.yms.ydt.YdtContext;
 
 import java.io.IOException;
@@ -50,7 +50,7 @@ public class YobBooleanTest {
 
         DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
 
-        Object yangObject = defaultYobBuilder.getYangObject((YdtExtendedContext) ydtContext1);
+        Object yangObject = defaultYobBuilder.getYangObject((YdtExtendedContext) ydtContext1, YdtTestUtils.getSchemaRegistry());
         assertNotNull(yangObject);
         try {
 

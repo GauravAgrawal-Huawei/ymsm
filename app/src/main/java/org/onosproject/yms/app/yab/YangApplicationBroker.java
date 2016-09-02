@@ -199,7 +199,7 @@ public class YangApplicationBroker {
     private Object getYangObject(YdtContext ydtNode) {
         if (ydtNode != null) {
             DefaultYobBuilder yobBuilder = new DefaultYobBuilder();
-            return yobBuilder.getYangObject(((YdtExtendedContext) ydtNode));
+            return yobBuilder.getYangObject(((YdtExtendedContext) ydtNode), schemaRegistry);
         }
         return null;
     }

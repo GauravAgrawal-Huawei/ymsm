@@ -248,13 +248,13 @@ public class DefaultYangCodecHandler
 
         YdtContext curNode = rootNode.getFirstChild();
         DefaultYobBuilder yobBuilder = new DefaultYobBuilder();
-        receivedObject = yobBuilder.getYangObject((YdtExtendedContext) curNode);
+        receivedObject = yobBuilder.getYangObject((YdtExtendedContext) curNode, yangSchemaRegistry);
         objectList.add(receivedObject);
 
         // Check next module is exit or not. If exist get the object for that.
         while (curNode.getNextSibling() != null) {
             curNode = curNode.getNextSibling();
-            receivedObject = yobBuilder.getYangObject((YdtExtendedContext) curNode);
+            receivedObject = yobBuilder.getYangObject((YdtExtendedContext) curNode, yangSchemaRegistry);
             objectList.add(receivedObject);
         }
 

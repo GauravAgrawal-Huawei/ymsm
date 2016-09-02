@@ -16,105 +16,36 @@
 
 package org.onosproject.yms.app.ytb;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
-import java.util.Set;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container
-        .rev20160826.YtbModuleWithContainer;
-import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container
-        .rev20160826.YtbModuleWithContainerOpParam;
-import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container
-        .rev20160826.ytbmodulewithcontainer.DefaultSched;
-import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container
-        .rev20160826.ytbmodulewithcontainer.Sched;
-import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule
-        .rev20160826.YtbIetfSchedule;
-import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule
-        .rev20160826.YtbIetfScheduleOpParam;
-import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaflist
-        .rev20160826.YtbModuleWithLeafList;
-import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaflist
-        .rev20160826.YtbModuleWithLeafListOpParam;
-import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list
-        .rev20160826.YtbModuleWithList;
-import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list
-        .rev20160826.YtbModuleWithListOpParam;
-import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list
-        .rev20160826.ytbmodulewithlist.DefaultYtblistlist;
-import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list
-        .rev20160826.ytbmodulewithlist.Find;
-import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list
-        .rev20160826.ytbmodulewithlist.Ytblistlist;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.a
-        .rev20160826.YtbMultiModulea;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.a
-        .rev20160826.YtbMultiModuleaOpParam;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.a
-        .rev20160826.ytbmultimodulea.DefaultYtbmultilist;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.a
-        .rev20160826.ytbmultimodulea.Ytbmultilist;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b
-        .rev20160826.YtbMultiModuleb;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b
-        .rev20160826.YtbMultiModulebOpParam;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b
-        .rev20160826.ytbmultimoduleb.DefaultYtbmultilistb;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b
-        .rev20160826.ytbmultimoduleb.Ytbmultilistb;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with
-        .container.rev20160826.ytbmultinotificationwithcontainer
-        .DefaultFortesta;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with
-        .container.rev20160826.ytbmultinotificationwithcontainer.Fortesta;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with
-        .container.rev20160826.ytbmultinotificationwithcontainer
-        .YtbMultiNotificationWithContainerEvent;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with
-        .container.rev20160826.ytbmultinotificationwithcontainer
-        .YtbMultiNotificationWithContainerEventSubject;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with
-        .container.rev20160826.ytbmultinotificationwithcontainer.fortesta
-        .DefaultYtbnot;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with
-        .container.rev20160826.ytbmultinotificationwithcontainer.fortesta
-        .Ytbnot;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder
-        .yangautoprefixfor.list.having.list
-        .rev20160826.YtbTreeBuilderForListHavingList;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder
-        .yangautoprefixfor.list.having.list
-        .rev20160826.YtbTreeBuilderForListHavingListOpParam;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder
-        .yangautoprefixfor.list.having.list
-        .rev20160826.ytbtreebuilderforlisthavinglist.Carrier;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder
-        .yangautoprefixfor.list.having.list
-        .rev20160826.ytbtreebuilderforlisthavinglist.DefaultCarrier;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder
-        .yangautoprefixfor.list.having.list
-        .rev20160826.ytbtreebuilderforlisthavinglist.carrier.DefaultMultiplexes;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder
-        .yangautoprefixfor.list.having.list
-        .rev20160826.ytbtreebuilderforlisthavinglist.carrier.Multiplexes;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder
-        .yangautoprefixfor.list.having.list
-        .rev20160826.ytbtreebuilderforlisthavinglist.carrier.multiplexes
-        .ApplicationAreas;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder
-        .yangautoprefixfor.list.having.list
-        .rev20160826.ytbtreebuilderforlisthavinglist.carrier.multiplexes
-        .DefaultApplicationAreas;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder
-        .yangautoprefixfor.list.having.list
-        .rev20160826.ytbtreebuilderforlisthavinglist.carrier.multiplexes
-        .TypesEnum;
+import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.YtbModuleWithContainer;
+import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.YtbModuleWithContainerOpParam;
+import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.ytbmodulewithcontainer.DefaultSched;
+import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.ytbmodulewithcontainer.Sched;
+import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826.YtbIetfSchedule;
+import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826.YtbIetfScheduleOpParam;
+import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaflist.rev20160826.YtbModuleWithLeafList;
+import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaflist.rev20160826.YtbModuleWithLeafListOpParam;
+import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list.rev20160826.YtbModuleWithList;
+import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list.rev20160826.YtbModuleWithListOpParam;
+import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list.rev20160826.ytbmodulewithlist.DefaultYtblistlist;
+import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list.rev20160826.ytbmodulewithlist.Find;
+import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list.rev20160826.ytbmodulewithlist.Ytblistlist;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.a.rev20160826.YtbMultiModulea;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.a.rev20160826.YtbMultiModuleaOpParam;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.a.rev20160826.ytbmultimodulea.DefaultYtbmultilist;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.a.rev20160826.ytbmultimodulea.Ytbmultilist;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.YtbMultiModuleb;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.YtbMultiModulebOpParam;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.ytbmultimoduleb.DefaultYtbmultilistb;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.ytbmultimoduleb.Ytbmultilistb;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.DefaultFortesta;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.Fortesta;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.YtbMultiNotificationWithContainerEvent;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.YtbMultiNotificationWithContainerEventSubject;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.fortesta.DefaultYtbnot;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.fortesta.Ytbnot;
 import org.onosproject.yms.app.ydt.YdtExtendedBuilder;
 import org.onosproject.yms.app.ydt.YdtNode;
 import org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry;
@@ -124,11 +55,16 @@ import org.onosproject.yms.ydt.YdtContext;
 import org.onosproject.yms.ydt.YdtContextOperationType;
 import org.onosproject.yms.ydt.YmsOperationType;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+import java.util.Set;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf
-        .ietfschedule.rev20160826.YtbIetfScheduleOpParam
-        .OnosYangNodeOperationType.MERGE;
+import static org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826.YtbIetfScheduleOpParam.OnosYangNodeOperationType.MERGE;
 import static org.onosproject.yms.ydt.YmsOperationType.EDIT_CONFIG_REQUEST;
 
 /**
@@ -634,167 +570,166 @@ public class DefaultYangTreeBuilderTest {
 
     /**
      * Processes tree building when a list node is having list inside it.
-     */
-    @Test
-    public void processTreeBuilderForListHavingList() {
 
-        testYangSchemaNodeProvider.processSchemaRegistry(null);
-        DefaultYangSchemaRegistry yangSchemaRegistryTest =
-                testYangSchemaNodeProvider
-                        .getDefaultYangSchemaRegistry();
+     @Test public void processTreeBuilderForListHavingList() {
 
-        //Children leaf-list-a and leaf-list-b having leaf-list contents.
-        List<byte[]> byteArray = new ArrayList<>();
-        byte[] arr = new byte[]{1, 6, 3};
-        byte[] arr1 = new byte[]{2, 7, 4};
-        byteArray.add(arr);
-        byteArray.add(arr1);
+     testYangSchemaNodeProvider.processSchemaRegistry(null);
+     DefaultYangSchemaRegistry yangSchemaRegistryTest =
+     testYangSchemaNodeProvider
+     .getDefaultYangSchemaRegistry();
 
-        List<byte[]> byteArray1 = new ArrayList<>();
-        byte[] arr2 = new byte[]{3, 8, 4};
-        byte[] arr3 = new byte[]{5, 6, 1};
-        byteArray1.add(arr2);
-        byteArray1.add(arr3);
+     //Children leaf-list-a and leaf-list-b having leaf-list contents.
+     List<byte[]> byteArray = new ArrayList<>();
+     byte[] arr = new byte[]{1, 6, 3};
+     byte[] arr1 = new byte[]{2, 7, 4};
+     byteArray.add(arr);
+     byteArray.add(arr1);
 
-        // Child list having respective leaf-lists.
-        ApplicationAreas applicationAreas1 =
-                new DefaultApplicationAreas.ApplicationAreasBuilder()
-                        .destinationAreas(byteArray).build();
-        ApplicationAreas applicationAreas2 =
-                new DefaultApplicationAreas.ApplicationAreasBuilder()
-                        .destinationAreas(byteArray1).build();
+     List<byte[]> byteArray1 = new ArrayList<>();
+     byte[] arr2 = new byte[]{3, 8, 4};
+     byte[] arr3 = new byte[]{5, 6, 1};
+     byteArray1.add(arr2);
+     byteArray1.add(arr3);
 
-        List<ApplicationAreas> applicationAreasList = new ArrayList<>();
-        applicationAreasList.add(applicationAreas1);
-        applicationAreasList.add(applicationAreas2);
-        Multiplexes multiplex1 = new DefaultMultiplexes.MultiplexesBuilder()
-                .types(TypesEnum.TIME_DIVISION)
-                .applicationAreas(applicationAreasList).build();
+     // Child list having respective leaf-lists.
+     ApplicationAreas applicationAreas1 =
+     new DefaultApplicationAreas.ApplicationAreasBuilder()
+     .destinationAreas(byteArray).build();
+     ApplicationAreas applicationAreas2 =
+     new DefaultApplicationAreas.ApplicationAreasBuilder()
+     .destinationAreas(byteArray1).build();
 
-        // Second set for parent list.
-        List<byte[]> byteArrayB = new ArrayList<>();
-        byte[] arrB = new byte[]{0, 0, 1};
-        byte[] arr1B = new byte[]{1, 0, 0};
-        byteArrayB.add(arrB);
-        byteArrayB.add(arr1B);
+     List<ApplicationAreas> applicationAreasList = new ArrayList<>();
+     applicationAreasList.add(applicationAreas1);
+     applicationAreasList.add(applicationAreas2);
+     Multiplexes multiplex1 = new DefaultMultiplexes.MultiplexesBuilder()
+     .types(TypesEnum.TIME_DIVISION)
+     .applicationAreas(applicationAreasList).build();
 
-        List<byte[]> byteArray1B = new ArrayList<>();
-        byte[] arr2B = new byte[]{7, 7, 7};
-        byte[] arr3B = new byte[]{0, 1};
-        byteArray1B.add(arr2B);
-        byteArray1B.add(arr3B);
+     // Second set for parent list.
+     List<byte[]> byteArrayB = new ArrayList<>();
+     byte[] arrB = new byte[]{0, 0, 1};
+     byte[] arr1B = new byte[]{1, 0, 0};
+     byteArrayB.add(arrB);
+     byteArrayB.add(arr1B);
 
-        ApplicationAreas applicationAreas1B =
-                new DefaultApplicationAreas.ApplicationAreasBuilder()
-                        .destinationAreas(byteArrayB).build();
-        ApplicationAreas applicationAreas2B =
-                new DefaultApplicationAreas.ApplicationAreasBuilder()
-                        .destinationAreas(byteArray1B).build();
+     List<byte[]> byteArray1B = new ArrayList<>();
+     byte[] arr2B = new byte[]{7, 7, 7};
+     byte[] arr3B = new byte[]{0, 1};
+     byteArray1B.add(arr2B);
+     byteArray1B.add(arr3B);
 
-        List<ApplicationAreas> applicationAreasListB = new ArrayList<>();
-        applicationAreasListB.add(applicationAreas1B);
-        applicationAreasListB.add(applicationAreas2B);
-        Multiplexes multiplex1B = new DefaultMultiplexes.MultiplexesBuilder()
-                .types(TypesEnum.FREQUENCY_DIVISION)
-                .applicationAreas(applicationAreasListB).build();
+     ApplicationAreas applicationAreas1B =
+     new DefaultApplicationAreas.ApplicationAreasBuilder()
+     .destinationAreas(byteArrayB).build();
+     ApplicationAreas applicationAreas2B =
+     new DefaultApplicationAreas.ApplicationAreasBuilder()
+     .destinationAreas(byteArray1B).build();
 
-        // Adds the child lists to the parent list.
-        List<Multiplexes> multiplexList = new ArrayList<>();
-        multiplexList.add(multiplex1);
-        multiplexList.add(multiplex1B);
+     List<ApplicationAreas> applicationAreasListB = new ArrayList<>();
+     applicationAreasListB.add(applicationAreas1B);
+     applicationAreasListB.add(applicationAreas2B);
+     Multiplexes multiplex1B = new DefaultMultiplexes.MultiplexesBuilder()
+     .types(TypesEnum.FREQUENCY_DIVISION)
+     .applicationAreas(applicationAreasListB).build();
 
-        // Sets it in the container.
-        Carrier carrier =
-                new DefaultCarrier.CarrierBuilder().multiplexes(multiplexList)
-                        .build();
+     // Adds the child lists to the parent list.
+     List<Multiplexes> multiplexList = new ArrayList<>();
+     multiplexList.add(multiplex1);
+     multiplexList.add(multiplex1B);
 
-        YtbTreeBuilderForListHavingList treeBuilderForListHavingList = new
-                YtbTreeBuilderForListHavingListOpParam
-                        .YtbTreeBuilderForListHavingListBuilder()
-                .carrier(carrier)
-                .build();
+     // Sets it in the container.
+     Carrier carrier =
+     new DefaultCarrier.CarrierBuilder().multiplexes(multiplexList)
+     .build();
 
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(treeBuilderForListHavingList);
-        DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
-        YdtBuilder ydtBuilder = yangTreeBuilder
-                .getYdtBuilderForYo(objectList, "RootNameOfListHavingList",
-                                    "RootNameSpaceOfListHavingList",
-                                    YmsOperationType.QUERY_CONFIG_REQUEST,
-                                    yangSchemaRegistryTest);
+     YtbTreeBuilderForListHavingList treeBuilderForListHavingList = new
+     YtbTreeBuilderForListHavingListOpParam
+     .YtbTreeBuilderForListHavingListBuilder()
+     .carrier(carrier)
+     .build();
 
-        // Checks the module node and name under logical node.
-        YdtContext ydtContext = ydtBuilder.getRootNode();
-        YdtContext moduleNode = ydtContext.getFirstChild();
-        assertThat(moduleNode.getName(), is("YtbTreeBuilderForListHavingList"));
+     List<Object> objectList = new ArrayList<>();
+     objectList.add(treeBuilderForListHavingList);
+     DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
+     YdtBuilder ydtBuilder = yangTreeBuilder
+     .getYdtBuilderForYo(objectList, "RootNameOfListHavingList",
+     "RootNameSpaceOfListHavingList",
+     YmsOperationType.QUERY_CONFIG_REQUEST,
+     yangSchemaRegistryTest);
 
-        // Checks the container node and name under module node.
-        YdtContext ydtContextForContainer = moduleNode.getFirstChild();
-        assertThat(ydtContextForContainer.getName(), is("carrier"));
+     // Checks the module node and name under logical node.
+     YdtContext ydtContext = ydtBuilder.getRootNode();
+     YdtContext moduleNode = ydtContext.getFirstChild();
+     assertThat(moduleNode.getName(), is("YtbTreeBuilderForListHavingList"));
 
-        // Checks the list node a and name under module node.
-        YdtContext ydtContextForParentListA =
-                ydtContextForContainer.getFirstChild();
-        assertThat(ydtContextForParentListA.getName(), is("multiplexes"));
+     // Checks the container node and name under module node.
+     YdtContext ydtContextForContainer = moduleNode.getFirstChild();
+     assertThat(ydtContextForContainer.getName(), is("carrier"));
 
-        YdtContext leafOfParentA = ydtContextForParentListA.getFirstChild();
-        assertThat(leafOfParentA.getName(), is("types"));
-        assertThat(leafOfParentA.getValue(), is("TIME_DIVISION"));
+     // Checks the list node a and name under module node.
+     YdtContext ydtContextForParentListA =
+     ydtContextForContainer.getFirstChild();
+     assertThat(ydtContextForParentListA.getName(), is("multiplexes"));
 
-        YdtContext ydtContextForChildListAOfParentA =
-                leafOfParentA.getNextSibling();
-        assertThat(ydtContextForChildListAOfParentA.getName(),
-                   is("application-areas"));
+     YdtContext leafOfParentA = ydtContextForParentListA.getFirstChild();
+     assertThat(leafOfParentA.getName(), is("types"));
+     assertThat(leafOfParentA.getValue(), is("TIME_DIVISION"));
 
-        YdtContext leaflistOfChildListAOfParentA =
-                ydtContextForChildListAOfParentA.getFirstChild();
-        assertThat(leaflistOfChildListAOfParentA.getName(),
-                   is("destination-areas"));
-        Set leaflistAValue = leaflistOfChildListAOfParentA.getValueSet();
-        // TODO: check the leaf-list value.
+     YdtContext ydtContextForChildListAOfParentA =
+     leafOfParentA.getNextSibling();
+     assertThat(ydtContextForChildListAOfParentA.getName(),
+     is("application-areas"));
 
-        YdtContext ydtContextForChildListBOfParentA =
-                ydtContextForChildListAOfParentA.getNextSibling();
-        assertThat(ydtContextForChildListBOfParentA.getName(),
-                   is("application-areas"));
+     YdtContext leaflistOfChildListAOfParentA =
+     ydtContextForChildListAOfParentA.getFirstChild();
+     assertThat(leaflistOfChildListAOfParentA.getName(),
+     is("destination-areas"));
+     Set leaflistAValue = leaflistOfChildListAOfParentA.getValueSet();
+     // TODO: check the leaf-list value.
 
-        YdtContext leaflistOfChildListBOfParentA =
-                ydtContextForChildListBOfParentA.getFirstChild();
-        assertThat(leaflistOfChildListBOfParentA.getName(),
-                   is("destination-areas"));
-        Set leaflistBValue = leaflistOfChildListAOfParentA.getValueSet();
-        // TODO: check the leaf-list value.
+     YdtContext ydtContextForChildListBOfParentA =
+     ydtContextForChildListAOfParentA.getNextSibling();
+     assertThat(ydtContextForChildListBOfParentA.getName(),
+     is("application-areas"));
 
-        YdtContext ydtContextForParentListB =
-                ydtContextForParentListA.getNextSibling();
-        assertThat(ydtContextForParentListB.getName(), is("multiplexes"));
+     YdtContext leaflistOfChildListBOfParentA =
+     ydtContextForChildListBOfParentA.getFirstChild();
+     assertThat(leaflistOfChildListBOfParentA.getName(),
+     is("destination-areas"));
+     Set leaflistBValue = leaflistOfChildListAOfParentA.getValueSet();
+     // TODO: check the leaf-list value.
 
-        YdtContext leafOfParentB = ydtContextForParentListB.getFirstChild();
-        assertThat(leafOfParentB.getName(), is("types"));
-        assertThat(leafOfParentB.getValue(), is("FREQUENCY_DIVISION"));
+     YdtContext ydtContextForParentListB =
+     ydtContextForParentListA.getNextSibling();
+     assertThat(ydtContextForParentListB.getName(), is("multiplexes"));
 
-        YdtContext ydtContextForChildListAOfParentB =
-                leafOfParentB.getNextSibling();
-        assertThat(ydtContextForChildListAOfParentB.getName(),
-                   is("application-areas"));
+     YdtContext leafOfParentB = ydtContextForParentListB.getFirstChild();
+     assertThat(leafOfParentB.getName(), is("types"));
+     assertThat(leafOfParentB.getValue(), is("FREQUENCY_DIVISION"));
 
-        YdtContext leaflistOfChildListAOfParentB =
-                ydtContextForChildListAOfParentB.getFirstChild();
-        assertThat(leaflistOfChildListAOfParentB.getName(),
-                   is("destination-areas"));
-        Set leaflistCValue = leaflistOfChildListAOfParentB.getValueSet();
-        // TODO: check the leaf-list value.
+     YdtContext ydtContextForChildListAOfParentB =
+     leafOfParentB.getNextSibling();
+     assertThat(ydtContextForChildListAOfParentB.getName(),
+     is("application-areas"));
 
-        YdtContext ydtContextForChildListBOfParentB =
-                ydtContextForChildListAOfParentB.getNextSibling();
-        assertThat(ydtContextForChildListBOfParentB.getName(),
-                   is("application-areas"));
+     YdtContext leaflistOfChildListAOfParentB =
+     ydtContextForChildListAOfParentB.getFirstChild();
+     assertThat(leaflistOfChildListAOfParentB.getName(),
+     is("destination-areas"));
+     Set leaflistCValue = leaflistOfChildListAOfParentB.getValueSet();
+     // TODO: check the leaf-list value.
 
-        YdtContext leaflistOfChildListBOfParentB =
-                ydtContextForChildListBOfParentB.getFirstChild();
-        assertThat(leaflistOfChildListBOfParentB.getName(),
-                   is("destination-areas"));
-        Set leaflistDValue = leaflistOfChildListBOfParentB.getValueSet();
-        // TODO: check the leaf-list value.
-    }
+     YdtContext ydtContextForChildListBOfParentB =
+     ydtContextForChildListAOfParentB.getNextSibling();
+     assertThat(ydtContextForChildListBOfParentB.getName(),
+     is("application-areas"));
+
+     YdtContext leaflistOfChildListBOfParentB =
+     ydtContextForChildListBOfParentB.getFirstChild();
+     assertThat(leaflistOfChildListBOfParentB.getName(),
+     is("destination-areas"));
+     Set leaflistDValue = leaflistOfChildListBOfParentB.getValueSet();
+     // TODO: check the leaf-list value.
+     } */
 }

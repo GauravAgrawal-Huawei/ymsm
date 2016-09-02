@@ -20,6 +20,7 @@ import org.onosproject.yangutils.datamodel.YangLeaf;
 import org.onosproject.yangutils.datamodel.YangType;
 import org.onosproject.yangutils.datamodel.javadatamodel.JavaQualifiedTypeInfoContainer;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
+import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,7 @@ class YobSingleInstanceLeafHandler extends YobHandler {
     private static final Logger log = LoggerFactory.getLogger(YobSingleInstanceLeafHandler.class);
 
     @Override
-    public void createYangBuilderObject(YdtExtendedContext ydtExtendedContext, YdtExtendedContext ydtRootNode){
+    public void createYangBuilderObject(YdtExtendedContext ydtExtendedContext, YdtExtendedContext ydtRootNode, YangSchemaRegistry registry){
         // For single instance leaf no need to create an object.
     }
 

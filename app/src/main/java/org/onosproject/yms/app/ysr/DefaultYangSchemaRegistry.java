@@ -44,6 +44,7 @@ import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
 import static org.apache.commons.io.FileUtils.deleteDirectory;
+import static org.onosproject.yangutils.utils.UtilConstants.DEFAULT;
 import static org.onosproject.yangutils.utils.UtilConstants.EVENT_STRING;
 import static org.onosproject.yangutils.utils.UtilConstants.OP_PARAM;
 import static org.onosproject.yangutils.utils.UtilConstants.PERIOD;
@@ -95,6 +96,8 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
      */
     private ConcurrentMap<String, YsrRegisteredAppContext> yangSchemaNotificationStore;
 
+    private ConcurrentMap<String, Class<?>> registerClassStore;
+
     /**
      * Context of application which is registering with YMS.
      */
@@ -109,6 +112,7 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
         yangSchemaStoreForRootInterface = new ConcurrentHashMap<>();
         yangSchemaStoreForRootOpParam = new ConcurrentHashMap<>();
         yangSchemaNotificationStore = new ConcurrentHashMap<>();
+        registerClassStore = new ConcurrentHashMap<>();
     }
 
     /**
@@ -118,6 +122,32 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
      */
     private ConcurrentMap<String, YsrRegisteredAppContext> getAppObjectStore() {
         return appObjectStore;
+    }
+
+    public ConcurrentMap<String, Class<?>> getRegisterClassStore() {
+        return registerClassStore;
+    }
+
+    public Class<?> getRegisteredClass(YangSchemaNode schemaNode, String appName) {
+        String interfaceName = schemaNode.getJavaPackage() + PERIOD +
+                getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType());
+        String serviceName = interfaceName + SERVICE;
+        String defaultClass = schemaNode.getJavaPackage() + PERIOD + DEFAULT
+                + getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType());
+        if (getRegisterClassStore().containsKey(appName)) {
+            return getRegisterClassStore().get(interfaceName);
+        } else if (getRegisterClassStore().containsKey(interfaceName)) {
+            return getRegisterClassStore().get(interfaceName);
+        } else if (getRegisterClassStore().containsKey(serviceName)) {
+            return getRegisterClassStore().get(serviceName);
+        } else if (getRegisterClassStore().containsKey(defaultClass)) {
+            return getRegisterClassStore().get(defaultClass);
+        }
+        return null;
+    }
+
+    public void updateServiceClass(Class<?> serviceClass) {
+        getRegisterClassStore().put(serviceClass.getName(), serviceClass);
     }
 
     /**
@@ -170,6 +200,7 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
             ysrRegisteredAppContext().jarPath(jarPath);
             //Store the YANG file handles.
             updateYangFileSet(jarPath);
+            updateServiceClass(serviceClass);
         }
     }
 

@@ -53,7 +53,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import static org.onlab.util.Tools.groupedThreads;
 
 /**
@@ -176,9 +180,8 @@ public class YmsManager
     }
 
     @Override
-    public void registerDefaultCodec(YangDataTreeCodec defaultCodec,
-                                     YangProtocolEncodingFormat dataFormat) {
-
+    public void registerDefaultCodec(YangDataTreeCodec defaultCodec, YangProtocolEncodingFormat dataFormat) {
+        defaultCodecs.put(dataFormat, defaultCodec);
     }
 
     @Override

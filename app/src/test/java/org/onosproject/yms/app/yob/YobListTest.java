@@ -49,7 +49,7 @@ public class YobListTest {
         DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
 
         Object yangObject = defaultYobBuilder
-                .getYangObject((YdtExtendedContext) ydtContext1);
+                .getYangObject((YdtExtendedContext) ydtContext1, YdtTestUtils.getSchemaRegistry());
         assertNotNull(yangObject);
         assertTrue(yangObject.getClass().getSimpleName()
                            .equals("RootlistOpParam"));
@@ -93,7 +93,7 @@ public class YobListTest {
         DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
 
         Object yangObject = defaultYobBuilder
-                .getYangObject((YdtExtendedContext) ydtContext1);
+                .getYangObject((YdtExtendedContext) ydtContext1, YdtTestUtils.getSchemaRegistry());
         assertNotNull(yangObject);
         assertTrue(yangObject.getClass().getSimpleName()
                            .equals("RootlistOpParam"));

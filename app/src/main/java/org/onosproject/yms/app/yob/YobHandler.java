@@ -17,19 +17,22 @@
 package org.onosproject.yms.app.yob;
 
 
+import org.onosproject.yangutils.datamodel.RpcNotificationContainer;
 import org.onosproject.yangutils.datamodel.YangBinary;
+import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangType;
 import org.onosproject.yangutils.translator.tojava.utils.JavaIdentifierSyntax;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
+import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -43,11 +46,13 @@ import static org.onosproject.yms.ydt.YdtType.MULTI_INSTANCE_NODE;
 public abstract class YobHandler {
 
     private static final String FROMSTRING = "fromString";
-    private static final String BUILD      = "build";
-    private static final String OPPARAM    = "OpParam";
-    private static final String DEFAULT    = "Default";
-    private static final String ADDTO      = "addTo";
-    private static final String VALUEOF    = "valueOf";
+    private static final String BUILD = "build";
+    private static final String OPPARAM = "OpParam";
+    private static final String DEFAULT = "Default";
+    private static final String ADDTO = "addTo";
+    private static final String VALUEOF = "valueOf";
+
+    private ClassLoader registeredAppClassLoader;
 
     private static final Logger log = LoggerFactory.getLogger(YobHandler.class);
 
@@ -55,9 +60,10 @@ public abstract class YobHandler {
      * Creates a YANG builder object.
      *
      * @param ydtExtendedContext ydtExtendedContext is used to get application related information maintained in YDT
-     * @param ydtRootNode ydtRootNode is refers to module node
+     * @param ydtRootNode        ydtRootNode is refers to module node
+     * @param registry
      */
-    public void createYangBuilderObject(YdtExtendedContext ydtExtendedContext, YdtExtendedContext ydtRootNode) {
+    public void createYangBuilderObject(YdtExtendedContext ydtExtendedContext, YdtExtendedContext ydtRootNode, YangSchemaRegistry registry) {
         String packageName;
         String className;
         Class<?> yangDefaultClass = null;
@@ -65,7 +71,7 @@ public abstract class YobHandler {
         Object builderObject = null;
         String qualifiedClassName;
 
-        YangSchemaNode yangSchemaNode =  ydtExtendedContext.getYangSchemaNode();
+        YangSchemaNode yangSchemaNode = ydtExtendedContext.getYangSchemaNode();
         if (yangSchemaNode == null) {
             //TODO
             return;
@@ -81,8 +87,9 @@ public abstract class YobHandler {
             qualifiedClassName = packageName + "." + DEFAULT + className;
         }
 
+        updateClassLoader(registry, yangSchemaNode, qualifiedClassName);
         try {
-            yangDefaultClass = Class.forName(qualifiedClassName);
+            yangDefaultClass = getRegisteredAppClassLoader().loadClass(qualifiedClassName);
         } catch (ClassNotFoundException e) {
             log.error("YOB: failed to load class for class " + className);
         }
@@ -120,8 +127,8 @@ public abstract class YobHandler {
                     ParameterizedType genericListType = (ParameterizedType) leafName.getGenericType();
                     Class<?> genericListClass = (Class<?>) genericListType.getActualTypeArguments()[0];
                     method = yangParentClass.getDeclaredMethod(ADDTO +
-                            getCapitalCase(ydtExtendedContext.getYangSchemaNode().getJavaAttributeName()),
-                            genericListClass);
+                                                                       getCapitalCase(ydtExtendedContext.getYangSchemaNode().getJavaAttributeName()),
+                                                               genericListClass);
                 } else {
                     method = yangParentClass.getDeclaredMethod(
                             ydtExtendedContext.getYangSchemaNode().getJavaAttributeName(), leafName.getType());
@@ -145,8 +152,8 @@ public abstract class YobHandler {
     /**
      * To build the object from builder method.
      *
-     * @param ydtExtendedContext        ydtExtendedContext is used to get application related
-     *                                  information maintained in YDT
+     * @param ydtExtendedContext ydtExtendedContext is used to get application related
+     *                           information maintained in YDT
      */
     public void buildObjectFromBuilder(YdtExtendedContext ydtExtendedContext) {
         Method method;
@@ -159,16 +166,16 @@ public abstract class YobHandler {
         // Setting the value into OnosYangNodeOperationType from ydtcontext operation type.
         try {
             Class<?>[] innerClasses = defaultClass.getClasses();
-            for (Class<?> innerEnumClass: innerClasses) {
+            for (Class<?> innerEnumClass : innerClasses) {
                 if (innerEnumClass.getSimpleName().equals("OnosYangNodeOperationType")) {
                     Method valueOfMethod = innerEnumClass.getDeclaredMethod(VALUEOF, String.class);
                     if (ydtExtendedContext.getYdtContextOperationType() != null) {
                         ydtContextOperationType = valueOfMethod.invoke(null,
-                                ydtExtendedContext.getYdtContextOperationType().toString());
+                                                                       ydtExtendedContext.getYdtContextOperationType().toString());
                     }
                 }
             }
-            Field onosYangNodeOperationType =  defaultBuilderClass.getDeclaredField("onosYangNodeOperationType");
+            Field onosYangNodeOperationType = defaultBuilderClass.getDeclaredField("onosYangNodeOperationType");
             onosYangNodeOperationType.setAccessible(true);
             onosYangNodeOperationType.set(defaultBuilderObject, ydtContextOperationType);
         } catch (NoSuchFieldException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
@@ -190,13 +197,13 @@ public abstract class YobHandler {
     /**
      * This method is used to set data from string value in parent method.
      *
-     * @param type                      refers to YANG type
-     * @param leafValue                 leafValue argument is used to set the value in method
-     * @param parentSetterMethod        Invokes the underlying method represented
-     *                                  by this parentSetterMethod
-     * @param parentBuilderObject       the parentBuilderObject is to invoke the underlying method
-     * @param ydtExtendedContext        ydtExtendedContext is used to get application related
-     *                                  information maintained in YDT
+     * @param type                refers to YANG type
+     * @param leafValue           leafValue argument is used to set the value in method
+     * @param parentSetterMethod  Invokes the underlying method represented
+     *                            by this parentSetterMethod
+     * @param parentBuilderObject the parentBuilderObject is to invoke the underlying method
+     * @param ydtExtendedContext  ydtExtendedContext is used to get application related
+     *                            information maintained in YDT
      * @throws InvocationTargetException throws InvocationTargetException
      * @throws IllegalAccessException    throws IllegalAccessException
      * @throws NoSuchMethodException     throws NoSuchMethodException
@@ -275,14 +282,14 @@ public abstract class YobHandler {
     /**
      * To set data into parent setter method from string value for derived type.
      *
-     * @param leafValue                 leafValue argument is used to set the value in method
-     * @param parentSetterMethod        Invokes the underlying method represented
-     *                                  by this parentSetterMethod
-     * @param parentBuilderObject       the parentBuilderObject is to invoke the underlying method
-     * @param ydtExtendedContext        ydtExtendedContext is used to get application related
-     *                                  information maintained in YDT
-     * @param isEnum                    isEnum parameter is used to check whether type is enum or derived
-     *                                  information maintained in YDT
+     * @param leafValue           leafValue argument is used to set the value in method
+     * @param parentSetterMethod  Invokes the underlying method represented
+     *                            by this parentSetterMethod
+     * @param parentBuilderObject the parentBuilderObject is to invoke the underlying method
+     * @param ydtExtendedContext  ydtExtendedContext is used to get application related
+     *                            information maintained in YDT
+     * @param isEnum              isEnum parameter is used to check whether type is enum or derived
+     *                            information maintained in YDT
      * @throws InvocationTargetException throws InvocationTargetException
      * @throws IllegalAccessException    throws IllegalAccessException
      * @throws NoSuchMethodException     throws NoSuchMethodException
@@ -340,5 +347,51 @@ public abstract class YobHandler {
         }
 
         parentSetterMethod.invoke(parentBuilderObject, childValue);
+    }
+
+    /**
+     * Returns registered application's class loader.
+     *
+     * @return registered application's class loader
+     */
+    private ClassLoader getRegisteredAppClassLoader() {
+        return registeredAppClassLoader;
+    }
+
+    /**
+     * Sets registered application's class loader.
+     *
+     * @param registeredAppClassLoader registered application's class loader
+     */
+    private void setRegisteredAppClassLoader(ClassLoader registeredAppClassLoader) {
+        this.registeredAppClassLoader = registeredAppClassLoader;
+    }
+
+    /**
+     * Updates class loader for all the classes.
+     *
+     * @param registry           YANG schema registry
+     * @param yangSchemaNode     YANG schema node
+     * @param qualifiedClassName qualified class name
+     */
+    private void updateClassLoader(YangSchemaRegistry registry, YangSchemaNode yangSchemaNode,
+                                   String qualifiedClassName) {
+
+        if (yangSchemaNode instanceof RpcNotificationContainer) {
+            Class<?> clas = registry.getRegisteredClass(yangSchemaNode, qualifiedClassName);
+            setRegisteredAppClassLoader(clas.getClassLoader());
+        } else {
+            YangNode parent = ((YangNode) yangSchemaNode).getParent();
+            if (parent instanceof RpcNotificationContainer) {
+                Class<?> clas = registry.getRegisteredClass(parent, qualifiedClassName);
+                setRegisteredAppClassLoader(clas.getClassLoader());
+            } else {
+                while (!(parent instanceof RpcNotificationContainer)) {
+                    parent = parent.getParent();
+                }
+                Class<?> clas = registry.getRegisteredClass(parent, qualifiedClassName);
+                setRegisteredAppClassLoader(clas.getClassLoader());
+            }
+        }
     }
 }

@@ -102,7 +102,7 @@ public class YobInteger8Test {
 
         DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
 
-        Object yangObject = defaultYobBuilder.getYangObject((YdtExtendedContext) ydtContext1);
+        Object yangObject = defaultYobBuilder.getYangObject((YdtExtendedContext) ydtContext1, YdtTestUtils.getSchemaRegistry());
         assertNotNull(yangObject);
         try {
             Field negInt = yangObject.getClass().getDeclaredField("negInt");

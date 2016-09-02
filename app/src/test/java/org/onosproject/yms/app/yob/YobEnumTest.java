@@ -56,7 +56,7 @@ public class YobEnumTest {
 
         DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
 
-        Object yangObject = defaultYobBuilder.getYangObject((YdtExtendedContext) ydtContext1);
+        Object yangObject = defaultYobBuilder.getYangObject((YdtExtendedContext) ydtContext1, YdtTestUtils.getSchemaRegistry());
         assertNotNull(yangObject);
         try {
             Field field = yangObject.getClass().getDeclaredField("enumList");

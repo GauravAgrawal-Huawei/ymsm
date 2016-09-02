@@ -17,6 +17,7 @@
 package org.onosproject.yms.app.yob;
 
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
+import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 
 /**
  * Abstraction of an entity which provides interfaces to YANG object
@@ -29,8 +30,9 @@ public interface YobBuilder {
      *
      * @param ydtExtendedContext        ydtExtendedContext is used to get application related
      *                                  information maintained in YDT
+     * @param schemaRegistry
      * @return YANG builder object
      */
-    Object getYangObject(YdtExtendedContext ydtExtendedContext);
+    Object getYangObject(YdtExtendedContext ydtExtendedContext, YangSchemaRegistry schemaRegistry);
 }
 

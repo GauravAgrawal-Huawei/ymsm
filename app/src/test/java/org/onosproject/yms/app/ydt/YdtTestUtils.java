@@ -1,15 +1,16 @@
 package org.onosproject.yms.app.ydt;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider;
+import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.onosproject.yms.ydt.YdtContext;
 import org.onosproject.yms.ydt.YdtContextOperationType;
 import org.onosproject.yms.ydt.YdtListener;
 import org.onosproject.yms.ydt.YdtType;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -18,10 +19,21 @@ public class YdtTestUtils
         implements YdtListener {
 
     private static List<String> keysValueList = new ArrayList<>();
+
+    public static YangSchemaRegistry getSchemaRegistry() {
+        return schemaRegistry;
+    }
+
+    public static void setSchemaRegistry(YangSchemaRegistry registry) {
+        schemaRegistry = registry;
+    }
+
+    private static YangSchemaRegistry schemaRegistry;
     private static TestYangSchemaNodeProvider testYangSchemaNodeProvider =
             new TestYangSchemaNodeProvider();
 
     public static YangRequestWorkBench foodArenaYdt() {
+        setSchemaRegistry(testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
         String appName =
                 "org.onosproject.yang.gen.v1.ydt.food.rev20160624.FoodService";
         testYangSchemaNodeProvider.processSchemaRegistry(null);
@@ -45,6 +57,7 @@ public class YdtTestUtils
 
     public static YangRequestWorkBench ietfNetwork1Ydt() {
 
+        setSchemaRegistry(testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
         String appName =
                 "org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang." +
                         "ietf.network.rev20151208.IetfNetworkService";
@@ -109,6 +122,7 @@ public class YdtTestUtils
 
     @SuppressWarnings({"unchecked", "MismatchedQueryAndUpdateOfCollection"})
     public static YangRequestWorkBench listWithContainerYdt() {
+        setSchemaRegistry(testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
         String appName =
                 "org.onosproject.yang.gen.v1.ydt.rootlist" +
                         ".rev20160624.RootlistService";
@@ -146,6 +160,7 @@ public class YdtTestUtils
     }
 
     public static YangRequestWorkBench listWithoutContainerYdt() {
+        setSchemaRegistry(testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
         String appName =
                 "org.onosproject.yang.gen.v1.ydt.rootlist" +
                         ".rev20160624.RootlistService";
@@ -169,6 +184,7 @@ public class YdtTestUtils
 
     @SuppressWarnings("unchecked")
     public static YangRequestWorkBench logisticsManagerYdt() {
+        setSchemaRegistry(testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
         testYangSchemaNodeProvider.processSchemaRegistry(null);
         YangRequestWorkBench defaultYdtBuilder;
         String rootName = "logisticsmanager";
@@ -287,6 +303,7 @@ public class YdtTestUtils
     }
 
     public static YangRequestWorkBench bitYdt() {
+        setSchemaRegistry(testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
         String appName =
                 "org.onosproject.yang.gen.v1.ydt.binarytest" +
                         ".rev20160524.BinarytestService";
@@ -320,6 +337,7 @@ public class YdtTestUtils
     }
 
     public static YangRequestWorkBench booleanYdt() {
+        setSchemaRegistry(testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
 
         String appName =
                 "org.onosproject.yang.gen.v1.ydt.yangautoprefixboolean" +
@@ -347,6 +365,7 @@ public class YdtTestUtils
 
 
     public static YangRequestWorkBench emptyTypeYdt() {
+        setSchemaRegistry(testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
         String appName =
                 "org.onosproject.yang.gen.v1.ydt.emptydata" +
                         ".rev20160524.EmptydataService";
@@ -367,6 +386,7 @@ public class YdtTestUtils
     }
 
     public static YangRequestWorkBench enumYdt() {
+        setSchemaRegistry(testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
         String appName =
                 "org.onosproject.yang.gen.v1.ydt.enumtest" +
                         ".rev20160524.EnumtestService";
@@ -395,6 +415,7 @@ public class YdtTestUtils
     }
 
     public static YangRequestWorkBench integer8Ydt() {
+        setSchemaRegistry(testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
 
         String appName =
                 "org.onosproject.yang.gen.v1.ydt" +
@@ -570,6 +591,7 @@ public class YdtTestUtils
     }
 
     public static YangRequestWorkBench integer16Ydt() {
+        setSchemaRegistry(testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
         String appName =
                 "org.onosproject.yang.gen.v1.ydt" +
                         ".integer16.rev20160524.Integer16Service";
@@ -744,6 +766,7 @@ public class YdtTestUtils
     }
 
     public static YangRequestWorkBench integer32Ydt() {
+        setSchemaRegistry(testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
         String appName =
                 "org.onosproject.yang.gen.v1.ydt" +
                         ".integer32.rev20160524.Integer32Service";
@@ -918,6 +941,7 @@ public class YdtTestUtils
     }
 
     public static YangRequestWorkBench integer64Ydt() {
+        setSchemaRegistry(testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
         String appName =
                 "org.onosproject.yang.gen.v1.ydt" +
                         ".integer64.rev20160524.Integer64Service";
@@ -1092,6 +1116,7 @@ public class YdtTestUtils
     }
 
     public static YangRequestWorkBench decimal64Ydt() {
+        setSchemaRegistry(testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
         String appName =
                 "org.onosproject.yang.gen.v1.ydt.decimal64.rev20160524.Decimal64Service";
         testYangSchemaNodeProvider.processSchemaRegistry(null);
@@ -1187,6 +1212,7 @@ public class YdtTestUtils
                                                             String moduleName,
                                                             String nameSpace,
                                                             String appName) {
+        setSchemaRegistry(testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
         YangRequestWorkBench defaultYdtBuilder;
         testYangSchemaNodeProvider.processSchemaRegistry(null);
         defaultYdtBuilder = new YangRequestWorkBench(rootName, null, null,

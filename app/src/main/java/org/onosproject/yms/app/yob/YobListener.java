@@ -19,6 +19,7 @@ package org.onosproject.yms.app.yob;
 
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.ydt.YdtExtendedListener;
+import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.onosproject.yms.ydt.YdtContext;
 
 /**
@@ -28,9 +29,18 @@ public class YobListener implements YdtExtendedListener {
 
     /**
      * reference to the ydt root node.
-     *
      */
     private YdtExtendedContext ydtRootNode;
+
+    public YangSchemaRegistry getSchemaRegistry() {
+        return schemaRegistry;
+    }
+
+    public void setSchemaRegistry(YangSchemaRegistry schemaRegistry) {
+        this.schemaRegistry = schemaRegistry;
+    }
+
+    YangSchemaRegistry schemaRegistry;
 
     /**
      * Returns the ydtRootNode.
@@ -55,9 +65,11 @@ public class YobListener implements YdtExtendedListener {
      *
      * @param ydtExtendedContext ydtExtendedContext is used to get application related
      *                           information maintained in YDT
+     * @param schemaRegistry
      */
-    public YobListener(YdtExtendedContext ydtExtendedContext) {
+    public YobListener(YdtExtendedContext ydtExtendedContext, YangSchemaRegistry schemaRegistry) {
         setYdtRootNode(ydtExtendedContext);
+        setSchemaRegistry(schemaRegistry);
     }
 
     @Override
@@ -65,7 +77,7 @@ public class YobListener implements YdtExtendedListener {
         YobHandler nodeHandler = YobHandlerFactory.getYobHandlerForContext(ydtExtendedContext);
 
         if (nodeHandler != null) {
-            nodeHandler.createYangBuilderObject(ydtExtendedContext, getYdtRootNode());
+            nodeHandler.createYangBuilderObject(ydtExtendedContext, getYdtRootNode(), getSchemaRegistry());
         }
     }
 

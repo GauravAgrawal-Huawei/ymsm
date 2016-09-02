@@ -16,16 +16,16 @@
 
 package org.onosproject.yms.app.yob;
 
+import org.onosproject.yms.app.ydt.DefaultYdtWalker;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.ydt.YdtExtendedListener;
 import org.onosproject.yms.app.ydt.YdtExtendedWalker;
-import org.onosproject.yms.app.ydt.DefaultYdtWalker;
+import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 
 import static org.onosproject.yms.app.ydt.AppType.YOB;
 
 /**
  * Represents implementation of interfaces to build and obtain YANG objects from YDT.
- *
  */
 public class DefaultYobBuilder implements YobBuilder {
 
@@ -36,9 +36,9 @@ public class DefaultYobBuilder implements YobBuilder {
     }
 
     @Override
-    public Object getYangObject(YdtExtendedContext ydtContextNode) {
+    public Object getYangObject(YdtExtendedContext ydtContextNode, YangSchemaRegistry schemaRegistry) {
         YdtExtendedWalker ydtExtendedWalker = new DefaultYdtWalker();
-        YdtExtendedListener ydtExtendedListener = new YobListener(ydtContextNode);
+        YdtExtendedListener ydtExtendedListener = new YobListener(ydtContextNode, schemaRegistry);
         if (ydtContextNode != null) {
             ydtExtendedWalker.walk(ydtExtendedListener, ydtContextNode);
             return ydtContextNode.getAppInfo(YOB);

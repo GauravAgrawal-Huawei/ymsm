@@ -91,4 +91,9 @@ public class YangSchemaRegistryTest implements YangSchemaRegistry {
         return null;
     }
 
+    @Override
+    public Class<?> getRegisteredClass(YangSchemaNode schemaNode, String appName) {
+        return null;
+    }
+
 }
