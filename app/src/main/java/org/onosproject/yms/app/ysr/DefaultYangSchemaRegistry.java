@@ -36,6 +36,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -96,12 +97,20 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
      */
     private ConcurrentMap<String, YsrRegisteredAppContext> yangSchemaNotificationStore;
 
+    /**
+     * Map for storing registered classes.
+     */
     private ConcurrentMap<String, Class<?>> registerClassStore;
 
     /**
      * Context of application which is registering with YMS.
      */
     private YsrRegisteredAppContext ysrRegisteredAppContext;
+
+    /**
+     * Context of application which is registering with YMS with multiple revision.
+     */
+    private YsrRegisteredAppContext ysrRegisteredAppContextForSchemaMap;
 
     /**
      * Creates an instance of YANG schema registry.
@@ -124,30 +133,13 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
         return appObjectStore;
     }
 
-    public ConcurrentMap<String, Class<?>> getRegisterClassStore() {
+    /**
+     * Returns register class store.
+     *
+     * @return register class store.
+     */
+    private ConcurrentMap<String, Class<?>> getRegisterClassStore() {
         return registerClassStore;
-    }
-
-    public Class<?> getRegisteredClass(YangSchemaNode schemaNode, String appName) {
-        String interfaceName = schemaNode.getJavaPackage() + PERIOD +
-                getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType());
-        String serviceName = interfaceName + SERVICE;
-        String defaultClass = schemaNode.getJavaPackage() + PERIOD + DEFAULT
-                + getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType());
-        if (getRegisterClassStore().containsKey(appName)) {
-            return getRegisterClassStore().get(interfaceName);
-        } else if (getRegisterClassStore().containsKey(interfaceName)) {
-            return getRegisterClassStore().get(interfaceName);
-        } else if (getRegisterClassStore().containsKey(serviceName)) {
-            return getRegisterClassStore().get(serviceName);
-        } else if (getRegisterClassStore().containsKey(defaultClass)) {
-            return getRegisterClassStore().get(defaultClass);
-        }
-        return null;
-    }
-
-    public void updateServiceClass(Class<?> serviceClass) {
-        getRegisterClassStore().put(serviceClass.getName(), serviceClass);
     }
 
     /**
@@ -155,7 +147,7 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
      *
      * @return schema store
      */
-    public ConcurrentMap<String, YsrRegisteredAppContext> getYangSchemaStore() {
+    private ConcurrentMap<String, YsrRegisteredAppContext> getYangSchemaStore() {
         return yangSchemaStore;
     }
 
@@ -198,6 +190,7 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
                 processApplicationContext(schemaNode, appObject);
             }
             ysrRegisteredAppContext().jarPath(jarPath);
+            ysrRegisteredAppContextForSchemaMap().jarPath(jarPath);
             //Store the YANG file handles.
             updateYangFileSet(jarPath);
             updateServiceClass(serviceClass);
@@ -206,49 +199,31 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
 
     @Override
     public void unRegisterApplication(Object managerObject, Class<?> serviceClass) {
+        YangSchemaNode curNode = null;
+        String appName = serviceClass.getName();
 
+        //check if service is in app store.
         if (getAppObjectStore().containsKey(serviceClass.getName())) {
-            YsrRegisteredAppContext curContext = getAppObjectStore().get(serviceClass.getName());
-            YangSchemaNode curNode = curContext.curNode();
-            String appName = curNode.getJavaPackage() + PERIOD +
+            curNode = retrieveNodeForUnregister(appName, getAppObjectStore());
+        } else if (getYangSchemaStoreForRootInterface().containsKey(serviceClass.getName())) {
+            //check if service is in interface store.
+            curNode = retrieveNodeForUnregister(appName, getYangSchemaStoreForRootInterface());
+        } else if (getYangSchemaStoreForRootOpParam().containsKey(serviceClass.getName())) {
+            //check if service is in op param store.
+            curNode = retrieveNodeForUnregister(appName, getYangSchemaStoreForRootOpParam());
+        }
+        if (curNode != null) {
+            String javaName = curNode.getJavaPackage() + PERIOD +
                     getCapitalCase(curNode.getJavaClassNameOrBuiltInType());
-            //Delete all the generated ysr information in application's package.
-            if (curContext.jarPath() != null) {
-                File jarPath = new File(curContext.jarPath());
-                if (jarPath.exists()) {
-                    try {
-                        deleteDirectory(new File(curContext.jarPath()));
-                    } catch (IOException e) {
-                        log.error("failed to delete ysr resources for " + serviceClass.getName());
-                        e.printStackTrace();
-                    }
-                }
-            }
-            //Remove entry from maps.
-            if (getYangSchemaStore().containsKey(curNode.getName())) {
-                removeSchemaNode(curNode);
-            }
-            //Remove from notification store.
-            if (getYangSchemaNotificationStore()
-                    .containsKey(appName.toLowerCase() + PERIOD +
-                                         getCapitalCase(curNode.getJavaClassNameOrBuiltInType() + EVENT_STRING))) {
-                getYangSchemaNotificationStore()
-                        .remove(appName.toLowerCase() + PERIOD +
-                                        getCapitalCase(curNode.getJavaClassNameOrBuiltInType() + EVENT_STRING));
-            }
-            //Remove from op param store.
-            if (getYangSchemaStoreForRootOpParam()
-                    .containsKey(appName + OP_PARAM)) {
-                getYangSchemaStoreForRootOpParam()
-                        .remove(appName + OP_PARAM);
-            }
-            //Remove from root interface store.
-            if (getYangSchemaStoreForRootInterface()
-                    .containsKey(appName)) {
-                getYangSchemaStoreForRootInterface().remove(appName);
-            }
-            getAppObjectStore().remove(serviceClass.getName());
+            removeFromYangSchemaStore(curNode);
+            removeFromYangNotificationStore(curNode, javaName);
+            removeFromAppSchemaStore(appName);
+            removeFromYangSchemaNodeForRootInterface(javaName);
+            removeFromYangSchemaNodeForRootOpParam(javaName);
             log.info("YSR: service " + serviceClass.getSimpleName() + " is unregistered.");
+        } else {
+            log.error("YSR: service " + serviceClass.getSimpleName() + " is " +
+                              "not registered.");
         }
     }
 
@@ -310,9 +285,44 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
         return null;
     }
 
-    @Override
-    public ConcurrentMap<String, YsrRegisteredAppContext> getNotificationSchemaMap() {
+    public Class<?> getRegisteredClass(YangSchemaNode schemaNode, String appName) {
+        String interfaceName = schemaNode.getJavaPackage() + PERIOD +
+                getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType());
+        String serviceName = interfaceName + SERVICE;
+        String defaultClass = schemaNode.getJavaPackage() + PERIOD + DEFAULT
+                + getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType());
+        //If application class is registered.
+        if (getRegisterClassStore().containsKey(appName)) {
+            return getRegisterClassStore().get(interfaceName);
+        } else if (getRegisterClassStore().containsKey(interfaceName)) {
+            //If interface class is registered.
+            return getRegisterClassStore().get(interfaceName);
+        } else if (getRegisterClassStore().containsKey(serviceName)) {
+            //If service class is registered.
+            return getRegisterClassStore().get(serviceName);
+        } else if (getRegisterClassStore().containsKey(defaultClass)) {
+            //If default class is registered.
+            return getRegisterClassStore().get(defaultClass);
+        }
+        return null;
+    }
+
+    /**
+     * Returns notification schema store.
+     *
+     * @return notification schema store
+     */
+    private ConcurrentMap<String, YsrRegisteredAppContext> getNotificationSchemaMap() {
         return getYangSchemaNotificationStore();
+    }
+
+    /**
+     * Updates service class store.
+     *
+     * @param serviceClass service class
+     */
+    void updateServiceClass(Class<?> serviceClass) {
+        getRegisterClassStore().put(serviceClass.getName(), serviceClass);
     }
 
     /**
@@ -372,6 +382,7 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
             for (File curFile : fileArray) {
                 if (curFile.getName().endsWith(YANG)) {
                     ysrRegisteredAppContext().addToYangFileSet(curFile);
+                    ysrRegisteredAppContextForSchemaMap().addToYangFileSet(curFile);
                 }
             }
         }
@@ -411,8 +422,10 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
         //Search the YANG node.
         //Create a new instance of ysr app context for each node.
         ysrRegisteredAppContext(new YsrRegisteredAppContext());
+        ysrRegisteredAppContextForSchemaMap(new YsrRegisteredAppContext());
         if (appObject != null) {
             ysrRegisteredAppContext().appObject(appObject);
+            ysrRegisteredAppContextForSchemaMap().appObject(appObject);
         }
 
         appName = appNode.getJavaPackage() + PERIOD +
@@ -590,12 +603,12 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
         //check if already present.
         YangRevision revision = ((YangNode) schemaNode).getRevision();
         if (!getYangSchemaStore().containsKey(schemaNode.getName())) {
-            ysrRegisteredAppContext().curNode(schemaNode);
+            ysrRegisteredAppContextForSchemaMap().curNode(schemaNode);
             //if revision is not present no need to add in revision store.
             if (revision != null) {
-                ysrRegisteredAppContext().addSchemaNodeWithRevisionStore(name, schemaNode);
+                ysrRegisteredAppContextForSchemaMap().addSchemaNodeWithRevisionStore(name, schemaNode);
             }
-            getYangSchemaStore().put(schemaNode.getName(), ysrRegisteredAppContext());
+            getYangSchemaStore().put(schemaNode.getName(), ysrRegisteredAppContextForSchemaMap());
         } else {
             YsrRegisteredAppContext appContext = getYangSchemaStore().get(schemaNode.getName());
             //check if old node has revision
@@ -643,19 +656,45 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
     /**
      * Removes schema node from schema map.
      *
-     * @param schemaNode schema node
+     * @param removableNode schema node which needs to be removed
      */
-    private void removeSchemaNode(YangSchemaNode schemaNode) {
-        YsrRegisteredAppContext appContext = getYangSchemaStore().get(schemaNode.getName());
-        if (((YangNode) appContext.curNode()).getRevision() != null) {
+    private void removeSchemaNode(YangSchemaNode removableNode) {
+        YsrRegisteredAppContext appContext = getYangSchemaStore().get(removableNode.getName());
+
+        YangRevision curNodeRev = ((YangNode) appContext.curNode()).getRevision();
+        YangRevision removeNodeRev = ((YangNode) removableNode).getRevision();
+        String name = removableNode.getName() + "@" +
+                getDateInStringFormat(removableNode);
+        //Remove in case old revision node need to be deleted.
+        if (curNodeRev != null && removeNodeRev != null) {
+            if (curNodeRev.compareTo(removeNodeRev) != 0) {
+                appContext.removeSchemaNodeForRevisionStore(name);
+            } else {
+                handleSchemaNodeWhenRevEntryExists(appContext, name);
+            }
+        } else if (curNodeRev == null && removeNodeRev != null) {
+            appContext.removeSchemaNodeForRevisionStore(name);
+        } else if (curNodeRev != null) {
+            // if old rev is not null but current rev is null.
+            //If current node has a revision.
             if (!appContext.getYangSchemaNodeForRevisionStore().isEmpty()) {
-                handleSchemaNodeWhenRevEntryExists(appContext, schemaNode.getName());
+                handleSchemaNodeWhenRevEntryExists(appContext, removableNode.getName());
             }
         } else {
+            //If current node does not have a revision.
             if (appContext.getYangSchemaNodeForRevisionStore().isEmpty()) {
-                getYangSchemaStore().remove(schemaNode.getName());
+                //If current node does not have a revision and no other version is stored.
+                getYangSchemaStore().remove(removableNode.getName());
+            } else if (appContext.getYangSchemaNodeForRevisionStore().size() == 1) {
+                //If current node does not have a revision and only one other revision is present.
+                //then need to update the current node with old latest node.
+                for (Map.Entry<String, YangSchemaNode> entry :
+                        appContext.getYangSchemaNodeForRevisionStore().entrySet()) {
+                    appContext.curNode(entry.getValue());
+                }
             } else {
-                handleSchemaNodeWhenRevEntryExists(appContext, schemaNode.getName());
+                //If current node does not have a revision and multiple revision are present.
+                handleSchemaNodeWhenRevEntryExists(appContext, removableNode.getName());
             }
         }
     }
@@ -669,9 +708,12 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
     private void handleSchemaNodeWhenRevEntryExists(YsrRegisteredAppContext appContext, String name) {
         ConcurrentMap<String, YangSchemaNode> schemaRevStore = appContext.getYangSchemaNodeForRevisionStore();
         YangSchemaNode approvedNode = null;
+        // if only one entry in store then need to delete completely.
         if (schemaRevStore.size() == 1) {
-            getYangSchemaStore().remove(name);
+            getYangSchemaStore().remove(appContext.curNode().getName());
         } else {
+            // if only one entry in store then need to find the old latest node
+            // and update current node for that.
             Iterator<YangSchemaNode> iterator = schemaRevStore.values().iterator();
             YangNode prevNode = (YangNode) iterator.next();
             YangRevision preRev;
@@ -681,18 +723,18 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
                 nextNode = (YangNode) iterator.next();
                 preRev = prevNode.getRevision();
                 nextRev = nextNode.getRevision();
+                //If prevNode has latest revision then approved node should be prevNode.
                 if (preRev.getRevDate().compareTo(nextRev.getRevDate()) > 0) {
                     approvedNode = prevNode;
                 } else {
+                    //If nextNode has latest revision then approved node should be nextNode.
                     approvedNode = nextNode;
                 }
                 prevNode = (YangNode) approvedNode;
             }
             if (approvedNode != null) {
+                //Update current node with approved node.
                 appContext.curNode(approvedNode);
-                name = approvedNode.getName() + "@" +
-                        getDateInStringFormat(approvedNode);
-                schemaRevStore.remove(name);
             }
         }
 
@@ -722,5 +764,112 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
         }
         return false;
 
+    }
+
+    /**
+     * Returns YSR application context for schema map.
+     *
+     * @return YSR application context for schema map
+     */
+    private YsrRegisteredAppContext ysrRegisteredAppContextForSchemaMap() {
+        return ysrRegisteredAppContextForSchemaMap;
+    }
+
+    /**
+     * Sets YSR application context for schema map.
+     *
+     * @param ysrRegisteredAppContextForSchemaMap YSR application context for schema map
+     */
+    private void ysrRegisteredAppContextForSchemaMap(YsrRegisteredAppContext ysrRegisteredAppContextForSchemaMap) {
+        this.ysrRegisteredAppContextForSchemaMap = ysrRegisteredAppContextForSchemaMap;
+    }
+
+
+    /**
+     * Retrieves schema node from the store and deletes jar file path.
+     *
+     * @param appName application name
+     * @param store   YSR stores
+     * @return schema node from the store
+     */
+    private YangSchemaNode retrieveNodeForUnregister(String appName,
+                                                     ConcurrentMap<String, YsrRegisteredAppContext> store) {
+        YsrRegisteredAppContext curContext = store.get(appName);
+        YangSchemaNode curNode = curContext.curNode();
+        //Delete all the generated ysr information in application's package.
+        if (curContext.jarPath() != null) {
+            File jarPath = new File(curContext.jarPath());
+            if (jarPath.exists()) {
+                try {
+                    deleteDirectory(new File(curContext.jarPath()));
+                } catch (IOException e) {
+                    log.error("failed to delete ysr resources for " + appName);
+                    e.printStackTrace();
+                }
+            }
+        }
+        return curNode;
+    }
+
+    /**
+     * Removes from YANG schema store.
+     *
+     * @param curNode schema node
+     */
+    private void removeFromYangSchemaStore(YangSchemaNode curNode) {
+        if (getYangSchemaStore().containsKey(curNode.getName())) {
+            removeSchemaNode(curNode);
+        }
+    }
+
+    /**
+     * Removes from YANG schema  notification store.
+     *
+     * @param curNode schema node
+     */
+    private void removeFromYangNotificationStore(YangSchemaNode curNode, String appName) {
+        appName = appName.toLowerCase() + PERIOD +
+                getCapitalCase(curNode.getJavaClassNameOrBuiltInType()) + EVENT_STRING;
+        if (getYangSchemaNotificationStore()
+                .containsKey(appName)) {
+            getYangSchemaNotificationStore()
+                    .remove(appName);
+        }
+    }
+
+    /**
+     * Removes from app store.
+     *
+     * @param appName application name
+     */
+    private void removeFromAppSchemaStore(String appName) {
+        if (getAppObjectStore().containsKey(appName)) {
+            getAppObjectStore().remove(appName);
+        }
+    }
+
+    /**
+     * Removes from interface store.
+     *
+     * @param appName application name
+     */
+    private void removeFromYangSchemaNodeForRootInterface(String appName) {
+        if (getYangSchemaStoreForRootInterface()
+                .containsKey(appName)) {
+            getYangSchemaStoreForRootInterface().remove(appName);
+        }
+    }
+
+    /**
+     * Removes from op param store.
+     *
+     * @param appName application name
+     */
+    private void removeFromYangSchemaNodeForRootOpParam(String appName) {
+        if (getYangSchemaStoreForRootOpParam()
+                .containsKey(appName + OP_PARAM)) {
+            getYangSchemaStoreForRootOpParam()
+                    .remove(appName + OP_PARAM);
+        }
     }
 }

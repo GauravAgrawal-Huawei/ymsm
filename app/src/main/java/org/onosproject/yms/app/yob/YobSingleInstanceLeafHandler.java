@@ -16,9 +16,6 @@
 
 package org.onosproject.yms.app.yob;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import org.onosproject.yangutils.datamodel.YangLeaf;
 import org.onosproject.yangutils.datamodel.YangType;
 import org.onosproject.yangutils.datamodel.javadatamodel.JavaQualifiedTypeInfoContainer;
@@ -26,6 +23,10 @@ import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import static org.onosproject.yms.app.ydt.AppType.YOB;
 
@@ -37,8 +38,7 @@ class YobSingleInstanceLeafHandler extends YobHandler {
     private static final Logger log = LoggerFactory.getLogger(YobSingleInstanceLeafHandler.class);
 
     @Override
-    public void createYangBuilderObject(YdtExtendedContext ydtExtendedContext, YdtExtendedContext ydtRootNode,
-                                        YangSchemaRegistry registry) {
+    public void createYangBuilderObject(YdtExtendedContext ydtExtendedContext, YdtExtendedContext ydtRootNode, YangSchemaRegistry registry){
         // For single instance leaf no need to create an object.
     }
 
@@ -49,12 +49,12 @@ class YobSingleInstanceLeafHandler extends YobHandler {
 
     @Override
     public void setObjectInParent(YdtExtendedContext ydtExtendedContext) {
-        String setterMethodNameInParent;
-        Method parentSetterMethod = null;
-        String leafValue = ydtExtendedContext.getValue();
+        String         setterMethodNameInParent;
+        Method         parentSetterMethod = null;
+        String         leafValue = ydtExtendedContext.getValue();
 
         try {
-            setterMethodNameInParent = ydtExtendedContext.getYangSchemaNode().getJavaAttributeName();
+            setterMethodNameInParent =  ydtExtendedContext.getYangSchemaNode().getJavaAttributeName();
             YdtExtendedContext parentNode = (YdtExtendedContext) ydtExtendedContext.getParent();
             Object parentBuilderObject = parentNode.getAppInfo(YOB);
             Class<?> parentBuilderClass = parentBuilderObject.getClass();
@@ -63,7 +63,7 @@ class YobSingleInstanceLeafHandler extends YobHandler {
             JavaQualifiedTypeInfoContainer javaQualifiedTypeInfoContainer
                     = (JavaQualifiedTypeInfoContainer) ydtExtendedContext.getYangSchemaNode();
             YangLeaf yangLeaf = (YangLeaf) javaQualifiedTypeInfoContainer;
-            YangType<?> yangType = yangLeaf.getDataType();
+            YangType<?>  yangType = yangLeaf.getDataType();
             setDataFromStringValue(yangType, leafValue, parentSetterMethod,
                     parentBuilderObject, ydtExtendedContext);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | NoSuchFieldException e) {

@@ -18,8 +18,6 @@ package org.onosproject.yms.app.ysr;
 
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 
-import java.util.concurrent.ConcurrentMap;
-
 /**
  * Abstraction of entity which provides interfaces to YANG schema registry.
  */
@@ -90,11 +88,9 @@ public interface YangSchemaRegistry {
     YangSchemaNode getRootYangSchemaNodeForNotification(String eventSubject);
 
     /**
-     * Returns notification schema store.
+     * Returns registered service class.
      *
-     * @return notification schema store
+     * @return registered service class
      */
-    ConcurrentMap<String, YsrRegisteredAppContext> getNotificationSchemaMap();
-
     Class<?> getRegisteredClass(YangSchemaNode schemaNode, String appName);
 }

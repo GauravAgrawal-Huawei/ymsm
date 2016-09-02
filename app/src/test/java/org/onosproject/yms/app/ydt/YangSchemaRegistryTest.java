@@ -16,12 +16,10 @@
 
 package org.onosproject.yms.app.ydt;
 
-import java.util.concurrent.ConcurrentMap;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry;
 import org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
-import org.onosproject.yms.app.ysr.YsrRegisteredAppContext;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -83,11 +81,6 @@ public class YangSchemaRegistryTest implements YangSchemaRegistry {
 
     @Override
     public YangSchemaNode getRootYangSchemaNodeForNotification(String eventSubject) {
-        return null;
-    }
-
-    @Override
-    public ConcurrentMap<String, YsrRegisteredAppContext> getNotificationSchemaMap() {
         return null;
     }
 
