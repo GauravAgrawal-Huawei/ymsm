@@ -30,6 +30,8 @@ import org.onosproject.core.ApplicationId;
 import org.onosproject.core.CoreService;
 import org.onosproject.event.ListenerService;
 import org.onosproject.yms.app.yab.YangApplicationBroker;
+import org.onosproject.yms.app.ych.DefaultYangCodecHandler;
+import org.onosproject.yms.app.ych.codecutils.YchYangDataTreeCodec;
 import org.onosproject.yms.app.ydt.DefaultYdtWalker;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ynh.YangNotificationExtendedService;
@@ -50,6 +52,8 @@ import org.onosproject.yms.ysr.YangModuleLibrary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
 import static org.onlab.util.Tools.groupedThreads;
 
 /**
@@ -67,7 +71,7 @@ public class YmsManager
     private ExecutorService schemaRegistryExecutor;
     private static final String APP_ID = "org.onosproject.app.yms";
     private YangNotificationExtendedService yangNotificationExtendedService;
-
+    private Map<YangProtocolEncodingFormat, YangDataTreeCodec> defaultCodecs = new HashMap<>();
     @Reference(cardinality = ReferenceCardinality.MANDATORY_UNARY)
     protected CoreService coreService;
 
@@ -75,6 +79,8 @@ public class YmsManager
     public void activate() {
         appId = coreService.registerApplication(APP_ID);
         schemaRegistry = new DefaultYangSchemaRegistry();
+        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
+        defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING, yangDataTreeCodec);
         schemaRegistryExecutor = Executors.newSingleThreadExecutor(
                 groupedThreads(
                         "onos/apps/yang-management-system/schema-registry",
@@ -199,7 +205,19 @@ public class YmsManager
 
     @Override
     public YangCodecHandler getYangCodecHandler() {
-        return null;
+
+        /*
+         * Create a new schema registry for new code handler instance
+         */
+        YangSchemaRegistry yangSchemaRegistry = new DefaultYangSchemaRegistry();
+
+        /*
+         * Create a new codec handler for the provider / driver
+         */
+        DefaultYangCodecHandler defaultYangCodecHandler = new DefaultYangCodecHandler(yangSchemaRegistry,
+                                                                                      defaultCodecs);
+
+        return defaultYangCodecHandler;
     }
 
     /**
