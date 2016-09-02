@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.onosproject.yangutils.datamodel.YangList;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeContextInfo;
@@ -130,7 +129,7 @@ public class YangRequestWorkBench
      * @param rootNode refers to root node
      */
     private void setRootNode(YdtNode rootNode) {
-        // Setting the root node
+        // Setting the root node.
         this.rootNode = rootNode;
         curNode = this.rootNode;
     }
@@ -197,10 +196,10 @@ public class YangRequestWorkBench
         // Checking the YdtType and processing it accordingly.
         if (ydtType == YdtType.MULTI_INSTANCE_NODE) {
             addChild(name, namespace, RequestedCardinality.MULTI_INSTANCE, null,
-                     false);
+                    false);
         } else {
             addChild(name, namespace, RequestedCardinality.SINGLE_INSTANCE,
-                     null, false);
+                    null, false);
         }
     }
 
@@ -217,10 +216,10 @@ public class YangRequestWorkBench
         // Checking the YdtType and processing it accordingly.
         if (ydtType == YdtType.MULTI_INSTANCE_NODE) {
             addChild(name, namespace, RequestedCardinality.MULTI_INSTANCE,
-                     opType, false);
+                    opType, false);
         } else {
             addChild(name, namespace, RequestedCardinality.SINGLE_INSTANCE,
-                     opType, false);
+                    opType, false);
         }
     }
 
@@ -317,7 +316,7 @@ public class YangRequestWorkBench
                 if (childSchemaNodeInfo.getContextSwitchedNode() != null) {
                     lastAugmentingModuleNode =
                             curAppNode.getAugmentingSchemaNode(nodeIdentifier,
-                                                               childSchemaNodeInfo);
+                                    childSchemaNodeInfo);
                     if (lastAugmentingModuleNode != null) {
                         if (curAppNode
                                 .addYdtAppTreeSet(lastAugmentingModuleNode)) {
@@ -341,7 +340,7 @@ public class YangRequestWorkBench
 
             // Get the ydtNode of respective type.
             childNode = YdtNodeFactory.getNode(nodeIdentifier, yangSchemaNode,
-                                               requestedCardinality, isLeaf);
+                    requestedCardinality, isLeaf);
         }
 
         // Update node identifier.
@@ -371,7 +370,7 @@ public class YangRequestWorkBench
         if ((curNode == rootNode) || (isContextSwitch)) {
             // Add application context switched child in ydt App tree.
             addChildInAppTree(childNode, lastAugmentingModuleNode, opType,
-                              isContextSwitch);
+                    isContextSwitch);
         }
 
         // Update app tree module node operation.
@@ -609,18 +608,18 @@ public class YangRequestWorkBench
                 // Free resources
                 curNode.freeRestResources();
                 throw new YdtExceptions("Too many key parameter in " +
-                                                curNode.getYdtNodeIdentifier()
-                                                        .getName() +
-                                                ". Expected fixed count " +
-                                                schemaKeyList.size() + ".");
+                        curNode.getYdtNodeIdentifier()
+                                .getName() +
+                        ". Expected fixed count " +
+                        schemaKeyList.size() + ".");
             } else if (schemaKeyList.size() > keysValueList.size()) {
                 // Free resources
                 curNode.freeRestResources();
                 throw new YdtExceptions("Too few key parameter in " +
-                                                curNode.getYdtNodeIdentifier()
-                                                        .getName() +
-                                                ". Expected fixed count " +
-                                                schemaKeyList.size() + ".");
+                        curNode.getYdtNodeIdentifier()
+                                .getName() +
+                        ". Expected fixed count " +
+                        schemaKeyList.size() + ".");
             }
 
             // Iterator for user given key value.
@@ -685,8 +684,8 @@ public class YangRequestWorkBench
         // Get the ydtNode of respective type.
         childNode = YdtNodeFactory
                 .getYangSchemaNodeTypeSpecificContext(nodeIdentifier,
-                                                      yangSchemaNode
-                                                              .getYangSchemaNodeType());
+                        yangSchemaNode
+                                .getYangSchemaNodeType());
 
         // Update node identifier.
         childNode.setNodeIdentifier(nodeIdentifier);
