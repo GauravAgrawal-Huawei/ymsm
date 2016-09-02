@@ -16,10 +16,11 @@
 
 package org.onosproject.yms.app.ymsm;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Deactivate;
@@ -51,12 +52,6 @@ import org.onosproject.yms.ysr.YangModuleIdentifier;
 import org.onosproject.yms.ysr.YangModuleLibrary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static org.onlab.util.Tools.groupedThreads;
 
@@ -105,7 +100,7 @@ public class YmsManager
                                     String rootNamespace,
                                     YmsOperationType operationType) {
         return new YangRequestWorkBench(logicalRootName, rootNamespace,
-                                        operationType, schemaRegistry, true);
+                operationType, schemaRegistry, true);
     }
 
     @Override
@@ -115,14 +110,14 @@ public class YmsManager
                                     Object schemaRegistryForYdt) {
         if (schemaRegistryForYdt != null) {
             return new YangRequestWorkBench(logicalRootName, rootNamespace,
-                                            operationType,
-                                            (YangSchemaRegistry)
-                                                    schemaRegistryForYdt,
-                                            false);
+                    operationType,
+                    (YangSchemaRegistry)
+                            schemaRegistryForYdt,
+                    false);
         } else {
             return new YangRequestWorkBench(logicalRootName, rootNamespace,
-                                            operationType, this.schemaRegistry,
-                                            true);
+                    operationType, this.schemaRegistry,
+                    true);
         }
     }
 
@@ -164,8 +159,7 @@ public class YmsManager
      *
      * @return YANG notification extended service
      */
-    public YangNotificationExtendedService getYangNotificationExtendedService
-    () {
+    public YangNotificationExtendedService getYangNotificationExtendedService() {
         return yangNotificationExtendedService;
     }
 
@@ -218,7 +212,7 @@ public class YmsManager
          * Create a new codec handler for the provider / driver
          */
         DefaultYangCodecHandler defaultYangCodecHandler = new DefaultYangCodecHandler(yangSchemaRegistry,
-                                                                                      defaultCodecs);
+                defaultCodecs);
 
         return defaultYangCodecHandler;
     }

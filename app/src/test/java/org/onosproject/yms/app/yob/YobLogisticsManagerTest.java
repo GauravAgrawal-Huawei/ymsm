@@ -16,15 +16,14 @@
 
 package org.onosproject.yms.app.yob;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import org.junit.Test;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.ydt.YdtTestUtils;
 import org.onosproject.yms.ydt.YdtContext;
-
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
@@ -41,7 +40,8 @@ public class YobLogisticsManagerTest {
         while (ydtContext1 != null) {
             DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
 
-            Object yangObject = defaultYobBuilder.getYangObject((YdtExtendedContext) ydtContext1, YdtTestUtils.getSchemaRegistry());
+            Object yangObject = defaultYobBuilder.getYangObject((YdtExtendedContext) ydtContext1,
+                    YdtTestUtils.getSchemaRegistry());
             Class<?> aClass = yangObject.getClass();
             if (aClass.getSimpleName().equals("CustomssupervisorOpParam")) {
                 try {

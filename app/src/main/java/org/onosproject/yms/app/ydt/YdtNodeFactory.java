@@ -39,11 +39,12 @@ final class YdtNodeFactory {
      * @param nodeIdentifier       dataNodeIdentifier of data tree node
      * @param yangSchemaNode       data node as per YANG schema metadata
      * @param requestedCardinality requested cardinality of node
-     * @param isLeaf               call type false for addChild and true for addLeaf
+     * @param callType             call type to identify the its a leaf node or other node
      * @return YANG data tree node
      */
     public static YdtNode getNode(YangSchemaNodeIdentifier nodeIdentifier, YangSchemaNode yangSchemaNode,
-                                  RequestedCardinality requestedCardinality, boolean isLeaf) {
+                                  RequestedCardinality requestedCardinality, RequestedCallType
+                                          callType) {
 
         YdtNode newNode;
         YangSchemaNodeType yangSchemaNodeType = yangSchemaNode.getYangSchemaNodeType();
@@ -55,7 +56,7 @@ final class YdtNodeFactory {
                  * if requested node type is UNKNOWN, check corresponding yang data node type
                  * and create respective type node.
                  */
-                newNode = getYangSchemaNodeTypeSpecificContext(nodeIdentifier, yangSchemaNodeType, isLeaf);
+                newNode = getYangSchemaNodeTypeSpecificContext(nodeIdentifier, yangSchemaNodeType, callType);
                 break;
 
             /**
@@ -115,39 +116,56 @@ final class YdtNodeFactory {
      *
      * @param nodeIdentifier     node identifier of data tree node
      * @param yangSchemaNodeType schema node type as per YANG schema metadata
-     * @param isLeaf             call type "false" for addChild & "true" for addLeaf
+     * @param callType           call type to identify the its a leaf node or other node
      * @return YANG data tree node
      */
     private static YdtNode getYangSchemaNodeTypeSpecificContext(YangSchemaNodeIdentifier nodeIdentifier,
-                                                                YangSchemaNodeType yangSchemaNodeType, boolean isLeaf) {
+                                                               YangSchemaNodeType yangSchemaNodeType, RequestedCallType
+                                                                       callType) {
+        switch (callType) {
+            case LEAF:
+                switch (yangSchemaNodeType) {
 
+                    case YANG_SINGLE_INSTANCE_LEAF_NODE:
+                        return new YdtSingleInstanceLeafNode(nodeIdentifier);
 
-        if (isLeaf) {
-            switch (yangSchemaNodeType) {
+                    case YANG_MULTI_INSTANCE_LEAF_NODE:
+                        return new YdtMultiInstanceLeafNode(nodeIdentifier);
 
-                case YANG_SINGLE_INSTANCE_LEAF_NODE:
-                    return new YdtSingleInstanceLeafNode(nodeIdentifier);
+                    default:
+                        String errorInfo = "Schema node with name " + nodeIdentifier.getName() + " doesn't exist.";
+                        throw new YdtExceptions(errorInfo);
+                }
 
-                case YANG_MULTI_INSTANCE_LEAF_NODE:
-                    return new YdtMultiInstanceLeafNode(nodeIdentifier);
+            case OTHER:
+                switch (yangSchemaNodeType) {
 
-                default:
-                    String errorInfo = "Schema node with name " + nodeIdentifier.getName() + " doesn't exist.";
-                    throw new YdtExceptions(errorInfo);
-            }
-        } else {
-            switch (yangSchemaNodeType) {
+                    case YANG_SINGLE_INSTANCE_NODE:
+                        return new YdtSingleInstanceNode(nodeIdentifier);
 
-                case YANG_SINGLE_INSTANCE_NODE:
-                    return new YdtSingleInstanceNode(nodeIdentifier);
+                    case YANG_MULTI_INSTANCE_NODE:
+                        return new YdtMultiInstanceNode(nodeIdentifier);
 
-                case YANG_MULTI_INSTANCE_NODE:
-                    return new YdtMultiInstanceNode(nodeIdentifier);
+                    default:
+                        String errorInfo = "Schema node with name " + nodeIdentifier.getName() + " doesn't exist.";
+                        throw new YdtExceptions(errorInfo);
+                }
+            case UNKNOWN:
+                switch (yangSchemaNodeType) {
 
-                default:
-                    String errorInfo = "Schema node with name " + nodeIdentifier.getName() + " doesn't exist.";
-                    throw new YdtExceptions(errorInfo);
-            }
+                    case YANG_MULTI_INSTANCE_LEAF_NODE:
+                        return new YdtMultiInstanceLeafNode(nodeIdentifier);
+
+                    case YANG_MULTI_INSTANCE_NODE:
+                        return new YdtMultiInstanceNode(nodeIdentifier);
+
+                    default:
+                        String errorInfo = "Schema node with name " + nodeIdentifier.getName() + " doesn't exist.";
+                        throw new YdtExceptions(errorInfo);
+                }
+            default:
+                String errorInfo = "Schema node with name " + nodeIdentifier.getName() + " doesn't exist.";
+                throw new YdtExceptions(errorInfo);
         }
 
     }

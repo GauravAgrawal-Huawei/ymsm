@@ -17,6 +17,13 @@
 package org.onosproject.yms.app.yob;
 
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import org.onosproject.yangutils.datamodel.RpcNotificationContainer;
 import org.onosproject.yangutils.datamodel.YangBinary;
 import org.onosproject.yangutils.datamodel.YangNode;
@@ -27,14 +34,6 @@ import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 
 import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
 import static org.onosproject.yms.app.ydt.AppType.YOB;
@@ -63,7 +62,8 @@ public abstract class YobHandler {
      * @param ydtRootNode        ydtRootNode is refers to module node
      * @param registry
      */
-    public void createYangBuilderObject(YdtExtendedContext ydtExtendedContext, YdtExtendedContext ydtRootNode, YangSchemaRegistry registry) {
+    public void createYangBuilderObject(YdtExtendedContext ydtExtendedContext, YdtExtendedContext ydtRootNode,
+                                        YangSchemaRegistry registry) {
         String packageName;
         String className;
         Class<?> yangDefaultClass = null;
@@ -127,8 +127,10 @@ public abstract class YobHandler {
                     ParameterizedType genericListType = (ParameterizedType) leafName.getGenericType();
                     Class<?> genericListClass = (Class<?>) genericListType.getActualTypeArguments()[0];
                     method = yangParentClass.getDeclaredMethod(ADDTO +
-                                                                       getCapitalCase(ydtExtendedContext.getYangSchemaNode().getJavaAttributeName()),
-                                                               genericListClass);
+                                    getCapitalCase(ydtExtendedContext
+                                            .getYangSchemaNode()
+                                            .getJavaAttributeName()),
+                            genericListClass);
                 } else {
                     method = yangParentClass.getDeclaredMethod(
                             ydtExtendedContext.getYangSchemaNode().getJavaAttributeName(), leafName.getType());
@@ -171,7 +173,9 @@ public abstract class YobHandler {
                     Method valueOfMethod = innerEnumClass.getDeclaredMethod(VALUEOF, String.class);
                     if (ydtExtendedContext.getYdtContextOperationType() != null) {
                         ydtContextOperationType = valueOfMethod.invoke(null,
-                                                                       ydtExtendedContext.getYdtContextOperationType().toString());
+                                ydtExtendedContext
+                                        .getYdtContextOperationType()
+                                        .toString());
                     }
                 }
             }

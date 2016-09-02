@@ -16,13 +16,12 @@
 
 package org.onosproject.yms.app.yob;
 
+import java.io.IOException;
 import org.junit.Test;
-import org.onosproject.yms.app.ydt.YdtTestUtils;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
+import org.onosproject.yms.app.ydt.YdtTestUtils;
 import org.onosproject.yms.ydt.YdtContext;
-
-import java.io.IOException;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -42,7 +41,8 @@ public class YobIetfNetworkTest {
 
         DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
 
-        Object yangObject = defaultYobBuilder.getYangObject((YdtExtendedContext) ydtContext1, YdtTestUtils.getSchemaRegistry());
+        Object yangObject = defaultYobBuilder.getYangObject((YdtExtendedContext) ydtContext1,
+                YdtTestUtils.getSchemaRegistry());
         assertNotNull(yangObject);
         //TODO yangObject need to verify
     }

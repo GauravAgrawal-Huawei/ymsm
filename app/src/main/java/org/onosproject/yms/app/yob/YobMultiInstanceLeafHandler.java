@@ -17,6 +17,11 @@
 package org.onosproject.yms.app.yob;
 
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.util.Set;
 import org.onosproject.yangutils.datamodel.YangLeafList;
 import org.onosproject.yangutils.datamodel.YangType;
 import org.onosproject.yangutils.datamodel.javadatamodel.JavaQualifiedTypeInfoContainer;
@@ -24,12 +29,6 @@ import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.util.Set;
 
 import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
 import static org.onosproject.yms.app.ydt.AppType.YOB;
@@ -44,7 +43,8 @@ public class YobMultiInstanceLeafHandler extends YobHandler {
     private static final Logger log = LoggerFactory.getLogger(YobMultiInstanceLeafHandler.class);
 
     @Override
-    public void createYangBuilderObject(YdtExtendedContext ydtExtendedContext, YdtExtendedContext ydtRootNode, YangSchemaRegistry registry) {
+    public void createYangBuilderObject(YdtExtendedContext ydtExtendedContext, YdtExtendedContext ydtRootNode,
+                                        YangSchemaRegistry registry) {
         // For multi instance leaf no need to create an object.
     }
 
@@ -55,10 +55,10 @@ public class YobMultiInstanceLeafHandler extends YobHandler {
 
     @Override
     public void setObjectInParent(YdtExtendedContext ydtExtendedContext) {
-        String         setterMethodNameInParent;
-        Method         parentSetterMethod;
-        Class<?>       parentBuilderClass = null;
-        Set<String>    leafValueSet = ydtExtendedContext.getValueSet();
+        String setterMethodNameInParent;
+        Method parentSetterMethod;
+        Class<?> parentBuilderClass = null;
+        Set<String> leafValueSet = ydtExtendedContext.getValueSet();
 
         for (String leafValue : leafValueSet) {
             try {
@@ -75,7 +75,7 @@ public class YobMultiInstanceLeafHandler extends YobHandler {
                 JavaQualifiedTypeInfoContainer javaQualifiedTypeInfoContainer
                         = (JavaQualifiedTypeInfoContainer) ydtExtendedContext.getYangSchemaNode();
                 YangLeafList yangLeafList = (YangLeafList) javaQualifiedTypeInfoContainer;
-                YangType<?>  yangType = yangLeafList.getDataType();
+                YangType<?> yangType = yangLeafList.getDataType();
                 setDataFromStringValue(yangType, leafValue, parentSetterMethod,
                         parentBuilderObject, ydtExtendedContext);
             } catch (NoSuchMethodException | InvocationTargetException
