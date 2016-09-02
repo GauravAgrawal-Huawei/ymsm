@@ -44,7 +44,8 @@ public class YobMultiInstanceLeafHandler extends YobHandler {
     private static final Logger log = LoggerFactory.getLogger(YobMultiInstanceLeafHandler.class);
 
     @Override
-    public void createYangBuilderObject(YdtExtendedContext ydtExtendedContext, YdtExtendedContext ydtRootNode, YangSchemaRegistry registry) {
+    public void createYangBuilderObject(YdtExtendedContext ydtExtendedContext, YdtExtendedContext ydtRootNode,
+                                        YangSchemaRegistry registry) {
         // For multi instance leaf no need to create an object.
     }
 
@@ -55,10 +56,10 @@ public class YobMultiInstanceLeafHandler extends YobHandler {
 
     @Override
     public void setObjectInParent(YdtExtendedContext ydtExtendedContext) {
-        String         setterMethodNameInParent;
-        Method         parentSetterMethod;
-        Class<?>       parentBuilderClass = null;
-        Set<String>    leafValueSet = ydtExtendedContext.getValueSet();
+        String setterMethodNameInParent;
+        Method parentSetterMethod;
+        Class<?> parentBuilderClass = null;
+        Set<String> leafValueSet = ydtExtendedContext.getValueSet();
 
         for (String leafValue : leafValueSet) {
             try {
@@ -71,13 +72,13 @@ public class YobMultiInstanceLeafHandler extends YobHandler {
                 ParameterizedType genericListType = (ParameterizedType) leafName.getGenericType();
                 Class<?> genericListClass = (Class<?>) genericListType.getActualTypeArguments()[0];
                 parentSetterMethod = parentBuilderClass.getDeclaredMethod(ADDTO + setterMethodNameInParent,
-                        genericListClass);
+                                                                          genericListClass);
                 JavaQualifiedTypeInfoContainer javaQualifiedTypeInfoContainer
                         = (JavaQualifiedTypeInfoContainer) ydtExtendedContext.getYangSchemaNode();
                 YangLeafList yangLeafList = (YangLeafList) javaQualifiedTypeInfoContainer;
-                YangType<?>  yangType = yangLeafList.getDataType();
+                YangType<?> yangType = yangLeafList.getDataType();
                 setDataFromStringValue(yangType, leafValue, parentSetterMethod,
-                        parentBuilderObject, ydtExtendedContext);
+                                       parentBuilderObject, ydtExtendedContext);
             } catch (NoSuchMethodException | InvocationTargetException
                     | IllegalAccessException | NoSuchFieldException e) {
                 log.error("YOB: failed to invoke method for application " + parentBuilderClass.getSimpleName());

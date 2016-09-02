@@ -62,7 +62,8 @@ public abstract class YobHandler {
      * @param ydtRootNode        ydtRootNode is refers to module node
      * @param registry
      */
-    public void createYangBuilderObject(YdtExtendedContext ydtExtendedContext, YdtExtendedContext ydtRootNode, YangSchemaRegistry registry) {
+    public void createYangBuilderObject(YdtExtendedContext ydtExtendedContext, YdtExtendedContext ydtRootNode,
+                                        YangSchemaRegistry registry) {
         String packageName;
         String className;
         Class<?> yangDefaultClass = null;
@@ -125,9 +126,12 @@ public abstract class YobHandler {
                 if (ydtExtendedContext.getYdtType() == MULTI_INSTANCE_NODE) {
                     ParameterizedType genericListType = (ParameterizedType) leafName.getGenericType();
                     Class<?> genericListClass = (Class<?>) genericListType.getActualTypeArguments()[0];
-                    method = yangParentClass.getDeclaredMethod(ADDTO +
-                                                                       getCapitalCase(ydtExtendedContext.getYangSchemaNode().getJavaAttributeName()),
-                                                               genericListClass);
+                    method = yangParentClass
+                            .getDeclaredMethod(ADDTO +
+                                                       getCapitalCase(ydtExtendedContext
+                                                                              .getYangSchemaNode()
+                                                                              .getJavaAttributeName()),
+                                               genericListClass);
                 } else {
                     method = yangParentClass.getDeclaredMethod(
                             ydtExtendedContext.getYangSchemaNode().getJavaAttributeName(), leafName.getType());
@@ -169,8 +173,8 @@ public abstract class YobHandler {
                 if (innerEnumClass.getSimpleName().equals("OnosYangNodeOperationType")) {
                     Method valueOfMethod = innerEnumClass.getDeclaredMethod(VALUEOF, String.class);
                     if (ydtExtendedContext.getYdtContextOperationType() != null) {
-                        ydtContextOperationType = valueOfMethod.invoke(null,
-                                                                       ydtExtendedContext.getYdtContextOperationType().toString());
+                        ydtContextOperationType =
+                                valueOfMethod.invoke(null, ydtExtendedContext.getYdtContextOperationType().toString());
                     }
                 }
             }

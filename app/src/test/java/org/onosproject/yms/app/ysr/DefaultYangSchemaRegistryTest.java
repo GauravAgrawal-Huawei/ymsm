@@ -17,7 +17,6 @@
 package org.onosproject.yms.app.ysr;
 
 import org.junit.Test;
-import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 
 import java.io.IOException;

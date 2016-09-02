@@ -38,7 +38,8 @@ class YobSingleInstanceLeafHandler extends YobHandler {
     private static final Logger log = LoggerFactory.getLogger(YobSingleInstanceLeafHandler.class);
 
     @Override
-    public void createYangBuilderObject(YdtExtendedContext ydtExtendedContext, YdtExtendedContext ydtRootNode, YangSchemaRegistry registry){
+    public void createYangBuilderObject(YdtExtendedContext ydtExtendedContext, YdtExtendedContext ydtRootNode,
+                                        YangSchemaRegistry registry) {
         // For single instance leaf no need to create an object.
     }
 
@@ -49,12 +50,12 @@ class YobSingleInstanceLeafHandler extends YobHandler {
 
     @Override
     public void setObjectInParent(YdtExtendedContext ydtExtendedContext) {
-        String         setterMethodNameInParent;
-        Method         parentSetterMethod = null;
-        String         leafValue = ydtExtendedContext.getValue();
+        String setterMethodNameInParent;
+        Method parentSetterMethod = null;
+        String leafValue = ydtExtendedContext.getValue();
 
         try {
-            setterMethodNameInParent =  ydtExtendedContext.getYangSchemaNode().getJavaAttributeName();
+            setterMethodNameInParent = ydtExtendedContext.getYangSchemaNode().getJavaAttributeName();
             YdtExtendedContext parentNode = (YdtExtendedContext) ydtExtendedContext.getParent();
             Object parentBuilderObject = parentNode.getAppInfo(YOB);
             Class<?> parentBuilderClass = parentBuilderObject.getClass();
@@ -63,9 +64,9 @@ class YobSingleInstanceLeafHandler extends YobHandler {
             JavaQualifiedTypeInfoContainer javaQualifiedTypeInfoContainer
                     = (JavaQualifiedTypeInfoContainer) ydtExtendedContext.getYangSchemaNode();
             YangLeaf yangLeaf = (YangLeaf) javaQualifiedTypeInfoContainer;
-            YangType<?>  yangType = yangLeaf.getDataType();
+            YangType<?> yangType = yangLeaf.getDataType();
             setDataFromStringValue(yangType, leafValue, parentSetterMethod,
-                    parentBuilderObject, ydtExtendedContext);
+                                   parentBuilderObject, ydtExtendedContext);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | NoSuchFieldException e) {
             log.error("YOB: failed to invoke method for application " + parentSetterMethod);
         }
