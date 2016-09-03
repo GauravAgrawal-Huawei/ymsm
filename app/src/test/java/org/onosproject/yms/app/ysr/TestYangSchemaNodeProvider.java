@@ -16,13 +16,16 @@
 
 package org.onosproject.yms.app.ysr;
 
-import org.onosproject.yangutils.datamodel.YangSchemaNode;
-
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
+import org.onosproject.yangutils.datamodel.YangSchemaNode;
+
 import static org.onosproject.yangutils.utils.UtilConstants.PERIOD;
+import static org.onosproject.yangutils.utils.UtilConstants.SERVICE;
 import static org.onosproject.yangutils.utils.UtilConstants.TEMP;
 import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.deleteDirectory;
 import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
@@ -37,6 +40,8 @@ public class TestYangSchemaNodeProvider {
     private static final String SER_FILE_PATH = "yang/resources/YangMetaData.ser";
     private static final String TEMP_FOLDER_PATH = PATH + TEMP;
     private DefaultYangSchemaRegistry defaultYangSchemaRegistry = new DefaultYangSchemaRegistry();
+
+    private List<String> services = new ArrayList<>();
 
     /**
      * Creates an instance of mock bundle context.
@@ -57,9 +62,14 @@ public class TestYangSchemaNodeProvider {
 
         Set<YangSchemaNode> appNode = defaultYangSchemaRegistry.deSerializeDataModel(PATH + SER_FILE_PATH);
 
+        String appName;
         for (YangSchemaNode node : appNode) {
             defaultYangSchemaRegistry.processApplicationContext(node, appObject);
-            storeClasses(node);
+
+            appName = node.getJavaPackage() + PERIOD +
+                    getCapitalCase(node.getJavaClassNameOrBuiltInType());
+            storeClasses(appName);
+            services.add(appName + SERVICE);
         }
 
         try {
@@ -69,9 +79,7 @@ public class TestYangSchemaNodeProvider {
         }
     }
 
-    private void storeClasses(YangSchemaNode node) {
-        String name = node.getJavaPackage() + PERIOD +
-                getCapitalCase(node.getJavaClassNameOrBuiltInType());
+    private void storeClasses(String name) {
         ClassLoader classLoader = this.getClass().getClassLoader();
         try {
             Class<?> nodeClass = classLoader.loadClass(name);
@@ -93,6 +101,15 @@ public class TestYangSchemaNodeProvider {
             getDefaultYangSchemaRegistry().unRegisterApplication(null, curClass);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Unregisters all the service.
+     */
+    void unregisterAllService() {
+        for (String appName : services) {
+            unregisterService(appName);
         }
     }
 

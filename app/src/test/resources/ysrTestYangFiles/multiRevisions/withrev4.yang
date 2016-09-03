@@ -67,4 +67,10 @@
          "draft-ietf-i2rs-yang-network-topo-02";
      }
 
+     container network {
+          leaf ip {
+             type int32;
+          }
+     }
+
 }

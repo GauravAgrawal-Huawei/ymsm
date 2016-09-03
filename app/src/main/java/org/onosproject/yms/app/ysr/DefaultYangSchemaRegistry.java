@@ -16,14 +16,6 @@
 
 package org.onosproject.yms.app.ysr;
 
-import org.onosproject.yangutils.datamodel.YangNode;
-import org.onosproject.yangutils.datamodel.YangRevision;
-import org.onosproject.yangutils.datamodel.YangSchemaNode;
-import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
-import org.osgi.framework.BundleContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -36,13 +28,20 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
+
+import org.onosproject.yangutils.datamodel.YangNode;
+import org.onosproject.yangutils.datamodel.YangRevision;
+import org.onosproject.yangutils.datamodel.YangSchemaNode;
+import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
+import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.onosproject.yangutils.utils.UtilConstants.DEFAULT;
@@ -57,7 +56,8 @@ import static org.osgi.framework.FrameworkUtil.getBundle;
  * Represent YANG schema registry. Yang schema registry provides interface to an application to register its YANG schema
  * with YMS. It provides YANG schema nodes to YDT, YNB and YSB.
  */
-public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
+public class DefaultYangSchemaRegistry
+        implements YangSchemaRegistry {
 
     private static final String SYSTEM = "/system/";
     private static final String MAVEN = "mvn:";
@@ -583,7 +583,12 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
         }
         appContext = getYangSchemaStore().get(name);
         if (appContext != null) {
-            return appContext.curNode();
+            Iterator<YangSchemaNode> iterator = appContext.getYangSchemaNodeForRevisionStore().values().iterator();
+            if (iterator.hasNext()) {
+                return appContext.getYangSchemaNodeForRevisionStore().values().iterator().next();
+            } else {
+                return null;
+            }
         }
         return null;
     }
@@ -601,39 +606,15 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
             name = name + "@" + date;
         }
         //check if already present.
-        YangRevision revision = ((YangNode) schemaNode).getRevision();
         if (!getYangSchemaStore().containsKey(schemaNode.getName())) {
             ysrRegisteredAppContextForSchemaMap().curNode(schemaNode);
             //if revision is not present no need to add in revision store.
-            if (revision != null) {
-                ysrRegisteredAppContextForSchemaMap().addSchemaNodeWithRevisionStore(name, schemaNode);
-            }
+            ysrRegisteredAppContextForSchemaMap().addSchemaNodeWithRevisionStore(name, schemaNode);
             getYangSchemaStore().put(schemaNode.getName(), ysrRegisteredAppContextForSchemaMap());
         } else {
             YsrRegisteredAppContext appContext = getYangSchemaStore().get(schemaNode.getName());
-            //check if old node has revision
-            YangRevision oldDate = ((YangNode) appContext.curNode()).getRevision();
-            //check if current revision and new revision are same or different.
-
-            if (oldDate == null && revision != null) {
-                // if new revision is not null but old one is then we need to add new node to store.
-                appContext.addSchemaNodeWithRevisionStore(name, schemaNode);
-            } else if (oldDate != null && revision == null) {
-                // if new revision is null but old one is not then we need to add update the current node.
-                appContext.curNode(schemaNode);
-            } else if (oldDate != null) {
-                // if new revision is and old both are not null then we need to add update the current node.
-                //if old date is before the new date the need to update node.
-                if (oldDate.getRevDate().compareTo(revision.getRevDate()) < 0) {
-                    appContext.curNode(schemaNode);
-                } else if (oldDate.getRevDate().compareTo(revision.getRevDate()) > 0) {
-                    //if old date is after the new date the need to update map.
-                    appContext.addSchemaNodeWithRevisionStore(name, schemaNode);
-                }
-            } else {
-                // do nothing. because curNode is already the latest node and
-                // map does not need any update.
-            }
+            appContext.addSchemaNodeWithRevisionStore(name, schemaNode);
+            appContext.curNode(schemaNode);
         }
     }
 
@@ -659,85 +640,14 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
      * @param removableNode schema node which needs to be removed
      */
     private void removeSchemaNode(YangSchemaNode removableNode) {
-        YsrRegisteredAppContext appContext = getYangSchemaStore().get(removableNode.getName());
 
-        YangRevision curNodeRev = ((YangNode) appContext.curNode()).getRevision();
         YangRevision removeNodeRev = ((YangNode) removableNode).getRevision();
-        String name = removableNode.getName() + "@" +
-                getDateInStringFormat(removableNode);
-        //Remove in case old revision node need to be deleted.
-        if (curNodeRev != null && removeNodeRev != null) {
-            if (curNodeRev.compareTo(removeNodeRev) != 0) {
-                appContext.removeSchemaNodeForRevisionStore(name);
-            } else {
-                handleSchemaNodeWhenRevEntryExists(appContext, name);
-            }
-        } else if (curNodeRev == null && removeNodeRev != null) {
-            appContext.removeSchemaNodeForRevisionStore(name);
-        } else if (curNodeRev != null) {
-            // if old rev is not null but current rev is null.
-            //If current node has a revision.
-            if (!appContext.getYangSchemaNodeForRevisionStore().isEmpty()) {
-                handleSchemaNodeWhenRevEntryExists(appContext, removableNode.getName());
-            }
-        } else {
-            //If current node does not have a revision.
-            if (appContext.getYangSchemaNodeForRevisionStore().isEmpty()) {
-                //If current node does not have a revision and no other version is stored.
-                getYangSchemaStore().remove(removableNode.getName());
-            } else if (appContext.getYangSchemaNodeForRevisionStore().size() == 1) {
-                //If current node does not have a revision and only one other revision is present.
-                //then need to update the current node with old latest node.
-                for (Map.Entry<String, YangSchemaNode> entry :
-                        appContext.getYangSchemaNodeForRevisionStore().entrySet()) {
-                    appContext.curNode(entry.getValue());
-                }
-            } else {
-                //If current node does not have a revision and multiple revision are present.
-                handleSchemaNodeWhenRevEntryExists(appContext, removableNode.getName());
-            }
+        String name = removableNode.getName();
+        if (removeNodeRev != null) {
+            name = removableNode.getName() + "@" +
+                    getDateInStringFormat(removableNode);
         }
-    }
-
-    /**
-     * Removes and replace schema node with latest revision schema.
-     *
-     * @param appContext application context
-     * @param name       name of schema node
-     */
-    private void handleSchemaNodeWhenRevEntryExists(YsrRegisteredAppContext appContext, String name) {
-        ConcurrentMap<String, YangSchemaNode> schemaRevStore = appContext.getYangSchemaNodeForRevisionStore();
-        YangSchemaNode approvedNode = null;
-        // if only one entry in store then need to delete completely.
-        if (schemaRevStore.size() == 1) {
-            getYangSchemaStore().remove(appContext.curNode().getName());
-        } else {
-            // if only one entry in store then need to find the old latest node
-            // and update current node for that.
-            Iterator<YangSchemaNode> iterator = schemaRevStore.values().iterator();
-            YangNode prevNode = (YangNode) iterator.next();
-            YangRevision preRev;
-            YangNode nextNode;
-            YangRevision nextRev;
-            while (iterator.hasNext()) {
-                nextNode = (YangNode) iterator.next();
-                preRev = prevNode.getRevision();
-                nextRev = nextNode.getRevision();
-                //If prevNode has latest revision then approved node should be prevNode.
-                if (preRev.getRevDate().compareTo(nextRev.getRevDate()) > 0) {
-                    approvedNode = prevNode;
-                } else {
-                    //If nextNode has latest revision then approved node should be nextNode.
-                    approvedNode = nextNode;
-                }
-                prevNode = (YangNode) approvedNode;
-            }
-            if (approvedNode != null) {
-                //Update current node with approved node.
-                appContext.curNode(approvedNode);
-            }
-        }
-
+        getYangSchemaStore().get(removableNode.getName()).removeSchemaNodeForRevisionStore(name);
     }
 
     /**
