@@ -185,7 +185,7 @@ public class DefaultYangSchemaRegistry
         String jarPath = getJarPathFromBundleLocation(bundleContext.getBundle().getLocation(),
                                                       bundleContext.getProperty(USER_DIRECTORY));
         if (!getAppObjectStore().containsKey(serviceClass.getName())) {
-            List<YangSchemaNode> curNodes = processJarParsingOperations(jarPath, serviceClass.getSimpleName());
+            List<YangSchemaNode> curNodes = processJarParsingOperations(jarPath);
             for (YangSchemaNode schemaNode : curNodes) {
                 processApplicationContext(schemaNode, appObject);
             }
@@ -391,21 +391,10 @@ public class DefaultYangSchemaRegistry
     /**
      * Process jar file for fetching YANG nodes.
      *
-     * @param path    jar file path
-     * @param appName application name
+     * @param path jar file path
      * @return YANG schema nodes
      */
-    private List<YangSchemaNode> processJarParsingOperations(String path, String appName) {
-        File jarPath = new File(path + "/yang");
-        if (jarPath.exists()) {
-            try {
-                deleteDirectory(jarPath);
-            } catch (IOException e) {
-                log.error("failed to delete old ysr resources for " + appName);
-                e.printStackTrace();
-            }
-        }
-
+    private List<YangSchemaNode> processJarParsingOperations(String path) {
         //Deserialize data model and get the YANG node set.
         return parseJarFile(path + JAR, path);
     }
