@@ -1132,6 +1132,35 @@ public class YdtTestUtils
     }
 
 
+    public static YangRequestWorkBench helloOnos() {
+        setSchemaRegistry(testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
+        String appName = "org.onosproject.yang.gen.v1.ydt.hello.onos.rev20160903.helloonos.helloworld.HelloWorldInput";
+        testYangSchemaNodeProvider.processSchemaRegistry(null);
+        YangRequestWorkBench defaultYdtBuilder;
+        String rootName = "Hello-ONOS";
+
+        defaultYdtBuilder = new YangRequestWorkBench(rootName, null, null,
+                testYangSchemaNodeProvider.getDefaultYangSchemaRegistry(), true);
+
+        defaultYdtBuilder.addChild("Hello_ONOS", "ydt:hello_onos");
+        defaultYdtBuilder.addChild("hello-world", null);
+        defaultYdtBuilder.addChild("input", null);
+        defaultYdtBuilder.addLeaf("name", null, "onos");
+        defaultYdtBuilder.traverseToParent();
+        defaultYdtBuilder.addLeaf("surName", null, "yang");
+        defaultYdtBuilder.traverseToParent();
+
+        keysValueList.clear();
+        keysValueList.add("ON");
+        keysValueList.add("LAB");
+        defaultYdtBuilder.addMultiInstanceChild("stringList", null, keysValueList);
+        defaultYdtBuilder.traverseToParent();
+        defaultYdtBuilder.traverseToParent();
+        defaultYdtBuilder.traverseToParent();
+        testYangSchemaNodeProvider.unregisterService(appName);
+        return defaultYdtBuilder;
+    }
+
     @Override
     public void enterYdtNode(YdtContext ydtContext) {
         LOGGER.add("Entry Node is " + ydtContext.getName() + ".");
