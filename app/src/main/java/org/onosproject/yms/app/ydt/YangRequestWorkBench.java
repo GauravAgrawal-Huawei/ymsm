@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.onosproject.yangutils.datamodel.YangList;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeContextInfo;
@@ -196,10 +197,10 @@ public class YangRequestWorkBench
         // Checking the YdtType and processing it accordingly.
         if (ydtType == YdtType.MULTI_INSTANCE_NODE) {
             addChild(name, namespace, RequestedCardinality.MULTI_INSTANCE, null,
-                    RequestedCallType.OTHER);
+                     RequestedCallType.OTHER);
         } else {
             addChild(name, namespace, RequestedCardinality.SINGLE_INSTANCE,
-                    null, RequestedCallType.OTHER);
+                     null, RequestedCallType.OTHER);
         }
     }
 
@@ -216,10 +217,10 @@ public class YangRequestWorkBench
         // Checking the YdtType and processing it accordingly.
         if (ydtType == YdtType.MULTI_INSTANCE_NODE) {
             addChild(name, namespace, RequestedCardinality.MULTI_INSTANCE,
-                    opType, RequestedCallType.OTHER);
+                     opType, RequestedCallType.OTHER);
         } else {
             addChild(name, namespace, RequestedCardinality.SINGLE_INSTANCE,
-                    opType, RequestedCallType.OTHER);
+                     opType, RequestedCallType.OTHER);
         }
     }
 
@@ -315,7 +316,7 @@ public class YangRequestWorkBench
                 if (childSchemaNodeInfo.getContextSwitchedNode() != null) {
                     lastAugmentingModuleNode =
                             curAppNode.getAugmentingSchemaNode(nodeIdentifier,
-                                    childSchemaNodeInfo);
+                                                               childSchemaNodeInfo);
                     if (lastAugmentingModuleNode != null) {
                         if (curAppNode
                                 .addYdtAppTreeSet(lastAugmentingModuleNode)) {
@@ -342,7 +343,7 @@ public class YangRequestWorkBench
 
             // Get the ydtNode of respective type.
             childNode = YdtNodeFactory.getNode(nodeIdentifier, yangSchemaNode,
-                    requestedCardinality, callType);
+                                               requestedCardinality, callType);
         }
 
         // Update node identifier.
@@ -375,7 +376,7 @@ public class YangRequestWorkBench
         if ((curNode == rootNode) || (isContextSwitch)) {
             // Add application context switched child in ydt App tree.
             addChildInAppTree(childNode, lastAugmentingModuleNode, opType,
-                    isContextSwitch);
+                              isContextSwitch);
         }
 
         // Update app tree module node operation.
@@ -637,18 +638,18 @@ public class YangRequestWorkBench
             // Free resources
             curNode.freeRestResources();
             throw new YdtExceptions("Too many key parameter in " +
-                    curNode.getYdtNodeIdentifier()
-                            .getName() +
-                    ". Expected fixed count " +
-                    actualSize + ".");
+                                            curNode.getYdtNodeIdentifier()
+                                                    .getName() +
+                                            ". Expected fixed count " +
+                                            actualSize + ".");
         } else if (actualSize < userInputSize) {
             // Free resources
             curNode.freeRestResources();
             throw new YdtExceptions("Too few key parameter in " +
-                    curNode.getYdtNodeIdentifier()
-                            .getName() +
-                    ". Expected fixed count " +
-                    actualSize + ".");
+                                            curNode.getYdtNodeIdentifier()
+                                                    .getName() +
+                                            ". Expected fixed count " +
+                                            actualSize + ".");
         }
     }
 
@@ -670,8 +671,8 @@ public class YangRequestWorkBench
         // Get the ydtNode of respective type.
         childNode = YdtNodeFactory
                 .getYangSchemaNodeTypeSpecificContext(nodeIdentifier,
-                        yangSchemaNode
-                                .getYangSchemaNodeType());
+                                                      yangSchemaNode
+                                                              .getYangSchemaNodeType());
 
         // Update node identifier.
         childNode.setNodeIdentifier(nodeIdentifier);
@@ -723,7 +724,10 @@ public class YangRequestWorkBench
 
     @Override
     public void traverseToParentExtended() {
+        //if (curNode != null) {
+        // FIXME: null pointer excpetion is coming at this point. at yab ut (testExecuteQueryOperation)
         curNode = curNode.getParent();
+        //}
     }
 
 }

@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+
 import org.onosproject.yangutils.datamodel.YangLeaf;
 import org.onosproject.yangutils.datamodel.YangLeafList;
 import org.onosproject.yangutils.datamodel.YangLeafRef;
@@ -342,8 +343,9 @@ public class YdtBuilderFromYo {
     /**
      * Process root node and add as a child to the YDT extended builder obtained from logical root node.
      */
-    private void processApplicationRootNode() throws InvocationTargetException, NoSuchMethodException,
-            IllegalAccessException, NoSuchFieldException {
+    private void processApplicationRootNode()
+            throws InvocationTargetException, NoSuchMethodException,
+                   IllegalAccessException, NoSuchFieldException {
 
         // Gets the operation type of the root node.
         YdtContextOperationType operationType = getOperationTypeOfTheNode(rootObject);
@@ -444,7 +446,7 @@ public class YdtBuilderFromYo {
                 YtbNodeInfo parentNodeInfo = (YtbNodeInfo) parentYdtExtendedContext.getAppInfo(AppType.YTB);
 
                 List<Object> childObjectList = (List<Object>) getAttributeOfObject(parentNodeInfo.getYangObject(),
-                        nodeJavaName);
+                                                                                   nodeJavaName);
                 Iterator<Object> listIterator = childObjectList.iterator();
                 if (!listIterator.hasNext()) {
                     return null;
@@ -577,7 +579,7 @@ public class YdtBuilderFromYo {
                     try {
                         //TODO: Let the received object list be generic collection
                         List<Object> leafListObject = (List<Object>) getAttributeOfObject(objectOfNode,
-                                javaNameOfLeafList);
+                                                                                          javaNameOfLeafList);
                         Set<String> leafListValue = new HashSet<>();
 
                         // If list is present, then add as child to the parent, consecutively traverse back to parent.
@@ -627,8 +629,9 @@ public class YdtBuilderFromYo {
      * @throws NoSuchMethodException     no such method exception from reflection
      * @throws InvocationTargetException invocation target exception from reflection
      */
-    public Object getAttributeOfObject(Object objectOfTheNode, String nameOfTheField) throws NoSuchFieldException,
-            IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public Object getAttributeOfObject(Object objectOfTheNode, String nameOfTheField)
+            throws NoSuchFieldException,
+                   IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         Class classOfNode = objectOfTheNode.getClass();
         Method getterMethodOfField = classOfNode.getDeclaredMethod(nameOfTheField);
         Object valueOfMethod = getterMethodOfField.invoke(objectOfTheNode);
@@ -645,8 +648,9 @@ public class YdtBuilderFromYo {
      * @throws NoSuchMethodException     no such method exception from reflection
      * @throws InvocationTargetException invocation target exception from reflection
      */
-    public YdtContextOperationType getOperationTypeOfTheNode(Object objectOfTheNode) throws NoSuchFieldException,
-            IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public YdtContextOperationType getOperationTypeOfTheNode(Object objectOfTheNode)
+            throws NoSuchFieldException,
+                   IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         Object operationTypeObject = getAttributeOfObject(objectOfTheNode, OPERATION_TYPE);
         String valueOfOpType = String.valueOf(operationTypeObject);
         if (valueOfOpType.equals(STR_NULL) || valueOfOpType.isEmpty()) {
@@ -681,13 +685,15 @@ public class YdtBuilderFromYo {
      * @throws NoSuchMethodException     no such method exception from reflection
      * @throws InvocationTargetException invocation target exception from reflection
      */
-    private String isValueLeafSetForLeaf(Object objectOfNode, String javaNameOfLeaf) throws ClassNotFoundException,
-            NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private String isValueLeafSetForLeaf(Object objectOfNode, String javaNameOfLeaf)
+            throws ClassNotFoundException,
+                   NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 
         Class classOfNode = objectOfNode.getClass();
         Class interfaceClass = getInterfaceClassFromImplClass(objectOfNode);
         String enumPackage = interfaceClass.getName() + ENUM_LEAF_IDENTIFIER;
-        Class leafIdentifierEnumeration = interfaceClass.getClassLoader().loadClass(enumPackage);
+        ClassLoader classLoader = interfaceClass.getClassLoader();
+        Class leafIdentifierEnumeration = classLoader.loadClass(enumPackage);
         Enum valueOfEnum = Enum.valueOf(leafIdentifierEnumeration, javaNameOfLeaf.toUpperCase());
         Method methodMyMethod = classOfNode.getMethod(IS_LEAF_VALUE_SET_METHOD, leafIdentifierEnumeration);
         return String.valueOf(methodMyMethod.invoke(objectOfNode, valueOfEnum));
@@ -744,8 +750,9 @@ public class YdtBuilderFromYo {
      * @throws NoSuchFieldException      no field exception from reflection
      * @throws DataModelException        data model exception from YANG utils
      */
-    public YangSchemaNode getSchemaNodeOfNotification() throws InvocationTargetException, NoSuchMethodException,
-            IllegalAccessException, NoSuchFieldException, DataModelException {
+    public YangSchemaNode getSchemaNodeOfNotification()
+            throws InvocationTargetException, NoSuchMethodException,
+                   IllegalAccessException, NoSuchFieldException, DataModelException {
         Class parentClass = getRootObject().getClass().getSuperclass();
         Object typeOfEventObject = getAttributeFromInheritance(parentClass, getRootObject(), STR_TYPE);
         String valueOfOpType = String.valueOf(typeOfEventObject);
@@ -765,8 +772,9 @@ public class YdtBuilderFromYo {
      * @throws IllegalAccessException    illegal access exception from reflection
      * @throws NoSuchFieldException      no field exception from reflection
      */
-    public Object getYangObjectOfNotification() throws InvocationTargetException, NoSuchMethodException,
-            IllegalAccessException, NoSuchFieldException {
+    public Object getYangObjectOfNotification()
+            throws InvocationTargetException, NoSuchMethodException,
+                   IllegalAccessException, NoSuchFieldException {
         Class parentClass = getRootObject().getClass().getSuperclass();
         Object eventSubjectObject = getAttributeFromInheritance(parentClass, getRootObject(), STR_SUBJECT);
         String notificationName = getSchemaRoot().getJavaAttributeName();
@@ -784,7 +792,8 @@ public class YdtBuilderFromYo {
      * @throws InvocationTargetException invocation target exception from reflection
      * @throws IllegalAccessException    illegal access exception from reflection
      */
-    private Object getAttributeFromInheritance(Class parentClass, Object childClass, String nameOfTheMethod) throws
+    private Object getAttributeFromInheritance(Class parentClass, Object childClass, String nameOfTheMethod)
+            throws
             NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method getterMethodOfField = parentClass.getDeclaredMethod(nameOfTheMethod);
         Object valueOfMethod = getterMethodOfField.invoke(childClass);
