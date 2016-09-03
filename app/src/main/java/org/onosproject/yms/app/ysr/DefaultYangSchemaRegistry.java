@@ -657,10 +657,16 @@ public class DefaultYangSchemaRegistry
      * @return true if the manager object is already registered with notification handler.
      */
     public boolean verifyNotificationObject(Class<?> serviceClass) {
-
+        YangSchemaNode schemaNode = null;
         if (getAppObjectStore().containsKey(serviceClass.getName())) {
-            YangSchemaNode schemaNode = getYangSchemaNodeUsingAppName(serviceClass.getName());
+            schemaNode = getYangSchemaNodeUsingAppName(serviceClass.getName());
+        } else if (getYangSchemaStoreForRootInterface().containsKey(serviceClass.getName())) {
+            schemaNode = getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName(serviceClass.getName());
+        } else if (getYangSchemaStoreForRootOpParam().containsKey(serviceClass.getName())) {
+            schemaNode = getYangSchemaNodeUsingGeneratedRootNodeOpPramFileName(serviceClass.getName());
+        }
 
+        if (schemaNode != null) {
             String name = (schemaNode.getJavaPackage() + PERIOD +
                     schemaNode.getJavaClassNameOrBuiltInType() + PERIOD).toLowerCase()
                     + getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType()) + EVENT_STRING;
@@ -672,6 +678,7 @@ public class DefaultYangSchemaRegistry
                 }
             }
         }
+
         return false;
 
     }
