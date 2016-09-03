@@ -18,6 +18,7 @@ package org.onosproject.yms.app.ych;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.yob.DefaultYobBuilder;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.onosproject.yms.app.ytb.DefaultYangTreeBuilder;
+import org.onosproject.yms.app.ytb.YtbException;
 import org.onosproject.yms.ych.YangCodecHandler;
 import org.onosproject.yms.ych.YangCompositeEncoding;
 import org.onosproject.yms.ych.YangDataTreeCodec;
@@ -60,7 +62,7 @@ public class DefaultYangCodecHandler
     /**
      * Override codec handler.
      */
-    private Map<YangProtocolEncodingFormat, YangDataTreeCodec> overRideCodecs;
+    private Map<YangProtocolEncodingFormat, YangDataTreeCodec> overRideCodecs = new HashMap<>();
 
     /**
      * Returns schema registry for the driver.
@@ -140,6 +142,10 @@ public class DefaultYangCodecHandler
             String> tagAttributeLinkedMap, List<Object> yangModuleList, YangProtocolEncodingFormat dataFormat,
             YmsOperationType protocolOperation) {
 
+        if (yangModuleList == null || yangModuleList.isEmpty()) {
+            throw new YchException("YCH Error: The input module/sub-module object list cannot be null.");
+        }
+
         // Get yang data tree from YTB for the received objects.
         DefaultYangTreeBuilder defaultYangTreeBuilder = new DefaultYangTreeBuilder();
         YdtExtendedBuilder ydtExtendedBuilder = defaultYangTreeBuilder.getYdtBuilderForYo(yangModuleList,
@@ -178,9 +184,44 @@ public class DefaultYangCodecHandler
                                                           Object appModuleObject,
                                                           YangProtocolEncodingFormat dataFormat,
                                                           YmsOperationType protocolOperation) {
-        String errorInfo = "Encode for composite protocol request not supported.";
-        throw new YchException(errorInfo);
 
+        if (appModuleObject == null) {
+            throw new YtbException("YCH Error: The input module/sub-module object cannot be null.");
+        }
+
+        List<Object> yangModuleList = new ArrayList<>();
+        yangModuleList.add(appModuleObject);
+
+        // Get yang data tree from YTB for the received objects.
+        DefaultYangTreeBuilder defaultYangTreeBuilder = new DefaultYangTreeBuilder();
+        YdtExtendedBuilder ydtExtendedBuilder = defaultYangTreeBuilder.getYdtBuilderForYo(yangModuleList,
+                                                                                          rootName,
+                                                                                          rootNamespace,
+                                                                                          protocolOperation,
+                                                                                          getYangSchemaRegistry());
+
+        // Get the default codec handler.
+        YangDataTreeCodec codec = null;
+        YangDataTreeCodec defaultCodec = getDefaultCodecs().get(dataFormat);
+        if (defaultCodec != null) {
+            codec = defaultCodec;
+        }
+
+        // Check over ridden codec handler is exist or not.
+        if (overRideCodecs != null) {
+            YangDataTreeCodec overRidingCodec = overRideCodecs.get(dataFormat);
+            if (overRidingCodec != null) {
+                codec = overRidingCodec;
+            }
+        }
+
+        // Get the composite response from codec handler.
+        YangCompositeEncoding yangCompositeEncoding = null;
+        if (codec != null) {
+            yangCompositeEncoding = codec.encodeYdtToCompositeProtocolFormat(ydtExtendedBuilder, protocolOperation);
+        }
+
+        return yangCompositeEncoding;
     }
 
     @Override
@@ -190,11 +231,13 @@ public class DefaultYangCodecHandler
         YdtBuilder ydtBuilder = null;
         YangDataTreeCodec codec = null;
 
+        // Get the default codec handler.
         YangDataTreeCodec defaultCodec = getDefaultCodecs().get(dataFormat);
         if (defaultCodec != null) {
             codec = defaultCodec;
         }
 
+        // Check over ridden codec handler is exist or not.
         if (overRideCodecs != null) {
             YangDataTreeCodec overRidingCodec = overRideCodecs.get(dataFormat);
             if (overRidingCodec != null) {
@@ -202,6 +245,7 @@ public class DefaultYangCodecHandler
             }
         }
 
+        // Get the YANG data tree
         if (codec != null) {
             ydtBuilder = codec.decodeProtocolDataToYdt(inputString, getYangSchemaRegistry(), protocolOperation);
         }
@@ -217,8 +261,35 @@ public class DefaultYangCodecHandler
     public Object decode(YangCompositeEncoding protocolData,
                          YangProtocolEncodingFormat dataFormat,
                          YmsOperationType protocolOperation) {
-        String errorInfo = "Decode for composite protocol request not supported.";
-        throw new YchException(errorInfo);
+
+        YdtBuilder ydtBuilder = null;
+        YangDataTreeCodec codec = null;
+
+        // Get the default codec handler.
+        YangDataTreeCodec defaultCodec = getDefaultCodecs().get(dataFormat);
+        if (defaultCodec != null) {
+            codec = defaultCodec;
+        }
+
+        // Check over ridden codec handler is exist or not.
+        if (overRideCodecs != null) {
+            YangDataTreeCodec overRidingCodec = overRideCodecs.get(dataFormat);
+            if (overRidingCodec != null) {
+                codec = overRidingCodec;
+            }
+        }
+
+        // Get the YANG data tree
+        if (codec != null) {
+            ydtBuilder = codec.decodeCompositeProtocolDataToYdt(protocolData, dataFormat, protocolOperation);
+        }
+
+        // Get the module object by using YANG data tree
+        if (ydtBuilder != null) {
+            return getObjectList(ydtBuilder.getRootNode());
+        }
+
+        return null;
     }
 
     @Override

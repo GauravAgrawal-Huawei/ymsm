@@ -177,7 +177,9 @@ public class YchYangDataTreeCodec
     public YangCompositeEncoding encodeYdtToCompositeProtocolFormat(
             YdtBuilder ydtBuilder,
             YmsOperationType protocolOperation) {
-        return null;
+
+        String errorInfo = "Encode for composite protocol request not supported.";
+        throw new YchException(errorInfo);
     }
 
     @Override
@@ -185,7 +187,9 @@ public class YchYangDataTreeCodec
             YangCompositeEncoding protocolData,
             Object schemaRegistryForYdt,
             YmsOperationType protocolOperation) {
-        return null;
+
+        String errorInfo = "Decode for composite protocol request not supported.";
+        throw new YchException(errorInfo);
     }
 
     @Override
