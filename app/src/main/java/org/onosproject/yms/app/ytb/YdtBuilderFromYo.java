@@ -687,7 +687,7 @@ public class YdtBuilderFromYo {
         Class classOfNode = objectOfNode.getClass();
         Class interfaceClass = getInterfaceClassFromImplClass(objectOfNode);
         String enumPackage = interfaceClass.getName() + ENUM_LEAF_IDENTIFIER;
-        Class leafIdentifierEnumeration = Class.forName(enumPackage);
+        Class leafIdentifierEnumeration = interfaceClass.getClassLoader().loadClass(enumPackage);
         Enum valueOfEnum = Enum.valueOf(leafIdentifierEnumeration, javaNameOfLeaf.toUpperCase());
         Method methodMyMethod = classOfNode.getMethod(IS_LEAF_VALUE_SET_METHOD, leafIdentifierEnumeration);
         return String.valueOf(methodMyMethod.invoke(objectOfNode, valueOfEnum));
