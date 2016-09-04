@@ -18,6 +18,7 @@ package org.onosproject.yms.app.ytb;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -47,6 +48,7 @@ import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_SINGLE
 import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.BOOLEAN;
 import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.DECIMAL64;
 import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.EMPTY;
+import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.ENUMERATION;
 import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.INT16;
 import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.INT32;
 import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.INT64;
@@ -528,8 +530,17 @@ public class YdtBuilderFromYo {
                                 fieldValue = String.valueOf(typeOfLeaf);
                             }
                         } else {
-                            // If type is not primitive, check the object is not null.
-                            if (typeOfLeaf != null) {
+                            if (yangLeaf.getDataType().getDataType().equals(ENUMERATION)) {
+                                if (typeOfLeaf != null) {
+                                    Object value = getAttributeOfObject(typeOfLeaf, "schemaName");
+                                    if (value != null) {
+                                        // If type is not primitive, check the object is not null.
+                                        fieldValue = String.valueOf(value);
+                                    }
+                                    // If type is not primitive, check the object is not null.
+                                }
+                            } else if (typeOfLeaf != null) {
+                                // If type is not primitive, check the object is not null.
                                 fieldValue = String.valueOf(typeOfLeaf);
                             }
                         }
@@ -581,6 +592,22 @@ public class YdtBuilderFromYo {
                         List<Object> leafListObject = (List<Object>) getAttributeOfObject(objectOfNode,
                                                                                           javaNameOfLeafList);
                         Set<String> leafListValue = new HashSet<>();
+
+                        if (yangLeafList.getDataType().getDataType().equals(ENUMERATION)) {
+                            List<Object> enumObjects = new ArrayList<>();
+                            if (leafListObject != null && !leafListObject.isEmpty()) {
+                                for (Object enumObj : leafListObject) {
+                                    Object value = getAttributeOfObject(enumObj, "schemaName");
+                                    if (value != null) {
+                                        // If type is not primitive, check the object is not null.
+                                        enumObjects.add(value);
+                                    }
+                                }
+                                leafListObject.clear();
+                                leafListObject.addAll(enumObjects);
+                                // If type is not primitive, check the object is not null.
+                            }
+                        }
 
                         // If list is present, then add as child to the parent, consecutively traverse back to parent.
                         if (leafListObject != null && !leafListObject.isEmpty()) {

@@ -16,6 +16,13 @@
 
 package org.onosproject.yms.app.ytb;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -25,6 +32,8 @@ import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev2016082
 import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.ytbmodulewithcontainer.Sched;
 import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826.YtbIetfSchedule;
 import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826.YtbIetfScheduleOpParam;
+import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826.ytbietfschedule.Enum1Enum;
+import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826.ytbietfschedule.Enum2Enum;
 import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaflist.rev20160826.YtbModuleWithLeafList;
 import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaflist.rev20160826.YtbModuleWithLeafListOpParam;
 import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list.rev20160826.YtbModuleWithList;
@@ -40,12 +49,18 @@ import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.YtbMu
 import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.YtbMultiModulebOpParam;
 import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.ytbmultimoduleb.DefaultYtbmultilistb;
 import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.ytbmultimoduleb.Ytbmultilistb;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.DefaultFortesta;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.Fortesta;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.YtbMultiNotificationWithContainerEvent;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.YtbMultiNotificationWithContainerEventSubject;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.fortesta.DefaultYtbnot;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.fortesta.Ytbnot;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container
+        .rev20160826.ytbmultinotificationwithcontainer.DefaultFortesta;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container
+        .rev20160826.ytbmultinotificationwithcontainer.Fortesta;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container
+        .rev20160826.ytbmultinotificationwithcontainer.YtbMultiNotificationWithContainerEvent;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container
+        .rev20160826.ytbmultinotificationwithcontainer.YtbMultiNotificationWithContainerEventSubject;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container
+        .rev20160826.ytbmultinotificationwithcontainer.fortesta.DefaultYtbnot;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container
+        .rev20160826.ytbmultinotificationwithcontainer.fortesta.Ytbnot;
 import org.onosproject.yms.app.ydt.YdtExtendedBuilder;
 import org.onosproject.yms.app.ydt.YdtNode;
 import org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry;
@@ -55,16 +70,10 @@ import org.onosproject.yms.ydt.YdtContext;
 import org.onosproject.yms.ydt.YdtContextOperationType;
 import org.onosproject.yms.ydt.YmsOperationType;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
-import java.util.Set;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826.YtbIetfScheduleOpParam.OnosYangNodeOperationType.MERGE;
+import static org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule
+        .rev20160826.YtbIetfScheduleOpParam.OnosYangNodeOperationType.MERGE;
 import static org.onosproject.yms.ydt.YmsOperationType.EDIT_CONFIG_REQUEST;
 
 /**
@@ -122,7 +131,9 @@ public class DefaultYangTreeBuilderTest {
         YtbIetfSchedule ietfSchedule =
                 new YtbIetfScheduleOpParam.YtbIetfScheduleBuilder()
                         .time((byte) 9)
-                        .onosYangNodeOperationType(MERGE).build();
+                        .onosYangNodeOperationType(MERGE)
+                        .build();
+
 
         // YSB or YAB protocol to set the values for YTB.
         List<Object> objectList = new ArrayList<>();
@@ -151,6 +162,70 @@ public class DefaultYangTreeBuilderTest {
         String value = ydtContextForLeaf.getValue();
         assertThat(value, is("9"));
         assertThat(leafName, is("time"));
+
+    }
+
+    /**
+     * Test for checking if for type enum ydt should have schema name instead of enum's contants.
+     */
+    @Test
+    public void processLeafAndLeafListWithTypeEnum() {
+
+        testYangSchemaNodeProvider.processSchemaRegistry(null);
+        DefaultYangSchemaRegistry defaultTreeBuilder =
+                testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
+
+        List<Enum2Enum> enum2Ena = new ArrayList<>();
+        enum2Ena.add(Enum2Enum.HUNDRED_100);
+        enum2Ena.add(Enum2Enum.TEN_10);
+        enum2Ena.add(Enum2Enum.THOUSAND_1000);
+        YtbIetfSchedule ietfSchedule =
+                new YtbIetfScheduleOpParam.YtbIetfScheduleBuilder()
+                        .time((byte) 9)
+                        .onosYangNodeOperationType(MERGE).enum1(Enum1Enum.HUNDRED).enum2(enum2Ena)
+                        .build();
+
+
+        // YSB or YAB protocol to set the values for YTB.
+        List<Object> objectList = new ArrayList<>();
+        objectList.add(ietfSchedule);
+
+        // Build YANG tree.
+        DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
+        YdtExtendedBuilder ydtBuilder = yangTreeBuilder
+                .getYdtBuilderForYo(objectList, "rootName", "rootNamespace",
+                                    EDIT_CONFIG_REQUEST, defaultTreeBuilder);
+
+        // Receive YDT context and check the tree that is built.
+        YdtContext ydtContext = ydtBuilder.getRootNode();
+
+        // Get the first module from logical root node.
+        YdtContext moduleNode = ydtContext.getFirstChild();
+        String moduleNodeName = moduleNode.getName();
+        YdtContextOperationType operationType =
+                ((YdtNode) moduleNode).getYdtContextOperationType();
+        assertThat(moduleNodeName, is("YtbIetfSchedule"));
+        assertThat(operationType, is(YdtContextOperationType.MERGE));
+
+        // Get the first leaf from module IetfSchedule.
+        YdtContext ydtContextForLeaf = moduleNode.getFirstChild();
+        String leafName = ydtContextForLeaf.getName();
+        String value = ydtContextForLeaf.getValue();
+        assertThat(value, is("9"));
+        assertThat(leafName, is("time"));
+
+        ydtContextForLeaf = ydtContextForLeaf.getNextSibling();
+        leafName = ydtContextForLeaf.getName();
+        value = ydtContextForLeaf.getValue();
+        assertThat(value, is("hundred"));
+        assertThat(leafName, is("enum1"));
+
+        ydtContextForLeaf = ydtContextForLeaf.getNextSibling();
+        leafName = ydtContextForLeaf.getName();
+        Set<String> valueSet = ydtContextForLeaf.getValueSet();
+        assertThat(true, is(valueSet.contains("hundred-100")));
+        assertThat(leafName, is("enum2"));
+
     }
 
     /**
