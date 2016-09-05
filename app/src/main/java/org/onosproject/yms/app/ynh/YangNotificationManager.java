@@ -63,6 +63,7 @@ public class YangNotificationManager extends ListenerRegistry<YangNotificationEv
      */
     public YangNotificationManager(YangSchemaRegistry schemaRegistry) {
         ynhAbstractListener = new YnhAbstractListener();
+        this.schemaRegistry = schemaRegistry;
         eventHandlingExecutor = Executors.newSingleThreadExecutor(
                 groupedThreads("onos/apps/yang-management-system/yang-notification-handler", "event-handler", log));
     }
