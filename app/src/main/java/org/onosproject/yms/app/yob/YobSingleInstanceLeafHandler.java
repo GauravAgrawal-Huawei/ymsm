@@ -16,59 +16,76 @@
 
 package org.onosproject.yms.app.yob;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.onosproject.yangutils.datamodel.YangLeaf;
 import org.onosproject.yangutils.datamodel.YangType;
-import org.onosproject.yangutils.datamodel.javadatamodel.JavaQualifiedTypeInfoContainer;
+import org.onosproject.yangutils.datamodel.javadatamodel
+        .JavaQualifiedTypeInfoContainer;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import static org.onosproject.yms.app.ydt.AppType.YOB;
 
 /**
  * Represents a single instance leaf node handler in YANG object builder.
  */
-class YobSingleInstanceLeafHandler extends YobHandler {
+class YobSingleInstanceLeafHandler
+        extends YobHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(YobSingleInstanceLeafHandler.class);
+    private static final Logger log =
+            LoggerFactory.getLogger(YobSingleInstanceLeafHandler.class);
 
     @Override
-    public void createYangBuilderObject(YdtExtendedContext ydtExtendedContext, YdtExtendedContext ydtRootNode,
+    public void createYangBuilderObject(YdtExtendedContext curYdtNode,
+                                        YdtExtendedContext rootYdtNode,
                                         YangSchemaRegistry registry) {
         // For single instance leaf no need to create an object.
     }
 
     @Override
-    public void buildObjectFromBuilder(YdtExtendedContext ydtExtendedContext) {
+    public void buildObjectFromBuilder(YdtExtendedContext ydtNode) {
         // For single instance leaf no need to build object
     }
 
     @Override
-    public void setObjectInParent(YdtExtendedContext ydtExtendedContext) {
+    public void setObjectInParent(YdtExtendedContext leafNode,
+                                  YangSchemaRegistry schemaRegistry) {
         String setterMethodNameInParent;
         Method parentSetterMethod = null;
-        String leafValue = ydtExtendedContext.getValue();
+        YdtExtendedContext parentYdtNode = (YdtExtendedContext)
+                leafNode.getParent();
+        YobBuilderContainer parentYobBuilderContainer = (YobBuilderContainer)
+                parentYdtNode.getAppInfo(YOB);
+        String leafValue = leafNode.getValue();
 
         try {
-            setterMethodNameInParent = ydtExtendedContext.getYangSchemaNode().getJavaAttributeName();
-            YdtExtendedContext parentNode = (YdtExtendedContext) ydtExtendedContext.getParent();
-            Object parentBuilderObject = parentNode.getAppInfo(YOB);
+            setterMethodNameInParent = leafNode.getYangSchemaNode()
+                    .getJavaAttributeName();
+            Object parentBuilderObject = parentYobBuilderContainer
+                    .getParentBuilderObjectFromAncestor(leafNode,
+                                                        schemaRegistry);
             Class<?> parentBuilderClass = parentBuilderObject.getClass();
-            Field leafName = parentBuilderClass.getDeclaredField(setterMethodNameInParent);
-            parentSetterMethod = parentBuilderClass.getDeclaredMethod(setterMethodNameInParent, leafName.getType());
+            Field leafName = parentBuilderClass
+                    .getDeclaredField(setterMethodNameInParent);
+            parentSetterMethod = parentBuilderClass
+                    .getDeclaredMethod(setterMethodNameInParent,
+                                       leafName.getType());
             JavaQualifiedTypeInfoContainer javaQualifiedTypeInfoContainer
-                    = (JavaQualifiedTypeInfoContainer) ydtExtendedContext.getYangSchemaNode();
+                    = (JavaQualifiedTypeInfoContainer) leafNode
+                    .getYangSchemaNode();
             YangLeaf yangLeaf = (YangLeaf) javaQualifiedTypeInfoContainer;
             YangType<?> yangType = yangLeaf.getDataType();
             setDataFromStringValue(yangType, leafValue, parentSetterMethod,
-                                   parentBuilderObject, ydtExtendedContext);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | NoSuchFieldException e) {
-            log.error("YOB: failed to invoke method for application " + parentSetterMethod);
+                                   parentBuilderObject, leafNode);
+        } catch (NoSuchMethodException | InvocationTargetException |
+                IllegalAccessException | NoSuchFieldException e) {
+            log.error("YOB: failed to invoke method for application " +
+                              parentSetterMethod);
         }
     }
 }

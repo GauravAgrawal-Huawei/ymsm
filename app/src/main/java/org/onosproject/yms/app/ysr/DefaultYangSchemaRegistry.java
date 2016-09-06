@@ -35,6 +35,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
+import org.onosproject.yangutils.datamodel.RpcNotificationContainer;
 import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangRevision;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
@@ -48,12 +49,14 @@ import static org.onosproject.yangutils.utils.UtilConstants.DEFAULT;
 import static org.onosproject.yangutils.utils.UtilConstants.EVENT_STRING;
 import static org.onosproject.yangutils.utils.UtilConstants.OP_PARAM;
 import static org.onosproject.yangutils.utils.UtilConstants.PERIOD;
-import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
+import static org.onosproject.yangutils.utils.io.impl.YangIoUtils
+        .getCapitalCase;
 import static org.osgi.framework.FrameworkUtil.getBundle;
 
 
 /**
- * Represent YANG schema registry. Yang schema registry provides interface to an application to register its YANG schema
+ * Represent YANG schema registry. Yang schema registry provides interface to
+ * an application to register its YANG schema
  * with YMS. It provides YANG schema nodes to YDT, YNB and YSB.
  */
 public class DefaultYangSchemaRegistry
@@ -70,7 +73,8 @@ public class DefaultYangSchemaRegistry
     private static final String USER_DIRECTORY = "user.dir";
     private static final String SLASH = File.separator;
 
-    private static final Logger log = LoggerFactory.getLogger(DefaultYangSchemaRegistry.class);
+    private static final Logger log =
+            LoggerFactory.getLogger(DefaultYangSchemaRegistry.class);
 
     /**
      * Map for storing app objects.
@@ -83,19 +87,23 @@ public class DefaultYangSchemaRegistry
     private ConcurrentMap<String, YsrRegisteredAppContext> yangSchemaStore;
 
     /**
-     * Map for storing YANG schema nodes with respect to root's generated interface file name.
+     * Map for storing YANG schema nodes with respect to root's generated
+     * interface file name.
      */
-    private ConcurrentMap<String, YsrRegisteredAppContext> yangSchemaStoreForRootInterface;
+    private ConcurrentMap<String, YsrRegisteredAppContext>
+            yangSchemaStoreForRootInterface;
 
     /**
      * Map for storing YANG schema nodes root's generated op param file name.
      */
-    private ConcurrentMap<String, YsrRegisteredAppContext> yangSchemaStoreForRootOpParam;
+    private ConcurrentMap<String, YsrRegisteredAppContext>
+            yangSchemaStoreForRootOpParam;
 
     /**
      * Map for storing YANG schema nodes with respect to notifications.
      */
-    private ConcurrentMap<String, YsrRegisteredAppContext> yangSchemaNotificationStore;
+    private ConcurrentMap<String, YsrRegisteredAppContext>
+            yangSchemaNotificationStore;
 
     /**
      * Map for storing registered classes.
@@ -108,7 +116,8 @@ public class DefaultYangSchemaRegistry
     private YsrRegisteredAppContext ysrRegisteredAppContext;
 
     /**
-     * Context of application which is registering with YMS with multiple revision.
+     * Context of application which is registering with YMS with multiple
+     * revision.
      */
     private YsrRegisteredAppContext ysrRegisteredAppContextForSchemaMap;
 
@@ -147,7 +156,8 @@ public class DefaultYangSchemaRegistry
      *
      * @return schema store
      */
-    private ConcurrentMap<String, YsrRegisteredAppContext> getYangSchemaStore() {
+    private ConcurrentMap<String, YsrRegisteredAppContext> getYangSchemaStore
+    () {
         return yangSchemaStore;
     }
 
@@ -156,7 +166,8 @@ public class DefaultYangSchemaRegistry
      *
      * @return schema store
      */
-    private ConcurrentMap<String, YsrRegisteredAppContext> getYangSchemaStoreForRootInterface() {
+    private ConcurrentMap<String, YsrRegisteredAppContext>
+    getYangSchemaStoreForRootInterface() {
         return yangSchemaStoreForRootInterface;
     }
 
@@ -165,7 +176,8 @@ public class DefaultYangSchemaRegistry
      *
      * @return schema store
      */
-    private ConcurrentMap<String, YsrRegisteredAppContext> getYangSchemaStoreForRootOpParam() {
+    private ConcurrentMap<String, YsrRegisteredAppContext>
+    getYangSchemaStoreForRootOpParam() {
         return yangSchemaStoreForRootOpParam;
     }
 
@@ -174,18 +186,22 @@ public class DefaultYangSchemaRegistry
      *
      * @return schema notification store
      */
-    private ConcurrentMap<String, YsrRegisteredAppContext> getYangSchemaNotificationStore() {
+    private ConcurrentMap<String, YsrRegisteredAppContext>
+    getYangSchemaNotificationStore() {
         return yangSchemaNotificationStore;
     }
 
     @Override
     public void registerApplication(Object appObject, Class<?> serviceClass) {
 
-        BundleContext bundleContext = getBundle(serviceClass).getBundleContext();
-        String jarPath = getJarPathFromBundleLocation(bundleContext.getBundle().getLocation(),
-                                                      bundleContext.getProperty(USER_DIRECTORY));
+        BundleContext bundleContext =
+                getBundle(serviceClass).getBundleContext();
+        String jarPath = getJarPathFromBundleLocation(
+                bundleContext.getBundle().getLocation(),
+                bundleContext.getProperty(USER_DIRECTORY));
         if (!getAppObjectStore().containsKey(serviceClass.getName())) {
-            List<YangSchemaNode> curNodes = processJarParsingOperations(jarPath);
+            List<YangSchemaNode> curNodes =
+                    processJarParsingOperations(jarPath);
             for (YangSchemaNode schemaNode : curNodes) {
                 processApplicationContext(schemaNode, appObject);
             }
@@ -198,19 +214,24 @@ public class DefaultYangSchemaRegistry
     }
 
     @Override
-    public void unRegisterApplication(Object managerObject, Class<?> serviceClass) {
+    public void unRegisterApplication(Object managerObject,
+                                      Class<?> serviceClass) {
         YangSchemaNode curNode = null;
         String appName = serviceClass.getName();
 
         //check if service is in app store.
         if (getAppObjectStore().containsKey(serviceClass.getName())) {
             curNode = retrieveNodeForUnregister(appName, getAppObjectStore());
-        } else if (getYangSchemaStoreForRootInterface().containsKey(serviceClass.getName())) {
+        } else if (getYangSchemaStoreForRootInterface()
+                .containsKey(serviceClass.getName())) {
             //check if service is in interface store.
-            curNode = retrieveNodeForUnregister(appName, getYangSchemaStoreForRootInterface());
-        } else if (getYangSchemaStoreForRootOpParam().containsKey(serviceClass.getName())) {
+            curNode = retrieveNodeForUnregister(appName,
+                                                getYangSchemaStoreForRootInterface());
+        } else if (getYangSchemaStoreForRootOpParam()
+                .containsKey(serviceClass.getName())) {
             //check if service is in op param store.
-            curNode = retrieveNodeForUnregister(appName, getYangSchemaStoreForRootOpParam());
+            curNode = retrieveNodeForUnregister(appName,
+                                                getYangSchemaStoreForRootOpParam());
         }
         if (curNode != null) {
             String javaName = curNode.getJavaPackage() + PERIOD +
@@ -220,7 +241,8 @@ public class DefaultYangSchemaRegistry
             removeFromAppSchemaStore(appName);
             removeFromYangSchemaNodeForRootInterface(javaName);
             removeFromYangSchemaNodeForRootOpParam(javaName);
-            log.info("YSR: service " + serviceClass.getSimpleName() + " is unregistered.");
+            log.info("YSR: service " + serviceClass.getSimpleName() +
+                             " is unregistered.");
         } else {
             log.error("YSR: service " + serviceClass.getSimpleName() + " is " +
                               "not registered.");
@@ -233,7 +255,8 @@ public class DefaultYangSchemaRegistry
             String name = schemaNode.getJavaPackage() + PERIOD +
                     getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType());
             if (getYangSchemaStoreForRootInterface().containsKey(name)) {
-                return getYangSchemaStoreForRootInterface().get(name).appObject();
+                return getYangSchemaStoreForRootInterface().get(name)
+                        .appObject();
             }
             log.error("YSR: " + name + " not found.");
         }
@@ -259,25 +282,33 @@ public class DefaultYangSchemaRegistry
     }
 
     @Override
-    public YangSchemaNode getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName(String rootInterfaceFileName) {
-        if (getYangSchemaStoreForRootInterface().containsKey(rootInterfaceFileName)) {
-            return getYangSchemaStoreForRootInterface().get(rootInterfaceFileName).curNode();
+    public YangSchemaNode
+    getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName(
+            String rootInterfaceFileName) {
+        if (getYangSchemaStoreForRootInterface()
+                .containsKey(rootInterfaceFileName)) {
+            return getYangSchemaStoreForRootInterface()
+                    .get(rootInterfaceFileName).curNode();
         }
         log.error("YSR: " + rootInterfaceFileName + " not found.");
         return null;
     }
 
     @Override
-    public YangSchemaNode getYangSchemaNodeUsingGeneratedRootNodeOpPramFileName(String rootOpParamFileName) {
-        if (getYangSchemaStoreForRootOpParam().containsKey(rootOpParamFileName)) {
-            return getYangSchemaStoreForRootOpParam().get(rootOpParamFileName).curNode();
+    public YangSchemaNode getYangSchemaNodeUsingGeneratedRootNodeOpPramFileName(
+            String rootOpParamFileName) {
+        if (getYangSchemaStoreForRootOpParam()
+                .containsKey(rootOpParamFileName)) {
+            return getYangSchemaStoreForRootOpParam().get(rootOpParamFileName)
+                    .curNode();
         }
         log.error("YSR: " + rootOpParamFileName + " not found.");
         return null;
     }
 
     @Override
-    public YangSchemaNode getRootYangSchemaNodeForNotification(String eventSubject) {
+    public YangSchemaNode getRootYangSchemaNodeForNotification(
+            String eventSubject) {
         if (getYangSchemaNotificationStore().containsKey(eventSubject)) {
             return getYangSchemaNotificationStore().get(eventSubject).curNode();
         }
@@ -285,12 +316,21 @@ public class DefaultYangSchemaRegistry
         return null;
     }
 
-    public Class<?> getRegisteredClass(YangSchemaNode schemaNode, String appName) {
+    public Class<?> getRegisteredClass(YangSchemaNode schemaNode,
+                                       String appName) {
         String interfaceName = schemaNode.getJavaPackage() + PERIOD +
                 getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType());
         String serviceName = interfaceName + SERVICE;
-        String defaultClass = schemaNode.getJavaPackage() + PERIOD + DEFAULT
-                + getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType());
+        String defaultClass;
+        if (schemaNode instanceof RpcNotificationContainer) {
+            defaultClass = schemaNode.getJavaPackage()
+                    + getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType()
+                                             + OP_PARAM);
+        } else {
+            defaultClass = schemaNode.getJavaPackage() + PERIOD
+                    + getCapitalCase(DEFAULT) +
+                    getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType());
+        }
         //If application class is registered.
         if (getRegisterClassStore().containsKey(appName)) {
             return getRegisterClassStore().get(interfaceName);
@@ -312,7 +352,8 @@ public class DefaultYangSchemaRegistry
      *
      * @return notification schema store
      */
-    private ConcurrentMap<String, YsrRegisteredAppContext> getNotificationSchemaMap() {
+    private ConcurrentMap<String, YsrRegisteredAppContext>
+    getNotificationSchemaMap() {
         return getYangSchemaNotificationStore();
     }
 
@@ -349,16 +390,20 @@ public class DefaultYangSchemaRegistry
      * @param notificationName application's notification name
      */
     private void updateYangNotificationStore(String notificationName) {
-        getYangSchemaNotificationStore().put(notificationName, ysrRegisteredAppContext());
+        getYangSchemaNotificationStore()
+                .put(notificationName, ysrRegisteredAppContext());
     }
 
     /**
      * Updates YANG schema object store for root interface file name.
      *
-     * @param rootInterfaceFileName name of generated interface file for root node
+     * @param rootInterfaceFileName name of generated interface file for root
+     *                              node
      */
-    private void updateYangSchemaForRootInterfaceFileNameStore(String rootInterfaceFileName) {
-        getYangSchemaStoreForRootInterface().put(rootInterfaceFileName, ysrRegisteredAppContext());
+    private void updateYangSchemaForRootInterfaceFileNameStore(
+            String rootInterfaceFileName) {
+        getYangSchemaStoreForRootInterface()
+                .put(rootInterfaceFileName, ysrRegisteredAppContext());
     }
 
     /**
@@ -366,8 +411,10 @@ public class DefaultYangSchemaRegistry
      *
      * @param rootOpParamFileName name of generated op param file for root node
      */
-    private void updateYangSchemaForRootOpParamFileNameStore(String rootOpParamFileName) {
-        getYangSchemaStoreForRootOpParam().put(rootOpParamFileName, ysrRegisteredAppContext());
+    private void updateYangSchemaForRootOpParamFileNameStore(
+            String rootOpParamFileName) {
+        getYangSchemaStoreForRootOpParam()
+                .put(rootOpParamFileName, ysrRegisteredAppContext());
     }
 
     /**
@@ -382,7 +429,8 @@ public class DefaultYangSchemaRegistry
             for (File curFile : fileArray) {
                 if (curFile.getName().endsWith(YANG)) {
                     ysrRegisteredAppContext().addToYangFileSet(curFile);
-                    ysrRegisteredAppContextForSchemaMap().addToYangFileSet(curFile);
+                    ysrRegisteredAppContextForSchemaMap()
+                            .addToYangFileSet(curFile);
                 }
             }
         }
@@ -430,7 +478,9 @@ public class DefaultYangSchemaRegistry
         try {
             if (appNode.isNotificationPresent()) {
                 eventSubject = appName.toLowerCase() + PERIOD +
-                        getCapitalCase(appNode.getJavaClassNameOrBuiltInType()) + EVENT_STRING;
+                        getCapitalCase(
+                                appNode.getJavaClassNameOrBuiltInType()) +
+                        EVENT_STRING;
             }
         } catch (DataModelException e) {
             e.printStackTrace();
@@ -438,7 +488,8 @@ public class DefaultYangSchemaRegistry
         if (eventSubject != null) {
             updateYangNotificationStore(eventSubject);
         }
-        log.info("YSR: successfully registered this application " + appName + SERVICE);
+        log.info("YSR: successfully registered this application " + appName +
+                         SERVICE);
 
     }
 
@@ -449,7 +500,8 @@ public class DefaultYangSchemaRegistry
      * @param directory directory where to search
      * @return list of serialized files
      */
-    private List<YangSchemaNode> parseJarFile(String jarFile, String directory) {
+    private List<YangSchemaNode> parseJarFile(String jarFile,
+                                              String directory) {
 
         List<YangSchemaNode> nodes = new ArrayList<>();
         try {
@@ -468,26 +520,31 @@ public class DefaultYangSchemaRegistry
                         File dir = new File(directory + tempPath);
                         dir.mkdirs();
                     }
-                    File serializedFile = new File(directory + SLASH + file.getName());
+                    File serializedFile =
+                            new File(directory + SLASH + file.getName());
                     if (file.isDirectory()) {
                         serializedFile.mkdirs();
                         continue;
                     }
                     InputStream inputStream = jar.getInputStream(file);
 
-                    FileOutputStream fileOutputStream = new FileOutputStream(serializedFile);
+                    FileOutputStream fileOutputStream =
+                            new FileOutputStream(serializedFile);
                     while (inputStream.available() > 0) {
                         fileOutputStream.write(inputStream.read());
                     }
                     fileOutputStream.close();
                     inputStream.close();
-                    nodes.addAll(deSerializeDataModel(serializedFile.toString()));
+                    nodes.addAll(
+                            deSerializeDataModel(serializedFile.toString()));
                 }
             }
             jar.close();
         } catch (IOException e) {
-            log.error("YSR: failed to fetch yang nodes from jar file for application " +
-                              ysrRegisteredAppContext().appObject());
+            log.error(
+                    "YSR: failed to fetch yang nodes from jar file for " +
+                            "application " +
+                            ysrRegisteredAppContext().appObject());
             e.printStackTrace();
         }
         return nodes;
@@ -500,7 +557,8 @@ public class DefaultYangSchemaRegistry
      * @param mvnLocationPath mvnLocationPath of bundle
      * @return path of jar
      */
-    private String getJarPathFromBundleLocation(String mvnLocationPath, String currentDirectory) {
+    private String getJarPathFromBundleLocation(String mvnLocationPath,
+                                                String currentDirectory) {
         String path = currentDirectory + SYSTEM;
         String[] strArray = mvnLocationPath.split(MAVEN);
         String[] split = strArray[1].split(File.separator);
@@ -521,8 +579,10 @@ public class DefaultYangSchemaRegistry
 
         Set<YangSchemaNode> nodes = new HashSet<>();
         try {
-            FileInputStream fileInputStream = new FileInputStream(serializedFileInfo);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            FileInputStream fileInputStream =
+                    new FileInputStream(serializedFileInfo);
+            ObjectInputStream objectInputStream =
+                    new ObjectInputStream(fileInputStream);
             nodes = (Set<YangSchemaNode>) objectInputStream.readObject();
             objectInputStream.close();
             fileInputStream.close();
@@ -548,7 +608,8 @@ public class DefaultYangSchemaRegistry
      *
      * @param ysrRegisteredAppContext ysr app context
      */
-    void ysrRegisteredAppContext(YsrRegisteredAppContext ysrRegisteredAppContext) {
+    void ysrRegisteredAppContext(
+            YsrRegisteredAppContext ysrRegisteredAppContext) {
         this.ysrRegisteredAppContext = ysrRegisteredAppContext;
     }
 
@@ -572,9 +633,12 @@ public class DefaultYangSchemaRegistry
         }
         appContext = getYangSchemaStore().get(name);
         if (appContext != null) {
-            Iterator<YangSchemaNode> iterator = appContext.getYangSchemaNodeForRevisionStore().values().iterator();
+            Iterator<YangSchemaNode> iterator =
+                    appContext.getYangSchemaNodeForRevisionStore().values()
+                            .iterator();
             if (iterator.hasNext()) {
-                return appContext.getYangSchemaNodeForRevisionStore().values().iterator().next();
+                return appContext.getYangSchemaNodeForRevisionStore().values()
+                        .iterator().next();
             } else {
                 return null;
             }
@@ -587,7 +651,8 @@ public class DefaultYangSchemaRegistry
      *
      * @param schemaNode schema node
      */
-    private void addSchemaNodeUsingSchemaNameWithRev(YangSchemaNode schemaNode) {
+    private void addSchemaNodeUsingSchemaNameWithRev(
+            YangSchemaNode schemaNode) {
 
         String date = getDateInStringFormat(schemaNode);
         String name = schemaNode.getName();
@@ -598,10 +663,13 @@ public class DefaultYangSchemaRegistry
         if (!getYangSchemaStore().containsKey(schemaNode.getName())) {
             ysrRegisteredAppContextForSchemaMap().curNode(schemaNode);
             //if revision is not present no need to add in revision store.
-            ysrRegisteredAppContextForSchemaMap().addSchemaNodeWithRevisionStore(name, schemaNode);
-            getYangSchemaStore().put(schemaNode.getName(), ysrRegisteredAppContextForSchemaMap());
+            ysrRegisteredAppContextForSchemaMap()
+                    .addSchemaNodeWithRevisionStore(name, schemaNode);
+            getYangSchemaStore().put(schemaNode.getName(),
+                                     ysrRegisteredAppContextForSchemaMap());
         } else {
-            YsrRegisteredAppContext appContext = getYangSchemaStore().get(schemaNode.getName());
+            YsrRegisteredAppContext appContext =
+                    getYangSchemaStore().get(schemaNode.getName());
             appContext.addSchemaNodeWithRevisionStore(name, schemaNode);
             appContext.curNode(schemaNode);
         }
@@ -617,7 +685,8 @@ public class DefaultYangSchemaRegistry
         if (schemaNode != null) {
             if (((YangNode) schemaNode).getRevision() != null) {
                 return new SimpleDateFormat("yyyy-mm-dd")
-                        .format(((YangNode) schemaNode).getRevision().getRevDate());
+                        .format(((YangNode) schemaNode).getRevision()
+                                        .getRevDate());
             }
         }
         return "";
@@ -636,33 +705,46 @@ public class DefaultYangSchemaRegistry
             name = removableNode.getName() + "@" +
                     getDateInStringFormat(removableNode);
         }
-        getYangSchemaStore().get(removableNode.getName()).removeSchemaNodeForRevisionStore(name);
+        getYangSchemaStore().get(removableNode.getName())
+                .removeSchemaNodeForRevisionStore(name);
     }
 
     /**
-     * Verifies if the manager object is already registered with notification handler.
+     * Verifies if the manager object is already registered with notification
+     * handler.
      *
      * @param serviceClass service class
-     * @return true if the manager object is already registered with notification handler.
+     * @return true if the manager object is already registered with
+     * notification handler.
      */
     public boolean verifyNotificationObject(Class<?> serviceClass) {
         YangSchemaNode schemaNode = null;
         if (getAppObjectStore().containsKey(serviceClass.getName())) {
             schemaNode = getYangSchemaNodeUsingAppName(serviceClass.getName());
-        } else if (getYangSchemaStoreForRootInterface().containsKey(serviceClass.getName())) {
-            schemaNode = getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName(serviceClass.getName());
-        } else if (getYangSchemaStoreForRootOpParam().containsKey(serviceClass.getName())) {
-            schemaNode = getYangSchemaNodeUsingGeneratedRootNodeOpPramFileName(serviceClass.getName());
+        } else if (getYangSchemaStoreForRootInterface()
+                .containsKey(serviceClass.getName())) {
+            schemaNode =
+                    getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName(
+                            serviceClass.getName());
+        } else if (getYangSchemaStoreForRootOpParam()
+                .containsKey(serviceClass.getName())) {
+            schemaNode = getYangSchemaNodeUsingGeneratedRootNodeOpPramFileName(
+                    serviceClass.getName());
         }
 
         if (schemaNode != null) {
             String name = (schemaNode.getJavaPackage() + PERIOD +
-                    schemaNode.getJavaClassNameOrBuiltInType() + PERIOD).toLowerCase()
-                    + getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType()) + EVENT_STRING;
+                    schemaNode.getJavaClassNameOrBuiltInType() + PERIOD)
+                    .toLowerCase()
+                    +
+                    getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType()) +
+                    EVENT_STRING;
 
             if (getNotificationSchemaMap().containsKey(name)) {
-                if (!getNotificationSchemaMap().get(name).isNotificationRegistered()) {
-                    getNotificationSchemaMap().get(name).setNotificationRegistered(true);
+                if (!getNotificationSchemaMap().get(name)
+                        .isNotificationRegistered()) {
+                    getNotificationSchemaMap().get(name)
+                            .setNotificationRegistered(true);
                     return true;
                 }
             }
@@ -684,10 +766,13 @@ public class DefaultYangSchemaRegistry
     /**
      * Sets YSR application context for schema map.
      *
-     * @param ysrRegisteredAppContextForSchemaMap YSR application context for schema map
+     * @param ysrRegisteredAppContextForSchemaMap YSR application context for
+     *                                            schema map
      */
-    private void ysrRegisteredAppContextForSchemaMap(YsrRegisteredAppContext ysrRegisteredAppContextForSchemaMap) {
-        this.ysrRegisteredAppContextForSchemaMap = ysrRegisteredAppContextForSchemaMap;
+    private void ysrRegisteredAppContextForSchemaMap(
+            YsrRegisteredAppContext ysrRegisteredAppContextForSchemaMap) {
+        this.ysrRegisteredAppContextForSchemaMap =
+                ysrRegisteredAppContextForSchemaMap;
     }
 
 
@@ -699,7 +784,8 @@ public class DefaultYangSchemaRegistry
      * @return schema node from the store
      */
     private YangSchemaNode retrieveNodeForUnregister(String appName,
-                                                     ConcurrentMap<String, YsrRegisteredAppContext> store) {
+                                                     ConcurrentMap<String,
+                                                             YsrRegisteredAppContext> store) {
         YsrRegisteredAppContext curContext = store.get(appName);
         YangSchemaNode curNode = curContext.curNode();
         //Delete all the generated ysr information in application's package.
@@ -733,9 +819,11 @@ public class DefaultYangSchemaRegistry
      *
      * @param curNode schema node
      */
-    private void removeFromYangNotificationStore(YangSchemaNode curNode, String appName) {
+    private void removeFromYangNotificationStore(YangSchemaNode curNode,
+                                                 String appName) {
         appName = appName.toLowerCase() + PERIOD +
-                getCapitalCase(curNode.getJavaClassNameOrBuiltInType()) + EVENT_STRING;
+                getCapitalCase(curNode.getJavaClassNameOrBuiltInType()) +
+                EVENT_STRING;
         if (getYangSchemaNotificationStore()
                 .containsKey(appName)) {
             getYangSchemaNotificationStore()

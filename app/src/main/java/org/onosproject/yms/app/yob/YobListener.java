@@ -19,13 +19,15 @@ package org.onosproject.yms.app.yob;
 
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.ydt.YdtExtendedListener;
+import org.onosproject.yms.app.yob.exception.YobExceptions;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.onosproject.yms.ydt.YdtContext;
 
 /**
  * Represents implementation of YANG object builder listener.
  */
-public class YobListener implements YdtExtendedListener {
+public class YobListener
+        implements YdtExtendedListener {
 
     /**
      * reference to the ydt root node.
@@ -63,32 +65,41 @@ public class YobListener implements YdtExtendedListener {
     /**
      * Creates an instance of YANG object builder listener.
      *
-     * @param ydtExtendedContext ydtExtendedContext is used to get application related
-     *                           information maintained in YDT
+     * @param ydtRootExtendedContext ydtExtendedContext is used to get
+     *                               application related
+     *                               information maintained in YDT
      * @param schemaRegistry
      */
-    public YobListener(YdtExtendedContext ydtExtendedContext, YangSchemaRegistry schemaRegistry) {
-        setYdtRootNode(ydtExtendedContext);
+    public YobListener(YdtExtendedContext ydtRootExtendedContext,
+                       YangSchemaRegistry schemaRegistry) {
+        setYdtRootNode(ydtRootExtendedContext);
         setSchemaRegistry(schemaRegistry);
     }
 
     @Override
     public void enterYdtNode(YdtExtendedContext ydtExtendedContext) {
-        YobHandler nodeHandler = YobHandlerFactory.getYobHandlerForContext(ydtExtendedContext);
+        YobHandler nodeHandler =
+                YobHandlerFactory.getYobHandlerForContext(ydtExtendedContext);
 
-        if (nodeHandler != null) {
-            nodeHandler.createYangBuilderObject(ydtExtendedContext, getYdtRootNode(), getSchemaRegistry());
+        if (nodeHandler == null) {
+            throw new YobExceptions("No handler for YDT node");
         }
+        nodeHandler.createYangBuilderObject(ydtExtendedContext,
+                                            getYdtRootNode(),
+                                            getSchemaRegistry());
+
     }
 
     @Override
     public void exitYdtNode(YdtExtendedContext ydtExtendedContext) {
-        YobHandler nodeHandler = YobHandlerFactory.getYobHandlerForContext(ydtExtendedContext);
+        YobHandler nodeHandler =
+                YobHandlerFactory.getYobHandlerForContext(ydtExtendedContext);
         if (nodeHandler != null) {
             nodeHandler.buildObjectFromBuilder(ydtExtendedContext);
             // The current ydt context node and root node are same then return.
             if (!ydtExtendedContext.equals(getYdtRootNode())) {
-                nodeHandler.setObjectInParent(ydtExtendedContext);
+                nodeHandler.setObjectInParent(ydtExtendedContext,
+                                              getSchemaRegistry());
             }
         }
     }

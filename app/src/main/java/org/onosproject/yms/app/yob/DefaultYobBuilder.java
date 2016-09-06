@@ -25,9 +25,11 @@ import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import static org.onosproject.yms.app.ydt.AppType.YOB;
 
 /**
- * Represents implementation of interfaces to build and obtain YANG objects from YDT.
+ * Represents implementation of interfaces to build and obtain YANG objects
+ * from YDT.
  */
-public class DefaultYobBuilder implements YobBuilder {
+public class DefaultYobBuilder
+        implements YobBuilder {
 
     /**
      * Creates an instance of DefaultYobBuilder.
@@ -36,12 +38,19 @@ public class DefaultYobBuilder implements YobBuilder {
     }
 
     @Override
-    public Object getYangObject(YdtExtendedContext ydtContextNode, YangSchemaRegistry schemaRegistry) {
+    public Object getYangObject(YdtExtendedContext ydtRootNode,
+                                YangSchemaRegistry schemaRegistry) {
         YdtExtendedWalker ydtExtendedWalker = new DefaultYdtWalker();
-        YdtExtendedListener ydtExtendedListener = new YobListener(ydtContextNode, schemaRegistry);
-        if (ydtContextNode != null) {
-            ydtExtendedWalker.walk(ydtExtendedListener, ydtContextNode);
-            return ydtContextNode.getAppInfo(YOB);
+        YdtExtendedListener yobListener =
+                new YobListener(ydtRootNode, schemaRegistry);
+        if (ydtRootNode != null) {
+            ydtExtendedWalker.walk(yobListener, ydtRootNode);
+            YobBuilderContainer
+                    yobBuilderContainer =
+                    (YobBuilderContainer) ydtRootNode.getAppInfo(YOB);
+
+            return yobBuilderContainer.getBuilderOrBuiltObjectOfScheam()
+                    .getBuiltObject();
         }
         return null;
     }
