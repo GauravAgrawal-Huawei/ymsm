@@ -29,6 +29,11 @@ import java.util.Objects;
 public class DefaultMultiRangeValidation implements MultiRangeValidation {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected byte integer;
+    protected short unInteger;
+    protected byte revInteger;
+    protected short revUnInteger;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,11 +53,6 @@ public class DefaultMultiRangeValidation implements MultiRangeValidation {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected byte integer;
-    protected short unInteger;
-    protected byte revInteger;
-    protected short revUnInteger;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -63,15 +63,6 @@ public class DefaultMultiRangeValidation implements MultiRangeValidation {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
 
     @Override
     public byte integer() {
@@ -92,6 +83,15 @@ public class DefaultMultiRangeValidation implements MultiRangeValidation {
     public short revUnInteger() {
         return revUnInteger;
     }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     @Override
     public int hashCode() {
@@ -282,17 +282,17 @@ public class DefaultMultiRangeValidation implements MultiRangeValidation {
     public static class MultiRangeValidationBuilder implements MultiRangeValidation.MultiRangeValidationBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected byte integer;
+        protected short unInteger;
+        protected byte revInteger;
+        protected short revUnInteger;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected byte integer;
-        protected short unInteger;
-        protected byte revInteger;
-        protected short revUnInteger;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -303,27 +303,6 @@ public class DefaultMultiRangeValidation implements MultiRangeValidation {
          * Identify the leafs to be selected, in a query operation
          */
         private BitSet selectLeafFlags = new BitSet();
-
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public MultiRangeValidationBuilder onosYangNodeOperationType(OnosYangNodeOperationType
-            onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
 
 
         @Override
@@ -373,6 +352,27 @@ public class DefaultMultiRangeValidation implements MultiRangeValidation {
             this.revUnInteger = revUnInteger;
             return this;
         }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public MultiRangeValidationBuilder onosYangNodeOperationType(OnosYangNodeOperationType
+            onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
+
 
         /**
          * Returns the valueLeafFlags.

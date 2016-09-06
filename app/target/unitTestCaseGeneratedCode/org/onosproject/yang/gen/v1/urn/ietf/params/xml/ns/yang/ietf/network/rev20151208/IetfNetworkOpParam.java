@@ -26,6 +26,9 @@ import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev2
  */
 public class IetfNetworkOpParam implements IetfNetwork {
 
+    protected Networks networks;
+    protected NetworksState networksState;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -45,9 +48,12 @@ public class IetfNetworkOpParam implements IetfNetwork {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected Networks networks;
-    protected NetworksState networksState;
+    public Networks networks() {
+        return networks;
+    }
+    public NetworksState networksState() {
+        return networksState;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -57,12 +63,6 @@ public class IetfNetworkOpParam implements IetfNetwork {
         return onosYangNodeOperationType;
     }
 
-    public Networks networks() {
-        return networks;
-    }
-    public NetworksState networksState() {
-        return networksState;
-    }
 
     @Override
     public int hashCode() {
@@ -163,35 +163,15 @@ public class IetfNetworkOpParam implements IetfNetwork {
      */
     public static class IetfNetworkBuilder {
 
+        protected Networks networks;
+        protected NetworksState networksState;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected Networks networks;
-        protected NetworksState networksState;
-
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public IetfNetworkBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
 
         public Networks networks() {
             return networks;
@@ -221,6 +201,26 @@ public class IetfNetworkOpParam implements IetfNetwork {
             this.networksState = networksState;
             return this;
         }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public IetfNetworkBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
+
 
         public IetfNetwork build() {
             return new IetfNetworkOpParam(this);

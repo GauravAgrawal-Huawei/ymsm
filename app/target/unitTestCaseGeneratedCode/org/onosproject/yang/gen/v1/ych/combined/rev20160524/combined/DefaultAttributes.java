@@ -36,6 +36,13 @@ import org.onosproject.yang.gen.v1.ych.combined.rev20160524.combined.attributes.
 public class DefaultAttributes implements Attributes {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected Origin origin;
+    protected MultiExitDisc multiExitDisc;
+    protected LocalPref localPref;
+    protected Aigp aigp;
+    protected List<UnrecognizedAttributes> unrecognizedAttributes = new ArrayList<>();
+    protected List<BgpParameters> bgpParameters = new ArrayList<>();
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -54,22 +61,6 @@ public class DefaultAttributes implements Attributes {
      * Applicable in protocol edit operation, will be ignored in query operation
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
-
-
-    protected Origin origin;
-    protected MultiExitDisc multiExitDisc;
-    protected LocalPref localPref;
-    protected Aigp aigp;
-    protected List<UnrecognizedAttributes> unrecognizedAttributes = new ArrayList<>();
-    protected List<BgpParameters> bgpParameters = new ArrayList<>();
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
 
 
     @Override
@@ -101,6 +92,15 @@ public class DefaultAttributes implements Attributes {
     public List<BgpParameters> bgpParameters() {
         return bgpParameters;
     }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     @Override
     public int hashCode() {
@@ -314,13 +314,6 @@ public class DefaultAttributes implements Attributes {
     public static class AttributesBuilder implements Attributes.AttributesBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        /**
-         * Specify the node specific operation in protocols like NETCONF.
-         * Applicable in protocol edit operation, will be ignored in query operation
-         */
-        private OnosYangNodeOperationType onosYangNodeOperationType;
-
-
         protected Origin origin;
         protected MultiExitDisc multiExitDisc;
         protected LocalPref localPref;
@@ -329,24 +322,11 @@ public class DefaultAttributes implements Attributes {
         protected List<BgpParameters> bgpParameters = new ArrayList<>();
 
         /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
+         * Specify the node specific operation in protocols like NETCONF.
+         * Applicable in protocol edit operation, will be ignored in query operation
          */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
+        private OnosYangNodeOperationType onosYangNodeOperationType;
 
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public AttributesBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
 
 
         @Override
@@ -426,6 +406,26 @@ public class DefaultAttributes implements Attributes {
             bgpParameters().add(value);
             return this;
         }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public AttributesBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
+
 
         @Override
         public void addYangAugmentedInfo(Object value, Class classObject) {

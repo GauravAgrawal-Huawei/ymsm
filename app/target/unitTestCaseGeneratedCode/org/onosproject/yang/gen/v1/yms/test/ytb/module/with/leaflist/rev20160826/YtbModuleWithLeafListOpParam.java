@@ -27,6 +27,8 @@ import java.util.Objects;
  */
 public class YtbModuleWithLeafListOpParam implements YtbModuleWithLeafList {
 
+    protected List<Long> time = new ArrayList<>();
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -46,8 +48,6 @@ public class YtbModuleWithLeafListOpParam implements YtbModuleWithLeafList {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected List<Long> time = new ArrayList<>();
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -58,6 +58,9 @@ public class YtbModuleWithLeafListOpParam implements YtbModuleWithLeafList {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+    public List<Long> time() {
+        return time;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -67,9 +70,6 @@ public class YtbModuleWithLeafListOpParam implements YtbModuleWithLeafList {
         return onosYangNodeOperationType;
     }
 
-    public List<Long> time() {
-        return time;
-    }
 
     @Override
     public int hashCode() {
@@ -211,14 +211,14 @@ public class YtbModuleWithLeafListOpParam implements YtbModuleWithLeafList {
      */
     public static class YtbModuleWithLeafListBuilder {
 
+        protected List<Long> time = new ArrayList<>();
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected List<Long> time = new ArrayList<>();
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -230,6 +230,24 @@ public class YtbModuleWithLeafListOpParam implements YtbModuleWithLeafList {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+        public List<Long> time() {
+            return time;
+        }
+
+        /**
+         * Returns the builder object of time.
+         *
+         * @param time list of time
+         * @return builder object of time
+         */
+        public YtbModuleWithLeafListBuilder time(List<Long> time) {
+            this.time = time;
+            return this;
+        }
+        public YtbModuleWithLeafListBuilder addToTime(Long value) {
+            time().add(value);
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -251,24 +269,6 @@ public class YtbModuleWithLeafListOpParam implements YtbModuleWithLeafList {
            return this;
         }
 
-        public List<Long> time() {
-            return time;
-        }
-
-        /**
-         * Returns the builder object of time.
-         *
-         * @param time list of time
-         * @return builder object of time
-         */
-        public YtbModuleWithLeafListBuilder time(List<Long> time) {
-            this.time = time;
-            return this;
-        }
-        public YtbModuleWithLeafListBuilder addToTime(Long value) {
-            time().add(value);
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.

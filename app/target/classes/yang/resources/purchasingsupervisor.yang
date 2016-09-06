@@ -1,8 +1,8 @@
-module purchasingsupervisor {
+module ych-purchasingsupervisor {
 
     yang-version 1;
 
-    namespace "ydt.purchasing-supervisor";
+    namespace "ych.purchasing-supervisor";
 
     prefix "purchasing";
 
@@ -14,13 +14,13 @@ module purchasingsupervisor {
         description "Initial revision.";
     }
 
-    container supervisor {
-        leaf purchasing-specialist {
+    container ych-purchasing-supervisor {
+        leaf ych-purchasing-specialist {
             type string;
             description "name of the purchasing-specialist person";
         }
 
-        leaf support {
+        leaf ych-purchasing-support {
             type string;
             description "name of the support person";
         }

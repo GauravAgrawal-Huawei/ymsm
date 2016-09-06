@@ -29,6 +29,8 @@ import java.util.Objects;
 public class DefaultCont5 implements Cont5 {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected String leaf9;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,8 +50,6 @@ public class DefaultCont5 implements Cont5 {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected String leaf9;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -60,6 +60,11 @@ public class DefaultCont5 implements Cont5 {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+
+    @Override
+    public String leaf9() {
+        return leaf9;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -69,11 +74,6 @@ public class DefaultCont5 implements Cont5 {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public String leaf9() {
-        return leaf9;
-    }
 
     @Override
     public int hashCode() {
@@ -220,14 +220,14 @@ public class DefaultCont5 implements Cont5 {
     public static class Cont5Builder implements Cont5.Cont5Builder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected String leaf9;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected String leaf9;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -239,6 +239,18 @@ public class DefaultCont5 implements Cont5 {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+
+        @Override
+        public String leaf9() {
+            return leaf9;
+        }
+
+        @Override
+        public Cont5Builder leaf9(String leaf9) {
+            getValueLeafFlags().set(LeafIdentifier.LEAF9.getLeafIndex());
+            this.leaf9 = leaf9;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -259,18 +271,6 @@ public class DefaultCont5 implements Cont5 {
            return this;
         }
 
-
-        @Override
-        public String leaf9() {
-            return leaf9;
-        }
-
-        @Override
-        public Cont5Builder leaf9(String leaf9) {
-            getValueLeafFlags().set(LeafIdentifier.LEAF9.getLeafIndex());
-            this.leaf9 = leaf9;
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.

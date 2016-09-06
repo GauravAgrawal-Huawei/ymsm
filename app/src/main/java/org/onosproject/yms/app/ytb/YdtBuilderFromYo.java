@@ -32,6 +32,7 @@ import org.onosproject.yangutils.datamodel.YangLeafRef;
 import org.onosproject.yangutils.datamodel.YangLeavesHolder;
 import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangNotification;
+import org.onosproject.yangutils.datamodel.YangRpc;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangType;
 import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
@@ -222,7 +223,7 @@ public class YdtBuilderFromYo {
             setRootObject(getYangObjectOfNotification());
         } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | NoSuchFieldException |
                 DataModelException e) {
-            // TODO: throws exception.
+            throw new YtbException(e.getMessage());
         }
     }
 
@@ -279,7 +280,8 @@ public class YdtBuilderFromYo {
                         notification can only be a root node.
                          */
                             if (curSchemaNode.getNextSibling() != null && !(curSchemaNode.getNextSibling()
-                                    instanceof YangNotification)) {
+                                    instanceof YangNotification) && !(curSchemaNode.getNextSibling() instanceof
+                                    YangRpc)) {
                             /*If there is any sibling, then change the current schema to sibling
                             * since the YDT, is still the parent, new node will be added under current
                             * YDT parent
@@ -306,7 +308,7 @@ public class YdtBuilderFromYo {
                     }
                 } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException |
                         NoSuchFieldException e) {
-                    //TODO: throw exception.
+                    throw new YtbException(e.getMessage());
                 }
 
             }
@@ -316,12 +318,14 @@ public class YdtBuilderFromYo {
             notification can only be a root node.
              */
             if (curTraversal != PARENT && curSchemaNode.getChild() != null && !(curSchemaNode.getChild()
-                    instanceof YangNotification)) {
+                    instanceof YangNotification) && !(curSchemaNode.getNextSibling() instanceof
+                    YangRpc)) {
                 previousNodeInfo = null;
                 curTraversal = CHILD;
                 curSchemaNode = curSchemaNode.getChild();
             } else if (curSchemaNode.getNextSibling() != null && !(curSchemaNode.getNextSibling() instanceof
-                    YangNotification)) {
+                    YangNotification) && !(curSchemaNode.getNextSibling() instanceof
+                    YangRpc)) {
                 if (curSchemaNode.getYangSchemaNodeType() == YANG_MULTI_INSTANCE_NODE) {
                     previousNodeInfo = getCurNodeYtbInfoAndTraverseToYtbParent();
                     continue;
@@ -555,7 +559,7 @@ public class YdtBuilderFromYo {
                         }
                     } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException |
                             NoSuchFieldException | ClassNotFoundException e) {
-                        // TODO: throw exception.
+                        throw new YtbException(e.getMessage());
                     }
                     // Only when child is added traverse back to parent.
                     if (leafTypeObject) {
@@ -624,7 +628,7 @@ public class YdtBuilderFromYo {
                         }
                     } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException |
                             NoSuchFieldException e) {
-                        // TODO: throw exception.
+                        throw new YtbException(e.getMessage());
                     }
                 }
             }
@@ -756,12 +760,13 @@ public class YdtBuilderFromYo {
     private Class getInterfaceClassFromImplClass(Object implClassObject) {
         Class implClass = implClassObject.getClass();
         Class[] interfacesOfClass = implClass.getInterfaces();
-        Class interfaceClass = null;
+        Class interfaceClass;
         if (interfacesOfClass.length == 1) {
             ListIterator<Class> rootClassInterfacesIterator = Arrays.asList(interfacesOfClass).listIterator();
             interfaceClass = rootClassInterfacesIterator.next();
         } else {
-            //TODO: throw exception
+            throw new YtbException("YTB Error: Two interfaces are present for the implementation class " +
+                    implClass + ". Unable to handle it");
         }
         return interfaceClass;
     }
@@ -784,7 +789,8 @@ public class YdtBuilderFromYo {
         Object typeOfEventObject = getAttributeFromInheritance(parentClass, getRootObject(), STR_TYPE);
         String valueOfOpType = String.valueOf(typeOfEventObject);
         if (valueOfOpType.equals(STR_NULL) || valueOfOpType.isEmpty()) {
-            // TODO: throw exception.
+            throw new YtbException("YTB error: There is no notification present for the event. Invalid input for " +
+                    "notification.");
         }
         YangSchemaNode notificationNode = getSchemaRoot().getNotificationSchemaNode(valueOfOpType);
         return notificationNode;

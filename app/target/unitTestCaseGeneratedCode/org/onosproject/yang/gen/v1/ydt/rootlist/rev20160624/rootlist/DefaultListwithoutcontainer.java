@@ -29,6 +29,8 @@ import java.util.Objects;
 public class DefaultListwithoutcontainer implements Listwithoutcontainer {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected int invalidinterval;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,8 +50,6 @@ public class DefaultListwithoutcontainer implements Listwithoutcontainer {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected int invalidinterval;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -60,6 +60,11 @@ public class DefaultListwithoutcontainer implements Listwithoutcontainer {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+
+    @Override
+    public int invalidinterval() {
+        return invalidinterval;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -69,11 +74,6 @@ public class DefaultListwithoutcontainer implements Listwithoutcontainer {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public int invalidinterval() {
-        return invalidinterval;
-    }
 
     @Override
     public int hashCode() {
@@ -223,14 +223,14 @@ public class DefaultListwithoutcontainer implements Listwithoutcontainer {
     public static class ListwithoutcontainerBuilder implements Listwithoutcontainer.ListwithoutcontainerBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected int invalidinterval;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected int invalidinterval;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -242,6 +242,18 @@ public class DefaultListwithoutcontainer implements Listwithoutcontainer {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+
+        @Override
+        public int invalidinterval() {
+            return invalidinterval;
+        }
+
+        @Override
+        public ListwithoutcontainerBuilder invalidinterval(int invalidinterval) {
+            getValueLeafFlags().set(LeafIdentifier.INVALIDINTERVAL.getLeafIndex());
+            this.invalidinterval = invalidinterval;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -263,18 +275,6 @@ public class DefaultListwithoutcontainer implements Listwithoutcontainer {
            return this;
         }
 
-
-        @Override
-        public int invalidinterval() {
-            return invalidinterval;
-        }
-
-        @Override
-        public ListwithoutcontainerBuilder invalidinterval(int invalidinterval) {
-            getValueLeafFlags().set(LeafIdentifier.INVALIDINTERVAL.getLeafIndex());
-            this.invalidinterval = invalidinterval;
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.

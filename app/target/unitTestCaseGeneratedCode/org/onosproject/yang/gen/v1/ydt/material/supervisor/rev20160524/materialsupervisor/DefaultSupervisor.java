@@ -29,6 +29,9 @@ import java.util.Objects;
 public class DefaultSupervisor implements Supervisor {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected String name;
+    protected String departmentId;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,9 +51,6 @@ public class DefaultSupervisor implements Supervisor {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected String name;
-    protected String departmentId;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -61,15 +61,6 @@ public class DefaultSupervisor implements Supervisor {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
 
     @Override
     public String name() {
@@ -80,6 +71,15 @@ public class DefaultSupervisor implements Supervisor {
     public String departmentId() {
         return departmentId;
     }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     @Override
     public int hashCode() {
@@ -241,15 +241,15 @@ public class DefaultSupervisor implements Supervisor {
     public static class SupervisorBuilder implements Supervisor.SupervisorBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected String name;
+        protected String departmentId;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected String name;
-        protected String departmentId;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -260,26 +260,6 @@ public class DefaultSupervisor implements Supervisor {
          * Identify the leafs to be selected, in a query operation
          */
         private BitSet selectLeafFlags = new BitSet();
-
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public SupervisorBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
 
 
         @Override
@@ -305,6 +285,26 @@ public class DefaultSupervisor implements Supervisor {
             this.departmentId = departmentId;
             return this;
         }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public SupervisorBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
+
 
         /**
          * Returns the valueLeafFlags.

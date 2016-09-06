@@ -27,6 +27,8 @@ import org.onosproject.yang.gen.v1.ydt.enumtest.rev20160524.enumtest.EnumList;
  */
 public class EnumtestOpParam implements Enumtest {
 
+    protected List<EnumList> enumList = new ArrayList<>();
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -46,8 +48,9 @@ public class EnumtestOpParam implements Enumtest {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected List<EnumList> enumList = new ArrayList<>();
+    public List<EnumList> enumList() {
+        return enumList;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -57,9 +60,6 @@ public class EnumtestOpParam implements Enumtest {
         return onosYangNodeOperationType;
     }
 
-    public List<EnumList> enumList() {
-        return enumList;
-    }
 
     @Override
     public int hashCode() {
@@ -163,6 +163,8 @@ public class EnumtestOpParam implements Enumtest {
      */
     public static class EnumtestBuilder {
 
+        protected List<EnumList> enumList = new ArrayList<>();
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -170,8 +172,24 @@ public class EnumtestOpParam implements Enumtest {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        protected List<EnumList> enumList = new ArrayList<>();
+        public List<EnumList> enumList() {
+            return enumList;
+        }
 
+        /**
+         * Returns the builder object of enumList.
+         *
+         * @param enumList list of enumList
+         * @return builder object of enumList
+         */
+        public EnumtestBuilder enumList(List<EnumList> enumList) {
+            this.enumList = enumList;
+            return this;
+        }
+        public EnumtestBuilder addToEnumList(EnumList value) {
+            enumList().add(value);
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -192,24 +210,6 @@ public class EnumtestOpParam implements Enumtest {
            return this;
         }
 
-        public List<EnumList> enumList() {
-            return enumList;
-        }
-
-        /**
-         * Returns the builder object of enumList.
-         *
-         * @param enumList list of enumList
-         * @return builder object of enumList
-         */
-        public EnumtestBuilder enumList(List<EnumList> enumList) {
-            this.enumList = enumList;
-            return this;
-        }
-        public EnumtestBuilder addToEnumList(EnumList value) {
-            enumList().add(value);
-            return this;
-        }
 
         public Enumtest build() {
             return new EnumtestOpParam(this);

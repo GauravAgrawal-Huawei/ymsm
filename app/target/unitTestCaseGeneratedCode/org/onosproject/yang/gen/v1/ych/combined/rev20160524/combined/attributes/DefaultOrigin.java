@@ -30,6 +30,8 @@ import org.onosproject.yang.gen.v1.ych.combined.rev20160524.combined.PathId;
 public class DefaultOrigin implements Origin {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected PathId value;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -49,8 +51,6 @@ public class DefaultOrigin implements Origin {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected PathId value;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -61,6 +61,11 @@ public class DefaultOrigin implements Origin {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+
+    @Override
+    public PathId value() {
+        return value;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -70,11 +75,6 @@ public class DefaultOrigin implements Origin {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public PathId value() {
-        return value;
-    }
 
     @Override
     public int hashCode() {
@@ -221,14 +221,14 @@ public class DefaultOrigin implements Origin {
     public static class OriginBuilder implements Origin.OriginBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected PathId value;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected PathId value;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -240,6 +240,18 @@ public class DefaultOrigin implements Origin {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+
+        @Override
+        public PathId value() {
+            return value;
+        }
+
+        @Override
+        public OriginBuilder value(PathId value) {
+            getValueLeafFlags().set(LeafIdentifier.VALUE.getLeafIndex());
+            this.value = value;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -260,18 +272,6 @@ public class DefaultOrigin implements Origin {
            return this;
         }
 
-
-        @Override
-        public PathId value() {
-            return value;
-        }
-
-        @Override
-        public OriginBuilder value(PathId value) {
-            getValueLeafFlags().set(LeafIdentifier.VALUE.getLeafIndex());
-            this.value = value;
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.

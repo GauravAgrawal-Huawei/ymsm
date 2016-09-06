@@ -30,6 +30,8 @@ import org.onosproject.yang.gen.v1.ych.combined.rev20160524.combined.Metric;
 public class DefaultAigpTlv implements AigpTlv {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected Metric metric;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -49,8 +51,6 @@ public class DefaultAigpTlv implements AigpTlv {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected Metric metric;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -61,6 +61,11 @@ public class DefaultAigpTlv implements AigpTlv {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+
+    @Override
+    public Metric metric() {
+        return metric;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -70,11 +75,6 @@ public class DefaultAigpTlv implements AigpTlv {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public Metric metric() {
-        return metric;
-    }
 
     @Override
     public int hashCode() {
@@ -221,14 +221,14 @@ public class DefaultAigpTlv implements AigpTlv {
     public static class AigpTlvBuilder implements AigpTlv.AigpTlvBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected Metric metric;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected Metric metric;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -240,6 +240,18 @@ public class DefaultAigpTlv implements AigpTlv {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+
+        @Override
+        public Metric metric() {
+            return metric;
+        }
+
+        @Override
+        public AigpTlvBuilder metric(Metric metric) {
+            getValueLeafFlags().set(LeafIdentifier.METRIC.getLeafIndex());
+            this.metric = metric;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -260,18 +272,6 @@ public class DefaultAigpTlv implements AigpTlv {
            return this;
         }
 
-
-        @Override
-        public Metric metric() {
-            return metric;
-        }
-
-        @Override
-        public AigpTlvBuilder metric(Metric metric) {
-            getValueLeafFlags().set(LeafIdentifier.METRIC.getLeafIndex());
-            this.metric = metric;
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.

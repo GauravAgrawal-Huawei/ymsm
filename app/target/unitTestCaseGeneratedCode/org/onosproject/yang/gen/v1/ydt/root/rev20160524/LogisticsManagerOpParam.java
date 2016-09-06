@@ -29,6 +29,14 @@ import org.onosproject.yang.gen.v1.ydt.root.rev20160524.logisticsmanager.Purchas
  */
 public class LogisticsManagerOpParam implements LogisticsManager {
 
+    protected String customsSupervisor;
+    protected String merchandiserSupervisor;
+    protected String tradingSupervisor;
+    protected List<String> warehouseSupervisor = new ArrayList<>();
+    protected List<String> employeeId = new ArrayList<>();
+    protected List<MaterialSupervisor> materialSupervisor = new ArrayList<>();
+    protected PurchasingSupervisor purchasingSupervisor;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,14 +56,6 @@ public class LogisticsManagerOpParam implements LogisticsManager {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected String customsSupervisor;
-    protected String merchandiserSupervisor;
-    protected String tradingSupervisor;
-    protected List<String> warehouseSupervisor = new ArrayList<>();
-    protected List<String> employeeId = new ArrayList<>();
-    protected List<MaterialSupervisor> materialSupervisor = new ArrayList<>();
-    protected PurchasingSupervisor purchasingSupervisor;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -66,15 +66,6 @@ public class LogisticsManagerOpParam implements LogisticsManager {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
     public String customsSupervisor() {
         return customsSupervisor;
     }
@@ -96,6 +87,15 @@ public class LogisticsManagerOpParam implements LogisticsManager {
     public PurchasingSupervisor purchasingSupervisor() {
         return purchasingSupervisor;
     }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     @Override
     public int hashCode() {
@@ -385,13 +385,6 @@ public class LogisticsManagerOpParam implements LogisticsManager {
      */
     public static class LogisticsManagerBuilder {
 
-        /**
-         * Specify the node specific operation in protocols like NETCONF.
-         * Applicable in protocol edit operation, will be ignored in query operation
-         */
-        private OnosYangNodeOperationType onosYangNodeOperationType;
-
-
         protected String customsSupervisor;
         protected String merchandiserSupervisor;
         protected String tradingSupervisor;
@@ -399,6 +392,13 @@ public class LogisticsManagerOpParam implements LogisticsManager {
         protected List<String> employeeId = new ArrayList<>();
         protected List<MaterialSupervisor> materialSupervisor = new ArrayList<>();
         protected PurchasingSupervisor purchasingSupervisor;
+
+        /**
+         * Specify the node specific operation in protocols like NETCONF.
+         * Applicable in protocol edit operation, will be ignored in query operation
+         */
+        private OnosYangNodeOperationType onosYangNodeOperationType;
+
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -409,27 +409,6 @@ public class LogisticsManagerOpParam implements LogisticsManager {
          * Identify the leafs to be selected, in a query operation
          */
         private BitSet selectLeafFlags = new BitSet();
-
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public LogisticsManagerBuilder onosYangNodeOperationType(OnosYangNodeOperationType
-            onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
 
         public String customsSupervisor() {
             return customsSupervisor;
@@ -544,6 +523,27 @@ public class LogisticsManagerOpParam implements LogisticsManager {
             materialSupervisor().add(value);
             return this;
         }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public LogisticsManagerBuilder onosYangNodeOperationType(OnosYangNodeOperationType
+            onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
+
 
         /**
          * Returns the valueLeafFlags.

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XmlCodecHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yms.app.ych.codecutils</a> &gt; <span class="el_source">XmlCodecHandler.java</span></div><h1>XmlCodecHandler.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yms.app.ych.codecutils;
+
+import org.dom4j.Element;
+import org.onosproject.yms.app.ydt.YdtExtendedContext;
+import org.onosproject.yms.ydt.YdtContext;
+import org.onosproject.yms.ydt.YdtContextOperationType;
+
+import java.util.Stack;
+
+/**
+ * Represents an codec handler to process the xml content and add element to the stack.
+ */
+<span class="fc" id="L29">public abstract class XmlCodecHandler {</span>
+
+    /**
+     * Sets the namespace and tag name in element tree maintained in stack.
+     *
+     * @param ydtContext           YDT context
+     * @param domElementStack      element tree stack
+     */
+    public void processXmlContext(YdtContext ydtContext, Stack&lt;Element&gt; domElementStack) {
+
+<span class="fc" id="L39">        Element newElement = updateNameAndNamespace(ydtContext, domElementStack.peek());</span>
+<span class="fc" id="L40">        domElementStack.push(newElement);</span>
+<span class="fc" id="L41">    }</span>
+
+    /**
+     * Returns the new element name by updating tag name and namespace.
+     *
+     * @param ydtContext     YDT context node
+     * @param xmlElement     element in the stack used for adding new element
+     * @return               new element name by updating tag name and namespace
+     */
+    public Element updateNameAndNamespace(YdtContext ydtContext, Element xmlElement) {
+<span class="fc" id="L51">        String nameSpace = null;</span>
+<span class="fc" id="L52">        String parentNameSpace = null;</span>
+<span class="fc" id="L53">        Element newElement = null;</span>
+
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (ydtContext.getNamespace() != null) {</span>
+<span class="fc" id="L56">            nameSpace = ydtContext.getNamespace();</span>
+        }
+
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">        if (ydtContext.getParent() != null) {</span>
+<span class="fc" id="L60">            parentNameSpace = ydtContext.getParent().getNamespace();</span>
+        }
+
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">        if (nameSpace != null) {</span>
+<span class="fc" id="L64">            newElement = xmlElement.addElement(ydtContext.getName(), nameSpace);</span>
+        } else {
+<span class="nc bnc" id="L66" title="All 2 branches missed.">            if (parentNameSpace != null) {</span>
+<span class="nc" id="L67">                newElement = xmlElement.addElement(ydtContext.getName(), parentNameSpace);</span>
+            } else {
+<span class="nc" id="L69">                newElement = xmlElement.addElement(ydtContext.getName());</span>
+            }
+        }
+
+<span class="fc" id="L73">        YdtContextOperationType ydtContextOperationType = ((YdtExtendedContext) ydtContext)</span>
+<span class="fc" id="L74">                                                                   .getYdtContextOperationType();</span>
+<span class="fc bfc" id="L75" title="All 4 branches covered.">        if (ydtContextOperationType != null &amp;&amp; ydtContextOperationType != YdtContextOperationType.NONE) {</span>
+<span class="fc" id="L76">            newElement.addAttribute(CodecUtilConstants.OPERATIONTYPE, ydtContextOperationType.toString().toLowerCase());</span>
+        }
+
+<span class="fc" id="L79">        return newElement;</span>
+    }
+
+    /**
+     * Sets the leaf value in the current element maintained in stack.
+     *
+     * @param ydtContext           YDT context node
+     * @param domElementStack      current element node in the stack
+     */
+    public void setXmlValue(YdtContext ydtContext, Stack&lt;Element&gt; domElementStack) {
+<span class="fc" id="L89">        return;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

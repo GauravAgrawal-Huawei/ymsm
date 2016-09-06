@@ -24,6 +24,9 @@ import java.util.Objects;
  */
 public class EmptyContainerOpParam implements EmptyContainer {
 
+    protected org.onosproject.yang.gen.v1.ych.empty.container.rev20160524.emptycontainer
+            .EmptyContainer emptyContainer;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -43,9 +46,10 @@ public class EmptyContainerOpParam implements EmptyContainer {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected org.onosproject.yang.gen.v1.ych.empty.container.rev20160524.emptycontainer
-            .EmptyContainer emptyContainer;
+    public org.onosproject.yang.gen.v1.ych.empty.container.rev20160524
+            .emptycontainer.EmptyContainer emptyContainer() {
+        return emptyContainer;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -55,10 +59,6 @@ public class EmptyContainerOpParam implements EmptyContainer {
         return onosYangNodeOperationType;
     }
 
-    public org.onosproject.yang.gen.v1.ych.empty.container.rev20160524
-            .emptycontainer.EmptyContainer emptyContainer() {
-        return emptyContainer;
-    }
 
     @Override
     public int hashCode() {
@@ -147,6 +147,9 @@ public class EmptyContainerOpParam implements EmptyContainer {
      */
     public static class EmptyContainerBuilder {
 
+        protected org.onosproject.yang.gen.v1.ych.empty.container.rev20160524.emptycontainer
+            .EmptyContainer emptyContainer;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -154,9 +157,22 @@ public class EmptyContainerOpParam implements EmptyContainer {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        protected org.onosproject.yang.gen.v1.ych.empty.container.rev20160524.emptycontainer
-            .EmptyContainer emptyContainer;
+        public org.onosproject.yang.gen.v1.ych.empty.container.rev20160524
+            .emptycontainer.EmptyContainer emptyContainer() {
+            return emptyContainer;
+        }
 
+        /**
+         * Returns the builder object of emptyContainer.
+         *
+         * @param emptyContainer value of emptyContainer
+         * @return builder object of emptyContainer
+         */
+        public EmptyContainerBuilder emptyContainer(org.onosproject.yang.gen.v1.ych.empty.container.rev20160524
+            .emptycontainer.EmptyContainer emptyContainer) {
+            this.emptyContainer = emptyContainer;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -177,22 +193,6 @@ public class EmptyContainerOpParam implements EmptyContainer {
            return this;
         }
 
-        public org.onosproject.yang.gen.v1.ych.empty.container.rev20160524
-            .emptycontainer.EmptyContainer emptyContainer() {
-            return emptyContainer;
-        }
-
-        /**
-         * Returns the builder object of emptyContainer.
-         *
-         * @param emptyContainer value of emptyContainer
-         * @return builder object of emptyContainer
-         */
-        public EmptyContainerBuilder emptyContainer(org.onosproject.yang.gen.v1.ych.empty.container.rev20160524
-            .emptycontainer.EmptyContainer emptyContainer) {
-            this.emptyContainer = emptyContainer;
-            return this;
-        }
 
         public EmptyContainer build() {
             return new EmptyContainerOpParam(this);

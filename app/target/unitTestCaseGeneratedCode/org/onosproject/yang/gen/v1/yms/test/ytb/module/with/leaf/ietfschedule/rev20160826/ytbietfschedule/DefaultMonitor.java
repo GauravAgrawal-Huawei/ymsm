@@ -29,6 +29,8 @@ import java.util.Objects;
 public class DefaultMonitor implements Monitor {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected short check;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,8 +50,6 @@ public class DefaultMonitor implements Monitor {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected short check;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -60,6 +60,11 @@ public class DefaultMonitor implements Monitor {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+
+    @Override
+    public short check() {
+        return check;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -69,11 +74,6 @@ public class DefaultMonitor implements Monitor {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public short check() {
-        return check;
-    }
 
     @Override
     public int hashCode() {
@@ -220,14 +220,14 @@ public class DefaultMonitor implements Monitor {
     public static class MonitorBuilder implements Monitor.MonitorBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected short check;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected short check;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -239,6 +239,18 @@ public class DefaultMonitor implements Monitor {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+
+        @Override
+        public short check() {
+            return check;
+        }
+
+        @Override
+        public MonitorBuilder check(short check) {
+            getValueLeafFlags().set(LeafIdentifier.CHECK.getLeafIndex());
+            this.check = check;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -259,18 +271,6 @@ public class DefaultMonitor implements Monitor {
            return this;
         }
 
-
-        @Override
-        public short check() {
-            return check;
-        }
-
-        @Override
-        public MonitorBuilder check(short check) {
-            getValueLeafFlags().set(LeafIdentifier.CHECK.getLeafIndex());
-            this.check = check;
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.

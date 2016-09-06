@@ -30,6 +30,8 @@ import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev2
 public class DefaultSupportingNetwork implements SupportingNetwork {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected NetworkId networkRef;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -49,8 +51,6 @@ public class DefaultSupportingNetwork implements SupportingNetwork {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected NetworkId networkRef;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -61,6 +61,11 @@ public class DefaultSupportingNetwork implements SupportingNetwork {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+
+    @Override
+    public NetworkId networkRef() {
+        return networkRef;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -70,11 +75,6 @@ public class DefaultSupportingNetwork implements SupportingNetwork {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public NetworkId networkRef() {
-        return networkRef;
-    }
 
     @Override
     public int hashCode() {
@@ -222,14 +222,14 @@ public class DefaultSupportingNetwork implements SupportingNetwork {
     public static class SupportingNetworkBuilder implements SupportingNetwork.SupportingNetworkBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected NetworkId networkRef;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected NetworkId networkRef;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -241,6 +241,18 @@ public class DefaultSupportingNetwork implements SupportingNetwork {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+
+        @Override
+        public NetworkId networkRef() {
+            return networkRef;
+        }
+
+        @Override
+        public SupportingNetworkBuilder networkRef(NetworkId networkRef) {
+            getValueLeafFlags().set(LeafIdentifier.NETWORKREF.getLeafIndex());
+            this.networkRef = networkRef;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -262,18 +274,6 @@ public class DefaultSupportingNetwork implements SupportingNetwork {
            return this;
         }
 
-
-        @Override
-        public NetworkId networkRef() {
-            return networkRef;
-        }
-
-        @Override
-        public SupportingNetworkBuilder networkRef(NetworkId networkRef) {
-            getValueLeafFlags().set(LeafIdentifier.NETWORKREF.getLeafIndex());
-            this.networkRef = networkRef;
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>YobBuilderOrBuiltObject.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yms.app.yob</a> &gt; <span class="el_source">YobBuilderOrBuiltObject.java</span></div><h1>YobBuilderOrBuiltObject.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yms.app.yob;
+
+import org.onosproject.yms.app.yob.exception.YobExceptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Represents the container of YANG object being built or the builder.
+ */
+public class YobBuilderOrBuiltObject {
+<span class="fc" id="L27">    private static final Logger log</span>
+<span class="fc" id="L28">            = LoggerFactory.getLogger(YobBuilderContainer.class);</span>
+
+    /**
+     * Is the contained object a built object.
+     */
+    boolean isBuilt;
+
+    /**
+     * Builder or built object.
+     */
+    Object builderOrBuiltObject;
+
+    /**
+     * Default / op param class.
+     */
+    Class&lt;?&gt; yangDefaultClass;
+
+    /**
+     * Default / op param builder class.
+     */
+    Class&lt;?&gt;[] yangDefaultClassBuilder;
+
+    public YobBuilderOrBuiltObject(
+<span class="fc" id="L51">            String qualifiedClassName, ClassLoader registeredAppClassLoader) {</span>
+
+        try {
+<span class="fc" id="L54">            yangDefaultClass =</span>
+<span class="fc" id="L55">                    registeredAppClassLoader.loadClass(qualifiedClassName);</span>
+<span class="fc" id="L56">            yangDefaultClassBuilder = yangDefaultClass.getDeclaredClasses();</span>
+<span class="fc" id="L57">            setBuilderObject(yangDefaultClassBuilder[0].newInstance());</span>
+<span class="nc" id="L58">        } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L59">            log.error(&quot;YOB: failed to load class for class &quot;</span>
+                              + qualifiedClassName);
+<span class="nc" id="L61">        } catch (InstantiationException | IllegalAccessException e) {</span>
+<span class="nc" id="L62">            log.error(&quot;YOB: failed to create an object for class &quot;</span>
+                              + qualifiedClassName);
+<span class="nc" id="L64">        } catch (NullPointerException e) {</span>
+<span class="nc" id="L65">            log.error(&quot;YOB: Reflection failed to create an object for &quot; +</span>
+                              &quot;class &quot; + qualifiedClassName);
+<span class="pc" id="L67">        }</span>
+
+<span class="fc" id="L69">    }</span>
+
+    /**
+     * Return the built status of the contained object.
+     *
+     * @return if the object is a built object
+     */
+    public boolean isBuilt() {
+<span class="fc" id="L77">        return isBuilt;</span>
+    }
+
+    /**
+     * Assign if the object is built or not.
+     *
+     * @param built status of built object
+     */
+    public void setBuilt(boolean built) {
+<span class="fc" id="L86">        isBuilt = built;</span>
+<span class="fc" id="L87">    }</span>
+
+    /**
+     * Returns the builder or built object.
+     *
+     * @return builder or built object
+     */
+    public Object getBuilderOrBuiltObject() {
+<span class="fc" id="L95">        return builderOrBuiltObject;</span>
+    }
+
+    /**
+     * Sets the builder or built object.
+     *
+     * @param builderOrBuiltObject object to be mainted
+     */
+    public void setBuilderOrBuiltObject(Object builderOrBuiltObject) {
+<span class="fc" id="L104">        this.builderOrBuiltObject = builderOrBuiltObject;</span>
+<span class="fc" id="L105">    }</span>
+
+    /**
+     * Returns the builder object if it is set.
+     *
+     * @return builder object
+     * @throws YobExceptions builder is not available
+     */
+    public Object getBuilderObject() {
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">        if (isBuilt()) {</span>
+<span class="nc" id="L115">            throw new YobExceptions(&quot;Object is already built, cannot fetch &quot; +</span>
+                                            &quot;builder&quot;);
+        }
+
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">        if (getBuilderOrBuiltObject() == null) {</span>
+<span class="nc" id="L120">            throw new YobExceptions(&quot;Builder is not yet set, cannot fetch it&quot;);</span>
+        }
+
+<span class="fc" id="L123">        return getBuilderOrBuiltObject();</span>
+    }
+
+    /**
+     * Check if the builder object is being initialized for the 1st time and
+     * set it.
+     *
+     * @param builderObject new builder object
+     */
+    private void setBuilderObject(Object builderObject) {
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">        if (isBuilt()) {</span>
+<span class="nc" id="L134">            throw new YobExceptions(&quot;Object is already built, cannot set &quot; +</span>
+                                            &quot;builder&quot;);
+        }
+
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">        if (getBuilderOrBuiltObject() != null) {</span>
+<span class="nc" id="L139">            throw new YobExceptions(&quot;ERROR: Builder is not already set&quot;);</span>
+        }
+
+<span class="fc" id="L142">        setBuilderOrBuiltObject(builderObject);</span>
+<span class="fc" id="L143">    }</span>
+
+    /**
+     * Returns the built object.
+     *
+     * @return built object
+     */
+    public Object getBuiltObject() {
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">        if (!isBuilt()) {</span>
+<span class="nc" id="L152">            throw new YobExceptions(&quot;Object is not built, cannot fetch it&quot;);</span>
+        }
+
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        if (getBuilderOrBuiltObject() == null) {</span>
+<span class="nc" id="L156">            throw new YobExceptions(&quot;ERROR: Built object is not set&quot;);</span>
+        }
+
+<span class="fc" id="L159">        return getBuilderOrBuiltObject();</span>
+    }
+
+    public void setBuiltObject(Object builtObject) {
+<span class="pc bpc" id="L163" title="1 of 2 branches missed.">        if (isBuilt()) {</span>
+<span class="nc" id="L164">            throw new YobExceptions(&quot;ERROR Object is already built, cannot &quot; +</span>
+                                            &quot;build again&quot;);
+        }
+
+<span class="pc bpc" id="L168" title="1 of 2 branches missed.">        if (getBuilderOrBuiltObject() == null) {</span>
+<span class="nc" id="L169">            throw new YobExceptions(&quot;ERROR: object building without builder&quot;);</span>
+        }
+
+<span class="fc" id="L172">        setBuilt(true);</span>
+<span class="fc" id="L173">        setBuilderOrBuiltObject(builtObject);</span>
+<span class="fc" id="L174">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

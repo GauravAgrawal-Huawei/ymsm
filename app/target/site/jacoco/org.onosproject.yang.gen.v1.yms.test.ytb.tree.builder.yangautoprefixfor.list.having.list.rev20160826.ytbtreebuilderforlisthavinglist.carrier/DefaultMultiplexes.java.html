@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultMultiplexes.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.ytbtreebuilderforlisthavinglist.carrier</a> &gt; <span class="el_source">DefaultMultiplexes.java</span></div><h1>DefaultMultiplexes.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
+            .ytbtreebuilderforlisthavinglist.carrier;
+
+import com.google.common.base.MoreObjects;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
+            .ytbtreebuilderforlisthavinglist.carrier.multiplexes.ApplicationAreas;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
+            .ytbtreebuilderforlisthavinglist.carrier.multiplexes.TypesEnum;
+
+/**
+ * Represents the implementation of multiplexes.
+ */
+public class DefaultMultiplexes implements Multiplexes {
+
+<span class="nc" id="L38">    protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+    protected TypesEnum types;
+<span class="nc" id="L40">    protected List&lt;ApplicationAreas&gt; applicationAreas = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, not applicable in query operation
+     */
+<span class="nc" id="L46">    public enum OnosYangNodeOperationType {</span>
+<span class="nc" id="L47">        MERGE,</span>
+<span class="nc" id="L48">        REPLACE,</span>
+<span class="nc" id="L49">        CREATE,</span>
+<span class="nc" id="L50">        DELETE,</span>
+<span class="nc" id="L51">        REMOVE,</span>
+<span class="nc" id="L52">        NONE</span>
+    }
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, will be ignored in query operation
+     */
+    private OnosYangNodeOperationType onosYangNodeOperationType;
+
+    /**
+     * Identify the leafs whose value are explicitly set
+     * Applicable in protocol edit and query operation
+     */
+<span class="nc" id="L65">    private BitSet valueLeafFlags = new BitSet();</span>
+
+    /**
+     * Identify the leafs to be selected, in a query operation
+     */
+<span class="nc" id="L70">    private BitSet selectLeafFlags = new BitSet();</span>
+
+    @Override
+    public TypesEnum types() {
+<span class="nc" id="L74">        return types;</span>
+    }
+
+    @Override
+    public List&lt;ApplicationAreas&gt; applicationAreas() {
+<span class="nc" id="L79">        return applicationAreas;</span>
+    }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L87">        return onosYangNodeOperationType;</span>
+    }
+
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L93">        return Objects.hash(types, applicationAreas);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L99">            return true;</span>
+        }
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        if (obj instanceof DefaultMultiplexes) {</span>
+<span class="nc" id="L102">            DefaultMultiplexes other = (DefaultMultiplexes) obj;</span>
+<span class="nc" id="L103">            return</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">                 Objects.equals(types, other.types) &amp;&amp;</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">                 Objects.equals(applicationAreas, other.applicationAreas);</span>
+        }
+<span class="nc" id="L107">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L112">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L113">            .add(&quot;types&quot;, types)</span>
+<span class="nc" id="L114">            .add(&quot;applicationAreas&quot;, applicationAreas)</span>
+<span class="nc" id="L115">            .toString();</span>
+    }
+
+    @Override
+    public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L120">        return yangAugmentedInfoMap.get(classObject);</span>
+    }
+
+    @Override
+    public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="nc" id="L125">        return yangAugmentedInfoMap;</span>
+    }
+
+    /**
+     * Creates an instance of multiplexes.
+     *
+     * @param builderObject builder object of multiplexes
+     */
+<span class="nc" id="L133">    protected DefaultMultiplexes(MultiplexesBuilder builderObject) {</span>
+<span class="nc" id="L134">        this.types = builderObject.types();</span>
+<span class="nc" id="L135">        this.applicationAreas = builderObject.applicationAreas();</span>
+<span class="nc" id="L136">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="nc" id="L137">        this.valueLeafFlags = builderObject.getValueLeafFlags();</span>
+<span class="nc" id="L138">        this.selectLeafFlags = builderObject.getSelectLeafFlags();</span>
+<span class="nc" id="L139">        this.yangAugmentedInfoMap = builderObject.yangAugmentedInfoMap();</span>
+<span class="nc" id="L140">    }</span>
+
+    @Override
+    public Multiplexes processSubtreeFiltering(Multiplexes appInstance, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L144">        MultiplexesBuilder subTreeFilteringResultBuilder = new MultiplexesBuilder();</span>
+<span class="nc" id="L145">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        if (!processLeafSubtreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L148">            return null;</span>
+        }
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (!processChildNodesSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L152">            return null;</span>
+        }
+<span class="nc bnc" id="L154" title="All 2 branches missed.">        for (Object yangAugmentedInfo : this.yangAugmentedInfoMap().values()) {</span>
+<span class="nc" id="L155">            Object yangAugmentedOpParamInfo = appInstance.yangAugmentedInfo(yangAugmentedInfo.getClass());</span>
+            Object processSubtreeFiltering;
+            try {
+<span class="nc" id="L158">                Class&lt;?&gt;[] interfaces = yangAugmentedInfo.getClass().getInterfaces();</span>
+<span class="nc" id="L159">                processSubtreeFiltering = yangAugmentedInfo.getClass()</span>
+<span class="nc" id="L160">                    .getMethod(&quot;processSubtreeFiltering&quot;, interfaces[0]).invoke(yangAugmentedInfo,</span>
+                        yangAugmentedOpParamInfo);
+<span class="nc bnc" id="L162" title="All 2 branches missed.">                if (processSubtreeFiltering != null) {</span>
+<span class="nc" id="L163">                    subTreeFilteringResultBuilder</span>
+<span class="nc" id="L164">            .addYangAugmentedInfo(processSubtreeFiltering, processSubtreeFiltering.getClass());</span>
+                }
+<span class="nc" id="L166">            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {</span>
+<span class="nc" id="L167">                continue;</span>
+<span class="nc" id="L168">            }</span>
+<span class="nc" id="L169">        }</span>
+<span class="nc bnc" id="L170" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L171">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L173">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processLeafSubtreeFiltering(Multiplexes appInstance, MultiplexesBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.TYPES.getLeafIndex())) {</span>
+<span class="nc bnc" id="L179" title="All 4 branches missed.">            if (appInstance.types() == null || !(types().equals(appInstance.types()))) {</span>
+<span class="nc" id="L180">                return false;</span>
+            } else {
+<span class="nc" id="L182">                subTreeFilteringResultBuilder.types(appInstance.types());</span>
+            }
+<span class="nc bnc" id="L184" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.TYPES.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L185">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L186">            subTreeFilteringResultBuilder.types(appInstance.types());</span>
+        }
+
+<span class="nc" id="L189">        return true;</span>
+    }
+
+    private boolean processChildNodesSubTreeFiltering(Multiplexes appInstance, MultiplexesBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L195" title="All 2 branches missed.">        if (isSelectAllSchemaChild) {</span>
+<span class="nc bnc" id="L196" title="All 2 branches missed.">            for (ApplicationAreas applicationAreas : appInstance.applicationAreas()) {</span>
+<span class="nc" id="L197">                subTreeFilteringResultBuilder.addToApplicationAreas(applicationAreas);</span>
+<span class="nc" id="L198">            }</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">        } else if (applicationAreas() != null) {</span>
+<span class="nc" id="L200">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">            if (!applicationAreas().isEmpty()) {</span>
+<span class="nc bnc" id="L202" title="All 4 branches missed.">                if (appInstance.applicationAreas() != null &amp;&amp; !appInstance.applicationAreas().isEmpty()) {</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">                    for (ApplicationAreas applicationAreas : applicationAreas()) {</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">                        for (ApplicationAreas applicationAreas2 : appInstance.applicationAreas()) {</span>
+<span class="nc" id="L205">                            ApplicationAreas result = applicationAreas</span>
+<span class="nc" id="L206">            .processSubtreeFiltering(applicationAreas2, false);</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">                            if (result != null) {</span>
+<span class="nc" id="L208">                                subTreeFilteringResultBuilder.addToApplicationAreas(result);</span>
+                            }
+<span class="nc" id="L210">                        }</span>
+<span class="nc" id="L211">                    }</span>
+                }
+            } else {
+<span class="nc bnc" id="L214" title="All 4 branches missed.">                if (appInstance.applicationAreas() != null &amp;&amp; !appInstance.applicationAreas().isEmpty()) {</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">                    for (ApplicationAreas applicationAreas : appInstance.applicationAreas()) {</span>
+<span class="nc" id="L216">                        subTreeFilteringResultBuilder.addToApplicationAreas(applicationAreas);</span>
+<span class="nc" id="L217">                    }</span>
+                }
+            }
+        }
+
+<span class="nc" id="L222">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of defaultMultiplexes.
+     */
+<span class="nc" id="L229">    protected DefaultMultiplexes() {</span>
+<span class="nc" id="L230">    }</span>
+
+    /**
+     * Returns the attribute MultiplexesBuilder.
+     *
+     * @return value of MultiplexesBuilder
+     */
+    public static MultiplexesBuilder builder() {
+<span class="nc" id="L238">        return new MultiplexesBuilder();</span>
+    }
+
+    /**
+     * Returns the valueLeafFlags.
+     *
+     * @return value of valueLeafFlags
+     */
+    public BitSet getValueLeafFlags() {
+<span class="nc" id="L247">        return valueLeafFlags;</span>
+    }
+
+    /**
+     * Returns the selectLeafFlags.
+     *
+     * @return value of selectLeafFlags
+     */
+    public BitSet getSelectLeafFlags() {
+<span class="nc" id="L256">        return selectLeafFlags;</span>
+    }
+
+
+    @Override
+    public boolean isLeafValueSet(LeafIdentifier leaf) {
+<span class="nc" id="L262">        return getValueLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+    @Override
+    public boolean isSelectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L267">        return getSelectLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of multiplexes.
+     */
+    public static class MultiplexesBuilder implements Multiplexes.MultiplexesBuilder {
+
+<span class="nc" id="L276">        protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+        protected TypesEnum types;
+<span class="nc" id="L278">        protected List&lt;ApplicationAreas&gt; applicationAreas = new ArrayList&lt;&gt;();</span>
+
+        /**
+         * Specify the node specific operation in protocols like NETCONF.
+         * Applicable in protocol edit operation, will be ignored in query operation
+         */
+        private OnosYangNodeOperationType onosYangNodeOperationType;
+
+        /**
+         * Identify the leafs whose value are explicitly set
+         * Applicable in protocol edit and query operation
+         */
+<span class="nc" id="L290">        private BitSet valueLeafFlags = new BitSet();</span>
+
+        /**
+         * Identify the leafs to be selected, in a query operation
+         */
+<span class="nc" id="L295">        private BitSet selectLeafFlags = new BitSet();</span>
+
+
+        @Override
+        public TypesEnum types() {
+<span class="nc" id="L300">            return types;</span>
+        }
+
+        @Override
+        public List&lt;ApplicationAreas&gt; applicationAreas() {
+<span class="nc" id="L305">            return applicationAreas;</span>
+        }
+
+        @Override
+        public MultiplexesBuilder types(TypesEnum types) {
+<span class="nc" id="L310">            getValueLeafFlags().set(LeafIdentifier.TYPES.getLeafIndex());</span>
+<span class="nc" id="L311">            this.types = types;</span>
+<span class="nc" id="L312">            return this;</span>
+        }
+
+        @Override
+        public MultiplexesBuilder applicationAreas(List&lt;ApplicationAreas&gt; applicationAreas) {
+<span class="nc" id="L317">            this.applicationAreas = applicationAreas;</span>
+<span class="nc" id="L318">            return this;</span>
+        }
+
+        @Override
+        public MultiplexesBuilder addToApplicationAreas(ApplicationAreas value) {
+<span class="nc" id="L323">            applicationAreas().add(value);</span>
+<span class="nc" id="L324">            return this;</span>
+        }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L332">            return onosYangNodeOperationType;</span>
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public MultiplexesBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+<span class="nc" id="L342">           this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L343">           return this;</span>
+        }
+
+
+        /**
+         * Returns the valueLeafFlags.
+         *
+         * @return value of valueLeafFlags
+         */
+        public BitSet getValueLeafFlags() {
+<span class="nc" id="L353">            return valueLeafFlags;</span>
+        }
+
+        /**
+         * Returns the selectLeafFlags.
+         *
+         * @return value of selectLeafFlags
+         */
+        public BitSet getSelectLeafFlags() {
+<span class="nc" id="L362">            return selectLeafFlags;</span>
+        }
+
+
+
+        @Override
+        public MultiplexesBuilder selectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L369">            getSelectLeafFlags().set(leaf.getLeafIndex());</span>
+<span class="nc" id="L370">            return this;</span>
+        }
+
+        @Override
+        public void addYangAugmentedInfo(Object value, Class classObject) {
+<span class="nc" id="L375">            yangAugmentedInfoMap.put(classObject, value);</span>
+<span class="nc" id="L376">        }</span>
+
+        @Override
+        public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L380">            return yangAugmentedInfoMap.get(classObject);</span>
+        }
+
+        @Override
+        public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="nc" id="L385">            return yangAugmentedInfoMap;</span>
+        }
+        @Override
+        public Multiplexes build() {
+<span class="nc" id="L389">            return new DefaultMultiplexes(this);</span>
+        }
+
+        /**
+         * Creates an instance of multiplexesBuilder.
+         */
+<span class="nc" id="L395">        public MultiplexesBuilder() {</span>
+<span class="nc" id="L396">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -21,35 +21,6 @@ package org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4;
  */
 public class IetfNetwork4OpParam implements IetfNetwork4 {
 
-    /**
-     * Specify the node specific operation in protocols like NETCONF.
-     * Applicable in protocol edit operation, not applicable in query operation
-     */
-    public enum OnosYangNodeOperationType {
-        MERGE,
-        REPLACE,
-        CREATE,
-        DELETE,
-        REMOVE,
-        NONE
-    }
-
-    /**
-     * Specify the node specific operation in protocols like NETCONF.
-     * Applicable in protocol edit operation, will be ignored in query operation
-     */
-    private OnosYangNodeOperationType onosYangNodeOperationType;
-
-
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
 
     /**
      * Creates an instance of ietfNetwork4.
@@ -99,33 +70,6 @@ public class IetfNetwork4OpParam implements IetfNetwork4 {
      * Represents the builder implementation of ietfNetwork4.
      */
     public static class IetfNetwork4Builder {
-
-        /**
-         * Specify the node specific operation in protocols like NETCONF.
-         * Applicable in protocol edit operation, will be ignored in query operation
-         */
-        private OnosYangNodeOperationType onosYangNodeOperationType;
-
-
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public IetfNetwork4Builder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
 
 
         public IetfNetwork4 build() {

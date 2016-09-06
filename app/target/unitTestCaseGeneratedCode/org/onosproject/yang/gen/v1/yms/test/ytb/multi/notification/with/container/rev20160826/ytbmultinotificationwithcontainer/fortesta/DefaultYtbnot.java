@@ -31,6 +31,8 @@ import java.util.Objects;
 public class DefaultYtbnot implements Ytbnot {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected BitSet notileaf;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -50,8 +52,6 @@ public class DefaultYtbnot implements Ytbnot {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected BitSet notileaf;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -62,6 +62,11 @@ public class DefaultYtbnot implements Ytbnot {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+
+    @Override
+    public BitSet notileaf() {
+        return notileaf;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -71,11 +76,6 @@ public class DefaultYtbnot implements Ytbnot {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public BitSet notileaf() {
-        return notileaf;
-    }
 
     @Override
     public int hashCode() {
@@ -222,14 +222,14 @@ public class DefaultYtbnot implements Ytbnot {
     public static class YtbnotBuilder implements Ytbnot.YtbnotBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected BitSet notileaf;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected BitSet notileaf;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -241,6 +241,18 @@ public class DefaultYtbnot implements Ytbnot {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+
+        @Override
+        public BitSet notileaf() {
+            return notileaf;
+        }
+
+        @Override
+        public YtbnotBuilder notileaf(BitSet notileaf) {
+            getValueLeafFlags().set(LeafIdentifier.NOTILEAF.getLeafIndex());
+            this.notileaf = notileaf;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -261,18 +273,6 @@ public class DefaultYtbnot implements Ytbnot {
            return this;
         }
 
-
-        @Override
-        public BitSet notileaf() {
-            return notileaf;
-        }
-
-        @Override
-        public YtbnotBuilder notileaf(BitSet notileaf) {
-            getValueLeafFlags().set(LeafIdentifier.NOTILEAF.getLeafIndex());
-            this.notileaf = notileaf;
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.

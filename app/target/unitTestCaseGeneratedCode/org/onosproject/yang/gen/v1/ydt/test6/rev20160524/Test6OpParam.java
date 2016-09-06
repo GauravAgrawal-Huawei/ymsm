@@ -30,6 +30,11 @@ import org.onosproject.yang.gen.v1.ydt.test6.rev20160524.test6.List2;
  */
 public class Test6OpParam implements Test6 {
 
+    protected String leaf10;
+    protected Cont1 cont1;
+    protected List<List2> list2 = new ArrayList<>();
+    protected Cont4 cont4;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -49,11 +54,6 @@ public class Test6OpParam implements Test6 {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected String leaf10;
-    protected Cont1 cont1;
-    protected List<List2> list2 = new ArrayList<>();
-    protected Cont4 cont4;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -64,15 +64,6 @@ public class Test6OpParam implements Test6 {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
     public String leaf10() {
         return leaf10;
     }
@@ -85,6 +76,15 @@ public class Test6OpParam implements Test6 {
     public Cont4 cont4() {
         return cont4;
     }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     @Override
     public int hashCode() {
@@ -267,17 +267,17 @@ public class Test6OpParam implements Test6 {
      */
     public static class Test6Builder {
 
+        protected String leaf10;
+        protected Cont1 cont1;
+        protected List<List2> list2 = new ArrayList<>();
+        protected Cont4 cont4;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected String leaf10;
-        protected Cont1 cont1;
-        protected List<List2> list2 = new ArrayList<>();
-        protected Cont4 cont4;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -288,26 +288,6 @@ public class Test6OpParam implements Test6 {
          * Identify the leafs to be selected, in a query operation
          */
         private BitSet selectLeafFlags = new BitSet();
-
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public Test6Builder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
 
         public String leaf10() {
             return leaf10;
@@ -370,6 +350,26 @@ public class Test6OpParam implements Test6 {
             list2().add(value);
             return this;
         }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public Test6Builder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
+
 
         /**
          * Returns the valueLeafFlags.

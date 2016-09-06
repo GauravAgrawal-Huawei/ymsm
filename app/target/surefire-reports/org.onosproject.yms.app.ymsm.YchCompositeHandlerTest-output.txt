@@ -1,24 +1,26 @@
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.warehouse.supervisor.rev20160524.WarehousesupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.test6.rev20160524.Test6Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.YtbModuleWithContainerService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.YtbMultiModulebService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.emptydata.rev20160524.EmptydataService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list.rev20160826.YtbModuleWithListService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.enumtest.rev20160524.EnumtestService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20161208.IetfNetwork4Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20151208.IetfNetwork4Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.combined.rev20160524.CombinedService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.material.supervisor.rev20160524.MaterialsupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.trading.supervisor.rev20160524.TradingsupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.employee.id.rev20160524.EmployeeidService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.YtbMultiNotificationWithContainerService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.customs.supervisor.rev20160524.CustomssupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.a.rev20160826.YtbMultiModuleaService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.hello.onos.rev20160903.HelloOnosService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.combined.rev20160524.CombinedService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.empty.container.rev20160524.EmptyContainerService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.IetfInetTypesService
 java.lang.ClassNotFoundException: org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.IetfInetTypes
 	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
@@ -62,71 +64,53 @@ java.lang.ClassNotFoundException: org.onosproject.yang.gen.v1.urn.ietf.params.xm
 	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:290)
 	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:242)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:121)
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer8.rev20160524.Integer8Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826.YtbIetfScheduleService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20171208.IetfNetwork4Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.YtbMultiNotificationWithContainerService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.root.rev20160524.LogisticsManagerService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.purchasing.supervisor.rev20160524.PurchasingsupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer16.rev20160524.Integer16Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.purchasing.supervisor.rev20160524.YchPurchasingsupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer64.rev20160524.Integer64Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.merchandiser.supervisor.rev20160524.MerchandisersupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.decimal64.rev20160524.Decimal64Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.binarytest.rev20160524.BinarytestService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer32.rev20160524.Integer32Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network1.rev20151208.IetfNetwork1Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.IetfNetworkService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.hello.onos.rev20160903.HelloOnosService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list.rev20160826.YtbModuleWithListService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaflist.rev20160826.YtbModuleWithLeafListService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.emptydata.rev20160524.EmptydataService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.empty.container.rev20160524.EmptyContainerService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.IetfNetwork4Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.customs.supervisor.rev20160524.CustomssupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev20151208.IetfNetwork2Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.YtbTreeBuilderForListHavingListService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.food.rev20160624.FoodService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.a.rev20160826.YtbMultiModuleaService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer32.rev20160524.Integer32Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.decimal64.rev20160524.Decimal64Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.YtbModuleWithContainerService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.purchasing.supervisor.rev20160524.YchPurchasingsupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.test6.rev20160524.Test6Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.binarytest.rev20160524.BinarytestService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network3.rev20151208.IetfNetwork3Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer8.rev20160524.Integer8Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20171208.IetfNetwork4Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.YtbTreeBuilderForListHavingListService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.merchandiser.supervisor.rev20160524.MerchandisersupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.purchasing.supervisor.rev20160524.PurchasingsupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20151208.IetfNetwork4Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.trading.supervisor.rev20160524.TradingsupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.warehouse.supervisor.rev20160524.WarehousesupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.root.rev20160524.LogisticsManagerService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network1.rev20151208.IetfNetwork1Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer16.rev20160524.Integer16Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.food.rev20160624.FoodService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20141208.IetfNetwork4Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.YtbMultiModulebService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.rootlist.rev20160624.RootlistService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.bit.rev20160524.BitService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.yangautoprefixboolean.rev20160524.BoolService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.IetfNetworkService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.logistics.manager.rev20160524.LogisticsmanagerService
 java.lang.ClassNotFoundException: org.onosproject.yang.gen.v1.ydt.logistics.manager.rev20160524.Logisticsmanager
 	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
@@ -170,137 +154,49 @@ java.lang.ClassNotFoundException: org.onosproject.yang.gen.v1.ydt.logistics.mana
 	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:290)
 	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:242)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:121)
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName
-SEVERE: YSR: org.onosproject.yang.gen.v1.ydt.customs.supervisor.rev20160524.Customssupervisor not found.
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName
-SEVERE: YSR: org.onosproject.yang.gen.v1.ydt.customs.supervisor.rev20160524.Customssupervisor not found.
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.binarytest.rev20160524.BinarytestService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.root.rev20160524.LogisticsManagerService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer16.rev20160524.Integer16Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.purchasing.supervisor.rev20160524.YchPurchasingsupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.combined.rev20160524.CombinedService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826.YtbIetfScheduleService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev20151208.IetfNetwork2Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.YtbModuleWithContainerService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.purchasing.supervisor.rev20160524.PurchasingsupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.warehouse.supervisor.rev20160524.WarehousesupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.trading.supervisor.rev20160524.TradingsupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.empty.container.rev20160524.EmptyContainerService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.bit.rev20160524.BitService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.YtbMultiModulebService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.logistics.manager.rev20160524.LogisticsmanagerService
-java.lang.ClassNotFoundException: org.onosproject.yang.gen.v1.ydt.logistics.manager.rev20160524.Logisticsmanager
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	at org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider.storeClasses(TestYangSchemaNodeProvider.java:85)
-	at org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider.processSchemaRegistry(TestYangSchemaNodeProvider.java:71)
-	at org.onosproject.yms.app.ymsm.YchCompositeHandlerTest.checkForOverridenDataTreeCodec(YchCompositeHandlerTest.java:179)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:498)
-	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
-	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
-	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
-	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
-	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
-	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
-	at org.junit.runners.Suite.runChild(Suite.java:128)
-	at org.junit.runners.Suite.runChild(Suite.java:27)
-	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
-	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
-	at org.apache.maven.surefire.junitcore.JUnitCore.run(JUnitCore.java:55)
-	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.createRequestAndRun(JUnitCoreWrapper.java:137)
-	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.executeEager(JUnitCoreWrapper.java:107)
-	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.execute(JUnitCoreWrapper.java:83)
-	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.execute(JUnitCoreWrapper.java:75)
-	at org.apache.maven.surefire.junitcore.JUnitCoreProvider.invoke(JUnitCoreProvider.java:161)
-	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:290)
-	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:242)
-	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:121)
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.employee.id.rev20160524.EmployeeidService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.a.rev20160826.YtbMultiModuleaService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.hello.onos.rev20160903.HelloOnosService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.emptydata.rev20160524.EmptydataService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network3.rev20151208.IetfNetwork3Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer64.rev20160524.Integer64Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20171208.IetfNetwork4Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaflist.rev20160826.YtbModuleWithLeafListService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.yangautoprefixboolean.rev20160524.BoolService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.YtbMultiNotificationWithContainerService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.food.rev20160624.FoodService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.IetfNetworkService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network1.rev20151208.IetfNetwork1Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.enumtest.rev20160524.EnumtestService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.test6.rev20160524.Test6Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.customs.supervisor.rev20160524.CustomssupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.merchandiser.supervisor.rev20160524.MerchandisersupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20151208.IetfNetwork4Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer8.rev20160524.Integer8Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.IetfNetwork4Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.YtbTreeBuilderForListHavingListService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.rootlist.rev20160624.RootlistService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20141208.IetfNetwork4Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.material.supervisor.rev20160524.MaterialsupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.decimal64.rev20160524.Decimal64Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list.rev20160826.YtbModuleWithListService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20161208.IetfNetwork4Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer64.rev20160524.Integer64Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826.YtbIetfScheduleService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.IetfNetwork4Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.rootlist.rev20160624.RootlistService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev20151208.IetfNetwork2Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.material.supervisor.rev20160524.MaterialsupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName
+SEVERE: YSR: org.onosproject.yang.gen.v1.ydt.customs.supervisor.rev20160524.Customssupervisor not found.
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName
+SEVERE: YSR: org.onosproject.yang.gen.v1.ydt.customs.supervisor.rev20160524.Customssupervisor not found.
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network1.rev20151208.IetfNetwork1Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaflist.rev20160826.YtbModuleWithLeafListService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20161208.IetfNetwork4Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.merchandiser.supervisor.rev20160524.MerchandisersupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.employee.id.rev20160524.EmployeeidService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.warehouse.supervisor.rev20160524.WarehousesupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.rootlist.rev20160624.RootlistService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.purchasing.supervisor.rev20160524.YchPurchasingsupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.empty.container.rev20160524.EmptyContainerService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.binarytest.rev20160524.BinarytestService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.emptydata.rev20160524.EmptydataService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.IetfInetTypesService
 java.lang.ClassNotFoundException: org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.IetfInetTypes
 	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
@@ -344,139 +240,155 @@ java.lang.ClassNotFoundException: org.onosproject.yang.gen.v1.urn.ietf.params.xm
 	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:290)
 	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:242)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:121)
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.customs.supervisor.rev20160524.CustomssupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.a.rev20160826.YtbMultiModuleaService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.enumtest.rev20160524.EnumtestService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.root.rev20160524.LogisticsManagerService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.logistics.manager.rev20160524.LogisticsmanagerService
+java.lang.ClassNotFoundException: org.onosproject.yang.gen.v1.ydt.logistics.manager.rev20160524.Logisticsmanager
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	at org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider.storeClasses(TestYangSchemaNodeProvider.java:85)
+	at org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider.processSchemaRegistry(TestYangSchemaNodeProvider.java:71)
+	at org.onosproject.yms.app.ymsm.YchCompositeHandlerTest.checkForOverridenDataTreeCodec(YchCompositeHandlerTest.java:179)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at org.junit.runners.Suite.runChild(Suite.java:128)
+	at org.junit.runners.Suite.runChild(Suite.java:27)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at org.apache.maven.surefire.junitcore.JUnitCore.run(JUnitCore.java:55)
+	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.createRequestAndRun(JUnitCoreWrapper.java:137)
+	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.executeEager(JUnitCoreWrapper.java:107)
+	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.execute(JUnitCoreWrapper.java:83)
+	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.execute(JUnitCoreWrapper.java:75)
+	at org.apache.maven.surefire.junitcore.JUnitCoreProvider.invoke(JUnitCoreProvider.java:161)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:290)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:242)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:121)
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.trading.supervisor.rev20160524.TradingsupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.hello.onos.rev20160903.HelloOnosService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.YtbTreeBuilderForListHavingListService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.YtbMultiModulebService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer8.rev20160524.Integer8Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list.rev20160826.YtbModuleWithListService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer16.rev20160524.Integer16Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer32.rev20160524.Integer32Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826.YtbIetfScheduleService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.food.rev20160624.FoodService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.test6.rev20160524.Test6Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20141208.IetfNetwork4Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20151208.IetfNetwork4Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev20151208.IetfNetwork2Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20171208.IetfNetwork4Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.YtbMultiNotificationWithContainerService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.IetfNetworkService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.decimal64.rev20160524.Decimal64Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer64.rev20160524.Integer64Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.material.supervisor.rev20160524.MaterialsupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.yangautoprefixboolean.rev20160524.BoolService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.purchasing.supervisor.rev20160524.PurchasingsupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.bit.rev20160524.BitService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.IetfNetwork4Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.combined.rev20160524.CombinedService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network3.rev20151208.IetfNetwork3Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.YtbModuleWithContainerService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName
 SEVERE: YSR: org.onosproject.yang.gen.v1.ydt.customs.supervisor.rev20160524.Customssupervisor not found.
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName
 SEVERE: YSR: org.onosproject.yang.gen.v1.ydt.customs.supervisor.rev20160524.Customssupervisor not found.
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ymsm.YmsManager activate
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ymsm.YmsManager activate
 INFO: Started
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaflist.rev20160826.YtbModuleWithLeafListService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.customs.supervisor.rev20160524.CustomssupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.empty.container.rev20160524.EmptyContainerService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer8.rev20160524.Integer8Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network3.rev20151208.IetfNetwork3Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.material.supervisor.rev20160524.MaterialsupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.food.rev20160624.FoodService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.binarytest.rev20160524.BinarytestService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.root.rev20160524.LogisticsManagerService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer32.rev20160524.Integer32Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20151208.IetfNetwork4Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.a.rev20160826.YtbMultiModuleaService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.decimal64.rev20160524.Decimal64Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.emptydata.rev20160524.EmptydataService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.hello.onos.rev20160903.HelloOnosService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20161208.IetfNetwork4Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20141208.IetfNetwork4Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer16.rev20160524.Integer16Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.yangautoprefixboolean.rev20160524.BoolService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.YtbMultiNotificationWithContainerService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.merchandiser.supervisor.rev20160524.MerchandisersupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network1.rev20151208.IetfNetwork1Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.enumtest.rev20160524.EnumtestService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.purchasing.supervisor.rev20160524.PurchasingsupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.combined.rev20160524.CombinedService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826.YtbIetfScheduleService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list.rev20160826.YtbModuleWithListService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.bit.rev20160524.BitService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.trading.supervisor.rev20160524.TradingsupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.employee.id.rev20160524.EmployeeidService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.rootlist.rev20160624.RootlistService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.purchasing.supervisor.rev20160524.YchPurchasingsupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev20151208.IetfNetwork2Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.IetfInetTypesService
-java.lang.ClassNotFoundException: org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.IetfInetTypes
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	at org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider.storeClasses(TestYangSchemaNodeProvider.java:85)
-	at org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider.processSchemaRegistry(TestYangSchemaNodeProvider.java:71)
-	at org.onosproject.yms.app.ymsm.YchCompositeHandlerTest.checkForDefaultCodec(YchCompositeHandlerTest.java:132)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:498)
-	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
-	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
-	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
-	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
-	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
-	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
-	at org.junit.runners.Suite.runChild(Suite.java:128)
-	at org.junit.runners.Suite.runChild(Suite.java:27)
-	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
-	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
-	at org.apache.maven.surefire.junitcore.JUnitCore.run(JUnitCore.java:55)
-	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.createRequestAndRun(JUnitCoreWrapper.java:137)
-	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.executeEager(JUnitCoreWrapper.java:107)
-	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.execute(JUnitCoreWrapper.java:83)
-	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.execute(JUnitCoreWrapper.java:75)
-	at org.apache.maven.surefire.junitcore.JUnitCoreProvider.invoke(JUnitCoreProvider.java:161)
-	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:290)
-	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:242)
-	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:121)
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.warehouse.supervisor.rev20160524.WarehousesupervisorService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.IetfNetwork4Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.test6.rev20160524.Test6Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.combined.rev20160524.CombinedService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer16.rev20160524.Integer16Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.merchandiser.supervisor.rev20160524.MerchandisersupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.YtbMultiNotificationWithContainerService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.hello.onos.rev20160903.HelloOnosService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.material.supervisor.rev20160524.MaterialsupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.YtbMultiModulebService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
-INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.YtbModuleWithContainerService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20151208.IetfNetwork4Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.trading.supervisor.rev20160524.TradingsupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.test6.rev20160524.Test6Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.empty.container.rev20160524.EmptyContainerService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.decimal64.rev20160524.Decimal64Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.customs.supervisor.rev20160524.CustomssupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list.rev20160826.YtbModuleWithListService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20171208.IetfNetwork4Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network3.rev20151208.IetfNetwork3Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.IetfNetworkService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.logistics.manager.rev20160524.LogisticsmanagerService
 java.lang.ClassNotFoundException: org.onosproject.yang.gen.v1.ydt.logistics.manager.rev20160524.Logisticsmanager
 	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
@@ -520,9 +432,97 @@ java.lang.ClassNotFoundException: org.onosproject.yang.gen.v1.ydt.logistics.mana
 	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:290)
 	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:242)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:121)
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.a.rev20160826.YtbMultiModuleaService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network1.rev20151208.IetfNetwork1Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.purchasing.supervisor.rev20160524.PurchasingsupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.YtbTreeBuilderForListHavingListService
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20161208.IetfNetwork4Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.rootlist.rev20160624.RootlistService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.binarytest.rev20160524.BinarytestService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.emptydata.rev20160524.EmptydataService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.purchasing.supervisor.rev20160524.YchPurchasingsupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.bit.rev20160524.BitService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.yangautoprefixboolean.rev20160524.BoolService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.employee.id.rev20160524.EmployeeidService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaflist.rev20160826.YtbModuleWithLeafListService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev20151208.IetfNetwork2Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
 INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer64.rev20160524.Integer64Service
-Sep 06, 2016 8:09:28 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.warehouse.supervisor.rev20160524.WarehousesupervisorService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.enumtest.rev20160524.EnumtestService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.IetfNetwork4Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.IetfInetTypesService
+java.lang.ClassNotFoundException: org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.IetfInetTypes
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	at org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider.storeClasses(TestYangSchemaNodeProvider.java:85)
+	at org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider.processSchemaRegistry(TestYangSchemaNodeProvider.java:71)
+	at org.onosproject.yms.app.ymsm.YchCompositeHandlerTest.checkForDefaultCodec(YchCompositeHandlerTest.java:132)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at org.junit.runners.Suite.runChild(Suite.java:128)
+	at org.junit.runners.Suite.runChild(Suite.java:27)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at org.apache.maven.surefire.junitcore.JUnitCore.run(JUnitCore.java:55)
+	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.createRequestAndRun(JUnitCoreWrapper.java:137)
+	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.executeEager(JUnitCoreWrapper.java:107)
+	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.execute(JUnitCoreWrapper.java:83)
+	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.execute(JUnitCoreWrapper.java:75)
+	at org.apache.maven.surefire.junitcore.JUnitCoreProvider.invoke(JUnitCoreProvider.java:161)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:290)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:242)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:121)
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer32.rev20160524.Integer32Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20141208.IetfNetwork4Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer8.rev20160524.Integer8Service
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.food.rev20160624.FoodService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.root.rev20160524.LogisticsManagerService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.YtbModuleWithContainerService
+Sep 06, 2016 8:37:09 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName
 SEVERE: YSR: org.onosproject.yang.gen.v1.ydt.customs.supervisor.rev20160524.Customssupervisor not found.

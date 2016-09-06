@@ -29,6 +29,8 @@ import java.util.Objects;
 public class DefaultRockTheHouseInput implements RockTheHouseInput {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected String zipCode;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,8 +50,6 @@ public class DefaultRockTheHouseInput implements RockTheHouseInput {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected String zipCode;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -60,6 +60,11 @@ public class DefaultRockTheHouseInput implements RockTheHouseInput {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+
+    @Override
+    public String zipCode() {
+        return zipCode;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -69,11 +74,6 @@ public class DefaultRockTheHouseInput implements RockTheHouseInput {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public String zipCode() {
-        return zipCode;
-    }
 
     @Override
     public int hashCode() {
@@ -221,14 +221,14 @@ public class DefaultRockTheHouseInput implements RockTheHouseInput {
     public static class RockTheHouseInputBuilder implements RockTheHouseInput.RockTheHouseInputBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected String zipCode;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected String zipCode;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -240,6 +240,18 @@ public class DefaultRockTheHouseInput implements RockTheHouseInput {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+
+        @Override
+        public String zipCode() {
+            return zipCode;
+        }
+
+        @Override
+        public RockTheHouseInputBuilder zipCode(String zipCode) {
+            getValueLeafFlags().set(LeafIdentifier.ZIPCODE.getLeafIndex());
+            this.zipCode = zipCode;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -261,18 +273,6 @@ public class DefaultRockTheHouseInput implements RockTheHouseInput {
            return this;
         }
 
-
-        @Override
-        public String zipCode() {
-            return zipCode;
-        }
-
-        @Override
-        public RockTheHouseInputBuilder zipCode(String zipCode) {
-            getValueLeafFlags().set(LeafIdentifier.ZIPCODE.getLeafIndex());
-            this.zipCode = zipCode;
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.

@@ -32,6 +32,8 @@ import java.util.Objects;
 public class DefaultApplicationAreas implements ApplicationAreas {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected List<byte[]> destinationAreas = new ArrayList<>();
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -51,8 +53,6 @@ public class DefaultApplicationAreas implements ApplicationAreas {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected List<byte[]> destinationAreas = new ArrayList<>();
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -63,6 +63,11 @@ public class DefaultApplicationAreas implements ApplicationAreas {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+
+    @Override
+    public List<byte[]> destinationAreas() {
+        return destinationAreas;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -72,11 +77,6 @@ public class DefaultApplicationAreas implements ApplicationAreas {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public List<byte[]> destinationAreas() {
-        return destinationAreas;
-    }
 
     @Override
     public int hashCode() {
@@ -245,14 +245,14 @@ public class DefaultApplicationAreas implements ApplicationAreas {
     public static class ApplicationAreasBuilder implements ApplicationAreas.ApplicationAreasBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected List<byte[]> destinationAreas = new ArrayList<>();
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected List<byte[]> destinationAreas = new ArrayList<>();
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -264,6 +264,23 @@ public class DefaultApplicationAreas implements ApplicationAreas {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+
+        @Override
+        public List<byte[]> destinationAreas() {
+            return destinationAreas;
+        }
+
+        @Override
+        public ApplicationAreasBuilder destinationAreas(List<byte[]> destinationAreas) {
+            this.destinationAreas = destinationAreas;
+            return this;
+        }
+
+        @Override
+        public ApplicationAreasBuilder addToDestinationAreas(byte[] value) {
+            destinationAreas().add(value);
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -285,23 +302,6 @@ public class DefaultApplicationAreas implements ApplicationAreas {
            return this;
         }
 
-
-        @Override
-        public List<byte[]> destinationAreas() {
-            return destinationAreas;
-        }
-
-        @Override
-        public ApplicationAreasBuilder destinationAreas(List<byte[]> destinationAreas) {
-            this.destinationAreas = destinationAreas;
-            return this;
-        }
-
-        @Override
-        public ApplicationAreasBuilder addToDestinationAreas(byte[] value) {
-            destinationAreas().add(value);
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.

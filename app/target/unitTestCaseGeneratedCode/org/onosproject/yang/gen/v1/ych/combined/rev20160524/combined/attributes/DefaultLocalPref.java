@@ -29,6 +29,8 @@ import java.util.Objects;
 public class DefaultLocalPref implements LocalPref {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected long pref;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,8 +50,6 @@ public class DefaultLocalPref implements LocalPref {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected long pref;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -60,6 +60,11 @@ public class DefaultLocalPref implements LocalPref {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+
+    @Override
+    public long pref() {
+        return pref;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -69,11 +74,6 @@ public class DefaultLocalPref implements LocalPref {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public long pref() {
-        return pref;
-    }
 
     @Override
     public int hashCode() {
@@ -220,14 +220,14 @@ public class DefaultLocalPref implements LocalPref {
     public static class LocalPrefBuilder implements LocalPref.LocalPrefBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected long pref;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected long pref;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -239,6 +239,18 @@ public class DefaultLocalPref implements LocalPref {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+
+        @Override
+        public long pref() {
+            return pref;
+        }
+
+        @Override
+        public LocalPrefBuilder pref(long pref) {
+            getValueLeafFlags().set(LeafIdentifier.PREF.getLeafIndex());
+            this.pref = pref;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -259,18 +271,6 @@ public class DefaultLocalPref implements LocalPref {
            return this;
         }
 
-
-        @Override
-        public long pref() {
-            return pref;
-        }
-
-        @Override
-        public LocalPrefBuilder pref(long pref) {
-            getValueLeafFlags().set(LeafIdentifier.PREF.getLeafIndex());
-            this.pref = pref;
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.

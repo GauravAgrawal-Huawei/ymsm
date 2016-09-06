@@ -25,6 +25,8 @@ import java.util.Objects;
  */
 public class CustomssupervisorOpParam implements Customssupervisor {
 
+    protected String supervisor;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -44,8 +46,6 @@ public class CustomssupervisorOpParam implements Customssupervisor {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected String supervisor;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -56,6 +56,9 @@ public class CustomssupervisorOpParam implements Customssupervisor {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+    public String supervisor() {
+        return supervisor;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -65,9 +68,6 @@ public class CustomssupervisorOpParam implements Customssupervisor {
         return onosYangNodeOperationType;
     }
 
-    public String supervisor() {
-        return supervisor;
-    }
 
     @Override
     public int hashCode() {
@@ -187,14 +187,14 @@ public class CustomssupervisorOpParam implements Customssupervisor {
      */
     public static class CustomssupervisorBuilder {
 
+        protected String supervisor;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected String supervisor;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -206,6 +206,21 @@ public class CustomssupervisorOpParam implements Customssupervisor {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+        public String supervisor() {
+            return supervisor;
+        }
+
+        /**
+         * Returns the builder object of supervisor.
+         *
+         * @param supervisor value of supervisor
+         * @return builder object of supervisor
+         */
+        public CustomssupervisorBuilder supervisor(String supervisor) {
+            getValueLeafFlags().set(LeafIdentifier.SUPERVISOR.getLeafIndex());
+            this.supervisor = supervisor;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -227,21 +242,6 @@ public class CustomssupervisorOpParam implements Customssupervisor {
            return this;
         }
 
-        public String supervisor() {
-            return supervisor;
-        }
-
-        /**
-         * Returns the builder object of supervisor.
-         *
-         * @param supervisor value of supervisor
-         * @return builder object of supervisor
-         */
-        public CustomssupervisorBuilder supervisor(String supervisor) {
-            getValueLeafFlags().set(LeafIdentifier.SUPERVISOR.getLeafIndex());
-            this.supervisor = supervisor;
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.

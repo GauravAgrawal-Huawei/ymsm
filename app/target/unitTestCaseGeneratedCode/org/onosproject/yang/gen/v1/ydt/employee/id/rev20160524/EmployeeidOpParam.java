@@ -27,6 +27,8 @@ import java.util.Objects;
  */
 public class EmployeeidOpParam implements Employeeid {
 
+    protected List<String> employeeid = new ArrayList<>();
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -46,8 +48,6 @@ public class EmployeeidOpParam implements Employeeid {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected List<String> employeeid = new ArrayList<>();
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -58,6 +58,9 @@ public class EmployeeidOpParam implements Employeeid {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+    public List<String> employeeid() {
+        return employeeid;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -67,9 +70,6 @@ public class EmployeeidOpParam implements Employeeid {
         return onosYangNodeOperationType;
     }
 
-    public List<String> employeeid() {
-        return employeeid;
-    }
 
     @Override
     public int hashCode() {
@@ -210,14 +210,14 @@ public class EmployeeidOpParam implements Employeeid {
      */
     public static class EmployeeidBuilder {
 
+        protected List<String> employeeid = new ArrayList<>();
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected List<String> employeeid = new ArrayList<>();
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -229,6 +229,24 @@ public class EmployeeidOpParam implements Employeeid {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+        public List<String> employeeid() {
+            return employeeid;
+        }
+
+        /**
+         * Returns the builder object of employeeid.
+         *
+         * @param employeeid list of employeeid
+         * @return builder object of employeeid
+         */
+        public EmployeeidBuilder employeeid(List<String> employeeid) {
+            this.employeeid = employeeid;
+            return this;
+        }
+        public EmployeeidBuilder addToEmployeeid(String value) {
+            employeeid().add(value);
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -249,24 +267,6 @@ public class EmployeeidOpParam implements Employeeid {
            return this;
         }
 
-        public List<String> employeeid() {
-            return employeeid;
-        }
-
-        /**
-         * Returns the builder object of employeeid.
-         *
-         * @param employeeid list of employeeid
-         * @return builder object of employeeid
-         */
-        public EmployeeidBuilder employeeid(List<String> employeeid) {
-            this.employeeid = employeeid;
-            return this;
-        }
-        public EmployeeidBuilder addToEmployeeid(String value) {
-            employeeid().add(value);
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.

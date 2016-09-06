@@ -32,6 +32,11 @@ import org.onosproject.yang.gen.v1.ydt.hello.onos.rev20160903.helloonos.hellowor
 public class DefaultHelloWorldInput implements HelloWorldInput {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected String name;
+    protected String surName;
+    protected String inputDefault;
+    protected List<StringList> stringList = new ArrayList<>();
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -51,11 +56,6 @@ public class DefaultHelloWorldInput implements HelloWorldInput {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected String name;
-    protected String surName;
-    protected String inputDefault;
-    protected List<StringList> stringList = new ArrayList<>();
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -66,15 +66,6 @@ public class DefaultHelloWorldInput implements HelloWorldInput {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
 
     @Override
     public String name() {
@@ -95,6 +86,15 @@ public class DefaultHelloWorldInput implements HelloWorldInput {
     public List<StringList> stringList() {
         return stringList;
     }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     @Override
     public int hashCode() {
@@ -309,17 +309,17 @@ public class DefaultHelloWorldInput implements HelloWorldInput {
     public static class HelloWorldInputBuilder implements HelloWorldInput.HelloWorldInputBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected String name;
+        protected String surName;
+        protected String inputDefault;
+        protected List<StringList> stringList = new ArrayList<>();
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected String name;
-        protected String surName;
-        protected String inputDefault;
-        protected List<StringList> stringList = new ArrayList<>();
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -330,26 +330,6 @@ public class DefaultHelloWorldInput implements HelloWorldInput {
          * Identify the leafs to be selected, in a query operation
          */
         private BitSet selectLeafFlags = new BitSet();
-
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public HelloWorldInputBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
 
 
         @Override
@@ -404,6 +384,26 @@ public class DefaultHelloWorldInput implements HelloWorldInput {
             stringList().add(value);
             return this;
         }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public HelloWorldInputBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
+
 
         /**
          * Returns the valueLeafFlags.

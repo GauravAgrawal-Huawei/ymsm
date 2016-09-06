@@ -1,0 +1,660 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Integer32OpParam.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.ydt.integer32.rev20160524</a> &gt; <span class="el_source">Integer32OpParam.java</span></div><h1>Integer32OpParam.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.ydt.integer32.rev20160524;
+
+import com.google.common.base.MoreObjects;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+import java.util.Objects;
+import org.onosproject.yang.gen.v1.ydt.integer32.rev20160524.integer32.MultiRangeValidation;
+
+/**
+ * Represents the implementation of integer32.
+ */
+public class Integer32OpParam implements Integer32 {
+
+    protected int negInt;
+    protected int posInt;
+    protected int minIntWithRange;
+    protected int midIntWithRange;
+    protected int maxIntWithRange;
+    protected long minUint;
+    protected long maxUint;
+    protected long minUintWithRange;
+    protected long midUintWithRange;
+    protected long maxUintWithRange;
+<span class="pc" id="L41">    protected List&lt;MultiRangeValidation&gt; multiRangeValidation = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, not applicable in query operation
+     */
+<span class="fc" id="L47">    public enum OnosYangNodeOperationType {</span>
+<span class="fc" id="L48">        MERGE,</span>
+<span class="fc" id="L49">        REPLACE,</span>
+<span class="fc" id="L50">        CREATE,</span>
+<span class="fc" id="L51">        DELETE,</span>
+<span class="fc" id="L52">        REMOVE,</span>
+<span class="fc" id="L53">        NONE</span>
+    }
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, will be ignored in query operation
+     */
+    private OnosYangNodeOperationType onosYangNodeOperationType;
+
+    /**
+     * Identify the leafs whose value are explicitly set
+     * Applicable in protocol edit and query operation
+     */
+<span class="pc" id="L66">    private BitSet valueLeafFlags = new BitSet();</span>
+
+    /**
+     * Identify the leafs to be selected, in a query operation
+     */
+<span class="pc" id="L71">    private BitSet selectLeafFlags = new BitSet();</span>
+    public int negInt() {
+<span class="nc" id="L73">        return negInt;</span>
+    }
+    public int posInt() {
+<span class="nc" id="L76">        return posInt;</span>
+    }
+    public int minIntWithRange() {
+<span class="nc" id="L79">        return minIntWithRange;</span>
+    }
+    public int midIntWithRange() {
+<span class="nc" id="L82">        return midIntWithRange;</span>
+    }
+    public int maxIntWithRange() {
+<span class="nc" id="L85">        return maxIntWithRange;</span>
+    }
+    public long minUint() {
+<span class="nc" id="L88">        return minUint;</span>
+    }
+    public long maxUint() {
+<span class="nc" id="L91">        return maxUint;</span>
+    }
+    public long minUintWithRange() {
+<span class="nc" id="L94">        return minUintWithRange;</span>
+    }
+    public long midUintWithRange() {
+<span class="nc" id="L97">        return midUintWithRange;</span>
+    }
+    public long maxUintWithRange() {
+<span class="nc" id="L100">        return maxUintWithRange;</span>
+    }
+    public List&lt;MultiRangeValidation&gt; multiRangeValidation() {
+<span class="nc" id="L103">        return multiRangeValidation;</span>
+    }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L111">        return onosYangNodeOperationType;</span>
+    }
+
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L117">        return Objects</span>
+<span class="nc" id="L118">            .hash(negInt, posInt, minIntWithRange, midIntWithRange, maxIntWithRange, minUint, maxUint,</span>
+<span class="nc" id="L119">            minUintWithRange, midUintWithRange, maxUintWithRange, multiRangeValidation);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L125">            return true;</span>
+        }
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        if (obj instanceof Integer32OpParam) {</span>
+<span class="nc" id="L128">            Integer32OpParam other = (Integer32OpParam) obj;</span>
+<span class="nc" id="L129">            return</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">                 Objects.equals(negInt, other.negInt) &amp;&amp;</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">                 Objects.equals(posInt, other.posInt) &amp;&amp;</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">                 Objects.equals(minIntWithRange, other.minIntWithRange) &amp;&amp;</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">                 Objects.equals(midIntWithRange, other.midIntWithRange) &amp;&amp;</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">                 Objects.equals(maxIntWithRange, other.maxIntWithRange) &amp;&amp;</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">                 Objects.equals(minUint, other.minUint) &amp;&amp;</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">                 Objects.equals(maxUint, other.maxUint) &amp;&amp;</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">                 Objects.equals(minUintWithRange, other.minUintWithRange) &amp;&amp;</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">                 Objects.equals(midUintWithRange, other.midUintWithRange) &amp;&amp;</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">                 Objects.equals(maxUintWithRange, other.maxUintWithRange) &amp;&amp;</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">                 Objects.equals(multiRangeValidation, other.multiRangeValidation);</span>
+        }
+<span class="nc" id="L142">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L147">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L148">            .add(&quot;negInt&quot;, negInt)</span>
+<span class="nc" id="L149">            .add(&quot;posInt&quot;, posInt)</span>
+<span class="nc" id="L150">            .add(&quot;minIntWithRange&quot;, minIntWithRange)</span>
+<span class="nc" id="L151">            .add(&quot;midIntWithRange&quot;, midIntWithRange)</span>
+<span class="nc" id="L152">            .add(&quot;maxIntWithRange&quot;, maxIntWithRange)</span>
+<span class="nc" id="L153">            .add(&quot;minUint&quot;, minUint)</span>
+<span class="nc" id="L154">            .add(&quot;maxUint&quot;, maxUint)</span>
+<span class="nc" id="L155">            .add(&quot;minUintWithRange&quot;, minUintWithRange)</span>
+<span class="nc" id="L156">            .add(&quot;midUintWithRange&quot;, midUintWithRange)</span>
+<span class="nc" id="L157">            .add(&quot;maxUintWithRange&quot;, maxUintWithRange)</span>
+<span class="nc" id="L158">            .add(&quot;multiRangeValidation&quot;, multiRangeValidation)</span>
+<span class="nc" id="L159">            .toString();</span>
+    }
+
+    /**
+     * Creates an instance of integer32.
+     *
+     * @param builderObject builder object of integer32
+     */
+<span class="fc" id="L167">    protected Integer32OpParam(Integer32Builder builderObject) {</span>
+<span class="fc" id="L168">        this.negInt = builderObject.negInt();</span>
+<span class="fc" id="L169">        this.posInt = builderObject.posInt();</span>
+<span class="fc" id="L170">        this.minIntWithRange = builderObject.minIntWithRange();</span>
+<span class="fc" id="L171">        this.midIntWithRange = builderObject.midIntWithRange();</span>
+<span class="fc" id="L172">        this.maxIntWithRange = builderObject.maxIntWithRange();</span>
+<span class="fc" id="L173">        this.minUint = builderObject.minUint();</span>
+<span class="fc" id="L174">        this.maxUint = builderObject.maxUint();</span>
+<span class="fc" id="L175">        this.minUintWithRange = builderObject.minUintWithRange();</span>
+<span class="fc" id="L176">        this.midUintWithRange = builderObject.midUintWithRange();</span>
+<span class="fc" id="L177">        this.maxUintWithRange = builderObject.maxUintWithRange();</span>
+<span class="fc" id="L178">        this.multiRangeValidation = builderObject.multiRangeValidation();</span>
+<span class="fc" id="L179">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="fc" id="L180">        this.valueLeafFlags = builderObject.getValueLeafFlags();</span>
+<span class="fc" id="L181">        this.selectLeafFlags = builderObject.getSelectLeafFlags();</span>
+<span class="fc" id="L182">    }</span>
+
+    @Override
+    public Integer32 processSubtreeFiltering(Integer32 appInstance, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L186">        Integer32Builder subTreeFilteringResultBuilder = new Integer32Builder();</span>
+<span class="nc" id="L187">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">        if (!processLeafSubtreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L190">            return null;</span>
+        }
+<span class="nc bnc" id="L192" title="All 2 branches missed.">        if (!processChildNodesSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L194">            return null;</span>
+        }
+<span class="nc bnc" id="L196" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L197">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L199">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processLeafSubtreeFiltering(Integer32 appInstance, Integer32Builder subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.NEGINT.getLeafIndex())) {</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">            if (appInstance.negInt() != negInt()) {</span>
+<span class="nc" id="L205">                return false;</span>
+            } else {
+<span class="nc" id="L207">                subTreeFilteringResultBuilder.negInt(appInstance.negInt());</span>
+            }
+<span class="nc bnc" id="L209" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.NEGINT.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L210">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L211">            subTreeFilteringResultBuilder.negInt(appInstance.negInt());</span>
+        }
+
+<span class="nc bnc" id="L214" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.POSINT.getLeafIndex())) {</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">            if (appInstance.posInt() != posInt()) {</span>
+<span class="nc" id="L216">                return false;</span>
+            } else {
+<span class="nc" id="L218">                subTreeFilteringResultBuilder.posInt(appInstance.posInt());</span>
+            }
+<span class="nc bnc" id="L220" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.POSINT.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L221">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L222">            subTreeFilteringResultBuilder.posInt(appInstance.posInt());</span>
+        }
+
+<span class="nc bnc" id="L225" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.MININTWITHRANGE.getLeafIndex())) {</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">            if (appInstance.minIntWithRange() != minIntWithRange()) {</span>
+<span class="nc" id="L227">                return false;</span>
+            } else {
+<span class="nc" id="L229">                subTreeFilteringResultBuilder.minIntWithRange(appInstance.minIntWithRange());</span>
+            }
+<span class="nc bnc" id="L231" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier</span>
+<span class="nc" id="L232">            .MININTWITHRANGE.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L233">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L234">            subTreeFilteringResultBuilder.minIntWithRange(appInstance.minIntWithRange());</span>
+        }
+
+<span class="nc bnc" id="L237" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.MIDINTWITHRANGE.getLeafIndex())) {</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">            if (appInstance.midIntWithRange() != midIntWithRange()) {</span>
+<span class="nc" id="L239">                return false;</span>
+            } else {
+<span class="nc" id="L241">                subTreeFilteringResultBuilder.midIntWithRange(appInstance.midIntWithRange());</span>
+            }
+<span class="nc bnc" id="L243" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier</span>
+<span class="nc" id="L244">            .MIDINTWITHRANGE.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L245">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L246">            subTreeFilteringResultBuilder.midIntWithRange(appInstance.midIntWithRange());</span>
+        }
+
+<span class="nc bnc" id="L249" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.MAXINTWITHRANGE.getLeafIndex())) {</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">            if (appInstance.maxIntWithRange() != maxIntWithRange()) {</span>
+<span class="nc" id="L251">                return false;</span>
+            } else {
+<span class="nc" id="L253">                subTreeFilteringResultBuilder.maxIntWithRange(appInstance.maxIntWithRange());</span>
+            }
+<span class="nc bnc" id="L255" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier</span>
+<span class="nc" id="L256">            .MAXINTWITHRANGE.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L257">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L258">            subTreeFilteringResultBuilder.maxIntWithRange(appInstance.maxIntWithRange());</span>
+        }
+
+<span class="nc bnc" id="L261" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.MINUINT.getLeafIndex())) {</span>
+<span class="nc bnc" id="L262" title="All 2 branches missed.">            if (appInstance.minUint() != minUint()) {</span>
+<span class="nc" id="L263">                return false;</span>
+            } else {
+<span class="nc" id="L265">                subTreeFilteringResultBuilder.minUint(appInstance.minUint());</span>
+            }
+<span class="nc bnc" id="L267" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.MINUINT.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L268">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L269">            subTreeFilteringResultBuilder.minUint(appInstance.minUint());</span>
+        }
+
+<span class="nc bnc" id="L272" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.MAXUINT.getLeafIndex())) {</span>
+<span class="nc bnc" id="L273" title="All 2 branches missed.">            if (appInstance.maxUint() != maxUint()) {</span>
+<span class="nc" id="L274">                return false;</span>
+            } else {
+<span class="nc" id="L276">                subTreeFilteringResultBuilder.maxUint(appInstance.maxUint());</span>
+            }
+<span class="nc bnc" id="L278" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.MAXUINT.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L279">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L280">            subTreeFilteringResultBuilder.maxUint(appInstance.maxUint());</span>
+        }
+
+<span class="nc bnc" id="L283" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.MINUINTWITHRANGE.getLeafIndex())) {</span>
+<span class="nc bnc" id="L284" title="All 2 branches missed.">            if (appInstance.minUintWithRange() != minUintWithRange()) {</span>
+<span class="nc" id="L285">                return false;</span>
+            } else {
+<span class="nc" id="L287">                subTreeFilteringResultBuilder.minUintWithRange(appInstance.minUintWithRange());</span>
+            }
+<span class="nc bnc" id="L289" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier</span>
+<span class="nc" id="L290">            .MINUINTWITHRANGE.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L291">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L292">            subTreeFilteringResultBuilder.minUintWithRange(appInstance.minUintWithRange());</span>
+        }
+
+<span class="nc bnc" id="L295" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.MIDUINTWITHRANGE.getLeafIndex())) {</span>
+<span class="nc bnc" id="L296" title="All 2 branches missed.">            if (appInstance.midUintWithRange() != midUintWithRange()) {</span>
+<span class="nc" id="L297">                return false;</span>
+            } else {
+<span class="nc" id="L299">                subTreeFilteringResultBuilder.midUintWithRange(appInstance.midUintWithRange());</span>
+            }
+<span class="nc bnc" id="L301" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier</span>
+<span class="nc" id="L302">            .MIDUINTWITHRANGE.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L303">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L304">            subTreeFilteringResultBuilder.midUintWithRange(appInstance.midUintWithRange());</span>
+        }
+
+<span class="nc bnc" id="L307" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.MAXUINTWITHRANGE.getLeafIndex())) {</span>
+<span class="nc bnc" id="L308" title="All 2 branches missed.">            if (appInstance.maxUintWithRange() != maxUintWithRange()) {</span>
+<span class="nc" id="L309">                return false;</span>
+            } else {
+<span class="nc" id="L311">                subTreeFilteringResultBuilder.maxUintWithRange(appInstance.maxUintWithRange());</span>
+            }
+<span class="nc bnc" id="L313" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier</span>
+<span class="nc" id="L314">            .MAXUINTWITHRANGE.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L315">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L316">            subTreeFilteringResultBuilder.maxUintWithRange(appInstance.maxUintWithRange());</span>
+        }
+
+<span class="nc" id="L319">        return true;</span>
+    }
+
+    private boolean processChildNodesSubTreeFiltering(Integer32 appInstance, Integer32Builder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L325" title="All 2 branches missed.">        if (isSelectAllSchemaChild) {</span>
+<span class="nc bnc" id="L326" title="All 2 branches missed.">            for (MultiRangeValidation multiRangeValidation : appInstance.multiRangeValidation()) {</span>
+<span class="nc" id="L327">                subTreeFilteringResultBuilder.addToMultiRangeValidation(multiRangeValidation);</span>
+<span class="nc" id="L328">            }</span>
+<span class="nc bnc" id="L329" title="All 2 branches missed.">        } else if (multiRangeValidation() != null) {</span>
+<span class="nc" id="L330">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L331" title="All 2 branches missed.">            if (!multiRangeValidation().isEmpty()) {</span>
+<span class="nc bnc" id="L332" title="All 4 branches missed.">                if (appInstance.multiRangeValidation() != null &amp;&amp; !appInstance.multiRangeValidation().isEmpty()) {</span>
+<span class="nc bnc" id="L333" title="All 2 branches missed.">                    for (MultiRangeValidation multiRangeValidation : multiRangeValidation()) {</span>
+<span class="nc bnc" id="L334" title="All 2 branches missed.">                        for (MultiRangeValidation multiRangeValidation2 : appInstance.multiRangeValidation()) {</span>
+<span class="nc" id="L335">                            MultiRangeValidation result = multiRangeValidation</span>
+<span class="nc" id="L336">            .processSubtreeFiltering(multiRangeValidation2, false);</span>
+<span class="nc bnc" id="L337" title="All 2 branches missed.">                            if (result != null) {</span>
+<span class="nc" id="L338">                                subTreeFilteringResultBuilder.addToMultiRangeValidation(result);</span>
+                            }
+<span class="nc" id="L340">                        }</span>
+<span class="nc" id="L341">                    }</span>
+                }
+            } else {
+<span class="nc bnc" id="L344" title="All 4 branches missed.">                if (appInstance.multiRangeValidation() != null &amp;&amp; !appInstance.multiRangeValidation().isEmpty()) {</span>
+<span class="nc bnc" id="L345" title="All 2 branches missed.">                    for (MultiRangeValidation multiRangeValidation : appInstance.multiRangeValidation()) {</span>
+<span class="nc" id="L346">                        subTreeFilteringResultBuilder.addToMultiRangeValidation(multiRangeValidation);</span>
+<span class="nc" id="L347">                    }</span>
+                }
+            }
+        }
+
+<span class="nc" id="L352">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of integer32OpParam.
+     */
+<span class="nc" id="L359">    protected Integer32OpParam() {</span>
+<span class="nc" id="L360">    }</span>
+
+    /**
+     * Returns the attribute Integer32Builder.
+     *
+     * @return value of Integer32Builder
+     */
+    public static Integer32Builder builder() {
+<span class="nc" id="L368">        return new Integer32Builder();</span>
+    }
+
+    /**
+     * Returns the valueLeafFlags.
+     *
+     * @return value of valueLeafFlags
+     */
+    public BitSet getValueLeafFlags() {
+<span class="nc" id="L377">        return valueLeafFlags;</span>
+    }
+
+    /**
+     * Returns the selectLeafFlags.
+     *
+     * @return value of selectLeafFlags
+     */
+    public BitSet getSelectLeafFlags() {
+<span class="nc" id="L386">        return selectLeafFlags;</span>
+    }
+
+
+    @Override
+    public boolean isLeafValueSet(LeafIdentifier leaf) {
+<span class="nc" id="L392">        return getValueLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+    @Override
+    public boolean isSelectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L397">        return getSelectLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of integer32.
+     */
+    public static class Integer32Builder {
+
+        protected int negInt;
+        protected int posInt;
+        protected int minIntWithRange;
+        protected int midIntWithRange;
+        protected int maxIntWithRange;
+        protected long minUint;
+        protected long maxUint;
+        protected long minUintWithRange;
+        protected long midUintWithRange;
+        protected long maxUintWithRange;
+<span class="fc" id="L416">        protected List&lt;MultiRangeValidation&gt; multiRangeValidation = new ArrayList&lt;&gt;();</span>
+
+        /**
+         * Specify the node specific operation in protocols like NETCONF.
+         * Applicable in protocol edit operation, will be ignored in query operation
+         */
+        private OnosYangNodeOperationType onosYangNodeOperationType;
+
+        /**
+         * Identify the leafs whose value are explicitly set
+         * Applicable in protocol edit and query operation
+         */
+<span class="fc" id="L428">        private BitSet valueLeafFlags = new BitSet();</span>
+
+        /**
+         * Identify the leafs to be selected, in a query operation
+         */
+<span class="fc" id="L433">        private BitSet selectLeafFlags = new BitSet();</span>
+
+        public int negInt() {
+<span class="fc" id="L436">            return negInt;</span>
+        }
+        public int posInt() {
+<span class="fc" id="L439">            return posInt;</span>
+        }
+        public int minIntWithRange() {
+<span class="fc" id="L442">            return minIntWithRange;</span>
+        }
+        public int midIntWithRange() {
+<span class="fc" id="L445">            return midIntWithRange;</span>
+        }
+        public int maxIntWithRange() {
+<span class="fc" id="L448">            return maxIntWithRange;</span>
+        }
+        public long minUint() {
+<span class="fc" id="L451">            return minUint;</span>
+        }
+        public long maxUint() {
+<span class="fc" id="L454">            return maxUint;</span>
+        }
+        public long minUintWithRange() {
+<span class="fc" id="L457">            return minUintWithRange;</span>
+        }
+        public long midUintWithRange() {
+<span class="fc" id="L460">            return midUintWithRange;</span>
+        }
+        public long maxUintWithRange() {
+<span class="fc" id="L463">            return maxUintWithRange;</span>
+        }
+        public List&lt;MultiRangeValidation&gt; multiRangeValidation() {
+<span class="fc" id="L466">            return multiRangeValidation;</span>
+        }
+
+        /**
+         * Returns the builder object of negInt.
+         *
+         * @param negInt value of negInt
+         * @return builder object of negInt
+         */
+        public Integer32Builder negInt(int negInt) {
+<span class="fc" id="L476">            getValueLeafFlags().set(LeafIdentifier.NEGINT.getLeafIndex());</span>
+<span class="fc" id="L477">            this.negInt = negInt;</span>
+<span class="fc" id="L478">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of posInt.
+         *
+         * @param posInt value of posInt
+         * @return builder object of posInt
+         */
+        public Integer32Builder posInt(int posInt) {
+<span class="fc" id="L488">            getValueLeafFlags().set(LeafIdentifier.POSINT.getLeafIndex());</span>
+<span class="fc" id="L489">            this.posInt = posInt;</span>
+<span class="fc" id="L490">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of minIntWithRange.
+         *
+         * @param minIntWithRange value of minIntWithRange
+         * @return builder object of minIntWithRange
+         */
+        public Integer32Builder minIntWithRange(int minIntWithRange) {
+<span class="fc" id="L500">            getValueLeafFlags().set(LeafIdentifier.MININTWITHRANGE.getLeafIndex());</span>
+<span class="fc" id="L501">            this.minIntWithRange = minIntWithRange;</span>
+<span class="fc" id="L502">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of midIntWithRange.
+         *
+         * @param midIntWithRange value of midIntWithRange
+         * @return builder object of midIntWithRange
+         */
+        public Integer32Builder midIntWithRange(int midIntWithRange) {
+<span class="fc" id="L512">            getValueLeafFlags().set(LeafIdentifier.MIDINTWITHRANGE.getLeafIndex());</span>
+<span class="fc" id="L513">            this.midIntWithRange = midIntWithRange;</span>
+<span class="fc" id="L514">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of maxIntWithRange.
+         *
+         * @param maxIntWithRange value of maxIntWithRange
+         * @return builder object of maxIntWithRange
+         */
+        public Integer32Builder maxIntWithRange(int maxIntWithRange) {
+<span class="fc" id="L524">            getValueLeafFlags().set(LeafIdentifier.MAXINTWITHRANGE.getLeafIndex());</span>
+<span class="fc" id="L525">            this.maxIntWithRange = maxIntWithRange;</span>
+<span class="fc" id="L526">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of minUint.
+         *
+         * @param minUint value of minUint
+         * @return builder object of minUint
+         */
+        public Integer32Builder minUint(long minUint) {
+<span class="fc" id="L536">            getValueLeafFlags().set(LeafIdentifier.MINUINT.getLeafIndex());</span>
+<span class="fc" id="L537">            this.minUint = minUint;</span>
+<span class="fc" id="L538">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of maxUint.
+         *
+         * @param maxUint value of maxUint
+         * @return builder object of maxUint
+         */
+        public Integer32Builder maxUint(long maxUint) {
+<span class="fc" id="L548">            getValueLeafFlags().set(LeafIdentifier.MAXUINT.getLeafIndex());</span>
+<span class="fc" id="L549">            this.maxUint = maxUint;</span>
+<span class="fc" id="L550">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of minUintWithRange.
+         *
+         * @param minUintWithRange value of minUintWithRange
+         * @return builder object of minUintWithRange
+         */
+        public Integer32Builder minUintWithRange(long minUintWithRange) {
+<span class="fc" id="L560">            getValueLeafFlags().set(LeafIdentifier.MINUINTWITHRANGE.getLeafIndex());</span>
+<span class="fc" id="L561">            this.minUintWithRange = minUintWithRange;</span>
+<span class="fc" id="L562">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of midUintWithRange.
+         *
+         * @param midUintWithRange value of midUintWithRange
+         * @return builder object of midUintWithRange
+         */
+        public Integer32Builder midUintWithRange(long midUintWithRange) {
+<span class="fc" id="L572">            getValueLeafFlags().set(LeafIdentifier.MIDUINTWITHRANGE.getLeafIndex());</span>
+<span class="fc" id="L573">            this.midUintWithRange = midUintWithRange;</span>
+<span class="fc" id="L574">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of maxUintWithRange.
+         *
+         * @param maxUintWithRange value of maxUintWithRange
+         * @return builder object of maxUintWithRange
+         */
+        public Integer32Builder maxUintWithRange(long maxUintWithRange) {
+<span class="fc" id="L584">            getValueLeafFlags().set(LeafIdentifier.MAXUINTWITHRANGE.getLeafIndex());</span>
+<span class="fc" id="L585">            this.maxUintWithRange = maxUintWithRange;</span>
+<span class="fc" id="L586">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of multiRangeValidation.
+         *
+         * @param multiRangeValidation list of multiRangeValidation
+         * @return builder object of multiRangeValidation
+         */
+        public Integer32Builder multiRangeValidation(List&lt;MultiRangeValidation&gt; multiRangeValidation) {
+<span class="nc" id="L596">            this.multiRangeValidation = multiRangeValidation;</span>
+<span class="nc" id="L597">            return this;</span>
+        }
+        public Integer32Builder addToMultiRangeValidation(MultiRangeValidation value) {
+<span class="fc" id="L600">            multiRangeValidation().add(value);</span>
+<span class="fc" id="L601">            return this;</span>
+        }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L609">            return onosYangNodeOperationType;</span>
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public Integer32Builder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+<span class="nc" id="L619">           this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L620">           return this;</span>
+        }
+
+
+        /**
+         * Returns the valueLeafFlags.
+         *
+         * @return value of valueLeafFlags
+         */
+        public BitSet getValueLeafFlags() {
+<span class="fc" id="L630">            return valueLeafFlags;</span>
+        }
+
+        /**
+         * Returns the selectLeafFlags.
+         *
+         * @return value of selectLeafFlags
+         */
+        public BitSet getSelectLeafFlags() {
+<span class="fc" id="L639">            return selectLeafFlags;</span>
+        }
+
+
+
+        public Integer32Builder selectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L645">            getSelectLeafFlags().set(leaf.getLeafIndex());</span>
+<span class="nc" id="L646">            return this;</span>
+        }
+
+        public Integer32 build() {
+<span class="fc" id="L650">            return new Integer32OpParam(this);</span>
+        }
+
+        /**
+         * Creates an instance of integer32Builder.
+         */
+<span class="fc" id="L656">        public Integer32Builder() {</span>
+<span class="fc" id="L657">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

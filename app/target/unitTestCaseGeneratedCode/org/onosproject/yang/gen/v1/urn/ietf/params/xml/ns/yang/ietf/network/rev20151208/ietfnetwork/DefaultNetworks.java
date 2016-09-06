@@ -31,6 +31,8 @@ import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev2
 public class DefaultNetworks implements Networks {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected List<Network> network = new ArrayList<>();
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -51,7 +53,10 @@ public class DefaultNetworks implements Networks {
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-    protected List<Network> network = new ArrayList<>();
+    @Override
+    public List<Network> network() {
+        return network;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -61,11 +66,6 @@ public class DefaultNetworks implements Networks {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public List<Network> network() {
-        return network;
-    }
 
     @Override
     public int hashCode() {
@@ -197,6 +197,8 @@ public class DefaultNetworks implements Networks {
     public static class NetworksBuilder implements Networks.NetworksBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected List<Network> network = new ArrayList<>();
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -204,8 +206,23 @@ public class DefaultNetworks implements Networks {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        protected List<Network> network = new ArrayList<>();
 
+        @Override
+        public List<Network> network() {
+            return network;
+        }
+
+        @Override
+        public NetworksBuilder network(List<Network> network) {
+            this.network = network;
+            return this;
+        }
+
+        @Override
+        public NetworksBuilder addToNetwork(Network value) {
+            network().add(value);
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -226,23 +243,6 @@ public class DefaultNetworks implements Networks {
            return this;
         }
 
-
-        @Override
-        public List<Network> network() {
-            return network;
-        }
-
-        @Override
-        public NetworksBuilder network(List<Network> network) {
-            this.network = network;
-            return this;
-        }
-
-        @Override
-        public NetworksBuilder addToNetwork(Network value) {
-            network().add(value);
-            return this;
-        }
 
         @Override
         public void addYangAugmentedInfo(Object value, Class classObject) {

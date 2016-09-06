@@ -29,6 +29,8 @@ import org.onosproject.yang.gen.v1.ydt.food.rev20160624.food.food.Snack;
 public class DefaultFood implements Food {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected Snack snack;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -49,7 +51,10 @@ public class DefaultFood implements Food {
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-    protected Snack snack;
+    @Override
+    public Snack snack() {
+        return snack;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -59,11 +64,6 @@ public class DefaultFood implements Food {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public Snack snack() {
-        return snack;
-    }
 
     @Override
     public int hashCode() {
@@ -178,6 +178,8 @@ public class DefaultFood implements Food {
     public static class FoodBuilder implements Food.FoodBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected Snack snack;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -185,8 +187,17 @@ public class DefaultFood implements Food {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        protected Snack snack;
 
+        @Override
+        public Snack snack() {
+            return snack;
+        }
+
+        @Override
+        public FoodBuilder snack(Snack snack) {
+            this.snack = snack;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -207,17 +218,6 @@ public class DefaultFood implements Food {
            return this;
         }
 
-
-        @Override
-        public Snack snack() {
-            return snack;
-        }
-
-        @Override
-        public FoodBuilder snack(Snack snack) {
-            this.snack = snack;
-            return this;
-        }
 
         @Override
         public void addYangAugmentedInfo(Object value, Class classObject) {

@@ -31,6 +31,8 @@ import org.onosproject.yang.gen.v1.ydt.food.rev20160624.food.food.snack.latenigh
 public class DefaultLatenight implements Latenight {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected ChocolateEnum chocolate;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -50,8 +52,6 @@ public class DefaultLatenight implements Latenight {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected ChocolateEnum chocolate;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -62,6 +62,11 @@ public class DefaultLatenight implements Latenight {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+
+    @Override
+    public ChocolateEnum chocolate() {
+        return chocolate;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -71,11 +76,6 @@ public class DefaultLatenight implements Latenight {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public ChocolateEnum chocolate() {
-        return chocolate;
-    }
 
     @Override
     public int hashCode() {
@@ -234,14 +234,14 @@ public class DefaultLatenight implements Latenight {
     public static class LatenightBuilder implements Latenight.LatenightBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected ChocolateEnum chocolate;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected ChocolateEnum chocolate;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -253,6 +253,18 @@ public class DefaultLatenight implements Latenight {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+
+        @Override
+        public ChocolateEnum chocolate() {
+            return chocolate;
+        }
+
+        @Override
+        public LatenightBuilder chocolate(ChocolateEnum chocolate) {
+            getValueLeafFlags().set(LeafIdentifier.CHOCOLATE.getLeafIndex());
+            this.chocolate = chocolate;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -273,18 +285,6 @@ public class DefaultLatenight implements Latenight {
            return this;
         }
 
-
-        @Override
-        public ChocolateEnum chocolate() {
-            return chocolate;
-        }
-
-        @Override
-        public LatenightBuilder chocolate(ChocolateEnum chocolate) {
-            getValueLeafFlags().set(LeafIdentifier.CHOCOLATE.getLeafIndex());
-            this.chocolate = chocolate;
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.

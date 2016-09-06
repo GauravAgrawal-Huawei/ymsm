@@ -32,6 +32,11 @@ import org.onosproject.yang.gen.v1.ydt.rootlist.rev20160624.rootlist.listwithcon
 public class DefaultListwithcontainer implements Listwithcontainer {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected int invalid;
+    protected int invalid1;
+    protected List<Integer> invalidinterval = new ArrayList<>();
+    protected YangAutoPrefixInterface yangAutoPrefixInterface;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -51,11 +56,6 @@ public class DefaultListwithcontainer implements Listwithcontainer {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected int invalid;
-    protected int invalid1;
-    protected List<Integer> invalidinterval = new ArrayList<>();
-    protected YangAutoPrefixInterface yangAutoPrefixInterface;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -66,15 +66,6 @@ public class DefaultListwithcontainer implements Listwithcontainer {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
 
     @Override
     public int invalid() {
@@ -95,6 +86,15 @@ public class DefaultListwithcontainer implements Listwithcontainer {
     public YangAutoPrefixInterface yangAutoPrefixInterface() {
         return yangAutoPrefixInterface;
     }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     @Override
     public int hashCode() {
@@ -325,17 +325,17 @@ public class DefaultListwithcontainer implements Listwithcontainer {
     public static class ListwithcontainerBuilder implements Listwithcontainer.ListwithcontainerBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected int invalid;
+        protected int invalid1;
+        protected List<Integer> invalidinterval = new ArrayList<>();
+        protected YangAutoPrefixInterface yangAutoPrefixInterface;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected int invalid;
-        protected int invalid1;
-        protected List<Integer> invalidinterval = new ArrayList<>();
-        protected YangAutoPrefixInterface yangAutoPrefixInterface;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -346,27 +346,6 @@ public class DefaultListwithcontainer implements Listwithcontainer {
          * Identify the leafs to be selected, in a query operation
          */
         private BitSet selectLeafFlags = new BitSet();
-
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public ListwithcontainerBuilder onosYangNodeOperationType(OnosYangNodeOperationType
-            onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
 
 
         @Override
@@ -420,6 +399,27 @@ public class DefaultListwithcontainer implements Listwithcontainer {
             invalidinterval().add(value);
             return this;
         }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public ListwithcontainerBuilder onosYangNodeOperationType(OnosYangNodeOperationType
+            onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
+
 
         /**
          * Returns the valueLeafFlags.

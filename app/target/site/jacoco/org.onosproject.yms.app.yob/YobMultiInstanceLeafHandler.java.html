@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>YobMultiInstanceLeafHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yms.app.yob</a> &gt; <span class="el_source">YobMultiInstanceLeafHandler.java</span></div><h1>YobMultiInstanceLeafHandler.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yms.app.yob;
+
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.util.Set;
+
+import org.onosproject.yangutils.datamodel.YangLeafList;
+import org.onosproject.yangutils.datamodel.YangType;
+import org.onosproject.yangutils.datamodel.javadatamodel
+        .JavaQualifiedTypeInfoContainer;
+import org.onosproject.yms.app.ydt.YdtExtendedContext;
+import org.onosproject.yms.app.ysr.YangSchemaRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.onosproject.yangutils.utils.io.impl.YangIoUtils
+        .getCapitalCase;
+import static org.onosproject.yms.app.ydt.AppType.YOB;
+
+/**
+ * Represents a multi instance leaf node handler in YANG object builder.
+ */
+<span class="fc" id="L42">public class YobMultiInstanceLeafHandler</span>
+        extends YobHandler {
+
+    private static final String ADDTO = &quot;addTo&quot;;
+
+<span class="fc" id="L47">    private static final Logger log =</span>
+<span class="fc" id="L48">            LoggerFactory.getLogger(YobMultiInstanceLeafHandler.class);</span>
+
+    @Override
+    public void createYangBuilderObject(YdtExtendedContext curYdtNode,
+                                        YdtExtendedContext rootYdtNode,
+                                        YangSchemaRegistry registry) {
+        // For multi instance leaf no need to create an object.
+<span class="fc" id="L55">    }</span>
+
+    @Override
+    public void buildObjectFromBuilder(YdtExtendedContext ydtNode) {
+        // For multi instance leaf no need to build object.
+<span class="fc" id="L60">    }</span>
+
+    @Override
+    public void setObjectInParent(YdtExtendedContext leafListYdtNode,
+                                  YangSchemaRegistry schemaRegistry) {
+        String setterMethodNameInParent;
+        Method parentSetterMethod;
+<span class="fc" id="L67">        Class&lt;?&gt; parentBuilderClass = null;</span>
+<span class="fc" id="L68">        YdtExtendedContext parentYdtNode = (YdtExtendedContext)</span>
+<span class="fc" id="L69">                leafListYdtNode.getParent();</span>
+<span class="fc" id="L70">        YobBuilderContainer parentYobBuilderContainer = (YobBuilderContainer)</span>
+<span class="fc" id="L71">                parentYdtNode.getAppInfo(YOB);</span>
+<span class="fc" id="L72">        Set&lt;String&gt; leafValueSet = leafListYdtNode.getValueSet();</span>
+
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        for (String leafValue : leafValueSet) {</span>
+            try {
+<span class="fc" id="L76">                setterMethodNameInParent =</span>
+<span class="fc" id="L77">                        leafListYdtNode.getYangSchemaNode()</span>
+<span class="fc" id="L78">                                .getJavaAttributeName();</span>
+<span class="fc" id="L79">                Object parentBuilderObject = parentYobBuilderContainer</span>
+<span class="fc" id="L80">                        .getParentBuilderObjectFromAncestor(leafListYdtNode,</span>
+                                                            schemaRegistry);
+<span class="fc" id="L82">                parentBuilderClass = parentBuilderObject.getClass();</span>
+<span class="fc" id="L83">                Field leafName = parentBuilderClass</span>
+<span class="fc" id="L84">                        .getDeclaredField(setterMethodNameInParent);</span>
+<span class="fc" id="L85">                setterMethodNameInParent =</span>
+<span class="fc" id="L86">                        getCapitalCase(setterMethodNameInParent);</span>
+<span class="fc" id="L87">                ParameterizedType genericListType =</span>
+<span class="fc" id="L88">                        (ParameterizedType) leafName.getGenericType();</span>
+<span class="fc" id="L89">                Class&lt;?&gt; genericListClass =</span>
+<span class="fc" id="L90">                        (Class&lt;?&gt;) genericListType.getActualTypeArguments()[0];</span>
+<span class="fc" id="L91">                parentSetterMethod = parentBuilderClass</span>
+<span class="fc" id="L92">                        .getDeclaredMethod(ADDTO + setterMethodNameInParent,</span>
+                                           genericListClass);
+<span class="fc" id="L94">                JavaQualifiedTypeInfoContainer javaQualifiedTypeInfoContainer</span>
+                        = (JavaQualifiedTypeInfoContainer) leafListYdtNode
+<span class="fc" id="L96">                        .getYangSchemaNode();</span>
+<span class="fc" id="L97">                YangLeafList yangLeafList =</span>
+                        (YangLeafList) javaQualifiedTypeInfoContainer;
+<span class="fc" id="L99">                YangType&lt;?&gt; yangType = yangLeafList.getDataType();</span>
+<span class="fc" id="L100">                setDataFromStringValue(yangType, leafValue, parentSetterMethod,</span>
+                                       parentBuilderObject, leafListYdtNode);
+<span class="nc" id="L102">            } catch (NoSuchMethodException | InvocationTargetException</span>
+                    | IllegalAccessException | NoSuchFieldException e) {
+<span class="nc" id="L104">                log.error(&quot;YOB: failed to invoke method for application &quot; +</span>
+<span class="nc" id="L105">                                  parentBuilderClass.getSimpleName());</span>
+<span class="fc" id="L106">            }</span>
+<span class="fc" id="L107">        }</span>
+<span class="fc" id="L108">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

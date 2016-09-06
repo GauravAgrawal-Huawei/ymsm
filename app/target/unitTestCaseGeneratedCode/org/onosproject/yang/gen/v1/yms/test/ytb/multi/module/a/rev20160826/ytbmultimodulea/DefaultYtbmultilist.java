@@ -32,6 +32,8 @@ import java.util.Objects;
 public class DefaultYtbmultilist implements Ytbmultilist {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected List<BigInteger> check = new ArrayList<>();
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -51,8 +53,6 @@ public class DefaultYtbmultilist implements Ytbmultilist {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected List<BigInteger> check = new ArrayList<>();
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -63,6 +63,11 @@ public class DefaultYtbmultilist implements Ytbmultilist {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+
+    @Override
+    public List<BigInteger> check() {
+        return check;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -72,11 +77,6 @@ public class DefaultYtbmultilist implements Ytbmultilist {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public List<BigInteger> check() {
-        return check;
-    }
 
     @Override
     public int hashCode() {
@@ -245,14 +245,14 @@ public class DefaultYtbmultilist implements Ytbmultilist {
     public static class YtbmultilistBuilder implements Ytbmultilist.YtbmultilistBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected List<BigInteger> check = new ArrayList<>();
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected List<BigInteger> check = new ArrayList<>();
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -264,6 +264,23 @@ public class DefaultYtbmultilist implements Ytbmultilist {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+
+        @Override
+        public List<BigInteger> check() {
+            return check;
+        }
+
+        @Override
+        public YtbmultilistBuilder check(List<BigInteger> check) {
+            this.check = check;
+            return this;
+        }
+
+        @Override
+        public YtbmultilistBuilder addToCheck(BigInteger value) {
+            check().add(value);
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -284,23 +301,6 @@ public class DefaultYtbmultilist implements Ytbmultilist {
            return this;
         }
 
-
-        @Override
-        public List<BigInteger> check() {
-            return check;
-        }
-
-        @Override
-        public YtbmultilistBuilder check(List<BigInteger> check) {
-            this.check = check;
-            return this;
-        }
-
-        @Override
-        public YtbmultilistBuilder addToCheck(BigInteger value) {
-            check().add(value);
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.

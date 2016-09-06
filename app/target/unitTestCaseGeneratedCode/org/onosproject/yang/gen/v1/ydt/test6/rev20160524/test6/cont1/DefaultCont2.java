@@ -29,6 +29,8 @@ import org.onosproject.yang.gen.v1.ydt.test6.rev20160524.test6.cont1.cont2.Cont3
 public class DefaultCont2 implements Cont2 {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected Cont3 cont3;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -49,7 +51,10 @@ public class DefaultCont2 implements Cont2 {
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-    protected Cont3 cont3;
+    @Override
+    public Cont3 cont3() {
+        return cont3;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -59,11 +64,6 @@ public class DefaultCont2 implements Cont2 {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public Cont3 cont3() {
-        return cont3;
-    }
 
     @Override
     public int hashCode() {
@@ -178,6 +178,8 @@ public class DefaultCont2 implements Cont2 {
     public static class Cont2Builder implements Cont2.Cont2Builder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected Cont3 cont3;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -185,8 +187,17 @@ public class DefaultCont2 implements Cont2 {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        protected Cont3 cont3;
 
+        @Override
+        public Cont3 cont3() {
+            return cont3;
+        }
+
+        @Override
+        public Cont2Builder cont3(Cont3 cont3) {
+            this.cont3 = cont3;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -207,17 +218,6 @@ public class DefaultCont2 implements Cont2 {
            return this;
         }
 
-
-        @Override
-        public Cont3 cont3() {
-            return cont3;
-        }
-
-        @Override
-        public Cont2Builder cont3(Cont3 cont3) {
-            this.cont3 = cont3;
-            return this;
-        }
 
         @Override
         public void addYangAugmentedInfo(Object value, Class classObject) {

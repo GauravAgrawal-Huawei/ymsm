@@ -29,6 +29,10 @@ import java.util.Objects;
 public class DefaultBinaryList implements BinaryList {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected byte[] binary;
+    protected byte[] binaryWithRange;
+    protected byte[] binaryWithMultiRange;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,10 +52,6 @@ public class DefaultBinaryList implements BinaryList {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected byte[] binary;
-    protected byte[] binaryWithRange;
-    protected byte[] binaryWithMultiRange;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -62,15 +62,6 @@ public class DefaultBinaryList implements BinaryList {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
 
     @Override
     public byte[] binary() {
@@ -86,6 +77,15 @@ public class DefaultBinaryList implements BinaryList {
     public byte[] binaryWithMultiRange() {
         return binaryWithMultiRange;
     }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     @Override
     public int hashCode() {
@@ -264,16 +264,16 @@ public class DefaultBinaryList implements BinaryList {
     public static class BinaryListBuilder implements BinaryList.BinaryListBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected byte[] binary;
+        protected byte[] binaryWithRange;
+        protected byte[] binaryWithMultiRange;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected byte[] binary;
-        protected byte[] binaryWithRange;
-        protected byte[] binaryWithMultiRange;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -284,26 +284,6 @@ public class DefaultBinaryList implements BinaryList {
          * Identify the leafs to be selected, in a query operation
          */
         private BitSet selectLeafFlags = new BitSet();
-
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public BinaryListBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
 
 
         @Override
@@ -341,6 +321,26 @@ public class DefaultBinaryList implements BinaryList {
             this.binaryWithMultiRange = binaryWithMultiRange;
             return this;
         }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public BinaryListBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
+
 
         /**
          * Returns the valueLeafFlags.

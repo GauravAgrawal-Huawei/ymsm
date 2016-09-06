@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IpAddressNoZoneUnion.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.ietfinettypes.ipaddressnozone</a> &gt; <span class="el_source">IpAddressNoZoneUnion.java</span></div><h1>IpAddressNoZoneUnion.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.ietfinettypes
+            .ipaddressnozone;
+
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.ietfinettypes
+            .Ipv4AddressNoZone;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.ietfinettypes
+            .Ipv6AddressNoZone;
+import java.util.Objects;
+import com.google.common.base.MoreObjects;
+
+/**
+ * Represents the implementation of ipAddressNoZoneUnion.
+ */
+public final class IpAddressNoZoneUnion {
+
+    private Ipv4AddressNoZone ipv4AddressNoZone;
+    private Ipv6AddressNoZone ipv6AddressNoZone;
+
+    /**
+     * Creates an instance of ipAddressNoZoneUnion.
+     */
+<span class="nc" id="L38">    private IpAddressNoZoneUnion() {</span>
+<span class="nc" id="L39">    }</span>
+
+    /**
+     * Creates an instance of ipAddressNoZoneUnionForTypeIpv4AddressNoZone.
+     *
+     * @param value value of ipAddressNoZoneUnionForTypeIpv4AddressNoZone
+     */
+<span class="nc" id="L46">    public IpAddressNoZoneUnion(Ipv4AddressNoZone value) {</span>
+<span class="nc" id="L47">        this.ipv4AddressNoZone = value;</span>
+<span class="nc" id="L48">    }</span>
+
+    /**
+     * Creates an instance of ipAddressNoZoneUnionForTypeIpv6AddressNoZone.
+     *
+     * @param value value of ipAddressNoZoneUnionForTypeIpv6AddressNoZone
+     */
+<span class="nc" id="L55">    public IpAddressNoZoneUnion(Ipv6AddressNoZone value) {</span>
+<span class="nc" id="L56">        this.ipv6AddressNoZone = value;</span>
+<span class="nc" id="L57">    }</span>
+
+    /**
+     * Returns the object of ipAddressNoZoneUnionForTypeIpv4AddressNoZone.
+     *
+     * @param value value of ipAddressNoZoneUnionForTypeIpv4AddressNoZone
+     * @return Object of ipAddressNoZoneUnionForTypeIpv4AddressNoZone
+     */
+    public static IpAddressNoZoneUnion of(Ipv4AddressNoZone value) {
+<span class="nc" id="L66">        return new IpAddressNoZoneUnion(value);</span>
+    }
+
+    /**
+     * Returns the object of ipAddressNoZoneUnionForTypeIpv6AddressNoZone.
+     *
+     * @param value value of ipAddressNoZoneUnionForTypeIpv6AddressNoZone
+     * @return Object of ipAddressNoZoneUnionForTypeIpv6AddressNoZone
+     */
+    public static IpAddressNoZoneUnion of(Ipv6AddressNoZone value) {
+<span class="nc" id="L76">        return new IpAddressNoZoneUnion(value);</span>
+    }
+
+    /**
+     * Returns the attribute ipv4AddressNoZone.
+     *
+     * @return value of ipv4AddressNoZone
+     */
+    public Ipv4AddressNoZone ipv4AddressNoZone() {
+<span class="nc" id="L85">        return ipv4AddressNoZone;</span>
+    }
+
+    /**
+     * Returns the attribute ipv6AddressNoZone.
+     *
+     * @return value of ipv6AddressNoZone
+     */
+    public Ipv6AddressNoZone ipv6AddressNoZone() {
+<span class="nc" id="L94">        return ipv6AddressNoZone;</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L99">        return Objects.hash(ipv4AddressNoZone, ipv6AddressNoZone);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L105">            return true;</span>
+        }
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        if (obj instanceof IpAddressNoZoneUnion) {</span>
+<span class="nc" id="L108">            IpAddressNoZoneUnion other = (IpAddressNoZoneUnion) obj;</span>
+<span class="nc" id="L109">            return</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">                 Objects.equals(ipv4AddressNoZone, other.ipv4AddressNoZone) &amp;&amp;</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">                 Objects.equals(ipv6AddressNoZone, other.ipv6AddressNoZone);</span>
+        }
+<span class="nc" id="L113">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L118">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L119">            .omitNullValues()</span>
+<span class="nc" id="L120">            .add(&quot;ipv4AddressNoZone&quot;, ipv4AddressNoZone)</span>
+<span class="nc" id="L121">            .add(&quot;ipv6AddressNoZone&quot;, ipv6AddressNoZone)</span>
+<span class="nc" id="L122">            .toString();</span>
+    }
+
+    /**
+     * Returns the object of ipAddressNoZoneUnion fromString input String.
+     *
+     * @param valInString input String
+     * @return Object of ipAddressNoZoneUnion
+     */
+    public static IpAddressNoZoneUnion fromString(String valInString) {
+        try {
+<span class="nc" id="L133">            Ipv4AddressNoZone tmpVal = Ipv4AddressNoZone.fromString(valInString);</span>
+<span class="nc" id="L134">            return of(tmpVal);</span>
+<span class="nc" id="L135">        } catch (Exception e) {</span>
+        }
+        try {
+<span class="nc" id="L138">            Ipv6AddressNoZone tmpVal = Ipv6AddressNoZone.fromString(valInString);</span>
+<span class="nc" id="L139">            return of(tmpVal);</span>
+<span class="nc" id="L140">        } catch (Exception e) {</span>
+        }
+<span class="nc" id="L142">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

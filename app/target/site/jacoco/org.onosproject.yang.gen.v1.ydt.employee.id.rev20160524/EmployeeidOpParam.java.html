@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EmployeeidOpParam.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.ydt.employee.id.rev20160524</a> &gt; <span class="el_source">EmployeeidOpParam.java</span></div><h1>EmployeeidOpParam.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.ydt.employee.id.rev20160524;
+
+import com.google.common.base.MoreObjects;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * Represents the implementation of employeeid.
+ */
+public class EmployeeidOpParam implements Employeeid {
+
+<span class="pc" id="L30">    protected List&lt;String&gt; employeeid = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, not applicable in query operation
+     */
+<span class="fc" id="L36">    public enum OnosYangNodeOperationType {</span>
+<span class="fc" id="L37">        MERGE,</span>
+<span class="fc" id="L38">        REPLACE,</span>
+<span class="fc" id="L39">        CREATE,</span>
+<span class="fc" id="L40">        DELETE,</span>
+<span class="fc" id="L41">        REMOVE,</span>
+<span class="fc" id="L42">        NONE</span>
+    }
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, will be ignored in query operation
+     */
+    private OnosYangNodeOperationType onosYangNodeOperationType;
+
+    /**
+     * Identify the leafs whose value are explicitly set
+     * Applicable in protocol edit and query operation
+     */
+<span class="pc" id="L55">    private BitSet valueLeafFlags = new BitSet();</span>
+
+    /**
+     * Identify the leafs to be selected, in a query operation
+     */
+<span class="pc" id="L60">    private BitSet selectLeafFlags = new BitSet();</span>
+    public List&lt;String&gt; employeeid() {
+<span class="fc" id="L62">        return employeeid;</span>
+    }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L70">        return onosYangNodeOperationType;</span>
+    }
+
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L76">        return Objects.hash(employeeid);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L82">            return true;</span>
+        }
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        if (obj instanceof EmployeeidOpParam) {</span>
+<span class="nc" id="L85">            EmployeeidOpParam other = (EmployeeidOpParam) obj;</span>
+<span class="nc" id="L86">            return</span>
+<span class="nc" id="L87">                 Objects.equals(employeeid, other.employeeid);</span>
+        }
+<span class="nc" id="L89">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L94">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L95">            .add(&quot;employeeid&quot;, employeeid)</span>
+<span class="nc" id="L96">            .toString();</span>
+    }
+
+    /**
+     * Creates an instance of employeeid.
+     *
+     * @param builderObject builder object of employeeid
+     */
+<span class="fc" id="L104">    protected EmployeeidOpParam(EmployeeidBuilder builderObject) {</span>
+<span class="fc" id="L105">        this.employeeid = builderObject.employeeid();</span>
+<span class="fc" id="L106">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="fc" id="L107">        this.valueLeafFlags = builderObject.getValueLeafFlags();</span>
+<span class="fc" id="L108">        this.selectLeafFlags = builderObject.getSelectLeafFlags();</span>
+<span class="fc" id="L109">    }</span>
+
+    @Override
+    public Employeeid processSubtreeFiltering(Employeeid appInstance, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L113">        EmployeeidBuilder subTreeFilteringResultBuilder = new EmployeeidBuilder();</span>
+<span class="nc" id="L114">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (!processLeafListSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L117">            return null;</span>
+        }
+<span class="nc bnc" id="L119" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L120">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L122">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processLeafListSubTreeFiltering(Employeeid appInstance, EmployeeidBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        if (isSelectAllSchemaChild) {</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">            for (String employeeid : appInstance.employeeid()) {</span>
+<span class="nc" id="L129">                subTreeFilteringResultBuilder.addToEmployeeid(employeeid);</span>
+<span class="nc" id="L130">            }</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        } else if (employeeid() != null) {</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">            if (!employeeid().isEmpty()) {</span>
+<span class="nc bnc" id="L133" title="All 4 branches missed.">                if (appInstance.employeeid() == null || appInstance.employeeid().isEmpty()) {</span>
+<span class="nc" id="L134">                    return false;</span>
+                }
+<span class="nc bnc" id="L136" title="All 2 branches missed.">                for (String employeeid : employeeid()) {</span>
+<span class="nc" id="L137">                    boolean flag = false;</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">                    for (String employeeid2 : appInstance.employeeid()) {</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">                        if (employeeid.equals(employeeid2)) {</span>
+<span class="nc" id="L140">                            flag = true;</span>
+<span class="nc" id="L141">                            subTreeFilteringResultBuilder.addToEmployeeid(employeeid2);</span>
+<span class="nc" id="L142">                            break;</span>
+                        }
+<span class="nc" id="L144">                    }</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">                    if (!flag) {</span>
+<span class="nc" id="L146">                        return false;</span>
+                    }
+<span class="nc" id="L148">                }</span>
+            } else {
+<span class="nc" id="L150">                isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L151" title="All 4 branches missed.">                if (appInstance.employeeid() != null &amp;&amp; !appInstance.employeeid().isEmpty()) {</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">                    for (String employeeid : appInstance.employeeid()) {</span>
+<span class="nc" id="L153">                        subTreeFilteringResultBuilder.addToEmployeeid(employeeid);</span>
+<span class="nc" id="L154">                    }</span>
+                }
+            }
+        }
+
+<span class="nc" id="L159">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of employeeidOpParam.
+     */
+<span class="nc" id="L166">    protected EmployeeidOpParam() {</span>
+<span class="nc" id="L167">    }</span>
+
+    /**
+     * Returns the attribute EmployeeidBuilder.
+     *
+     * @return value of EmployeeidBuilder
+     */
+    public static EmployeeidBuilder builder() {
+<span class="fc" id="L175">        return new EmployeeidBuilder();</span>
+    }
+
+    /**
+     * Returns the valueLeafFlags.
+     *
+     * @return value of valueLeafFlags
+     */
+    public BitSet getValueLeafFlags() {
+<span class="nc" id="L184">        return valueLeafFlags;</span>
+    }
+
+    /**
+     * Returns the selectLeafFlags.
+     *
+     * @return value of selectLeafFlags
+     */
+    public BitSet getSelectLeafFlags() {
+<span class="nc" id="L193">        return selectLeafFlags;</span>
+    }
+
+
+    @Override
+    public boolean isLeafValueSet(LeafIdentifier leaf) {
+<span class="nc" id="L199">        return getValueLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+    @Override
+    public boolean isSelectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L204">        return getSelectLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of employeeid.
+     */
+    public static class EmployeeidBuilder {
+
+<span class="fc" id="L213">        protected List&lt;String&gt; employeeid = new ArrayList&lt;&gt;();</span>
+
+        /**
+         * Specify the node specific operation in protocols like NETCONF.
+         * Applicable in protocol edit operation, will be ignored in query operation
+         */
+        private OnosYangNodeOperationType onosYangNodeOperationType;
+
+        /**
+         * Identify the leafs whose value are explicitly set
+         * Applicable in protocol edit and query operation
+         */
+<span class="fc" id="L225">        private BitSet valueLeafFlags = new BitSet();</span>
+
+        /**
+         * Identify the leafs to be selected, in a query operation
+         */
+<span class="fc" id="L230">        private BitSet selectLeafFlags = new BitSet();</span>
+
+        public List&lt;String&gt; employeeid() {
+<span class="fc" id="L233">            return employeeid;</span>
+        }
+
+        /**
+         * Returns the builder object of employeeid.
+         *
+         * @param employeeid list of employeeid
+         * @return builder object of employeeid
+         */
+        public EmployeeidBuilder employeeid(List&lt;String&gt; employeeid) {
+<span class="fc" id="L243">            this.employeeid = employeeid;</span>
+<span class="fc" id="L244">            return this;</span>
+        }
+        public EmployeeidBuilder addToEmployeeid(String value) {
+<span class="fc" id="L247">            employeeid().add(value);</span>
+<span class="fc" id="L248">            return this;</span>
+        }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L256">            return onosYangNodeOperationType;</span>
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public EmployeeidBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+<span class="nc" id="L266">           this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L267">           return this;</span>
+        }
+
+
+        /**
+         * Returns the valueLeafFlags.
+         *
+         * @return value of valueLeafFlags
+         */
+        public BitSet getValueLeafFlags() {
+<span class="fc" id="L277">            return valueLeafFlags;</span>
+        }
+
+        /**
+         * Returns the selectLeafFlags.
+         *
+         * @return value of selectLeafFlags
+         */
+        public BitSet getSelectLeafFlags() {
+<span class="fc" id="L286">            return selectLeafFlags;</span>
+        }
+
+
+
+        public EmployeeidBuilder selectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L292">            getSelectLeafFlags().set(leaf.getLeafIndex());</span>
+<span class="nc" id="L293">            return this;</span>
+        }
+
+        public Employeeid build() {
+<span class="fc" id="L297">            return new EmployeeidOpParam(this);</span>
+        }
+
+        /**
+         * Creates an instance of employeeidBuilder.
+         */
+<span class="fc" id="L303">        public EmployeeidBuilder() {</span>
+<span class="fc" id="L304">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

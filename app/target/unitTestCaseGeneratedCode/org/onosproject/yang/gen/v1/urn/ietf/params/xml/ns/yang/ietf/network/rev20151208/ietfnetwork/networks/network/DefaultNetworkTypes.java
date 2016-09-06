@@ -26,35 +26,6 @@ import java.util.Map;
 public class DefaultNetworkTypes implements NetworkTypes {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    /**
-     * Specify the node specific operation in protocols like NETCONF.
-     * Applicable in protocol edit operation, not applicable in query operation
-     */
-    public enum OnosYangNodeOperationType {
-        MERGE,
-        REPLACE,
-        CREATE,
-        DELETE,
-        REMOVE,
-        NONE
-    }
-
-    /**
-     * Specify the node specific operation in protocols like NETCONF.
-     * Applicable in protocol edit operation, will be ignored in query operation
-     */
-    private OnosYangNodeOperationType onosYangNodeOperationType;
-
-
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
 
     @Override
     public Object yangAugmentedInfo(Class classObject) {
@@ -123,33 +94,6 @@ public class DefaultNetworkTypes implements NetworkTypes {
     public static class NetworkTypesBuilder implements NetworkTypes.NetworkTypesBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        /**
-         * Specify the node specific operation in protocols like NETCONF.
-         * Applicable in protocol edit operation, will be ignored in query operation
-         */
-        private OnosYangNodeOperationType onosYangNodeOperationType;
-
-
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public NetworkTypesBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
-
 
         @Override
         public void addYangAugmentedInfo(Object value, Class classObject) {

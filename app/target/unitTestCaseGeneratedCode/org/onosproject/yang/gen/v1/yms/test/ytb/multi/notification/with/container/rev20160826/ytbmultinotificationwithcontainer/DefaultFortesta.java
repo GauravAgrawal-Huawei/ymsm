@@ -31,6 +31,8 @@ import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.containe
 public class DefaultFortesta implements Fortesta {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected Ytbnot ytbnot;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -51,7 +53,10 @@ public class DefaultFortesta implements Fortesta {
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-    protected Ytbnot ytbnot;
+    @Override
+    public Ytbnot ytbnot() {
+        return ytbnot;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -61,11 +66,6 @@ public class DefaultFortesta implements Fortesta {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public Ytbnot ytbnot() {
-        return ytbnot;
-    }
 
     @Override
     public int hashCode() {
@@ -181,6 +181,8 @@ public class DefaultFortesta implements Fortesta {
     public static class FortestaBuilder implements Fortesta.FortestaBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected Ytbnot ytbnot;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -188,8 +190,17 @@ public class DefaultFortesta implements Fortesta {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        protected Ytbnot ytbnot;
 
+        @Override
+        public Ytbnot ytbnot() {
+            return ytbnot;
+        }
+
+        @Override
+        public FortestaBuilder ytbnot(Ytbnot ytbnot) {
+            this.ytbnot = ytbnot;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -210,17 +221,6 @@ public class DefaultFortesta implements Fortesta {
            return this;
         }
 
-
-        @Override
-        public Ytbnot ytbnot() {
-            return ytbnot;
-        }
-
-        @Override
-        public FortestaBuilder ytbnot(Ytbnot ytbnot) {
-            this.ytbnot = ytbnot;
-            return this;
-        }
 
         @Override
         public void addYangAugmentedInfo(Object value, Class classObject) {

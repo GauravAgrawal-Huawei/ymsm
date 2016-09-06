@@ -26,6 +26,8 @@ import org.onosproject.yang.gen.v1.ych.purchasing.supervisor.rev20160524.ychpurc
  */
 public class YchPurchasingsupervisorOpParam implements YchPurchasingsupervisor {
 
+    protected YchPurchasingSupervisor ychPurchasingSupervisor;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -45,8 +47,9 @@ public class YchPurchasingsupervisorOpParam implements YchPurchasingsupervisor {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected YchPurchasingSupervisor ychPurchasingSupervisor;
+    public YchPurchasingSupervisor ychPurchasingSupervisor() {
+        return ychPurchasingSupervisor;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -56,9 +59,6 @@ public class YchPurchasingsupervisorOpParam implements YchPurchasingsupervisor {
         return onosYangNodeOperationType;
     }
 
-    public YchPurchasingSupervisor ychPurchasingSupervisor() {
-        return ychPurchasingSupervisor;
-    }
 
     @Override
     public int hashCode() {
@@ -148,6 +148,8 @@ public class YchPurchasingsupervisorOpParam implements YchPurchasingsupervisor {
      */
     public static class YchPurchasingsupervisorBuilder {
 
+        protected YchPurchasingSupervisor ychPurchasingSupervisor;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -155,8 +157,21 @@ public class YchPurchasingsupervisorOpParam implements YchPurchasingsupervisor {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        protected YchPurchasingSupervisor ychPurchasingSupervisor;
+        public YchPurchasingSupervisor ychPurchasingSupervisor() {
+            return ychPurchasingSupervisor;
+        }
 
+        /**
+         * Returns the builder object of ychPurchasingSupervisor.
+         *
+         * @param ychPurchasingSupervisor value of ychPurchasingSupervisor
+         * @return builder object of ychPurchasingSupervisor
+         */
+        public YchPurchasingsupervisorBuilder ychPurchasingSupervisor(YchPurchasingSupervisor
+            ychPurchasingSupervisor) {
+            this.ychPurchasingSupervisor = ychPurchasingSupervisor;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -178,21 +193,6 @@ public class YchPurchasingsupervisorOpParam implements YchPurchasingsupervisor {
            return this;
         }
 
-        public YchPurchasingSupervisor ychPurchasingSupervisor() {
-            return ychPurchasingSupervisor;
-        }
-
-        /**
-         * Returns the builder object of ychPurchasingSupervisor.
-         *
-         * @param ychPurchasingSupervisor value of ychPurchasingSupervisor
-         * @return builder object of ychPurchasingSupervisor
-         */
-        public YchPurchasingsupervisorBuilder ychPurchasingSupervisor(YchPurchasingSupervisor
-            ychPurchasingSupervisor) {
-            this.ychPurchasingSupervisor = ychPurchasingSupervisor;
-            return this;
-        }
 
         public YchPurchasingsupervisor build() {
             return new YchPurchasingsupervisorOpParam(this);

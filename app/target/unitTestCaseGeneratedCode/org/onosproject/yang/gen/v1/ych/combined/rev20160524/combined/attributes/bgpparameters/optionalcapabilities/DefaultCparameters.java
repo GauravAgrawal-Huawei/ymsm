@@ -30,6 +30,8 @@ import org.onosproject.yang.gen.v1.ych.combined.rev20160524.combined.attributes.
 public class DefaultCparameters implements Cparameters {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected As4BytesCapability as4BytesCapability;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -50,7 +52,10 @@ public class DefaultCparameters implements Cparameters {
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-    protected As4BytesCapability as4BytesCapability;
+    @Override
+    public As4BytesCapability as4BytesCapability() {
+        return as4BytesCapability;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -60,11 +65,6 @@ public class DefaultCparameters implements Cparameters {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public As4BytesCapability as4BytesCapability() {
-        return as4BytesCapability;
-    }
 
     @Override
     public int hashCode() {
@@ -181,6 +181,8 @@ public class DefaultCparameters implements Cparameters {
     public static class CparametersBuilder implements Cparameters.CparametersBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected As4BytesCapability as4BytesCapability;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -188,8 +190,17 @@ public class DefaultCparameters implements Cparameters {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        protected As4BytesCapability as4BytesCapability;
 
+        @Override
+        public As4BytesCapability as4BytesCapability() {
+            return as4BytesCapability;
+        }
+
+        @Override
+        public CparametersBuilder as4BytesCapability(As4BytesCapability as4BytesCapability) {
+            this.as4BytesCapability = as4BytesCapability;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -210,17 +221,6 @@ public class DefaultCparameters implements Cparameters {
            return this;
         }
 
-
-        @Override
-        public As4BytesCapability as4BytesCapability() {
-            return as4BytesCapability;
-        }
-
-        @Override
-        public CparametersBuilder as4BytesCapability(As4BytesCapability as4BytesCapability) {
-            this.as4BytesCapability = as4BytesCapability;
-            return this;
-        }
 
         @Override
         public void addYangAugmentedInfo(Object value, Class classObject) {

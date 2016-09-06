@@ -29,6 +29,8 @@ import java.util.Objects;
 public class DefaultHelloWorldOutput implements HelloWorldOutput {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected String greetingOut;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,8 +50,6 @@ public class DefaultHelloWorldOutput implements HelloWorldOutput {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected String greetingOut;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -60,6 +60,11 @@ public class DefaultHelloWorldOutput implements HelloWorldOutput {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+
+    @Override
+    public String greetingOut() {
+        return greetingOut;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -69,11 +74,6 @@ public class DefaultHelloWorldOutput implements HelloWorldOutput {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public String greetingOut() {
-        return greetingOut;
-    }
 
     @Override
     public int hashCode() {
@@ -221,14 +221,14 @@ public class DefaultHelloWorldOutput implements HelloWorldOutput {
     public static class HelloWorldOutputBuilder implements HelloWorldOutput.HelloWorldOutputBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected String greetingOut;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected String greetingOut;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -240,6 +240,18 @@ public class DefaultHelloWorldOutput implements HelloWorldOutput {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+
+        @Override
+        public String greetingOut() {
+            return greetingOut;
+        }
+
+        @Override
+        public HelloWorldOutputBuilder greetingOut(String greetingOut) {
+            getValueLeafFlags().set(LeafIdentifier.GREETINGOUT.getLeafIndex());
+            this.greetingOut = greetingOut;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -261,18 +273,6 @@ public class DefaultHelloWorldOutput implements HelloWorldOutput {
            return this;
         }
 
-
-        @Override
-        public String greetingOut() {
-            return greetingOut;
-        }
-
-        @Override
-        public HelloWorldOutputBuilder greetingOut(String greetingOut) {
-            getValueLeafFlags().set(LeafIdentifier.GREETINGOUT.getLeafIndex());
-            this.greetingOut = greetingOut;
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.

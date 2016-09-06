@@ -1,12 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: org.onosproject.yms.app.yab.YangApplicationBrokerTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 0.069 sec <<< FAILURE! - in org.onosproject.yms.app.yab.YangApplicationBrokerTest
-testExecuteListQueryOperation(org.onosproject.yms.app.yab.YangApplicationBrokerTest)  Time elapsed: 0.035 sec  <<< ERROR!
-java.lang.NullPointerException
-	at org.onosproject.yms.app.yab.YangApplicationBrokerTest.testExecuteListQueryOperation(YangApplicationBrokerTest.java:571)
-
-testExecuteQueryOperation(org.onosproject.yms.app.yab.YangApplicationBrokerTest)  Time elapsed: 0.034 sec  <<< ERROR!
-java.lang.NullPointerException
-	at org.onosproject.yms.app.yab.YangApplicationBrokerTest.testExecuteQueryOperation(YangApplicationBrokerTest.java:560)
-
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.472 sec - in org.onosproject.yms.app.yab.YangApplicationBrokerTest

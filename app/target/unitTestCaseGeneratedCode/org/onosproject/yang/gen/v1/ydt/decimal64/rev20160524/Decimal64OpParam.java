@@ -29,6 +29,17 @@ import org.onosproject.yang.gen.v1.ydt.decimal64.rev20160524.decimal64.MultiRang
  */
 public class Decimal64OpParam implements Decimal64 {
 
+    protected BigDecimal negInt;
+    protected BigDecimal negIntWithMaxFraction;
+    protected BigDecimal negIntWithMinFraction;
+    protected BigDecimal posInt;
+    protected BigDecimal posIntWithMaxFraction;
+    protected BigDecimal posIntWithMinFraction;
+    protected BigDecimal minIntWithRange;
+    protected BigDecimal midIntWithRange;
+    protected BigDecimal maxIntWithRange;
+    protected List<MultiRangeValidation> multiRangeValidation = new ArrayList<>();
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,17 +59,6 @@ public class Decimal64OpParam implements Decimal64 {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected BigDecimal negInt;
-    protected BigDecimal negIntWithMaxFraction;
-    protected BigDecimal negIntWithMinFraction;
-    protected BigDecimal posInt;
-    protected BigDecimal posIntWithMaxFraction;
-    protected BigDecimal posIntWithMinFraction;
-    protected BigDecimal minIntWithRange;
-    protected BigDecimal midIntWithRange;
-    protected BigDecimal maxIntWithRange;
-    protected List<MultiRangeValidation> multiRangeValidation = new ArrayList<>();
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -69,15 +69,6 @@ public class Decimal64OpParam implements Decimal64 {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
     public BigDecimal negInt() {
         return negInt;
     }
@@ -108,6 +99,15 @@ public class Decimal64OpParam implements Decimal64 {
     public List<MultiRangeValidation> multiRangeValidation() {
         return multiRangeValidation;
     }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     @Override
     public int hashCode() {
@@ -387,13 +387,6 @@ public class Decimal64OpParam implements Decimal64 {
      */
     public static class Decimal64Builder {
 
-        /**
-         * Specify the node specific operation in protocols like NETCONF.
-         * Applicable in protocol edit operation, will be ignored in query operation
-         */
-        private OnosYangNodeOperationType onosYangNodeOperationType;
-
-
         protected BigDecimal negInt;
         protected BigDecimal negIntWithMaxFraction;
         protected BigDecimal negIntWithMinFraction;
@@ -404,6 +397,13 @@ public class Decimal64OpParam implements Decimal64 {
         protected BigDecimal midIntWithRange;
         protected BigDecimal maxIntWithRange;
         protected List<MultiRangeValidation> multiRangeValidation = new ArrayList<>();
+
+        /**
+         * Specify the node specific operation in protocols like NETCONF.
+         * Applicable in protocol edit operation, will be ignored in query operation
+         */
+        private OnosYangNodeOperationType onosYangNodeOperationType;
+
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -414,26 +414,6 @@ public class Decimal64OpParam implements Decimal64 {
          * Identify the leafs to be selected, in a query operation
          */
         private BitSet selectLeafFlags = new BitSet();
-
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public Decimal64Builder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
 
         public BigDecimal negInt() {
             return negInt;
@@ -588,6 +568,26 @@ public class Decimal64OpParam implements Decimal64 {
             multiRangeValidation().add(value);
             return this;
         }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public Decimal64Builder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
+
 
         /**
          * Returns the valueLeafFlags.

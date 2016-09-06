@@ -25,6 +25,8 @@ import org.onosproject.yang.gen.v1.ych.combined.rev20160524.combined.Attributes;
  */
 public class CombinedOpParam implements Combined {
 
+    protected Attributes attributes;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -44,8 +46,9 @@ public class CombinedOpParam implements Combined {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected Attributes attributes;
+    public Attributes attributes() {
+        return attributes;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -55,9 +58,6 @@ public class CombinedOpParam implements Combined {
         return onosYangNodeOperationType;
     }
 
-    public Attributes attributes() {
-        return attributes;
-    }
 
     @Override
     public int hashCode() {
@@ -145,6 +145,8 @@ public class CombinedOpParam implements Combined {
      */
     public static class CombinedBuilder {
 
+        protected Attributes attributes;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -152,8 +154,20 @@ public class CombinedOpParam implements Combined {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        protected Attributes attributes;
+        public Attributes attributes() {
+            return attributes;
+        }
 
+        /**
+         * Returns the builder object of attributes.
+         *
+         * @param attributes value of attributes
+         * @return builder object of attributes
+         */
+        public CombinedBuilder attributes(Attributes attributes) {
+            this.attributes = attributes;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -174,20 +188,6 @@ public class CombinedOpParam implements Combined {
            return this;
         }
 
-        public Attributes attributes() {
-            return attributes;
-        }
-
-        /**
-         * Returns the builder object of attributes.
-         *
-         * @param attributes value of attributes
-         * @return builder object of attributes
-         */
-        public CombinedBuilder attributes(Attributes attributes) {
-            this.attributes = attributes;
-            return this;
-        }
 
         public Combined build() {
             return new CombinedOpParam(this);

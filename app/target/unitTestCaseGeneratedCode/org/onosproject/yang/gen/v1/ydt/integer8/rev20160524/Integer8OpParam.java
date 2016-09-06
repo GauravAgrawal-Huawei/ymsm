@@ -28,6 +28,18 @@ import org.onosproject.yang.gen.v1.ydt.integer8.rev20160524.integer8.MultiRangeV
  */
 public class Integer8OpParam implements Integer8 {
 
+    protected byte negInt;
+    protected byte posInt;
+    protected byte minIntWithRange;
+    protected byte midIntWithRange;
+    protected byte maxIntWithRange;
+    protected short minUint;
+    protected short maxUint;
+    protected short minUintWithRange;
+    protected short midUintWithRange;
+    protected short maxUintWithRange;
+    protected List<MultiRangeValidation> multiRangeValidation = new ArrayList<>();
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -47,18 +59,6 @@ public class Integer8OpParam implements Integer8 {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected byte negInt;
-    protected byte posInt;
-    protected byte minIntWithRange;
-    protected byte midIntWithRange;
-    protected byte maxIntWithRange;
-    protected short minUint;
-    protected short maxUint;
-    protected short minUintWithRange;
-    protected short midUintWithRange;
-    protected short maxUintWithRange;
-    protected List<MultiRangeValidation> multiRangeValidation = new ArrayList<>();
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -69,15 +69,6 @@ public class Integer8OpParam implements Integer8 {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
     public byte negInt() {
         return negInt;
     }
@@ -111,6 +102,15 @@ public class Integer8OpParam implements Integer8 {
     public List<MultiRangeValidation> multiRangeValidation() {
         return multiRangeValidation;
     }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     @Override
     public int hashCode() {
@@ -403,13 +403,6 @@ public class Integer8OpParam implements Integer8 {
      */
     public static class Integer8Builder {
 
-        /**
-         * Specify the node specific operation in protocols like NETCONF.
-         * Applicable in protocol edit operation, will be ignored in query operation
-         */
-        private OnosYangNodeOperationType onosYangNodeOperationType;
-
-
         protected byte negInt;
         protected byte posInt;
         protected byte minIntWithRange;
@@ -421,6 +414,13 @@ public class Integer8OpParam implements Integer8 {
         protected short midUintWithRange;
         protected short maxUintWithRange;
         protected List<MultiRangeValidation> multiRangeValidation = new ArrayList<>();
+
+        /**
+         * Specify the node specific operation in protocols like NETCONF.
+         * Applicable in protocol edit operation, will be ignored in query operation
+         */
+        private OnosYangNodeOperationType onosYangNodeOperationType;
+
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -431,26 +431,6 @@ public class Integer8OpParam implements Integer8 {
          * Identify the leafs to be selected, in a query operation
          */
         private BitSet selectLeafFlags = new BitSet();
-
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public Integer8Builder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
 
         public byte negInt() {
             return negInt;
@@ -620,6 +600,26 @@ public class Integer8OpParam implements Integer8 {
             multiRangeValidation().add(value);
             return this;
         }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public Integer8Builder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
+
 
         /**
          * Returns the valueLeafFlags.

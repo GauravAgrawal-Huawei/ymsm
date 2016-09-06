@@ -31,6 +31,8 @@ import org.onosproject.yang.gen.v1.ych.combined.rev20160524.combined.AsNum;
 public class DefaultAs4BytesCapability implements As4BytesCapability {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected AsNum asNumber;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -50,8 +52,6 @@ public class DefaultAs4BytesCapability implements As4BytesCapability {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected AsNum asNumber;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -62,6 +62,11 @@ public class DefaultAs4BytesCapability implements As4BytesCapability {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+
+    @Override
+    public AsNum asNumber() {
+        return asNumber;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -71,11 +76,6 @@ public class DefaultAs4BytesCapability implements As4BytesCapability {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public AsNum asNumber() {
-        return asNumber;
-    }
 
     @Override
     public int hashCode() {
@@ -224,14 +224,14 @@ public class DefaultAs4BytesCapability implements As4BytesCapability {
     public static class As4BytesCapabilityBuilder implements As4BytesCapability.As4BytesCapabilityBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected AsNum asNumber;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected AsNum asNumber;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -243,6 +243,18 @@ public class DefaultAs4BytesCapability implements As4BytesCapability {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+
+        @Override
+        public AsNum asNumber() {
+            return asNumber;
+        }
+
+        @Override
+        public As4BytesCapabilityBuilder asNumber(AsNum asNumber) {
+            getValueLeafFlags().set(LeafIdentifier.ASNUMBER.getLeafIndex());
+            this.asNumber = asNumber;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -264,18 +276,6 @@ public class DefaultAs4BytesCapability implements As4BytesCapability {
            return this;
         }
 
-
-        @Override
-        public AsNum asNumber() {
-            return asNumber;
-        }
-
-        @Override
-        public As4BytesCapabilityBuilder asNumber(AsNum asNumber) {
-            getValueLeafFlags().set(LeafIdentifier.ASNUMBER.getLeafIndex());
-            this.asNumber = asNumber;
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.

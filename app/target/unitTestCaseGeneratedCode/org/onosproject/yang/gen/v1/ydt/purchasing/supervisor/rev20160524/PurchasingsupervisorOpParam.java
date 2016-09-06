@@ -25,6 +25,8 @@ import org.onosproject.yang.gen.v1.ydt.purchasing.supervisor.rev20160524.purchas
  */
 public class PurchasingsupervisorOpParam implements Purchasingsupervisor {
 
+    protected Supervisor supervisor;
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -44,8 +46,9 @@ public class PurchasingsupervisorOpParam implements Purchasingsupervisor {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected Supervisor supervisor;
+    public Supervisor supervisor() {
+        return supervisor;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -55,9 +58,6 @@ public class PurchasingsupervisorOpParam implements Purchasingsupervisor {
         return onosYangNodeOperationType;
     }
 
-    public Supervisor supervisor() {
-        return supervisor;
-    }
 
     @Override
     public int hashCode() {
@@ -146,6 +146,8 @@ public class PurchasingsupervisorOpParam implements Purchasingsupervisor {
      */
     public static class PurchasingsupervisorBuilder {
 
+        protected Supervisor supervisor;
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -153,8 +155,20 @@ public class PurchasingsupervisorOpParam implements Purchasingsupervisor {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        protected Supervisor supervisor;
+        public Supervisor supervisor() {
+            return supervisor;
+        }
 
+        /**
+         * Returns the builder object of supervisor.
+         *
+         * @param supervisor value of supervisor
+         * @return builder object of supervisor
+         */
+        public PurchasingsupervisorBuilder supervisor(Supervisor supervisor) {
+            this.supervisor = supervisor;
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -176,20 +190,6 @@ public class PurchasingsupervisorOpParam implements Purchasingsupervisor {
            return this;
         }
 
-        public Supervisor supervisor() {
-            return supervisor;
-        }
-
-        /**
-         * Returns the builder object of supervisor.
-         *
-         * @param supervisor value of supervisor
-         * @return builder object of supervisor
-         */
-        public PurchasingsupervisorBuilder supervisor(Supervisor supervisor) {
-            this.supervisor = supervisor;
-            return this;
-        }
 
         public Purchasingsupervisor build() {
             return new PurchasingsupervisorOpParam(this);

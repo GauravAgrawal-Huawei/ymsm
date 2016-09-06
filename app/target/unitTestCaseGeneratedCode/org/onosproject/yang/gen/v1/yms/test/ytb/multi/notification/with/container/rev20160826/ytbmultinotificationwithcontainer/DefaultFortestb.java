@@ -32,6 +32,8 @@ import java.util.Objects;
 public class DefaultFortestb implements Fortestb {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+    protected List<Boolean> notileaflist = new ArrayList<>();
+
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -51,8 +53,6 @@ public class DefaultFortestb implements Fortestb {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-    protected List<Boolean> notileaflist = new ArrayList<>();
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -63,6 +63,11 @@ public class DefaultFortestb implements Fortestb {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+
+    @Override
+    public List<Boolean> notileaflist() {
+        return notileaflist;
+    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -72,11 +77,6 @@ public class DefaultFortestb implements Fortestb {
         return onosYangNodeOperationType;
     }
 
-
-    @Override
-    public List<Boolean> notileaflist() {
-        return notileaflist;
-    }
 
     @Override
     public int hashCode() {
@@ -245,14 +245,14 @@ public class DefaultFortestb implements Fortestb {
     public static class FortestbBuilder implements Fortestb.FortestbBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
+        protected List<Boolean> notileaflist = new ArrayList<>();
+
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
-
-        protected List<Boolean> notileaflist = new ArrayList<>();
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -264,6 +264,23 @@ public class DefaultFortestb implements Fortestb {
          */
         private BitSet selectLeafFlags = new BitSet();
 
+
+        @Override
+        public List<Boolean> notileaflist() {
+            return notileaflist;
+        }
+
+        @Override
+        public FortestbBuilder notileaflist(List<Boolean> notileaflist) {
+            this.notileaflist = notileaflist;
+            return this;
+        }
+
+        @Override
+        public FortestbBuilder addToNotileaflist(Boolean value) {
+            notileaflist().add(value);
+            return this;
+        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -284,23 +301,6 @@ public class DefaultFortestb implements Fortestb {
            return this;
         }
 
-
-        @Override
-        public List<Boolean> notileaflist() {
-            return notileaflist;
-        }
-
-        @Override
-        public FortestbBuilder notileaflist(List<Boolean> notileaflist) {
-            this.notileaflist = notileaflist;
-            return this;
-        }
-
-        @Override
-        public FortestbBuilder addToNotileaflist(Boolean value) {
-            notileaflist().add(value);
-            return this;
-        }
 
         /**
          * Returns the valueLeafFlags.
