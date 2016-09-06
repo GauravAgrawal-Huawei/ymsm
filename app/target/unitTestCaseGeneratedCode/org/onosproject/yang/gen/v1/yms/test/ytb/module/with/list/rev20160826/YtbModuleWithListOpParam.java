@@ -27,8 +27,6 @@ import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list.rev20160826.ytb
  */
 public class YtbModuleWithListOpParam implements YtbModuleWithList {
 
-    protected List<Ytblistlist> ytblistlist = new ArrayList<>();
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,9 +46,8 @@ public class YtbModuleWithListOpParam implements YtbModuleWithList {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-    public List<Ytblistlist> ytblistlist() {
-        return ytblistlist;
-    }
+
+    protected List<Ytblistlist> ytblistlist = new ArrayList<>();
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -60,6 +57,9 @@ public class YtbModuleWithListOpParam implements YtbModuleWithList {
         return onosYangNodeOperationType;
     }
 
+    public List<Ytblistlist> ytblistlist() {
+        return ytblistlist;
+    }
 
     @Override
     public int hashCode() {
@@ -163,8 +163,6 @@ public class YtbModuleWithListOpParam implements YtbModuleWithList {
      */
     public static class YtbModuleWithListBuilder {
 
-        protected List<Ytblistlist> ytblistlist = new ArrayList<>();
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -172,24 +170,8 @@ public class YtbModuleWithListOpParam implements YtbModuleWithList {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        public List<Ytblistlist> ytblistlist() {
-            return ytblistlist;
-        }
+        protected List<Ytblistlist> ytblistlist = new ArrayList<>();
 
-        /**
-         * Returns the builder object of ytblistlist.
-         *
-         * @param ytblistlist list of ytblistlist
-         * @return builder object of ytblistlist
-         */
-        public YtbModuleWithListBuilder ytblistlist(List<Ytblistlist> ytblistlist) {
-            this.ytblistlist = ytblistlist;
-            return this;
-        }
-        public YtbModuleWithListBuilder addToYtblistlist(Ytblistlist value) {
-            ytblistlist().add(value);
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -211,6 +193,24 @@ public class YtbModuleWithListOpParam implements YtbModuleWithList {
            return this;
         }
 
+        public List<Ytblistlist> ytblistlist() {
+            return ytblistlist;
+        }
+
+        /**
+         * Returns the builder object of ytblistlist.
+         *
+         * @param ytblistlist list of ytblistlist
+         * @return builder object of ytblistlist
+         */
+        public YtbModuleWithListBuilder ytblistlist(List<Ytblistlist> ytblistlist) {
+            this.ytblistlist = ytblistlist;
+            return this;
+        }
+        public YtbModuleWithListBuilder addToYtblistlist(Ytblistlist value) {
+            ytblistlist().add(value);
+            return this;
+        }
 
         public YtbModuleWithList build() {
             return new YtbModuleWithListOpParam(this);

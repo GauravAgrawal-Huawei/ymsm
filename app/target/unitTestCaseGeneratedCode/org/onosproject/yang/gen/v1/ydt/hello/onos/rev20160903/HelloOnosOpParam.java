@@ -21,6 +21,35 @@ package org.onosproject.yang.gen.v1.ydt.hello.onos.rev20160903;
  */
 public class HelloOnosOpParam implements HelloOnos {
 
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, not applicable in query operation
+     */
+    public enum OnosYangNodeOperationType {
+        MERGE,
+        REPLACE,
+        CREATE,
+        DELETE,
+        REMOVE,
+        NONE
+    }
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, will be ignored in query operation
+     */
+    private OnosYangNodeOperationType onosYangNodeOperationType;
+
+
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     /**
      * Creates an instance of helloOnos.
@@ -70,6 +99,33 @@ public class HelloOnosOpParam implements HelloOnos {
      * Represents the builder implementation of helloOnos.
      */
     public static class HelloOnosBuilder {
+
+        /**
+         * Specify the node specific operation in protocols like NETCONF.
+         * Applicable in protocol edit operation, will be ignored in query operation
+         */
+        private OnosYangNodeOperationType onosYangNodeOperationType;
+
+
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public HelloOnosBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
 
 
         public HelloOnos build() {

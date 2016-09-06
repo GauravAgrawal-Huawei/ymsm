@@ -30,11 +30,6 @@ import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.re
  */
 public class YtbIetfScheduleOpParam implements YtbIetfSchedule {
 
-    protected byte time;
-    protected Enum1Enum enum1;
-    protected List<Enum2Enum> enum2 = new ArrayList<>();
-    protected Monitor monitor;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -54,6 +49,11 @@ public class YtbIetfScheduleOpParam implements YtbIetfSchedule {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected byte time;
+    protected Enum1Enum enum1;
+    protected List<Enum2Enum> enum2 = new ArrayList<>();
+    protected Monitor monitor;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -64,6 +64,15 @@ public class YtbIetfScheduleOpParam implements YtbIetfSchedule {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
     public byte time() {
         return time;
     }
@@ -76,15 +85,6 @@ public class YtbIetfScheduleOpParam implements YtbIetfSchedule {
     public Monitor monitor() {
         return monitor;
     }
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
 
     @Override
     public int hashCode() {
@@ -286,17 +286,17 @@ public class YtbIetfScheduleOpParam implements YtbIetfSchedule {
      */
     public static class YtbIetfScheduleBuilder {
 
-        protected byte time;
-        protected Enum1Enum enum1;
-        protected List<Enum2Enum> enum2 = new ArrayList<>();
-        protected Monitor monitor;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected byte time;
+        protected Enum1Enum enum1;
+        protected List<Enum2Enum> enum2 = new ArrayList<>();
+        protected Monitor monitor;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -307,6 +307,26 @@ public class YtbIetfScheduleOpParam implements YtbIetfSchedule {
          * Identify the leafs to be selected, in a query operation
          */
         private BitSet selectLeafFlags = new BitSet();
+
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public YtbIetfScheduleBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
 
         public byte time() {
             return time;
@@ -370,26 +390,6 @@ public class YtbIetfScheduleOpParam implements YtbIetfSchedule {
             enum2().add(value);
             return this;
         }
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public YtbIetfScheduleBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
-
 
         /**
          * Returns the valueLeafFlags.

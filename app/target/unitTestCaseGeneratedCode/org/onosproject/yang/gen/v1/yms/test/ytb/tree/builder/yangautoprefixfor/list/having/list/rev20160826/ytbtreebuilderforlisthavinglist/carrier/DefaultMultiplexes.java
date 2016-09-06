@@ -36,9 +36,6 @@ import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.l
 public class DefaultMultiplexes implements Multiplexes {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected TypesEnum types;
-    protected List<ApplicationAreas> applicationAreas = new ArrayList<>();
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -58,6 +55,9 @@ public class DefaultMultiplexes implements Multiplexes {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected TypesEnum types;
+    protected List<ApplicationAreas> applicationAreas = new ArrayList<>();
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -68,6 +68,15 @@ public class DefaultMultiplexes implements Multiplexes {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     @Override
     public TypesEnum types() {
@@ -78,15 +87,6 @@ public class DefaultMultiplexes implements Multiplexes {
     public List<ApplicationAreas> applicationAreas() {
         return applicationAreas;
     }
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
 
     @Override
     public int hashCode() {
@@ -274,15 +274,15 @@ public class DefaultMultiplexes implements Multiplexes {
     public static class MultiplexesBuilder implements Multiplexes.MultiplexesBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected TypesEnum types;
-        protected List<ApplicationAreas> applicationAreas = new ArrayList<>();
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected TypesEnum types;
+        protected List<ApplicationAreas> applicationAreas = new ArrayList<>();
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -293,6 +293,26 @@ public class DefaultMultiplexes implements Multiplexes {
          * Identify the leafs to be selected, in a query operation
          */
         private BitSet selectLeafFlags = new BitSet();
+
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public MultiplexesBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
 
 
         @Override
@@ -323,26 +343,6 @@ public class DefaultMultiplexes implements Multiplexes {
             applicationAreas().add(value);
             return this;
         }
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public MultiplexesBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
-
 
         /**
          * Returns the valueLeafFlags.

@@ -30,9 +30,6 @@ import org.onosproject.yang.gen.v1.ydt.food.rev20160624.food.food.Snack;
 public class DefaultSportsarena implements Sportsarena {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected boolean pretzel;
-    protected boolean beer;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -52,6 +49,9 @@ public class DefaultSportsarena implements Sportsarena {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected boolean pretzel;
+    protected boolean beer;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -62,6 +62,15 @@ public class DefaultSportsarena implements Sportsarena {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     @Override
     public boolean pretzel() {
@@ -72,15 +81,6 @@ public class DefaultSportsarena implements Sportsarena {
     public boolean beer() {
         return beer;
     }
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
 
     @Override
     public int hashCode() {
@@ -243,15 +243,15 @@ public class DefaultSportsarena implements Sportsarena {
     public static class SportsarenaBuilder implements Sportsarena.SportsarenaBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected boolean pretzel;
-        protected boolean beer;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected boolean pretzel;
+        protected boolean beer;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -262,6 +262,26 @@ public class DefaultSportsarena implements Sportsarena {
          * Identify the leafs to be selected, in a query operation
          */
         private BitSet selectLeafFlags = new BitSet();
+
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public SportsarenaBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
 
 
         @Override
@@ -287,26 +307,6 @@ public class DefaultSportsarena implements Sportsarena {
             this.beer = beer;
             return this;
         }
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public SportsarenaBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
-
 
         /**
          * Returns the valueLeafFlags.

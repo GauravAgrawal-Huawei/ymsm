@@ -29,9 +29,6 @@ import java.util.Objects;
 public class DefaultMaterialSupervisor implements MaterialSupervisor {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected String name;
-    protected String departmentId;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -51,6 +48,9 @@ public class DefaultMaterialSupervisor implements MaterialSupervisor {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected String name;
+    protected String departmentId;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -61,6 +61,15 @@ public class DefaultMaterialSupervisor implements MaterialSupervisor {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     @Override
     public String name() {
@@ -71,15 +80,6 @@ public class DefaultMaterialSupervisor implements MaterialSupervisor {
     public String departmentId() {
         return departmentId;
     }
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
 
     @Override
     public int hashCode() {
@@ -242,15 +242,15 @@ public class DefaultMaterialSupervisor implements MaterialSupervisor {
     public static class MaterialSupervisorBuilder implements MaterialSupervisor.MaterialSupervisorBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected String name;
-        protected String departmentId;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected String name;
+        protected String departmentId;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -261,6 +261,27 @@ public class DefaultMaterialSupervisor implements MaterialSupervisor {
          * Identify the leafs to be selected, in a query operation
          */
         private BitSet selectLeafFlags = new BitSet();
+
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public MaterialSupervisorBuilder onosYangNodeOperationType(OnosYangNodeOperationType
+            onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
 
 
         @Override
@@ -286,27 +307,6 @@ public class DefaultMaterialSupervisor implements MaterialSupervisor {
             this.departmentId = departmentId;
             return this;
         }
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public MaterialSupervisorBuilder onosYangNodeOperationType(OnosYangNodeOperationType
-            onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
-
 
         /**
          * Returns the valueLeafFlags.

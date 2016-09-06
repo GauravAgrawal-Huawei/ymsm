@@ -27,8 +27,6 @@ import org.onosproject.yang.gen.v1.ydt.binarytest.rev20160524.binarytest.BinaryL
  */
 public class BinarytestOpParam implements Binarytest {
 
-    protected List<BinaryList> binaryList = new ArrayList<>();
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,9 +46,8 @@ public class BinarytestOpParam implements Binarytest {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-    public List<BinaryList> binaryList() {
-        return binaryList;
-    }
+
+    protected List<BinaryList> binaryList = new ArrayList<>();
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -60,6 +57,9 @@ public class BinarytestOpParam implements Binarytest {
         return onosYangNodeOperationType;
     }
 
+    public List<BinaryList> binaryList() {
+        return binaryList;
+    }
 
     @Override
     public int hashCode() {
@@ -163,8 +163,6 @@ public class BinarytestOpParam implements Binarytest {
      */
     public static class BinarytestBuilder {
 
-        protected List<BinaryList> binaryList = new ArrayList<>();
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -172,24 +170,8 @@ public class BinarytestOpParam implements Binarytest {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        public List<BinaryList> binaryList() {
-            return binaryList;
-        }
+        protected List<BinaryList> binaryList = new ArrayList<>();
 
-        /**
-         * Returns the builder object of binaryList.
-         *
-         * @param binaryList list of binaryList
-         * @return builder object of binaryList
-         */
-        public BinarytestBuilder binaryList(List<BinaryList> binaryList) {
-            this.binaryList = binaryList;
-            return this;
-        }
-        public BinarytestBuilder addToBinaryList(BinaryList value) {
-            binaryList().add(value);
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -210,6 +192,24 @@ public class BinarytestOpParam implements Binarytest {
            return this;
         }
 
+        public List<BinaryList> binaryList() {
+            return binaryList;
+        }
+
+        /**
+         * Returns the builder object of binaryList.
+         *
+         * @param binaryList list of binaryList
+         * @return builder object of binaryList
+         */
+        public BinarytestBuilder binaryList(List<BinaryList> binaryList) {
+            this.binaryList = binaryList;
+            return this;
+        }
+        public BinarytestBuilder addToBinaryList(BinaryList value) {
+            binaryList().add(value);
+            return this;
+        }
 
         public Binarytest build() {
             return new BinarytestOpParam(this);

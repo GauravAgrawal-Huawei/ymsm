@@ -29,11 +29,6 @@ import java.util.Objects;
 public class DefaultUnrecognizedAttributes implements UnrecognizedAttributes {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected boolean partial;
-    protected boolean transitive;
-    protected short type;
-    protected byte[] value;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -53,6 +48,11 @@ public class DefaultUnrecognizedAttributes implements UnrecognizedAttributes {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected boolean partial;
+    protected boolean transitive;
+    protected short type;
+    protected byte[] value;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -63,6 +63,15 @@ public class DefaultUnrecognizedAttributes implements UnrecognizedAttributes {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     @Override
     public boolean partial() {
@@ -83,15 +92,6 @@ public class DefaultUnrecognizedAttributes implements UnrecognizedAttributes {
     public byte[] value() {
         return value;
     }
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
 
     @Override
     public int hashCode() {
@@ -283,17 +283,17 @@ public class DefaultUnrecognizedAttributes implements UnrecognizedAttributes {
             .UnrecognizedAttributesBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected boolean partial;
-        protected boolean transitive;
-        protected short type;
-        protected byte[] value;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected boolean partial;
+        protected boolean transitive;
+        protected short type;
+        protected byte[] value;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -304,6 +304,27 @@ public class DefaultUnrecognizedAttributes implements UnrecognizedAttributes {
          * Identify the leafs to be selected, in a query operation
          */
         private BitSet selectLeafFlags = new BitSet();
+
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public UnrecognizedAttributesBuilder onosYangNodeOperationType(OnosYangNodeOperationType
+            onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
 
 
         @Override
@@ -353,27 +374,6 @@ public class DefaultUnrecognizedAttributes implements UnrecognizedAttributes {
             this.value = value;
             return this;
         }
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public UnrecognizedAttributesBuilder onosYangNodeOperationType(OnosYangNodeOperationType
-            onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
-
 
         /**
          * Returns the valueLeafFlags.

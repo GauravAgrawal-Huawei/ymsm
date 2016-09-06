@@ -31,8 +31,6 @@ import org.onosproject.yang.gen.v1.ych.combined.rev20160524.combined.attributes.
 public class DefaultBgpParameters implements BgpParameters {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected List<OptionalCapabilities> optionalCapabilities = new ArrayList<>();
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -53,10 +51,7 @@ public class DefaultBgpParameters implements BgpParameters {
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-    @Override
-    public List<OptionalCapabilities> optionalCapabilities() {
-        return optionalCapabilities;
-    }
+    protected List<OptionalCapabilities> optionalCapabilities = new ArrayList<>();
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -66,6 +61,11 @@ public class DefaultBgpParameters implements BgpParameters {
         return onosYangNodeOperationType;
     }
 
+
+    @Override
+    public List<OptionalCapabilities> optionalCapabilities() {
+        return optionalCapabilities;
+    }
 
     @Override
     public int hashCode() {
@@ -198,8 +198,6 @@ public class DefaultBgpParameters implements BgpParameters {
     public static class BgpParametersBuilder implements BgpParameters.BgpParametersBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected List<OptionalCapabilities> optionalCapabilities = new ArrayList<>();
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -207,23 +205,8 @@ public class DefaultBgpParameters implements BgpParameters {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
+        protected List<OptionalCapabilities> optionalCapabilities = new ArrayList<>();
 
-        @Override
-        public List<OptionalCapabilities> optionalCapabilities() {
-            return optionalCapabilities;
-        }
-
-        @Override
-        public BgpParametersBuilder optionalCapabilities(List<OptionalCapabilities> optionalCapabilities) {
-            this.optionalCapabilities = optionalCapabilities;
-            return this;
-        }
-
-        @Override
-        public BgpParametersBuilder addToOptionalCapabilities(OptionalCapabilities value) {
-            optionalCapabilities().add(value);
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -244,6 +227,23 @@ public class DefaultBgpParameters implements BgpParameters {
            return this;
         }
 
+
+        @Override
+        public List<OptionalCapabilities> optionalCapabilities() {
+            return optionalCapabilities;
+        }
+
+        @Override
+        public BgpParametersBuilder optionalCapabilities(List<OptionalCapabilities> optionalCapabilities) {
+            this.optionalCapabilities = optionalCapabilities;
+            return this;
+        }
+
+        @Override
+        public BgpParametersBuilder addToOptionalCapabilities(OptionalCapabilities value) {
+            optionalCapabilities().add(value);
+            return this;
+        }
 
         @Override
         public void addYangAugmentedInfo(Object value, Class classObject) {

@@ -28,9 +28,6 @@ import org.onosproject.yang.gen.v1.ydt.rootlist.rev20160624.rootlist.Listwithout
  */
 public class RootlistOpParam implements Rootlist {
 
-    protected List<Listwithoutcontainer> listwithoutcontainer = new ArrayList<>();
-    protected List<Listwithcontainer> listwithcontainer = new ArrayList<>();
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -50,12 +47,9 @@ public class RootlistOpParam implements Rootlist {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-    public List<Listwithoutcontainer> listwithoutcontainer() {
-        return listwithoutcontainer;
-    }
-    public List<Listwithcontainer> listwithcontainer() {
-        return listwithcontainer;
-    }
+
+    protected List<Listwithoutcontainer> listwithoutcontainer = new ArrayList<>();
+    protected List<Listwithcontainer> listwithcontainer = new ArrayList<>();
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -65,6 +59,12 @@ public class RootlistOpParam implements Rootlist {
         return onosYangNodeOperationType;
     }
 
+    public List<Listwithoutcontainer> listwithoutcontainer() {
+        return listwithoutcontainer;
+    }
+    public List<Listwithcontainer> listwithcontainer() {
+        return listwithcontainer;
+    }
 
     @Override
     public int hashCode() {
@@ -199,15 +199,35 @@ public class RootlistOpParam implements Rootlist {
      */
     public static class RootlistBuilder {
 
-        protected List<Listwithoutcontainer> listwithoutcontainer = new ArrayList<>();
-        protected List<Listwithcontainer> listwithcontainer = new ArrayList<>();
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected List<Listwithoutcontainer> listwithoutcontainer = new ArrayList<>();
+        protected List<Listwithcontainer> listwithcontainer = new ArrayList<>();
+
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public RootlistBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
 
         public List<Listwithoutcontainer> listwithoutcontainer() {
             return listwithoutcontainer;
@@ -245,26 +265,6 @@ public class RootlistOpParam implements Rootlist {
             listwithcontainer().add(value);
             return this;
         }
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public RootlistBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
-
 
         public Rootlist build() {
             return new RootlistOpParam(this);

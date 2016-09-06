@@ -30,8 +30,6 @@ import org.onosproject.yang.gen.v1.ych.combined.rev20160524.combined.attributes.
 public class DefaultOptionalCapabilities implements OptionalCapabilities {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected Cparameters cParameters;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -52,10 +50,7 @@ public class DefaultOptionalCapabilities implements OptionalCapabilities {
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-    @Override
-    public Cparameters cParameters() {
-        return cParameters;
-    }
+    protected Cparameters cParameters;
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -65,6 +60,11 @@ public class DefaultOptionalCapabilities implements OptionalCapabilities {
         return onosYangNodeOperationType;
     }
 
+
+    @Override
+    public Cparameters cParameters() {
+        return cParameters;
+    }
 
     @Override
     public int hashCode() {
@@ -181,8 +181,6 @@ public class DefaultOptionalCapabilities implements OptionalCapabilities {
     public static class OptionalCapabilitiesBuilder implements OptionalCapabilities.OptionalCapabilitiesBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected Cparameters cParameters;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -190,17 +188,8 @@ public class DefaultOptionalCapabilities implements OptionalCapabilities {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
+        protected Cparameters cParameters;
 
-        @Override
-        public Cparameters cParameters() {
-            return cParameters;
-        }
-
-        @Override
-        public OptionalCapabilitiesBuilder cParameters(Cparameters cParameters) {
-            this.cParameters = cParameters;
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -222,6 +211,17 @@ public class DefaultOptionalCapabilities implements OptionalCapabilities {
            return this;
         }
 
+
+        @Override
+        public Cparameters cParameters() {
+            return cParameters;
+        }
+
+        @Override
+        public OptionalCapabilitiesBuilder cParameters(Cparameters cParameters) {
+            this.cParameters = cParameters;
+            return this;
+        }
 
         @Override
         public void addYangAugmentedInfo(Object value, Class classObject) {

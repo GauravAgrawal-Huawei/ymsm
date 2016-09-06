@@ -27,8 +27,6 @@ import org.onosproject.yang.gen.v1.ydt.yangautoprefixboolean.rev20160524.bool.Bo
  */
 public class BoolOpParam implements Bool {
 
-    protected List<BooleanList> booleanList = new ArrayList<>();
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,9 +46,8 @@ public class BoolOpParam implements Bool {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-    public List<BooleanList> booleanList() {
-        return booleanList;
-    }
+
+    protected List<BooleanList> booleanList = new ArrayList<>();
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -60,6 +57,9 @@ public class BoolOpParam implements Bool {
         return onosYangNodeOperationType;
     }
 
+    public List<BooleanList> booleanList() {
+        return booleanList;
+    }
 
     @Override
     public int hashCode() {
@@ -162,8 +162,6 @@ public class BoolOpParam implements Bool {
      */
     public static class BoolBuilder {
 
-        protected List<BooleanList> booleanList = new ArrayList<>();
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -171,24 +169,8 @@ public class BoolOpParam implements Bool {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        public List<BooleanList> booleanList() {
-            return booleanList;
-        }
+        protected List<BooleanList> booleanList = new ArrayList<>();
 
-        /**
-         * Returns the builder object of booleanList.
-         *
-         * @param booleanList list of booleanList
-         * @return builder object of booleanList
-         */
-        public BoolBuilder booleanList(List<BooleanList> booleanList) {
-            this.booleanList = booleanList;
-            return this;
-        }
-        public BoolBuilder addToBooleanList(BooleanList value) {
-            booleanList().add(value);
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -209,6 +191,24 @@ public class BoolOpParam implements Bool {
            return this;
         }
 
+        public List<BooleanList> booleanList() {
+            return booleanList;
+        }
+
+        /**
+         * Returns the builder object of booleanList.
+         *
+         * @param booleanList list of booleanList
+         * @return builder object of booleanList
+         */
+        public BoolBuilder booleanList(List<BooleanList> booleanList) {
+            this.booleanList = booleanList;
+            return this;
+        }
+        public BoolBuilder addToBooleanList(BooleanList value) {
+            booleanList().add(value);
+            return this;
+        }
 
         public Bool build() {
             return new BoolOpParam(this);

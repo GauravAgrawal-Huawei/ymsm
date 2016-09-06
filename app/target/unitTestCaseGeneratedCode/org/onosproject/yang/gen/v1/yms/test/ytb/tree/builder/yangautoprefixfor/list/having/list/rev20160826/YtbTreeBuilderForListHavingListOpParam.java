@@ -26,8 +26,6 @@ import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.l
  */
 public class YtbTreeBuilderForListHavingListOpParam implements YtbTreeBuilderForListHavingList {
 
-    protected Carrier carrier;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -47,9 +45,8 @@ public class YtbTreeBuilderForListHavingListOpParam implements YtbTreeBuilderFor
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-    public Carrier carrier() {
-        return carrier;
-    }
+
+    protected Carrier carrier;
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -59,6 +56,9 @@ public class YtbTreeBuilderForListHavingListOpParam implements YtbTreeBuilderFor
         return onosYangNodeOperationType;
     }
 
+    public Carrier carrier() {
+        return carrier;
+    }
 
     @Override
     public int hashCode() {
@@ -149,8 +149,6 @@ public class YtbTreeBuilderForListHavingListOpParam implements YtbTreeBuilderFor
      */
     public static class YtbTreeBuilderForListHavingListBuilder {
 
-        protected Carrier carrier;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -158,20 +156,8 @@ public class YtbTreeBuilderForListHavingListOpParam implements YtbTreeBuilderFor
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        public Carrier carrier() {
-            return carrier;
-        }
+        protected Carrier carrier;
 
-        /**
-         * Returns the builder object of carrier.
-         *
-         * @param carrier value of carrier
-         * @return builder object of carrier
-         */
-        public YtbTreeBuilderForListHavingListBuilder carrier(Carrier carrier) {
-            this.carrier = carrier;
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -193,6 +179,20 @@ public class YtbTreeBuilderForListHavingListOpParam implements YtbTreeBuilderFor
            return this;
         }
 
+        public Carrier carrier() {
+            return carrier;
+        }
+
+        /**
+         * Returns the builder object of carrier.
+         *
+         * @param carrier value of carrier
+         * @return builder object of carrier
+         */
+        public YtbTreeBuilderForListHavingListBuilder carrier(Carrier carrier) {
+            this.carrier = carrier;
+            return this;
+        }
 
         public YtbTreeBuilderForListHavingList build() {
             return new YtbTreeBuilderForListHavingListOpParam(this);

@@ -27,8 +27,6 @@ import org.onosproject.yang.gen.v1.ydt.material.supervisor.rev20160524.materials
  */
 public class MaterialsupervisorOpParam implements Materialsupervisor {
 
-    protected List<Supervisor> supervisor = new ArrayList<>();
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,9 +46,8 @@ public class MaterialsupervisorOpParam implements Materialsupervisor {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-    public List<Supervisor> supervisor() {
-        return supervisor;
-    }
+
+    protected List<Supervisor> supervisor = new ArrayList<>();
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -60,6 +57,9 @@ public class MaterialsupervisorOpParam implements Materialsupervisor {
         return onosYangNodeOperationType;
     }
 
+    public List<Supervisor> supervisor() {
+        return supervisor;
+    }
 
     @Override
     public int hashCode() {
@@ -164,8 +164,6 @@ public class MaterialsupervisorOpParam implements Materialsupervisor {
      */
     public static class MaterialsupervisorBuilder {
 
-        protected List<Supervisor> supervisor = new ArrayList<>();
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -173,24 +171,8 @@ public class MaterialsupervisorOpParam implements Materialsupervisor {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        public List<Supervisor> supervisor() {
-            return supervisor;
-        }
+        protected List<Supervisor> supervisor = new ArrayList<>();
 
-        /**
-         * Returns the builder object of supervisor.
-         *
-         * @param supervisor list of supervisor
-         * @return builder object of supervisor
-         */
-        public MaterialsupervisorBuilder supervisor(List<Supervisor> supervisor) {
-            this.supervisor = supervisor;
-            return this;
-        }
-        public MaterialsupervisorBuilder addToSupervisor(Supervisor value) {
-            supervisor().add(value);
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -212,6 +194,24 @@ public class MaterialsupervisorOpParam implements Materialsupervisor {
            return this;
         }
 
+        public List<Supervisor> supervisor() {
+            return supervisor;
+        }
+
+        /**
+         * Returns the builder object of supervisor.
+         *
+         * @param supervisor list of supervisor
+         * @return builder object of supervisor
+         */
+        public MaterialsupervisorBuilder supervisor(List<Supervisor> supervisor) {
+            this.supervisor = supervisor;
+            return this;
+        }
+        public MaterialsupervisorBuilder addToSupervisor(Supervisor value) {
+            supervisor().add(value);
+            return this;
+        }
 
         public Materialsupervisor build() {
             return new MaterialsupervisorOpParam(this);

@@ -25,8 +25,6 @@ import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network3.rev
  */
 public class IetfNetwork3OpParam implements IetfNetwork3 {
 
-    protected Networks networks;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -46,9 +44,8 @@ public class IetfNetwork3OpParam implements IetfNetwork3 {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-    public Networks networks() {
-        return networks;
-    }
+
+    protected Networks networks;
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -58,6 +55,9 @@ public class IetfNetwork3OpParam implements IetfNetwork3 {
         return onosYangNodeOperationType;
     }
 
+    public Networks networks() {
+        return networks;
+    }
 
     @Override
     public int hashCode() {
@@ -145,8 +145,6 @@ public class IetfNetwork3OpParam implements IetfNetwork3 {
      */
     public static class IetfNetwork3Builder {
 
-        protected Networks networks;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -154,20 +152,8 @@ public class IetfNetwork3OpParam implements IetfNetwork3 {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        public Networks networks() {
-            return networks;
-        }
+        protected Networks networks;
 
-        /**
-         * Returns the builder object of networks.
-         *
-         * @param networks value of networks
-         * @return builder object of networks
-         */
-        public IetfNetwork3Builder networks(Networks networks) {
-            this.networks = networks;
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -188,6 +174,20 @@ public class IetfNetwork3OpParam implements IetfNetwork3 {
            return this;
         }
 
+        public Networks networks() {
+            return networks;
+        }
+
+        /**
+         * Returns the builder object of networks.
+         *
+         * @param networks value of networks
+         * @return builder object of networks
+         */
+        public IetfNetwork3Builder networks(Networks networks) {
+            this.networks = networks;
+            return this;
+        }
 
         public IetfNetwork3 build() {
             return new IetfNetwork3OpParam(this);

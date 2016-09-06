@@ -30,8 +30,6 @@ import java.util.Objects;
 public class DefaultSched implements Sched {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected BigDecimal predict;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -51,6 +49,8 @@ public class DefaultSched implements Sched {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected BigDecimal predict;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -61,11 +61,6 @@ public class DefaultSched implements Sched {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-
-    @Override
-    public BigDecimal predict() {
-        return predict;
-    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -75,6 +70,11 @@ public class DefaultSched implements Sched {
         return onosYangNodeOperationType;
     }
 
+
+    @Override
+    public BigDecimal predict() {
+        return predict;
+    }
 
     @Override
     public int hashCode() {
@@ -221,14 +221,14 @@ public class DefaultSched implements Sched {
     public static class SchedBuilder implements Sched.SchedBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected BigDecimal predict;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected BigDecimal predict;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -240,18 +240,6 @@ public class DefaultSched implements Sched {
          */
         private BitSet selectLeafFlags = new BitSet();
 
-
-        @Override
-        public BigDecimal predict() {
-            return predict;
-        }
-
-        @Override
-        public SchedBuilder predict(BigDecimal predict) {
-            getValueLeafFlags().set(LeafIdentifier.PREDICT.getLeafIndex());
-            this.predict = predict;
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -272,6 +260,18 @@ public class DefaultSched implements Sched {
            return this;
         }
 
+
+        @Override
+        public BigDecimal predict() {
+            return predict;
+        }
+
+        @Override
+        public SchedBuilder predict(BigDecimal predict) {
+            getValueLeafFlags().set(LeafIdentifier.PREDICT.getLeafIndex());
+            this.predict = predict;
+            return this;
+        }
 
         /**
          * Returns the valueLeafFlags.

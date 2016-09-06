@@ -29,8 +29,6 @@ import org.onosproject.yang.gen.v1.ych.combined.rev20160524.combined.attributes.
 public class DefaultAigp implements Aigp {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected AigpTlv aigpTlv;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -51,10 +49,7 @@ public class DefaultAigp implements Aigp {
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-    @Override
-    public AigpTlv aigpTlv() {
-        return aigpTlv;
-    }
+    protected AigpTlv aigpTlv;
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -64,6 +59,11 @@ public class DefaultAigp implements Aigp {
         return onosYangNodeOperationType;
     }
 
+
+    @Override
+    public AigpTlv aigpTlv() {
+        return aigpTlv;
+    }
 
     @Override
     public int hashCode() {
@@ -178,8 +178,6 @@ public class DefaultAigp implements Aigp {
     public static class AigpBuilder implements Aigp.AigpBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected AigpTlv aigpTlv;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -187,17 +185,8 @@ public class DefaultAigp implements Aigp {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
+        protected AigpTlv aigpTlv;
 
-        @Override
-        public AigpTlv aigpTlv() {
-            return aigpTlv;
-        }
-
-        @Override
-        public AigpBuilder aigpTlv(AigpTlv aigpTlv) {
-            this.aigpTlv = aigpTlv;
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -218,6 +207,17 @@ public class DefaultAigp implements Aigp {
            return this;
         }
 
+
+        @Override
+        public AigpTlv aigpTlv() {
+            return aigpTlv;
+        }
+
+        @Override
+        public AigpBuilder aigpTlv(AigpTlv aigpTlv) {
+            this.aigpTlv = aigpTlv;
+            return this;
+        }
 
         @Override
         public void addYangAugmentedInfo(Object value, Class classObject) {

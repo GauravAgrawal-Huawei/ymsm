@@ -32,8 +32,6 @@ import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev2
 public class DefaultNetworksState implements NetworksState {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected List<Network> network = new ArrayList<>();
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -54,10 +52,7 @@ public class DefaultNetworksState implements NetworksState {
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-    @Override
-    public List<Network> network() {
-        return network;
-    }
+    protected List<Network> network = new ArrayList<>();
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -67,6 +62,11 @@ public class DefaultNetworksState implements NetworksState {
         return onosYangNodeOperationType;
     }
 
+
+    @Override
+    public List<Network> network() {
+        return network;
+    }
 
     @Override
     public int hashCode() {
@@ -198,8 +198,6 @@ public class DefaultNetworksState implements NetworksState {
     public static class NetworksStateBuilder implements NetworksState.NetworksStateBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected List<Network> network = new ArrayList<>();
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -207,23 +205,8 @@ public class DefaultNetworksState implements NetworksState {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
+        protected List<Network> network = new ArrayList<>();
 
-        @Override
-        public List<Network> network() {
-            return network;
-        }
-
-        @Override
-        public NetworksStateBuilder network(List<Network> network) {
-            this.network = network;
-            return this;
-        }
-
-        @Override
-        public NetworksStateBuilder addToNetwork(Network value) {
-            network().add(value);
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -244,6 +227,23 @@ public class DefaultNetworksState implements NetworksState {
            return this;
         }
 
+
+        @Override
+        public List<Network> network() {
+            return network;
+        }
+
+        @Override
+        public NetworksStateBuilder network(List<Network> network) {
+            this.network = network;
+            return this;
+        }
+
+        @Override
+        public NetworksStateBuilder addToNetwork(Network value) {
+            network().add(value);
+            return this;
+        }
 
         @Override
         public void addYangAugmentedInfo(Object value, Class classObject) {

@@ -29,8 +29,6 @@ import java.util.Objects;
 public class DefaultCont3 implements Cont3 {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected String leaf1;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -50,6 +48,8 @@ public class DefaultCont3 implements Cont3 {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected String leaf1;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -60,11 +60,6 @@ public class DefaultCont3 implements Cont3 {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-
-    @Override
-    public String leaf1() {
-        return leaf1;
-    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -74,6 +69,11 @@ public class DefaultCont3 implements Cont3 {
         return onosYangNodeOperationType;
     }
 
+
+    @Override
+    public String leaf1() {
+        return leaf1;
+    }
 
     @Override
     public int hashCode() {
@@ -220,14 +220,14 @@ public class DefaultCont3 implements Cont3 {
     public static class Cont3Builder implements Cont3.Cont3Builder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected String leaf1;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected String leaf1;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -239,18 +239,6 @@ public class DefaultCont3 implements Cont3 {
          */
         private BitSet selectLeafFlags = new BitSet();
 
-
-        @Override
-        public String leaf1() {
-            return leaf1;
-        }
-
-        @Override
-        public Cont3Builder leaf1(String leaf1) {
-            getValueLeafFlags().set(LeafIdentifier.LEAF1.getLeafIndex());
-            this.leaf1 = leaf1;
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -271,6 +259,18 @@ public class DefaultCont3 implements Cont3 {
            return this;
         }
 
+
+        @Override
+        public String leaf1() {
+            return leaf1;
+        }
+
+        @Override
+        public Cont3Builder leaf1(String leaf1) {
+            getValueLeafFlags().set(LeafIdentifier.LEAF1.getLeafIndex());
+            this.leaf1 = leaf1;
+            return this;
+        }
 
         /**
          * Returns the valueLeafFlags.

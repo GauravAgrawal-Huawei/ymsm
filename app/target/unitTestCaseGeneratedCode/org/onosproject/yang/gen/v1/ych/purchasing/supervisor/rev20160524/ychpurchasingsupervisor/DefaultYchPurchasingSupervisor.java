@@ -29,9 +29,6 @@ import java.util.Objects;
 public class DefaultYchPurchasingSupervisor implements YchPurchasingSupervisor {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected String ychPurchasingSpecialist;
-    protected String ychPurchasingSupport;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -51,6 +48,9 @@ public class DefaultYchPurchasingSupervisor implements YchPurchasingSupervisor {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected String ychPurchasingSpecialist;
+    protected String ychPurchasingSupport;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -61,6 +61,15 @@ public class DefaultYchPurchasingSupervisor implements YchPurchasingSupervisor {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     @Override
     public String ychPurchasingSpecialist() {
@@ -71,15 +80,6 @@ public class DefaultYchPurchasingSupervisor implements YchPurchasingSupervisor {
     public String ychPurchasingSupport() {
         return ychPurchasingSupport;
     }
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
 
     @Override
     public int hashCode() {
@@ -247,15 +247,15 @@ public class DefaultYchPurchasingSupervisor implements YchPurchasingSupervisor {
             .YchPurchasingSupervisorBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected String ychPurchasingSpecialist;
-        protected String ychPurchasingSupport;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected String ychPurchasingSpecialist;
+        protected String ychPurchasingSupport;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -266,6 +266,27 @@ public class DefaultYchPurchasingSupervisor implements YchPurchasingSupervisor {
          * Identify the leafs to be selected, in a query operation
          */
         private BitSet selectLeafFlags = new BitSet();
+
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public YchPurchasingSupervisorBuilder onosYangNodeOperationType(OnosYangNodeOperationType
+            onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
 
 
         @Override
@@ -291,27 +312,6 @@ public class DefaultYchPurchasingSupervisor implements YchPurchasingSupervisor {
             this.ychPurchasingSupport = ychPurchasingSupport;
             return this;
         }
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public YchPurchasingSupervisorBuilder onosYangNodeOperationType(OnosYangNodeOperationType
-            onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
-
 
         /**
          * Returns the valueLeafFlags.

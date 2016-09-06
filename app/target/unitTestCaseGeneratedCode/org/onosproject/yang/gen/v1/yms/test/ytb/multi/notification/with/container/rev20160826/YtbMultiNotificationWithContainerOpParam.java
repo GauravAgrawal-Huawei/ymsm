@@ -21,6 +21,35 @@ package org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.contain
  */
 public class YtbMultiNotificationWithContainerOpParam implements YtbMultiNotificationWithContainer {
 
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, not applicable in query operation
+     */
+    public enum OnosYangNodeOperationType {
+        MERGE,
+        REPLACE,
+        CREATE,
+        DELETE,
+        REMOVE,
+        NONE
+    }
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, will be ignored in query operation
+     */
+    private OnosYangNodeOperationType onosYangNodeOperationType;
+
+
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     /**
      * Creates an instance of ytbMultiNotificationWithContainer.
@@ -73,6 +102,34 @@ public class YtbMultiNotificationWithContainerOpParam implements YtbMultiNotific
      * Represents the builder implementation of ytbMultiNotificationWithContainer.
      */
     public static class YtbMultiNotificationWithContainerBuilder {
+
+        /**
+         * Specify the node specific operation in protocols like NETCONF.
+         * Applicable in protocol edit operation, will be ignored in query operation
+         */
+        private OnosYangNodeOperationType onosYangNodeOperationType;
+
+
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public YtbMultiNotificationWithContainerBuilder onosYangNodeOperationType(OnosYangNodeOperationType
+            onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
 
 
         public YtbMultiNotificationWithContainer build() {

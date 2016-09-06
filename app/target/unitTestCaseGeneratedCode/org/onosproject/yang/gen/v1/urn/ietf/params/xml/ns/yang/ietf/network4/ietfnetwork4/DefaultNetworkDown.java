@@ -29,8 +29,6 @@ import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.iet
 public class DefaultNetworkDown implements NetworkDown {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected Networks networks;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -51,10 +49,7 @@ public class DefaultNetworkDown implements NetworkDown {
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-    @Override
-    public Networks networks() {
-        return networks;
-    }
+    protected Networks networks;
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -64,6 +59,11 @@ public class DefaultNetworkDown implements NetworkDown {
         return onosYangNodeOperationType;
     }
 
+
+    @Override
+    public Networks networks() {
+        return networks;
+    }
 
     @Override
     public int hashCode() {
@@ -179,8 +179,6 @@ public class DefaultNetworkDown implements NetworkDown {
     public static class NetworkDownBuilder implements NetworkDown.NetworkDownBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected Networks networks;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -188,17 +186,8 @@ public class DefaultNetworkDown implements NetworkDown {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
+        protected Networks networks;
 
-        @Override
-        public Networks networks() {
-            return networks;
-        }
-
-        @Override
-        public NetworkDownBuilder networks(Networks networks) {
-            this.networks = networks;
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -219,6 +208,17 @@ public class DefaultNetworkDown implements NetworkDown {
            return this;
         }
 
+
+        @Override
+        public Networks networks() {
+            return networks;
+        }
+
+        @Override
+        public NetworkDownBuilder networks(Networks networks) {
+            this.networks = networks;
+            return this;
+        }
 
         @Override
         public void addYangAugmentedInfo(Object value, Class classObject) {

@@ -29,18 +29,6 @@ import org.onosproject.yang.gen.v1.ydt.integer64.rev20160524.integer64.MultiRang
  */
 public class Integer64OpParam implements Integer64 {
 
-    protected long negInt;
-    protected long posInt;
-    protected long minIntWithRange;
-    protected long midIntWithRange;
-    protected long maxIntWithRange;
-    protected BigInteger minUint;
-    protected BigInteger maxUint;
-    protected BigInteger minUintWithRange;
-    protected BigInteger midUintWithRange;
-    protected BigInteger maxUintWithRange;
-    protected List<MultiRangeValidation> multiRangeValidation = new ArrayList<>();
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -60,6 +48,18 @@ public class Integer64OpParam implements Integer64 {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected long negInt;
+    protected long posInt;
+    protected long minIntWithRange;
+    protected long midIntWithRange;
+    protected long maxIntWithRange;
+    protected BigInteger minUint;
+    protected BigInteger maxUint;
+    protected BigInteger minUintWithRange;
+    protected BigInteger midUintWithRange;
+    protected BigInteger maxUintWithRange;
+    protected List<MultiRangeValidation> multiRangeValidation = new ArrayList<>();
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -70,6 +70,15 @@ public class Integer64OpParam implements Integer64 {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
     public long negInt() {
         return negInt;
     }
@@ -103,15 +112,6 @@ public class Integer64OpParam implements Integer64 {
     public List<MultiRangeValidation> multiRangeValidation() {
         return multiRangeValidation;
     }
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
 
     @Override
     public int hashCode() {
@@ -404,6 +404,13 @@ public class Integer64OpParam implements Integer64 {
      */
     public static class Integer64Builder {
 
+        /**
+         * Specify the node specific operation in protocols like NETCONF.
+         * Applicable in protocol edit operation, will be ignored in query operation
+         */
+        private OnosYangNodeOperationType onosYangNodeOperationType;
+
+
         protected long negInt;
         protected long posInt;
         protected long minIntWithRange;
@@ -415,13 +422,6 @@ public class Integer64OpParam implements Integer64 {
         protected BigInteger midUintWithRange;
         protected BigInteger maxUintWithRange;
         protected List<MultiRangeValidation> multiRangeValidation = new ArrayList<>();
-
-        /**
-         * Specify the node specific operation in protocols like NETCONF.
-         * Applicable in protocol edit operation, will be ignored in query operation
-         */
-        private OnosYangNodeOperationType onosYangNodeOperationType;
-
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -432,6 +432,26 @@ public class Integer64OpParam implements Integer64 {
          * Identify the leafs to be selected, in a query operation
          */
         private BitSet selectLeafFlags = new BitSet();
+
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public Integer64Builder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
 
         public long negInt() {
             return negInt;
@@ -601,26 +621,6 @@ public class Integer64OpParam implements Integer64 {
             multiRangeValidation().add(value);
             return this;
         }
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public Integer64Builder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
-
 
         /**
          * Returns the valueLeafFlags.

@@ -27,8 +27,6 @@ import org.onosproject.yang.gen.v1.ydt.bit.rev20160524.bit.BitList;
  */
 public class BitOpParam implements Bit {
 
-    protected List<BitList> bitList = new ArrayList<>();
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,9 +46,8 @@ public class BitOpParam implements Bit {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-    public List<BitList> bitList() {
-        return bitList;
-    }
+
+    protected List<BitList> bitList = new ArrayList<>();
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -60,6 +57,9 @@ public class BitOpParam implements Bit {
         return onosYangNodeOperationType;
     }
 
+    public List<BitList> bitList() {
+        return bitList;
+    }
 
     @Override
     public int hashCode() {
@@ -162,8 +162,6 @@ public class BitOpParam implements Bit {
      */
     public static class BitBuilder {
 
-        protected List<BitList> bitList = new ArrayList<>();
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -171,24 +169,8 @@ public class BitOpParam implements Bit {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        public List<BitList> bitList() {
-            return bitList;
-        }
+        protected List<BitList> bitList = new ArrayList<>();
 
-        /**
-         * Returns the builder object of bitList.
-         *
-         * @param bitList list of bitList
-         * @return builder object of bitList
-         */
-        public BitBuilder bitList(List<BitList> bitList) {
-            this.bitList = bitList;
-            return this;
-        }
-        public BitBuilder addToBitList(BitList value) {
-            bitList().add(value);
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -209,6 +191,24 @@ public class BitOpParam implements Bit {
            return this;
         }
 
+        public List<BitList> bitList() {
+            return bitList;
+        }
+
+        /**
+         * Returns the builder object of bitList.
+         *
+         * @param bitList list of bitList
+         * @return builder object of bitList
+         */
+        public BitBuilder bitList(List<BitList> bitList) {
+            this.bitList = bitList;
+            return this;
+        }
+        public BitBuilder addToBitList(BitList value) {
+            bitList().add(value);
+            return this;
+        }
 
         public Bit build() {
             return new BitOpParam(this);

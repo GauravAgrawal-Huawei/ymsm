@@ -30,8 +30,6 @@ import org.onosproject.yang.gen.v1.ydt.enumtest.rev20160524.enumtest.enumlist.En
 public class DefaultEnumList implements EnumList {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected EnumleafEnum enumleaf;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -51,6 +49,8 @@ public class DefaultEnumList implements EnumList {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected EnumleafEnum enumleaf;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -61,11 +61,6 @@ public class DefaultEnumList implements EnumList {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-
-    @Override
-    public EnumleafEnum enumleaf() {
-        return enumleaf;
-    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -75,6 +70,11 @@ public class DefaultEnumList implements EnumList {
         return onosYangNodeOperationType;
     }
 
+
+    @Override
+    public EnumleafEnum enumleaf() {
+        return enumleaf;
+    }
 
     @Override
     public int hashCode() {
@@ -231,14 +231,14 @@ public class DefaultEnumList implements EnumList {
     public static class EnumListBuilder implements EnumList.EnumListBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected EnumleafEnum enumleaf;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected EnumleafEnum enumleaf;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -250,18 +250,6 @@ public class DefaultEnumList implements EnumList {
          */
         private BitSet selectLeafFlags = new BitSet();
 
-
-        @Override
-        public EnumleafEnum enumleaf() {
-            return enumleaf;
-        }
-
-        @Override
-        public EnumListBuilder enumleaf(EnumleafEnum enumleaf) {
-            getValueLeafFlags().set(LeafIdentifier.ENUMLEAF.getLeafIndex());
-            this.enumleaf = enumleaf;
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -282,6 +270,18 @@ public class DefaultEnumList implements EnumList {
            return this;
         }
 
+
+        @Override
+        public EnumleafEnum enumleaf() {
+            return enumleaf;
+        }
+
+        @Override
+        public EnumListBuilder enumleaf(EnumleafEnum enumleaf) {
+            getValueLeafFlags().set(LeafIdentifier.ENUMLEAF.getLeafIndex());
+            this.enumleaf = enumleaf;
+            return this;
+        }
 
         /**
          * Returns the valueLeafFlags.

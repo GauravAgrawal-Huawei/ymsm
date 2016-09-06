@@ -27,8 +27,6 @@ import java.util.Objects;
  */
 public class WarehousesupervisorOpParam implements Warehousesupervisor {
 
-    protected List<String> supervisor = new ArrayList<>();
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,6 +46,8 @@ public class WarehousesupervisorOpParam implements Warehousesupervisor {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected List<String> supervisor = new ArrayList<>();
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -58,9 +58,6 @@ public class WarehousesupervisorOpParam implements Warehousesupervisor {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-    public List<String> supervisor() {
-        return supervisor;
-    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -70,6 +67,9 @@ public class WarehousesupervisorOpParam implements Warehousesupervisor {
         return onosYangNodeOperationType;
     }
 
+    public List<String> supervisor() {
+        return supervisor;
+    }
 
     @Override
     public int hashCode() {
@@ -211,14 +211,14 @@ public class WarehousesupervisorOpParam implements Warehousesupervisor {
      */
     public static class WarehousesupervisorBuilder {
 
-        protected List<String> supervisor = new ArrayList<>();
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected List<String> supervisor = new ArrayList<>();
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -230,24 +230,6 @@ public class WarehousesupervisorOpParam implements Warehousesupervisor {
          */
         private BitSet selectLeafFlags = new BitSet();
 
-        public List<String> supervisor() {
-            return supervisor;
-        }
-
-        /**
-         * Returns the builder object of supervisor.
-         *
-         * @param supervisor list of supervisor
-         * @return builder object of supervisor
-         */
-        public WarehousesupervisorBuilder supervisor(List<String> supervisor) {
-            this.supervisor = supervisor;
-            return this;
-        }
-        public WarehousesupervisorBuilder addToSupervisor(String value) {
-            supervisor().add(value);
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -269,6 +251,24 @@ public class WarehousesupervisorOpParam implements Warehousesupervisor {
            return this;
         }
 
+        public List<String> supervisor() {
+            return supervisor;
+        }
+
+        /**
+         * Returns the builder object of supervisor.
+         *
+         * @param supervisor list of supervisor
+         * @return builder object of supervisor
+         */
+        public WarehousesupervisorBuilder supervisor(List<String> supervisor) {
+            this.supervisor = supervisor;
+            return this;
+        }
+        public WarehousesupervisorBuilder addToSupervisor(String value) {
+            supervisor().add(value);
+            return this;
+        }
 
         /**
          * Returns the valueLeafFlags.

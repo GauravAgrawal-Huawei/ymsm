@@ -31,8 +31,6 @@ import java.util.Objects;
 public class DefaultYtbmultilistb implements Ytbmultilistb {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected List<String> checkin = new ArrayList<>();
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -52,6 +50,8 @@ public class DefaultYtbmultilistb implements Ytbmultilistb {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected List<String> checkin = new ArrayList<>();
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -62,11 +62,6 @@ public class DefaultYtbmultilistb implements Ytbmultilistb {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-
-    @Override
-    public List<String> checkin() {
-        return checkin;
-    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -76,6 +71,11 @@ public class DefaultYtbmultilistb implements Ytbmultilistb {
         return onosYangNodeOperationType;
     }
 
+
+    @Override
+    public List<String> checkin() {
+        return checkin;
+    }
 
     @Override
     public int hashCode() {
@@ -244,14 +244,14 @@ public class DefaultYtbmultilistb implements Ytbmultilistb {
     public static class YtbmultilistbBuilder implements Ytbmultilistb.YtbmultilistbBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected List<String> checkin = new ArrayList<>();
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected List<String> checkin = new ArrayList<>();
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -263,23 +263,6 @@ public class DefaultYtbmultilistb implements Ytbmultilistb {
          */
         private BitSet selectLeafFlags = new BitSet();
 
-
-        @Override
-        public List<String> checkin() {
-            return checkin;
-        }
-
-        @Override
-        public YtbmultilistbBuilder checkin(List<String> checkin) {
-            this.checkin = checkin;
-            return this;
-        }
-
-        @Override
-        public YtbmultilistbBuilder addToCheckin(String value) {
-            checkin().add(value);
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -300,6 +283,23 @@ public class DefaultYtbmultilistb implements Ytbmultilistb {
            return this;
         }
 
+
+        @Override
+        public List<String> checkin() {
+            return checkin;
+        }
+
+        @Override
+        public YtbmultilistbBuilder checkin(List<String> checkin) {
+            this.checkin = checkin;
+            return this;
+        }
+
+        @Override
+        public YtbmultilistbBuilder addToCheckin(String value) {
+            checkin().add(value);
+            return this;
+        }
 
         /**
          * Returns the valueLeafFlags.

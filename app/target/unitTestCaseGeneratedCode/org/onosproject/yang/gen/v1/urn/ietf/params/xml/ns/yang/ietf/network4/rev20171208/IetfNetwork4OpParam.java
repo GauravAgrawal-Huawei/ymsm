@@ -25,8 +25,6 @@ import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev
  */
 public class IetfNetwork4OpParam implements IetfNetwork4 {
 
-    protected Network network;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -46,9 +44,8 @@ public class IetfNetwork4OpParam implements IetfNetwork4 {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-    public Network network() {
-        return network;
-    }
+
+    protected Network network;
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -58,6 +55,9 @@ public class IetfNetwork4OpParam implements IetfNetwork4 {
         return onosYangNodeOperationType;
     }
 
+    public Network network() {
+        return network;
+    }
 
     @Override
     public int hashCode() {
@@ -145,8 +145,6 @@ public class IetfNetwork4OpParam implements IetfNetwork4 {
      */
     public static class IetfNetwork4Builder {
 
-        protected Network network;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -154,20 +152,8 @@ public class IetfNetwork4OpParam implements IetfNetwork4 {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        public Network network() {
-            return network;
-        }
+        protected Network network;
 
-        /**
-         * Returns the builder object of network.
-         *
-         * @param network value of network
-         * @return builder object of network
-         */
-        public IetfNetwork4Builder network(Network network) {
-            this.network = network;
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -188,6 +174,20 @@ public class IetfNetwork4OpParam implements IetfNetwork4 {
            return this;
         }
 
+        public Network network() {
+            return network;
+        }
+
+        /**
+         * Returns the builder object of network.
+         *
+         * @param network value of network
+         * @return builder object of network
+         */
+        public IetfNetwork4Builder network(Network network) {
+            this.network = network;
+            return this;
+        }
 
         public IetfNetwork4 build() {
             return new IetfNetwork4OpParam(this);

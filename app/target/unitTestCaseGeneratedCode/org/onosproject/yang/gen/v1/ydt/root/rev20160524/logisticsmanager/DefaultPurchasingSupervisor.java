@@ -29,9 +29,6 @@ import java.util.Objects;
 public class DefaultPurchasingSupervisor implements PurchasingSupervisor {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected String purchasingSpecialist;
-    protected String support;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -51,6 +48,9 @@ public class DefaultPurchasingSupervisor implements PurchasingSupervisor {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected String purchasingSpecialist;
+    protected String support;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -61,6 +61,15 @@ public class DefaultPurchasingSupervisor implements PurchasingSupervisor {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+        return onosYangNodeOperationType;
+    }
+
 
     @Override
     public String purchasingSpecialist() {
@@ -71,15 +80,6 @@ public class DefaultPurchasingSupervisor implements PurchasingSupervisor {
     public String support() {
         return support;
     }
-    /**
-     * Returns the onosYangNodeOperationType.
-     *
-     * @return value of onosYangNodeOperationType
-     */
-    public OnosYangNodeOperationType onosYangNodeOperationType() {
-        return onosYangNodeOperationType;
-    }
-
 
     @Override
     public int hashCode() {
@@ -244,15 +244,15 @@ public class DefaultPurchasingSupervisor implements PurchasingSupervisor {
     public static class PurchasingSupervisorBuilder implements PurchasingSupervisor.PurchasingSupervisorBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected String purchasingSpecialist;
-        protected String support;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected String purchasingSpecialist;
+        protected String support;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -263,6 +263,27 @@ public class DefaultPurchasingSupervisor implements PurchasingSupervisor {
          * Identify the leafs to be selected, in a query operation
          */
         private BitSet selectLeafFlags = new BitSet();
+
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+            return onosYangNodeOperationType;
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public PurchasingSupervisorBuilder onosYangNodeOperationType(OnosYangNodeOperationType
+            onosYangNodeOperationType) {
+           this.onosYangNodeOperationType = onosYangNodeOperationType;
+           return this;
+        }
 
 
         @Override
@@ -288,27 +309,6 @@ public class DefaultPurchasingSupervisor implements PurchasingSupervisor {
             this.support = support;
             return this;
         }
-        /**
-         * Returns the onosYangNodeOperationType.
-         *
-         * @return value of onosYangNodeOperationType
-         */
-        public OnosYangNodeOperationType onosYangNodeOperationType() {
-            return onosYangNodeOperationType;
-        }
-
-        /**
-         * Set node operation type.
-         *
-         * @param onosYangNodeOperationType node operation type
-         * @return builder object for node operation type
-         */
-        public PurchasingSupervisorBuilder onosYangNodeOperationType(OnosYangNodeOperationType
-            onosYangNodeOperationType) {
-           this.onosYangNodeOperationType = onosYangNodeOperationType;
-           return this;
-        }
-
 
         /**
          * Returns the valueLeafFlags.

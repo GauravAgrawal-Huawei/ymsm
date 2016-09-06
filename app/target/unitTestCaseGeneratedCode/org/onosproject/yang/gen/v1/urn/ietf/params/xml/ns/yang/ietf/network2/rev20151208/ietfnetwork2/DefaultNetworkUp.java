@@ -30,8 +30,6 @@ import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev
 public class DefaultNetworkUp implements NetworkUp {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected Networks networks;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -52,10 +50,7 @@ public class DefaultNetworkUp implements NetworkUp {
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-    @Override
-    public Networks networks() {
-        return networks;
-    }
+    protected Networks networks;
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -65,6 +60,11 @@ public class DefaultNetworkUp implements NetworkUp {
         return onosYangNodeOperationType;
     }
 
+
+    @Override
+    public Networks networks() {
+        return networks;
+    }
 
     @Override
     public int hashCode() {
@@ -180,8 +180,6 @@ public class DefaultNetworkUp implements NetworkUp {
     public static class NetworkUpBuilder implements NetworkUp.NetworkUpBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected Networks networks;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -189,17 +187,8 @@ public class DefaultNetworkUp implements NetworkUp {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
+        protected Networks networks;
 
-        @Override
-        public Networks networks() {
-            return networks;
-        }
-
-        @Override
-        public NetworkUpBuilder networks(Networks networks) {
-            this.networks = networks;
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -220,6 +209,17 @@ public class DefaultNetworkUp implements NetworkUp {
            return this;
         }
 
+
+        @Override
+        public Networks networks() {
+            return networks;
+        }
+
+        @Override
+        public NetworkUpBuilder networks(Networks networks) {
+            this.networks = networks;
+            return this;
+        }
 
         @Override
         public void addYangAugmentedInfo(Object value, Class classObject) {

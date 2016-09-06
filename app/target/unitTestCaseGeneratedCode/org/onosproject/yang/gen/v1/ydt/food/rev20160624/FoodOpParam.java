@@ -24,8 +24,6 @@ import java.util.Objects;
  */
 public class FoodOpParam implements Food {
 
-    protected org.onosproject.yang.gen.v1.ydt.food.rev20160624.food.Food food;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -45,9 +43,8 @@ public class FoodOpParam implements Food {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-    public org.onosproject.yang.gen.v1.ydt.food.rev20160624.food.Food food() {
-        return food;
-    }
+
+    protected org.onosproject.yang.gen.v1.ydt.food.rev20160624.food.Food food;
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -57,6 +54,9 @@ public class FoodOpParam implements Food {
         return onosYangNodeOperationType;
     }
 
+    public org.onosproject.yang.gen.v1.ydt.food.rev20160624.food.Food food() {
+        return food;
+    }
 
     @Override
     public int hashCode() {
@@ -144,8 +144,6 @@ public class FoodOpParam implements Food {
      */
     public static class FoodBuilder {
 
-        protected org.onosproject.yang.gen.v1.ydt.food.rev20160624.food.Food food;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -153,20 +151,8 @@ public class FoodOpParam implements Food {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        public org.onosproject.yang.gen.v1.ydt.food.rev20160624.food.Food food() {
-            return food;
-        }
+        protected org.onosproject.yang.gen.v1.ydt.food.rev20160624.food.Food food;
 
-        /**
-         * Returns the builder object of food.
-         *
-         * @param food value of food
-         * @return builder object of food
-         */
-        public FoodBuilder food(org.onosproject.yang.gen.v1.ydt.food.rev20160624.food.Food food) {
-            this.food = food;
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -187,6 +173,20 @@ public class FoodOpParam implements Food {
            return this;
         }
 
+        public org.onosproject.yang.gen.v1.ydt.food.rev20160624.food.Food food() {
+            return food;
+        }
+
+        /**
+         * Returns the builder object of food.
+         *
+         * @param food value of food
+         * @return builder object of food
+         */
+        public FoodBuilder food(org.onosproject.yang.gen.v1.ydt.food.rev20160624.food.Food food) {
+            this.food = food;
+            return this;
+        }
 
         public Food build() {
             return new FoodOpParam(this);

@@ -27,8 +27,6 @@ import org.onosproject.yang.gen.v1.ydt.emptydata.rev20160524.emptydata.EmptyList
  */
 public class EmptydataOpParam implements Emptydata {
 
-    protected List<EmptyList> emptyList = new ArrayList<>();
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,9 +46,8 @@ public class EmptydataOpParam implements Emptydata {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-    public List<EmptyList> emptyList() {
-        return emptyList;
-    }
+
+    protected List<EmptyList> emptyList = new ArrayList<>();
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -60,6 +57,9 @@ public class EmptydataOpParam implements Emptydata {
         return onosYangNodeOperationType;
     }
 
+    public List<EmptyList> emptyList() {
+        return emptyList;
+    }
 
     @Override
     public int hashCode() {
@@ -163,8 +163,6 @@ public class EmptydataOpParam implements Emptydata {
      */
     public static class EmptydataBuilder {
 
-        protected List<EmptyList> emptyList = new ArrayList<>();
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -172,24 +170,8 @@ public class EmptydataOpParam implements Emptydata {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        public List<EmptyList> emptyList() {
-            return emptyList;
-        }
+        protected List<EmptyList> emptyList = new ArrayList<>();
 
-        /**
-         * Returns the builder object of emptyList.
-         *
-         * @param emptyList list of emptyList
-         * @return builder object of emptyList
-         */
-        public EmptydataBuilder emptyList(List<EmptyList> emptyList) {
-            this.emptyList = emptyList;
-            return this;
-        }
-        public EmptydataBuilder addToEmptyList(EmptyList value) {
-            emptyList().add(value);
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -210,6 +192,24 @@ public class EmptydataOpParam implements Emptydata {
            return this;
         }
 
+        public List<EmptyList> emptyList() {
+            return emptyList;
+        }
+
+        /**
+         * Returns the builder object of emptyList.
+         *
+         * @param emptyList list of emptyList
+         * @return builder object of emptyList
+         */
+        public EmptydataBuilder emptyList(List<EmptyList> emptyList) {
+            this.emptyList = emptyList;
+            return this;
+        }
+        public EmptydataBuilder addToEmptyList(EmptyList value) {
+            emptyList().add(value);
+            return this;
+        }
 
         public Emptydata build() {
             return new EmptydataOpParam(this);

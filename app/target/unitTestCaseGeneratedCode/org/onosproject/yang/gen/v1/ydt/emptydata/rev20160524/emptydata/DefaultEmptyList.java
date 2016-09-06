@@ -29,8 +29,6 @@ import java.util.Objects;
 public class DefaultEmptyList implements EmptyList {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected boolean empty;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -50,6 +48,8 @@ public class DefaultEmptyList implements EmptyList {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected boolean empty;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -60,11 +60,6 @@ public class DefaultEmptyList implements EmptyList {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-
-    @Override
-    public boolean empty() {
-        return empty;
-    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -74,6 +69,11 @@ public class DefaultEmptyList implements EmptyList {
         return onosYangNodeOperationType;
     }
 
+
+    @Override
+    public boolean empty() {
+        return empty;
+    }
 
     @Override
     public int hashCode() {
@@ -220,14 +220,14 @@ public class DefaultEmptyList implements EmptyList {
     public static class EmptyListBuilder implements EmptyList.EmptyListBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected boolean empty;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected boolean empty;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -239,18 +239,6 @@ public class DefaultEmptyList implements EmptyList {
          */
         private BitSet selectLeafFlags = new BitSet();
 
-
-        @Override
-        public boolean empty() {
-            return empty;
-        }
-
-        @Override
-        public EmptyListBuilder empty(boolean empty) {
-            getValueLeafFlags().set(LeafIdentifier.EMPTY.getLeafIndex());
-            this.empty = empty;
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -271,6 +259,18 @@ public class DefaultEmptyList implements EmptyList {
            return this;
         }
 
+
+        @Override
+        public boolean empty() {
+            return empty;
+        }
+
+        @Override
+        public EmptyListBuilder empty(boolean empty) {
+            getValueLeafFlags().set(LeafIdentifier.EMPTY.getLeafIndex());
+            this.empty = empty;
+            return this;
+        }
 
         /**
          * Returns the valueLeafFlags.

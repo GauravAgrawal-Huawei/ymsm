@@ -30,8 +30,6 @@ import java.util.Objects;
 public class DefaultBitList implements BitList {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected BitSet bit;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -51,6 +49,8 @@ public class DefaultBitList implements BitList {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected BitSet bit;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -61,11 +61,6 @@ public class DefaultBitList implements BitList {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-
-    @Override
-    public BitSet bit() {
-        return bit;
-    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -75,6 +70,11 @@ public class DefaultBitList implements BitList {
         return onosYangNodeOperationType;
     }
 
+
+    @Override
+    public BitSet bit() {
+        return bit;
+    }
 
     @Override
     public int hashCode() {
@@ -221,14 +221,14 @@ public class DefaultBitList implements BitList {
     public static class BitListBuilder implements BitList.BitListBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected BitSet bit;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected BitSet bit;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -240,18 +240,6 @@ public class DefaultBitList implements BitList {
          */
         private BitSet selectLeafFlags = new BitSet();
 
-
-        @Override
-        public BitSet bit() {
-            return bit;
-        }
-
-        @Override
-        public BitListBuilder bit(BitSet bit) {
-            getValueLeafFlags().set(LeafIdentifier.BIT.getLeafIndex());
-            this.bit = bit;
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -272,6 +260,18 @@ public class DefaultBitList implements BitList {
            return this;
         }
 
+
+        @Override
+        public BitSet bit() {
+            return bit;
+        }
+
+        @Override
+        public BitListBuilder bit(BitSet bit) {
+            getValueLeafFlags().set(LeafIdentifier.BIT.getLeafIndex());
+            this.bit = bit;
+            return this;
+        }
 
         /**
          * Returns the valueLeafFlags.

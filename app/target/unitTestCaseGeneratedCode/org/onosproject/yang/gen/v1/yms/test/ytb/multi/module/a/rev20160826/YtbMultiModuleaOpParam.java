@@ -27,8 +27,6 @@ import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.a.rev20160826.ytbmu
  */
 public class YtbMultiModuleaOpParam implements YtbMultiModulea {
 
-    protected List<Ytbmultilist> ytbmultilist = new ArrayList<>();
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -48,9 +46,8 @@ public class YtbMultiModuleaOpParam implements YtbMultiModulea {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-    public List<Ytbmultilist> ytbmultilist() {
-        return ytbmultilist;
-    }
+
+    protected List<Ytbmultilist> ytbmultilist = new ArrayList<>();
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -60,6 +57,9 @@ public class YtbMultiModuleaOpParam implements YtbMultiModulea {
         return onosYangNodeOperationType;
     }
 
+    public List<Ytbmultilist> ytbmultilist() {
+        return ytbmultilist;
+    }
 
     @Override
     public int hashCode() {
@@ -163,8 +163,6 @@ public class YtbMultiModuleaOpParam implements YtbMultiModulea {
      */
     public static class YtbMultiModuleaBuilder {
 
-        protected List<Ytbmultilist> ytbmultilist = new ArrayList<>();
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -172,24 +170,8 @@ public class YtbMultiModuleaOpParam implements YtbMultiModulea {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        public List<Ytbmultilist> ytbmultilist() {
-            return ytbmultilist;
-        }
+        protected List<Ytbmultilist> ytbmultilist = new ArrayList<>();
 
-        /**
-         * Returns the builder object of ytbmultilist.
-         *
-         * @param ytbmultilist list of ytbmultilist
-         * @return builder object of ytbmultilist
-         */
-        public YtbMultiModuleaBuilder ytbmultilist(List<Ytbmultilist> ytbmultilist) {
-            this.ytbmultilist = ytbmultilist;
-            return this;
-        }
-        public YtbMultiModuleaBuilder addToYtbmultilist(Ytbmultilist value) {
-            ytbmultilist().add(value);
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -210,6 +192,24 @@ public class YtbMultiModuleaOpParam implements YtbMultiModulea {
            return this;
         }
 
+        public List<Ytbmultilist> ytbmultilist() {
+            return ytbmultilist;
+        }
+
+        /**
+         * Returns the builder object of ytbmultilist.
+         *
+         * @param ytbmultilist list of ytbmultilist
+         * @return builder object of ytbmultilist
+         */
+        public YtbMultiModuleaBuilder ytbmultilist(List<Ytbmultilist> ytbmultilist) {
+            this.ytbmultilist = ytbmultilist;
+            return this;
+        }
+        public YtbMultiModuleaBuilder addToYtbmultilist(Ytbmultilist value) {
+            ytbmultilist().add(value);
+            return this;
+        }
 
         public YtbMultiModulea build() {
             return new YtbMultiModuleaOpParam(this);

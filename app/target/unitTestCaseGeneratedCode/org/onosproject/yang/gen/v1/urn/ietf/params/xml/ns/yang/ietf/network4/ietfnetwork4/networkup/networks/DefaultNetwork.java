@@ -29,8 +29,6 @@ import java.util.Objects;
 public class DefaultNetwork implements Network {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected int ipAddress;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -50,6 +48,8 @@ public class DefaultNetwork implements Network {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected int ipAddress;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -60,11 +60,6 @@ public class DefaultNetwork implements Network {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-
-    @Override
-    public int ipAddress() {
-        return ipAddress;
-    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -74,6 +69,11 @@ public class DefaultNetwork implements Network {
         return onosYangNodeOperationType;
     }
 
+
+    @Override
+    public int ipAddress() {
+        return ipAddress;
+    }
 
     @Override
     public int hashCode() {
@@ -220,14 +220,14 @@ public class DefaultNetwork implements Network {
     public static class NetworkBuilder implements Network.NetworkBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected int ipAddress;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected int ipAddress;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -239,18 +239,6 @@ public class DefaultNetwork implements Network {
          */
         private BitSet selectLeafFlags = new BitSet();
 
-
-        @Override
-        public int ipAddress() {
-            return ipAddress;
-        }
-
-        @Override
-        public NetworkBuilder ipAddress(int ipAddress) {
-            getValueLeafFlags().set(LeafIdentifier.IPADDRESS.getLeafIndex());
-            this.ipAddress = ipAddress;
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -271,6 +259,18 @@ public class DefaultNetwork implements Network {
            return this;
         }
 
+
+        @Override
+        public int ipAddress() {
+            return ipAddress;
+        }
+
+        @Override
+        public NetworkBuilder ipAddress(int ipAddress) {
+            getValueLeafFlags().set(LeafIdentifier.IPADDRESS.getLeafIndex());
+            this.ipAddress = ipAddress;
+            return this;
+        }
 
         /**
          * Returns the valueLeafFlags.

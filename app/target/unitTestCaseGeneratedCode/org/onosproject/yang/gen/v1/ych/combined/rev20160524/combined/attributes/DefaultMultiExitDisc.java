@@ -29,8 +29,6 @@ import java.util.Objects;
 public class DefaultMultiExitDisc implements MultiExitDisc {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected long med;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -50,6 +48,8 @@ public class DefaultMultiExitDisc implements MultiExitDisc {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected long med;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -60,11 +60,6 @@ public class DefaultMultiExitDisc implements MultiExitDisc {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-
-    @Override
-    public long med() {
-        return med;
-    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -74,6 +69,11 @@ public class DefaultMultiExitDisc implements MultiExitDisc {
         return onosYangNodeOperationType;
     }
 
+
+    @Override
+    public long med() {
+        return med;
+    }
 
     @Override
     public int hashCode() {
@@ -221,14 +221,14 @@ public class DefaultMultiExitDisc implements MultiExitDisc {
     public static class MultiExitDiscBuilder implements MultiExitDisc.MultiExitDiscBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected long med;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected long med;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -240,18 +240,6 @@ public class DefaultMultiExitDisc implements MultiExitDisc {
          */
         private BitSet selectLeafFlags = new BitSet();
 
-
-        @Override
-        public long med() {
-            return med;
-        }
-
-        @Override
-        public MultiExitDiscBuilder med(long med) {
-            getValueLeafFlags().set(LeafIdentifier.MED.getLeafIndex());
-            this.med = med;
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -272,6 +260,18 @@ public class DefaultMultiExitDisc implements MultiExitDisc {
            return this;
         }
 
+
+        @Override
+        public long med() {
+            return med;
+        }
+
+        @Override
+        public MultiExitDiscBuilder med(long med) {
+            getValueLeafFlags().set(LeafIdentifier.MED.getLeafIndex());
+            this.med = med;
+            return this;
+        }
 
         /**
          * Returns the valueLeafFlags.

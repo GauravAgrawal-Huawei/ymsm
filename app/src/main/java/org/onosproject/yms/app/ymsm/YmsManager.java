@@ -31,6 +31,7 @@ import org.onosproject.core.ApplicationId;
 import org.onosproject.core.CoreService;
 import org.onosproject.event.ListenerService;
 import org.onosproject.yms.app.yab.YangApplicationBroker;
+import org.onosproject.yms.app.yab.exceptions.YabException;
 import org.onosproject.yms.app.ych.DefaultYangCodecHandler;
 import org.onosproject.yms.app.ych.codecutils.YchYangDataTreeCodec;
 import org.onosproject.yms.app.ydt.DefaultYdtWalker;
@@ -127,7 +128,7 @@ public class YmsManager
     }
 
     @Override
-    public YdtResponse executeOperation(YdtBuilder operationRequest) {
+    public YdtResponse executeOperation(YdtBuilder operationRequest) throws YabException {
         YangApplicationBroker requestBroker =
                 new YangApplicationBroker(schemaRegistry);
         switch (operationRequest.getYmsOperationType()) {

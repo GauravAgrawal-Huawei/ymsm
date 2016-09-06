@@ -25,7 +25,7 @@ import org.onosproject.yangutils.datamodel.TraversalType;
 import org.onosproject.yangutils.datamodel.YangInput;
 import org.onosproject.yangutils.datamodel.YangRpc;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
-import org.onosproject.yms.app.yab.exceptions.YabExceptions;
+import org.onosproject.yms.app.yab.exceptions.YabException;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ydt.YangResponseWorkBench;
 import org.onosproject.yms.app.ydt.YdtAppContext;
@@ -89,21 +89,15 @@ public class YangApplicationBroker {
      * @param ydtWorkBench YANG request work bench
      * @return YANG response data tree node context
      */
-    public YdtResponse processQuery(YdtBuilder ydtWorkBench) {
+    public YdtResponse processQuery(YdtBuilder ydtWorkBench) throws YabException {
         List<Object> responseObjects = new LinkedList<>();
         YangRequestWorkBench workBench = ((YangRequestWorkBench) ydtWorkBench);
         YdtContext rootYdtContext = workBench.getRootNode();
         YdtAppContext appRootNode = workBench.getAppRootNode();
         for (YdtAppContext appContext = appRootNode.getFirstChild(); appContext != null;
              appContext = appContext.getNextSibling()) {
-            try {
-                Object responseObject = processQueryOfApplication(appContext);
-                responseObjects.add(responseObject);
-            } catch (YabExceptions e) {
-                return new YangResponseWorkBench(null,
-                        YmsOperationExecutionStatus.ERROR_EXCEPTION,
-                        ydtWorkBench.getYmsOperationType());
-            }
+            Object responseObject = processQueryOfApplication(appContext);
+            responseObjects.add(responseObject);
         }
         YdtBuilder responseYdt = buildResponseYdtTree(responseObjects, rootYdtContext.getName(),
                 rootYdtContext.getNamespace());
@@ -120,18 +114,14 @@ public class YangApplicationBroker {
      * @return YANG response data tree node context
      * @throws CloneNotSupportedException clone is not supported
      */
-    public YdtResponse processEdit(YdtBuilder ydtWorkBench) throws CloneNotSupportedException {
+
+    public YdtResponse processEdit(YdtBuilder ydtWorkBench)
+            throws CloneNotSupportedException, YabException {
         YangRequestWorkBench workBench = ((YangRequestWorkBench) ydtWorkBench);
         YdtAppContext appRootNode = workBench.getAppRootNode();
         for (YdtAppContext appContext = appRootNode.getFirstChild(); appContext != null;
              appContext = appContext.getNextSibling()) {
-            try {
-                processEditOfApplication(appContext);
-            } catch (YabExceptions e) {
-                return new YangResponseWorkBench(null,
-                        YmsOperationExecutionStatus.ERROR_EXCEPTION,
-                        workBench.getYmsOperationType());
-            }
+            processEditOfApplication(appContext);
         }
         return new YangResponseWorkBench(null,
                 YmsOperationExecutionStatus.EXECUTION_SUCCESS,
@@ -144,7 +134,7 @@ public class YangApplicationBroker {
      * @param ydtWorkBench YANG request work bench
      * @return YANG response data tree node context
      */
-    public YdtResponse processOperation(YdtBuilder ydtWorkBench) {
+    public YdtResponse processOperation(YdtBuilder ydtWorkBench) throws YabException {
         List<Object> responseObjects = new LinkedList<>();
         YangRequestWorkBench workBench = ((YangRequestWorkBench) ydtWorkBench);
         YdtContext rootYdtContext = workBench.getRootNode();
@@ -156,15 +146,9 @@ public class YangApplicationBroker {
                 YdtContext inputNode = getInputYdtNode(childNode);
                 Object inputParamObject = getYangObject(inputNode);
                 Object appObject = getApplicationObject(ydtNode);
-                try {
-                    Object outputObject = invokeApplicationsMethod(appObject, inputParamObject,
-                            yangNode.getName());
-                    responseObjects.add(outputObject);
-                } catch (YabExceptions e) {
-                    return new YangResponseWorkBench(null,
-                            YmsOperationExecutionStatus.ERROR_EXCEPTION,
-                            ydtWorkBench.getYmsOperationType());
-                }
+                Object outputObject = invokeApplicationsMethod(appObject, inputParamObject,
+                        yangNode.getName());
+                responseObjects.add(outputObject);
                 YdtBuilder responseYdt = buildResponseYdtTree(responseObjects, rootYdtContext.getName(),
                         rootYdtContext.getNamespace());
                 return new YangResponseWorkBench(responseYdt.getRootNode(),
@@ -183,7 +167,7 @@ public class YangApplicationBroker {
      * @return response object from application
      */
     private Object processQueryOfApplication(YdtAppContext appContext)
-            throws YabExceptions {
+            throws YabException {
 
         // get YdtContext from appContext
         YdtContext ydtNode = appContext.getModuleNode();
@@ -291,7 +275,7 @@ public class YangApplicationBroker {
      * @return response object from application
      */
     private Object invokeApplicationsMethod(Object appManagerObject,
-                                            Object inputParamObject, String methodName) throws YabExceptions {
+                                            Object inputParamObject, String methodName) throws YabException {
         Class<?> appClass = appManagerObject.getClass();
         Method methodObject;
         Object responseObject = null;
@@ -299,7 +283,7 @@ public class YangApplicationBroker {
             methodObject = appClass.getDeclaredMethod(methodName, inputParamObject.getClass());
         } catch (NoSuchMethodException e) {
             log.error("YAB: failed to fetch method object from application object.");
-            throw new YabExceptions(e.getMessage());
+            throw new YabException(e.getMessage());
         }
 
         try {
@@ -307,9 +291,8 @@ public class YangApplicationBroker {
                 responseObject = methodObject.invoke(appManagerObject, inputParamObject);
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
             log.error("YAB: failed to invoke method in application object.");
-            throw new YabExceptions(e.getMessage());
+            throw new YabException(e.getMessage());
         }
         return responseObject;
     }
@@ -373,7 +356,7 @@ public class YangApplicationBroker {
      * @param appContext application context
      */
     private void processEditOfApplication(YdtAppContext appContext)
-            throws CloneNotSupportedException, YabExceptions {
+            throws CloneNotSupportedException, YabException {
         if (appContext.getOperationType() != YdtAppNodeOperationType.OTHER_EDIT) {
             processDeleteRequestOfApplication(appContext);
         } else if (appContext.getOperationType() != YdtAppNodeOperationType.DELETE_ONLY) {
@@ -408,7 +391,7 @@ public class YangApplicationBroker {
      * @param appContext application context
      */
     private void processDeleteRequestOfApplication(YdtAppContext appContext)
-            throws CloneNotSupportedException, YabExceptions {
+            throws CloneNotSupportedException, YabException {
         List<YdtContext> deleteNodes = appContext.getDeleteNodes();
 
         if (deleteNodes != null && !deleteNodes.isEmpty()) {

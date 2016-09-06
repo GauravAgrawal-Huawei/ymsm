@@ -29,8 +29,6 @@ import java.util.Objects;
 public class DefaultBooleanList implements BooleanList {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected boolean yangAutoPrefixBoolean;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -50,6 +48,8 @@ public class DefaultBooleanList implements BooleanList {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+    protected boolean yangAutoPrefixBoolean;
     /**
      * Identify the leafs whose value are explicitly set
      * Applicable in protocol edit and query operation
@@ -60,11 +60,6 @@ public class DefaultBooleanList implements BooleanList {
      * Identify the leafs to be selected, in a query operation
      */
     private BitSet selectLeafFlags = new BitSet();
-
-    @Override
-    public boolean yangAutoPrefixBoolean() {
-        return yangAutoPrefixBoolean;
-    }
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -74,6 +69,11 @@ public class DefaultBooleanList implements BooleanList {
         return onosYangNodeOperationType;
     }
 
+
+    @Override
+    public boolean yangAutoPrefixBoolean() {
+        return yangAutoPrefixBoolean;
+    }
 
     @Override
     public int hashCode() {
@@ -222,14 +222,14 @@ public class DefaultBooleanList implements BooleanList {
     public static class BooleanListBuilder implements BooleanList.BooleanListBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected boolean yangAutoPrefixBoolean;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
          */
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
+
+        protected boolean yangAutoPrefixBoolean;
         /**
          * Identify the leafs whose value are explicitly set
          * Applicable in protocol edit and query operation
@@ -241,18 +241,6 @@ public class DefaultBooleanList implements BooleanList {
          */
         private BitSet selectLeafFlags = new BitSet();
 
-
-        @Override
-        public boolean yangAutoPrefixBoolean() {
-            return yangAutoPrefixBoolean;
-        }
-
-        @Override
-        public BooleanListBuilder yangAutoPrefixBoolean(boolean yangAutoPrefixBoolean) {
-            getValueLeafFlags().set(LeafIdentifier.YANGAUTOPREFIXBOOLEAN.getLeafIndex());
-            this.yangAutoPrefixBoolean = yangAutoPrefixBoolean;
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -273,6 +261,18 @@ public class DefaultBooleanList implements BooleanList {
            return this;
         }
 
+
+        @Override
+        public boolean yangAutoPrefixBoolean() {
+            return yangAutoPrefixBoolean;
+        }
+
+        @Override
+        public BooleanListBuilder yangAutoPrefixBoolean(boolean yangAutoPrefixBoolean) {
+            getValueLeafFlags().set(LeafIdentifier.YANGAUTOPREFIXBOOLEAN.getLeafIndex());
+            this.yangAutoPrefixBoolean = yangAutoPrefixBoolean;
+            return this;
+        }
 
         /**
          * Returns the valueLeafFlags.

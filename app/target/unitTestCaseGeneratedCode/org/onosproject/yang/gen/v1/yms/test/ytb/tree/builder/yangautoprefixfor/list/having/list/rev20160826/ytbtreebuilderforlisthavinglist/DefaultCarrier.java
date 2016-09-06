@@ -33,8 +33,6 @@ import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.l
 public class DefaultCarrier implements Carrier {
 
     protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-    protected List<Multiplexes> multiplexes = new ArrayList<>();
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -55,10 +53,7 @@ public class DefaultCarrier implements Carrier {
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-    @Override
-    public List<Multiplexes> multiplexes() {
-        return multiplexes;
-    }
+    protected List<Multiplexes> multiplexes = new ArrayList<>();
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -68,6 +63,11 @@ public class DefaultCarrier implements Carrier {
         return onosYangNodeOperationType;
     }
 
+
+    @Override
+    public List<Multiplexes> multiplexes() {
+        return multiplexes;
+    }
 
     @Override
     public int hashCode() {
@@ -199,8 +199,6 @@ public class DefaultCarrier implements Carrier {
     public static class CarrierBuilder implements Carrier.CarrierBuilder {
 
         protected Map<Class<?>, Object> yangAugmentedInfoMap = new HashMap<>();
-        protected List<Multiplexes> multiplexes = new ArrayList<>();
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -208,23 +206,8 @@ public class DefaultCarrier implements Carrier {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
+        protected List<Multiplexes> multiplexes = new ArrayList<>();
 
-        @Override
-        public List<Multiplexes> multiplexes() {
-            return multiplexes;
-        }
-
-        @Override
-        public CarrierBuilder multiplexes(List<Multiplexes> multiplexes) {
-            this.multiplexes = multiplexes;
-            return this;
-        }
-
-        @Override
-        public CarrierBuilder addToMultiplexes(Multiplexes value) {
-            multiplexes().add(value);
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -245,6 +228,23 @@ public class DefaultCarrier implements Carrier {
            return this;
         }
 
+
+        @Override
+        public List<Multiplexes> multiplexes() {
+            return multiplexes;
+        }
+
+        @Override
+        public CarrierBuilder multiplexes(List<Multiplexes> multiplexes) {
+            this.multiplexes = multiplexes;
+            return this;
+        }
+
+        @Override
+        public CarrierBuilder addToMultiplexes(Multiplexes value) {
+            multiplexes().add(value);
+            return this;
+        }
 
         @Override
         public void addYangAugmentedInfo(Object value, Class classObject) {

@@ -25,8 +25,6 @@ import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev2016082
  */
 public class YtbModuleWithContainerOpParam implements YtbModuleWithContainer {
 
-    protected Sched sched;
-
     /**
      * Specify the node specific operation in protocols like NETCONF.
      * Applicable in protocol edit operation, not applicable in query operation
@@ -46,9 +44,8 @@ public class YtbModuleWithContainerOpParam implements YtbModuleWithContainer {
      */
     private OnosYangNodeOperationType onosYangNodeOperationType;
 
-    public Sched sched() {
-        return sched;
-    }
+
+    protected Sched sched;
     /**
      * Returns the onosYangNodeOperationType.
      *
@@ -58,6 +55,9 @@ public class YtbModuleWithContainerOpParam implements YtbModuleWithContainer {
         return onosYangNodeOperationType;
     }
 
+    public Sched sched() {
+        return sched;
+    }
 
     @Override
     public int hashCode() {
@@ -146,8 +146,6 @@ public class YtbModuleWithContainerOpParam implements YtbModuleWithContainer {
      */
     public static class YtbModuleWithContainerBuilder {
 
-        protected Sched sched;
-
         /**
          * Specify the node specific operation in protocols like NETCONF.
          * Applicable in protocol edit operation, will be ignored in query operation
@@ -155,20 +153,8 @@ public class YtbModuleWithContainerOpParam implements YtbModuleWithContainer {
         private OnosYangNodeOperationType onosYangNodeOperationType;
 
 
-        public Sched sched() {
-            return sched;
-        }
+        protected Sched sched;
 
-        /**
-         * Returns the builder object of sched.
-         *
-         * @param sched value of sched
-         * @return builder object of sched
-         */
-        public YtbModuleWithContainerBuilder sched(Sched sched) {
-            this.sched = sched;
-            return this;
-        }
         /**
          * Returns the onosYangNodeOperationType.
          *
@@ -190,6 +176,20 @@ public class YtbModuleWithContainerOpParam implements YtbModuleWithContainer {
            return this;
         }
 
+        public Sched sched() {
+            return sched;
+        }
+
+        /**
+         * Returns the builder object of sched.
+         *
+         * @param sched value of sched
+         * @return builder object of sched
+         */
+        public YtbModuleWithContainerBuilder sched(Sched sched) {
+            this.sched = sched;
+            return this;
+        }
 
         public YtbModuleWithContainer build() {
             return new YtbModuleWithContainerOpParam(this);
