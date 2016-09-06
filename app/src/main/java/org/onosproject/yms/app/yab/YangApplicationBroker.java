@@ -25,7 +25,6 @@ import org.onosproject.yangutils.datamodel.TraversalType;
 import org.onosproject.yangutils.datamodel.YangInput;
 import org.onosproject.yangutils.datamodel.YangRpc;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
-import org.onosproject.yangutils.datamodel.javadatamodel.JavaFileInfo;
 import org.onosproject.yms.app.yab.exceptions.YabExceptions;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ydt.YangResponseWorkBench;
@@ -541,9 +540,9 @@ public class YangApplicationBroker {
     private String getJavaNameOfApp(YdtAppContext appContext) {
         String javaName = null;
         if (appContext.getModuleNode() != null) {
-            javaName = ((YdtNode) appContext.getModuleNode()).getYangSchemaNode().getName();
+            javaName = ((YdtNode) appContext.getModuleNode()).getYangSchemaNode().getJavaClassNameOrBuiltInType();
         } else if (appContext.getAugmentingModuleSchemaNode() != null) {
-            javaName = ((JavaFileInfo) appContext.getAugmentingModuleSchemaNode()).getJavaName();
+            javaName = appContext.getAugmentingModuleSchemaNode().getJavaClassNameOrBuiltInType();
         } else {
             log.error("YAB: failed to fetch yang nodes from application context.");
         }
