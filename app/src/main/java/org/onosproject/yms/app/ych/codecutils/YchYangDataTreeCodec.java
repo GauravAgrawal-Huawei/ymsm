@@ -203,13 +203,18 @@ public class YchYangDataTreeCodec
         try {
             document = DocumentHelper.parseText(protocolData);
         } catch (DocumentException e) {
-            // TODO
+            String errorInfo = "Root element in XML input string is not well-formed.";
+            throw new YchException(errorInfo);
         }
         XmlWalker walker = new DefaultXmlCodecWalker();
         XmlCodecListener listener = new XmlCodecListener();
 
         // Find the root element in xml string
         findRootElement(document.getRootElement());
+        if (getRootElement() == null) {
+            String errorInfo = "Root element (filter, config, data) in XML input string is not found.";
+            throw new YchException(errorInfo);
+        }
 
         // Get the YDT builder for the logical root name.
         if (getRootElement() != null) {
