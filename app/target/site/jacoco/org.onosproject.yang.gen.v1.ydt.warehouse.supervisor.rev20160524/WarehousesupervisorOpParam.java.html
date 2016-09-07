@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WarehousesupervisorOpParam.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.ydt.warehouse.supervisor.rev20160524</a> &gt; <span class="el_source">WarehousesupervisorOpParam.java</span></div><h1>WarehousesupervisorOpParam.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.ydt.warehouse.supervisor.rev20160524;
+
+import com.google.common.base.MoreObjects;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * Represents the implementation of warehousesupervisor.
+ */
+public class WarehousesupervisorOpParam implements Warehousesupervisor {
+
+    protected List&lt;String&gt; supervisor;
+    protected OnosYangNodeOperationType onosYangNodeOperationType;
+    /**
+     * Identify the leafs whose value are explicitly set
+     * Applicable in protocol edit and query operation
+     */
+<span class="pc" id="L36">    private BitSet valueLeafFlags = new BitSet();</span>
+
+    /**
+     * Identify the leafs to be selected, in a query operation
+     */
+<span class="pc" id="L41">    private BitSet selectLeafFlags = new BitSet();</span>
+    public List&lt;String&gt; supervisor() {
+<span class="fc" id="L43">        return supervisor;</span>
+    }
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L46">        return onosYangNodeOperationType;</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L51">        return Objects.hash(supervisor, onosYangNodeOperationType);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L57">            return true;</span>
+        }
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if (obj instanceof WarehousesupervisorOpParam) {</span>
+<span class="nc" id="L60">            WarehousesupervisorOpParam other = (WarehousesupervisorOpParam) obj;</span>
+<span class="nc" id="L61">            return</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">                 Objects.equals(supervisor, other.supervisor) &amp;&amp;</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">                 Objects.equals(onosYangNodeOperationType, other.onosYangNodeOperationType);</span>
+        }
+<span class="nc" id="L65">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L70">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L71">            .add(&quot;supervisor&quot;, supervisor)</span>
+<span class="nc" id="L72">            .add(&quot;onosYangNodeOperationType&quot;, onosYangNodeOperationType)</span>
+<span class="nc" id="L73">            .toString();</span>
+    }
+
+    /**
+     * Creates an instance of warehousesupervisor.
+     *
+     * @param builderObject builder object of warehousesupervisor
+     */
+<span class="fc" id="L81">    protected WarehousesupervisorOpParam(WarehousesupervisorBuilder builderObject) {</span>
+<span class="fc" id="L82">        this.supervisor = builderObject.supervisor();</span>
+<span class="fc" id="L83">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="fc" id="L84">        this.valueLeafFlags = builderObject.getValueLeafFlags();</span>
+<span class="fc" id="L85">        this.selectLeafFlags = builderObject.getSelectLeafFlags();</span>
+<span class="fc" id="L86">    }</span>
+
+    @Override
+    public Warehousesupervisor processSubtreeFiltering(Warehousesupervisor appInstance, boolean
+            isSelectAllSchemaChild) {
+<span class="nc" id="L91">        WarehousesupervisorBuilder subTreeFilteringResultBuilder = new WarehousesupervisorBuilder();</span>
+<span class="nc" id="L92">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (!processLeafListSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L95">            return null;</span>
+        }
+<span class="nc bnc" id="L97" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L98">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L100">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processLeafListSubTreeFiltering(Warehousesupervisor appInstance, WarehousesupervisorBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        if (isSelectAllSchemaChild) {</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">            for (String supervisor : appInstance.supervisor()) {</span>
+<span class="nc" id="L107">                subTreeFilteringResultBuilder.addToSupervisor(supervisor);</span>
+<span class="nc" id="L108">            }</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        } else if (supervisor() != null) {</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">            if (!supervisor().isEmpty()) {</span>
+<span class="nc bnc" id="L111" title="All 4 branches missed.">                if (appInstance.supervisor() == null || appInstance.supervisor().isEmpty()) {</span>
+<span class="nc" id="L112">                    return false;</span>
+                }
+<span class="nc bnc" id="L114" title="All 2 branches missed.">                for (String supervisor : supervisor()) {</span>
+<span class="nc" id="L115">                    boolean flag = false;</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">                    for (String supervisor2 : appInstance.supervisor()) {</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">                        if (supervisor.equals(supervisor2)) {</span>
+<span class="nc" id="L118">                            flag = true;</span>
+<span class="nc" id="L119">                            subTreeFilteringResultBuilder.addToSupervisor(supervisor2);</span>
+<span class="nc" id="L120">                            break;</span>
+                        }
+<span class="nc" id="L122">                    }</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">                    if (!flag) {</span>
+<span class="nc" id="L124">                        return false;</span>
+                    }
+<span class="nc" id="L126">                }</span>
+            } else {
+<span class="nc" id="L128">                isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L129" title="All 4 branches missed.">                if (appInstance.supervisor() != null &amp;&amp; !appInstance.supervisor().isEmpty()) {</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">                    for (String supervisor : appInstance.supervisor()) {</span>
+<span class="nc" id="L131">                        subTreeFilteringResultBuilder.addToSupervisor(supervisor);</span>
+<span class="nc" id="L132">                    }</span>
+                }
+            }
+        }
+
+<span class="nc" id="L137">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of warehousesupervisorOpParam.
+     */
+<span class="nc" id="L144">    protected WarehousesupervisorOpParam() {</span>
+<span class="nc" id="L145">    }</span>
+
+    /**
+     * Returns the attribute WarehousesupervisorBuilder.
+     *
+     * @return value of WarehousesupervisorBuilder
+     */
+    public static WarehousesupervisorBuilder builder() {
+<span class="fc" id="L153">        return new WarehousesupervisorBuilder();</span>
+    }
+
+    /**
+     * Returns the valueLeafFlags.
+     *
+     * @return value of valueLeafFlags
+     */
+    public BitSet getValueLeafFlags() {
+<span class="nc" id="L162">        return valueLeafFlags;</span>
+    }
+
+    /**
+     * Returns the selectLeafFlags.
+     *
+     * @return value of selectLeafFlags
+     */
+    public BitSet getSelectLeafFlags() {
+<span class="nc" id="L171">        return selectLeafFlags;</span>
+    }
+
+
+    @Override
+    public boolean isLeafValueSet(LeafIdentifier leaf) {
+<span class="nc" id="L177">        return getValueLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+    @Override
+    public boolean isSelectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L182">        return getSelectLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of warehousesupervisor.
+     */
+    public static class WarehousesupervisorBuilder {
+
+        protected List&lt;String&gt; supervisor;
+        protected OnosYangNodeOperationType onosYangNodeOperationType;
+        /**
+         * Identify the leafs whose value are explicitly set
+         * Applicable in protocol edit and query operation
+         */
+<span class="fc" id="L197">        private BitSet valueLeafFlags = new BitSet();</span>
+
+        /**
+         * Identify the leafs to be selected, in a query operation
+         */
+<span class="fc" id="L202">        private BitSet selectLeafFlags = new BitSet();</span>
+
+        public List&lt;String&gt; supervisor() {
+<span class="fc" id="L205">            return supervisor;</span>
+        }
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L208">            return onosYangNodeOperationType;</span>
+        }
+
+        /**
+         * Returns the builder object of supervisor.
+         *
+         * @param supervisor list of supervisor
+         * @return builder object of supervisor
+         */
+        public WarehousesupervisorBuilder supervisor(List&lt;String&gt; supervisor) {
+<span class="fc" id="L218">            this.supervisor = supervisor;</span>
+<span class="fc" id="L219">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of onosYangNodeOperationType.
+         *
+         * @param onosYangNodeOperationType value of onosYangNodeOperationType
+         * @return builder object of onosYangNodeOperationType
+         */
+        public WarehousesupervisorBuilder onosYangNodeOperationType(OnosYangNodeOperationType
+            onosYangNodeOperationType) {
+<span class="nc" id="L230">            this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L231">            return this;</span>
+        }
+        public WarehousesupervisorBuilder addToSupervisor(String value) {
+<span class="fc bfc" id="L234" title="All 2 branches covered.">            if (supervisor() == null) {</span>
+<span class="fc" id="L235">                supervisor(new ArrayList&lt;&gt;());</span>
+            }
+<span class="fc" id="L237">            supervisor().add(value);</span>
+<span class="fc" id="L238">            return this;</span>
+        }
+
+        /**
+         * Returns the valueLeafFlags.
+         *
+         * @return value of valueLeafFlags
+         */
+        public BitSet getValueLeafFlags() {
+<span class="fc" id="L247">            return valueLeafFlags;</span>
+        }
+
+        /**
+         * Returns the selectLeafFlags.
+         *
+         * @return value of selectLeafFlags
+         */
+        public BitSet getSelectLeafFlags() {
+<span class="fc" id="L256">            return selectLeafFlags;</span>
+        }
+
+
+
+        public WarehousesupervisorBuilder selectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L262">            getSelectLeafFlags().set(leaf.getLeafIndex());</span>
+<span class="nc" id="L263">            return this;</span>
+        }
+
+        public Warehousesupervisor build() {
+<span class="fc" id="L267">            return new WarehousesupervisorOpParam(this);</span>
+        }
+
+        /**
+         * Creates an instance of warehousesupervisorBuilder.
+         */
+<span class="fc" id="L273">        public WarehousesupervisorBuilder() {</span>
+<span class="fc" id="L274">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

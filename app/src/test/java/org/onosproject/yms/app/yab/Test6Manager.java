@@ -43,6 +43,16 @@ public class Test6Manager implements Test6Service {
     }
 
     @Override
+    public Test6 getAugmentedTest6Cont4(Test6OpParam test6) {
+        return null;
+    }
+
+    @Override
+    public void setAugmentedTest6Cont4(Test6OpParam augmentedTest6Cont4) {
+
+    }
+
+    @Override
     public void rockTheHouse(RockTheHouseInput inputVar) {
         // TODO: to be implemented
     }

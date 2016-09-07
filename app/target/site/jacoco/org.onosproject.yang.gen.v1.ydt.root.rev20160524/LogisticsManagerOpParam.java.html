@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LogisticsManagerOpParam.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.ydt.root.rev20160524</a> &gt; <span class="el_source">LogisticsManagerOpParam.java</span></div><h1>LogisticsManagerOpParam.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.ydt.root.rev20160524;
+
+import com.google.common.base.MoreObjects;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+import java.util.Objects;
+import org.onosproject.yang.gen.v1.ydt.root.rev20160524.logisticsmanager.MaterialSupervisor;
+import org.onosproject.yang.gen.v1.ydt.root.rev20160524.logisticsmanager.PurchasingSupervisor;
+
+/**
+ * Represents the implementation of logisticsManager.
+ */
+public class LogisticsManagerOpParam implements LogisticsManager {
+
+    protected String customsSupervisor;
+    protected String merchandiserSupervisor;
+    protected String tradingSupervisor;
+    protected List&lt;String&gt; warehouseSupervisor;
+    protected List&lt;String&gt; employeeId;
+    protected OnosYangNodeOperationType onosYangNodeOperationType;
+    protected List&lt;MaterialSupervisor&gt; materialSupervisor;
+    protected PurchasingSupervisor purchasingSupervisor;
+    /**
+     * Identify the leafs whose value are explicitly set
+     * Applicable in protocol edit and query operation
+     */
+<span class="pc" id="L44">    private BitSet valueLeafFlags = new BitSet();</span>
+
+    /**
+     * Identify the leafs to be selected, in a query operation
+     */
+<span class="pc" id="L49">    private BitSet selectLeafFlags = new BitSet();</span>
+    public String customsSupervisor() {
+<span class="fc" id="L51">        return customsSupervisor;</span>
+    }
+    public String merchandiserSupervisor() {
+<span class="nc" id="L54">        return merchandiserSupervisor;</span>
+    }
+    public String tradingSupervisor() {
+<span class="nc" id="L57">        return tradingSupervisor;</span>
+    }
+    public List&lt;String&gt; warehouseSupervisor() {
+<span class="nc" id="L60">        return warehouseSupervisor;</span>
+    }
+    public List&lt;String&gt; employeeId() {
+<span class="nc" id="L63">        return employeeId;</span>
+    }
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L66">        return onosYangNodeOperationType;</span>
+    }
+    public List&lt;MaterialSupervisor&gt; materialSupervisor() {
+<span class="nc" id="L69">        return materialSupervisor;</span>
+    }
+    public PurchasingSupervisor purchasingSupervisor() {
+<span class="fc" id="L72">        return purchasingSupervisor;</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L77">        return Objects</span>
+<span class="nc" id="L78">            .hash(customsSupervisor, merchandiserSupervisor, tradingSupervisor, warehouseSupervisor, employeeId,</span>
+            onosYangNodeOperationType, materialSupervisor, purchasingSupervisor);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L85">            return true;</span>
+        }
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        if (obj instanceof LogisticsManagerOpParam) {</span>
+<span class="nc" id="L88">            LogisticsManagerOpParam other = (LogisticsManagerOpParam) obj;</span>
+<span class="nc" id="L89">            return</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">                 Objects.equals(customsSupervisor, other.customsSupervisor) &amp;&amp;</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">                 Objects.equals(merchandiserSupervisor, other.merchandiserSupervisor) &amp;&amp;</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">                 Objects.equals(tradingSupervisor, other.tradingSupervisor) &amp;&amp;</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">                 Objects.equals(warehouseSupervisor, other.warehouseSupervisor) &amp;&amp;</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">                 Objects.equals(employeeId, other.employeeId) &amp;&amp;</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">                 Objects.equals(onosYangNodeOperationType, other.onosYangNodeOperationType) &amp;&amp;</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">                 Objects.equals(materialSupervisor, other.materialSupervisor) &amp;&amp;</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">                 Objects.equals(purchasingSupervisor, other.purchasingSupervisor);</span>
+        }
+<span class="nc" id="L99">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L104">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L105">            .add(&quot;customsSupervisor&quot;, customsSupervisor)</span>
+<span class="nc" id="L106">            .add(&quot;merchandiserSupervisor&quot;, merchandiserSupervisor)</span>
+<span class="nc" id="L107">            .add(&quot;tradingSupervisor&quot;, tradingSupervisor)</span>
+<span class="nc" id="L108">            .add(&quot;warehouseSupervisor&quot;, warehouseSupervisor)</span>
+<span class="nc" id="L109">            .add(&quot;employeeId&quot;, employeeId)</span>
+<span class="nc" id="L110">            .add(&quot;onosYangNodeOperationType&quot;, onosYangNodeOperationType)</span>
+<span class="nc" id="L111">            .add(&quot;materialSupervisor&quot;, materialSupervisor)</span>
+<span class="nc" id="L112">            .add(&quot;purchasingSupervisor&quot;, purchasingSupervisor)</span>
+<span class="nc" id="L113">            .toString();</span>
+    }
+
+    /**
+     * Creates an instance of logisticsManager.
+     *
+     * @param builderObject builder object of logisticsManager
+     */
+<span class="fc" id="L121">    protected LogisticsManagerOpParam(LogisticsManagerBuilder builderObject) {</span>
+<span class="fc" id="L122">        this.customsSupervisor = builderObject.customsSupervisor();</span>
+<span class="fc" id="L123">        this.merchandiserSupervisor = builderObject.merchandiserSupervisor();</span>
+<span class="fc" id="L124">        this.tradingSupervisor = builderObject.tradingSupervisor();</span>
+<span class="fc" id="L125">        this.warehouseSupervisor = builderObject.warehouseSupervisor();</span>
+<span class="fc" id="L126">        this.employeeId = builderObject.employeeId();</span>
+<span class="fc" id="L127">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="fc" id="L128">        this.materialSupervisor = builderObject.materialSupervisor();</span>
+<span class="fc" id="L129">        this.purchasingSupervisor = builderObject.purchasingSupervisor();</span>
+<span class="fc" id="L130">        this.valueLeafFlags = builderObject.getValueLeafFlags();</span>
+<span class="fc" id="L131">        this.selectLeafFlags = builderObject.getSelectLeafFlags();</span>
+<span class="fc" id="L132">    }</span>
+
+    @Override
+    public LogisticsManager processSubtreeFiltering(LogisticsManager appInstance, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L136">        LogisticsManagerBuilder subTreeFilteringResultBuilder = new LogisticsManagerBuilder();</span>
+<span class="nc" id="L137">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        if (!processLeafSubtreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L140">            return null;</span>
+        }
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (!processLeafListSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L144">            return null;</span>
+        }
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        if (!processChildNodesSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L148">            return null;</span>
+        }
+<span class="nc bnc" id="L150" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L151">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L153">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processLeafSubtreeFiltering(LogisticsManager appInstance, LogisticsManagerBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L158" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.CUSTOMSSUPERVISOR.getLeafIndex())) {</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">            if (appInstance.customsSupervisor() == null || !(customsSupervisor()</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">            .equals(appInstance.customsSupervisor()))) {</span>
+<span class="nc" id="L161">                return false;</span>
+            } else {
+<span class="nc" id="L163">                subTreeFilteringResultBuilder.customsSupervisor(appInstance.customsSupervisor());</span>
+            }
+<span class="nc bnc" id="L165" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier</span>
+<span class="nc" id="L166">            .CUSTOMSSUPERVISOR.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L167">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L168">            subTreeFilteringResultBuilder.customsSupervisor(appInstance.customsSupervisor());</span>
+        }
+
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.MERCHANDISERSUPERVISOR.getLeafIndex())) {</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">            if (appInstance.merchandiserSupervisor() == null || !(merchandiserSupervisor()</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">            .equals(appInstance.merchandiserSupervisor()))) {</span>
+<span class="nc" id="L174">                return false;</span>
+            } else {
+<span class="nc" id="L176">                subTreeFilteringResultBuilder.merchandiserSupervisor(appInstance.merchandiserSupervisor());</span>
+            }
+<span class="nc bnc" id="L178" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier</span>
+<span class="nc" id="L179">            .MERCHANDISERSUPERVISOR.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L180">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L181">            subTreeFilteringResultBuilder.merchandiserSupervisor(appInstance.merchandiserSupervisor());</span>
+        }
+
+<span class="nc bnc" id="L184" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.TRADINGSUPERVISOR.getLeafIndex())) {</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">            if (appInstance.tradingSupervisor() == null || !(tradingSupervisor()</span>
+<span class="nc bnc" id="L186" title="All 2 branches missed.">            .equals(appInstance.tradingSupervisor()))) {</span>
+<span class="nc" id="L187">                return false;</span>
+            } else {
+<span class="nc" id="L189">                subTreeFilteringResultBuilder.tradingSupervisor(appInstance.tradingSupervisor());</span>
+            }
+<span class="nc bnc" id="L191" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier</span>
+<span class="nc" id="L192">            .TRADINGSUPERVISOR.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L193">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L194">            subTreeFilteringResultBuilder.tradingSupervisor(appInstance.tradingSupervisor());</span>
+        }
+
+<span class="nc" id="L197">        return true;</span>
+    }
+
+    private boolean processLeafListSubTreeFiltering(LogisticsManager appInstance, LogisticsManagerBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (isSelectAllSchemaChild) {</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">            for (String warehouseSupervisor : appInstance.warehouseSupervisor()) {</span>
+<span class="nc" id="L205">                subTreeFilteringResultBuilder.addToWarehouseSupervisor(warehouseSupervisor);</span>
+<span class="nc" id="L206">            }</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">        } else if (warehouseSupervisor() != null) {</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">            if (!warehouseSupervisor().isEmpty()) {</span>
+<span class="nc bnc" id="L209" title="All 4 branches missed.">                if (appInstance.warehouseSupervisor() == null || appInstance.warehouseSupervisor().isEmpty()) {</span>
+<span class="nc" id="L210">                    return false;</span>
+                }
+<span class="nc bnc" id="L212" title="All 2 branches missed.">                for (String warehouseSupervisor : warehouseSupervisor()) {</span>
+<span class="nc" id="L213">                    boolean flag = false;</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">                    for (String warehouseSupervisor2 : appInstance.warehouseSupervisor()) {</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">                        if (warehouseSupervisor.equals(warehouseSupervisor2)) {</span>
+<span class="nc" id="L216">                            flag = true;</span>
+<span class="nc" id="L217">                            subTreeFilteringResultBuilder.addToWarehouseSupervisor(warehouseSupervisor2);</span>
+<span class="nc" id="L218">                            break;</span>
+                        }
+<span class="nc" id="L220">                    }</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">                    if (!flag) {</span>
+<span class="nc" id="L222">                        return false;</span>
+                    }
+<span class="nc" id="L224">                }</span>
+            } else {
+<span class="nc" id="L226">                isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L227" title="All 4 branches missed.">                if (appInstance.warehouseSupervisor() != null &amp;&amp; !appInstance.warehouseSupervisor().isEmpty()) {</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">                    for (String warehouseSupervisor : appInstance.warehouseSupervisor()) {</span>
+<span class="nc" id="L229">                        subTreeFilteringResultBuilder.addToWarehouseSupervisor(warehouseSupervisor);</span>
+<span class="nc" id="L230">                    }</span>
+                }
+            }
+        }
+
+<span class="nc bnc" id="L235" title="All 2 branches missed.">        if (isSelectAllSchemaChild) {</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">            for (String employeeId : appInstance.employeeId()) {</span>
+<span class="nc" id="L237">                subTreeFilteringResultBuilder.addToEmployeeId(employeeId);</span>
+<span class="nc" id="L238">            }</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">        } else if (employeeId() != null) {</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">            if (!employeeId().isEmpty()) {</span>
+<span class="nc bnc" id="L241" title="All 4 branches missed.">                if (appInstance.employeeId() == null || appInstance.employeeId().isEmpty()) {</span>
+<span class="nc" id="L242">                    return false;</span>
+                }
+<span class="nc bnc" id="L244" title="All 2 branches missed.">                for (String employeeId : employeeId()) {</span>
+<span class="nc" id="L245">                    boolean flag = false;</span>
+<span class="nc bnc" id="L246" title="All 2 branches missed.">                    for (String employeeId2 : appInstance.employeeId()) {</span>
+<span class="nc bnc" id="L247" title="All 2 branches missed.">                        if (employeeId.equals(employeeId2)) {</span>
+<span class="nc" id="L248">                            flag = true;</span>
+<span class="nc" id="L249">                            subTreeFilteringResultBuilder.addToEmployeeId(employeeId2);</span>
+<span class="nc" id="L250">                            break;</span>
+                        }
+<span class="nc" id="L252">                    }</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">                    if (!flag) {</span>
+<span class="nc" id="L254">                        return false;</span>
+                    }
+<span class="nc" id="L256">                }</span>
+            } else {
+<span class="nc" id="L258">                isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L259" title="All 4 branches missed.">                if (appInstance.employeeId() != null &amp;&amp; !appInstance.employeeId().isEmpty()) {</span>
+<span class="nc bnc" id="L260" title="All 2 branches missed.">                    for (String employeeId : appInstance.employeeId()) {</span>
+<span class="nc" id="L261">                        subTreeFilteringResultBuilder.addToEmployeeId(employeeId);</span>
+<span class="nc" id="L262">                    }</span>
+                }
+            }
+        }
+
+<span class="nc" id="L267">        return true;</span>
+    }
+
+    private boolean processChildNodesSubTreeFiltering(LogisticsManager appInstance, LogisticsManagerBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L273" title="All 2 branches missed.">        if (isSelectAllSchemaChild) {</span>
+<span class="nc bnc" id="L274" title="All 2 branches missed.">            for (MaterialSupervisor materialSupervisor : appInstance.materialSupervisor()) {</span>
+<span class="nc" id="L275">                subTreeFilteringResultBuilder.addToMaterialSupervisor(materialSupervisor);</span>
+<span class="nc" id="L276">            }</span>
+<span class="nc bnc" id="L277" title="All 2 branches missed.">        } else if (materialSupervisor() != null) {</span>
+<span class="nc" id="L278">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">            if (!materialSupervisor().isEmpty()) {</span>
+<span class="nc bnc" id="L280" title="All 4 branches missed.">                if (appInstance.materialSupervisor() != null &amp;&amp; !appInstance.materialSupervisor().isEmpty()) {</span>
+<span class="nc bnc" id="L281" title="All 2 branches missed.">                    for (MaterialSupervisor materialSupervisor : materialSupervisor()) {</span>
+<span class="nc bnc" id="L282" title="All 2 branches missed.">                        for (MaterialSupervisor materialSupervisor2 : appInstance.materialSupervisor()) {</span>
+<span class="nc" id="L283">                            MaterialSupervisor result = materialSupervisor</span>
+<span class="nc" id="L284">            .processSubtreeFiltering(materialSupervisor2, false);</span>
+<span class="nc bnc" id="L285" title="All 2 branches missed.">                            if (result != null) {</span>
+<span class="nc" id="L286">                                subTreeFilteringResultBuilder.addToMaterialSupervisor(result);</span>
+                            }
+<span class="nc" id="L288">                        }</span>
+<span class="nc" id="L289">                    }</span>
+                }
+            } else {
+<span class="nc bnc" id="L292" title="All 4 branches missed.">                if (appInstance.materialSupervisor() != null &amp;&amp; !appInstance.materialSupervisor().isEmpty()) {</span>
+<span class="nc bnc" id="L293" title="All 2 branches missed.">                    for (MaterialSupervisor materialSupervisor : appInstance.materialSupervisor()) {</span>
+<span class="nc" id="L294">                        subTreeFilteringResultBuilder.addToMaterialSupervisor(materialSupervisor);</span>
+<span class="nc" id="L295">                    }</span>
+                }
+            }
+        }
+
+<span class="nc bnc" id="L300" title="All 2 branches missed.">        if (purchasingSupervisor()  != null) {</span>
+<span class="nc" id="L301">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L302" title="All 2 branches missed.">            if (appInstance.purchasingSupervisor() != null) {</span>
+<span class="nc" id="L303">                PurchasingSupervisor result = purchasingSupervisor.processSubtreeFiltering(appInstance</span>
+<span class="nc" id="L304">            .purchasingSupervisor(), false);</span>
+<span class="nc bnc" id="L305" title="All 2 branches missed.">                if (result != null) {</span>
+<span class="nc" id="L306">                    subTreeFilteringResultBuilder.purchasingSupervisor(result);</span>
+                }
+            }
+        }
+
+<span class="nc" id="L311">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of logisticsManagerOpParam.
+     */
+<span class="nc" id="L318">    protected LogisticsManagerOpParam() {</span>
+<span class="nc" id="L319">    }</span>
+
+    /**
+     * Returns the attribute LogisticsManagerBuilder.
+     *
+     * @return value of LogisticsManagerBuilder
+     */
+    public static LogisticsManagerBuilder builder() {
+<span class="nc" id="L327">        return new LogisticsManagerBuilder();</span>
+    }
+
+    /**
+     * Returns the valueLeafFlags.
+     *
+     * @return value of valueLeafFlags
+     */
+    public BitSet getValueLeafFlags() {
+<span class="nc" id="L336">        return valueLeafFlags;</span>
+    }
+
+    /**
+     * Returns the selectLeafFlags.
+     *
+     * @return value of selectLeafFlags
+     */
+    public BitSet getSelectLeafFlags() {
+<span class="nc" id="L345">        return selectLeafFlags;</span>
+    }
+
+
+    @Override
+    public boolean isLeafValueSet(LeafIdentifier leaf) {
+<span class="nc" id="L351">        return getValueLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+    @Override
+    public boolean isSelectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L356">        return getSelectLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of logisticsManager.
+     */
+    public static class LogisticsManagerBuilder {
+
+        protected String customsSupervisor;
+        protected String merchandiserSupervisor;
+        protected String tradingSupervisor;
+        protected List&lt;String&gt; warehouseSupervisor;
+        protected List&lt;String&gt; employeeId;
+        protected OnosYangNodeOperationType onosYangNodeOperationType;
+        protected List&lt;MaterialSupervisor&gt; materialSupervisor;
+        protected PurchasingSupervisor purchasingSupervisor;
+        /**
+         * Identify the leafs whose value are explicitly set
+         * Applicable in protocol edit and query operation
+         */
+<span class="fc" id="L377">        private BitSet valueLeafFlags = new BitSet();</span>
+
+        /**
+         * Identify the leafs to be selected, in a query operation
+         */
+<span class="fc" id="L382">        private BitSet selectLeafFlags = new BitSet();</span>
+
+        public String customsSupervisor() {
+<span class="fc" id="L385">            return customsSupervisor;</span>
+        }
+        public String merchandiserSupervisor() {
+<span class="fc" id="L388">            return merchandiserSupervisor;</span>
+        }
+        public String tradingSupervisor() {
+<span class="fc" id="L391">            return tradingSupervisor;</span>
+        }
+        public List&lt;String&gt; warehouseSupervisor() {
+<span class="fc" id="L394">            return warehouseSupervisor;</span>
+        }
+        public List&lt;String&gt; employeeId() {
+<span class="fc" id="L397">            return employeeId;</span>
+        }
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L400">            return onosYangNodeOperationType;</span>
+        }
+        public List&lt;MaterialSupervisor&gt; materialSupervisor() {
+<span class="fc" id="L403">            return materialSupervisor;</span>
+        }
+        public PurchasingSupervisor purchasingSupervisor() {
+<span class="fc" id="L406">            return purchasingSupervisor;</span>
+        }
+
+        /**
+         * Returns the builder object of customsSupervisor.
+         *
+         * @param customsSupervisor value of customsSupervisor
+         * @return builder object of customsSupervisor
+         */
+        public LogisticsManagerBuilder customsSupervisor(String customsSupervisor) {
+<span class="fc" id="L416">            getValueLeafFlags().set(LeafIdentifier.CUSTOMSSUPERVISOR.getLeafIndex());</span>
+<span class="fc" id="L417">            this.customsSupervisor = customsSupervisor;</span>
+<span class="fc" id="L418">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of merchandiserSupervisor.
+         *
+         * @param merchandiserSupervisor value of merchandiserSupervisor
+         * @return builder object of merchandiserSupervisor
+         */
+        public LogisticsManagerBuilder merchandiserSupervisor(String merchandiserSupervisor) {
+<span class="nc" id="L428">            getValueLeafFlags().set(LeafIdentifier.MERCHANDISERSUPERVISOR.getLeafIndex());</span>
+<span class="nc" id="L429">            this.merchandiserSupervisor = merchandiserSupervisor;</span>
+<span class="nc" id="L430">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of tradingSupervisor.
+         *
+         * @param tradingSupervisor value of tradingSupervisor
+         * @return builder object of tradingSupervisor
+         */
+        public LogisticsManagerBuilder tradingSupervisor(String tradingSupervisor) {
+<span class="nc" id="L440">            getValueLeafFlags().set(LeafIdentifier.TRADINGSUPERVISOR.getLeafIndex());</span>
+<span class="nc" id="L441">            this.tradingSupervisor = tradingSupervisor;</span>
+<span class="nc" id="L442">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of warehouseSupervisor.
+         *
+         * @param warehouseSupervisor list of warehouseSupervisor
+         * @return builder object of warehouseSupervisor
+         */
+        public LogisticsManagerBuilder warehouseSupervisor(List&lt;String&gt; warehouseSupervisor) {
+<span class="nc" id="L452">            this.warehouseSupervisor = warehouseSupervisor;</span>
+<span class="nc" id="L453">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of employeeId.
+         *
+         * @param employeeId list of employeeId
+         * @return builder object of employeeId
+         */
+        public LogisticsManagerBuilder employeeId(List&lt;String&gt; employeeId) {
+<span class="nc" id="L463">            this.employeeId = employeeId;</span>
+<span class="nc" id="L464">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of onosYangNodeOperationType.
+         *
+         * @param onosYangNodeOperationType value of onosYangNodeOperationType
+         * @return builder object of onosYangNodeOperationType
+         */
+        public LogisticsManagerBuilder onosYangNodeOperationType(OnosYangNodeOperationType
+            onosYangNodeOperationType) {
+<span class="nc" id="L475">            this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L476">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of materialSupervisor.
+         *
+         * @param materialSupervisor list of materialSupervisor
+         * @return builder object of materialSupervisor
+         */
+        public LogisticsManagerBuilder materialSupervisor(List&lt;MaterialSupervisor&gt; materialSupervisor) {
+<span class="nc" id="L486">            this.materialSupervisor = materialSupervisor;</span>
+<span class="nc" id="L487">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of purchasingSupervisor.
+         *
+         * @param purchasingSupervisor value of purchasingSupervisor
+         * @return builder object of purchasingSupervisor
+         */
+        public LogisticsManagerBuilder purchasingSupervisor(PurchasingSupervisor purchasingSupervisor) {
+<span class="fc" id="L497">            this.purchasingSupervisor = purchasingSupervisor;</span>
+<span class="fc" id="L498">            return this;</span>
+        }
+        public LogisticsManagerBuilder addToWarehouseSupervisor(String value) {
+<span class="nc bnc" id="L501" title="All 2 branches missed.">            if (warehouseSupervisor() == null) {</span>
+<span class="nc" id="L502">                warehouseSupervisor(new ArrayList&lt;&gt;());</span>
+            }
+<span class="nc" id="L504">            warehouseSupervisor().add(value);</span>
+<span class="nc" id="L505">            return this;</span>
+        }
+        public LogisticsManagerBuilder addToEmployeeId(String value) {
+<span class="nc bnc" id="L508" title="All 2 branches missed.">            if (employeeId() == null) {</span>
+<span class="nc" id="L509">                employeeId(new ArrayList&lt;&gt;());</span>
+            }
+<span class="nc" id="L511">            employeeId().add(value);</span>
+<span class="nc" id="L512">            return this;</span>
+        }
+        public LogisticsManagerBuilder addToMaterialSupervisor(MaterialSupervisor value) {
+<span class="nc bnc" id="L515" title="All 2 branches missed.">            if (materialSupervisor() == null) {</span>
+<span class="nc" id="L516">                materialSupervisor(new ArrayList&lt;&gt;());</span>
+            }
+<span class="nc" id="L518">            materialSupervisor().add(value);</span>
+<span class="nc" id="L519">            return this;</span>
+        }
+
+        /**
+         * Returns the valueLeafFlags.
+         *
+         * @return value of valueLeafFlags
+         */
+        public BitSet getValueLeafFlags() {
+<span class="fc" id="L528">            return valueLeafFlags;</span>
+        }
+
+        /**
+         * Returns the selectLeafFlags.
+         *
+         * @return value of selectLeafFlags
+         */
+        public BitSet getSelectLeafFlags() {
+<span class="fc" id="L537">            return selectLeafFlags;</span>
+        }
+
+
+
+        public LogisticsManagerBuilder selectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L543">            getSelectLeafFlags().set(leaf.getLeafIndex());</span>
+<span class="nc" id="L544">            return this;</span>
+        }
+
+        public LogisticsManager build() {
+<span class="fc" id="L548">            return new LogisticsManagerOpParam(this);</span>
+        }
+
+        /**
+         * Creates an instance of logisticsManagerBuilder.
+         */
+<span class="fc" id="L554">        public LogisticsManagerBuilder() {</span>
+<span class="fc" id="L555">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

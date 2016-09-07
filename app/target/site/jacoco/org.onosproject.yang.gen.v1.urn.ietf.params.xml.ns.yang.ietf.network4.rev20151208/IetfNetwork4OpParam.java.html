@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IetfNetwork4OpParam.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20151208</a> &gt; <span class="el_source">IetfNetwork4OpParam.java</span></div><h1>IetfNetwork4OpParam.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20151208;
+
+import com.google.common.base.MoreObjects;
+import java.util.Objects;
+
+/**
+ * Represents the implementation of ietfNetwork4.
+ */
+public class IetfNetwork4OpParam implements IetfNetwork4 {
+
+    protected OnosYangNodeOperationType onosYangNodeOperationType;
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L29">        return onosYangNodeOperationType;</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L34">        return Objects.hash(onosYangNodeOperationType);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L40">            return true;</span>
+        }
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (obj instanceof IetfNetwork4OpParam) {</span>
+<span class="nc" id="L43">            IetfNetwork4OpParam other = (IetfNetwork4OpParam) obj;</span>
+<span class="nc" id="L44">            return</span>
+<span class="nc" id="L45">                 Objects.equals(onosYangNodeOperationType, other.onosYangNodeOperationType);</span>
+        }
+<span class="nc" id="L47">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L52">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L53">            .add(&quot;onosYangNodeOperationType&quot;, onosYangNodeOperationType)</span>
+<span class="nc" id="L54">            .toString();</span>
+    }
+
+    /**
+     * Creates an instance of ietfNetwork4.
+     *
+     * @param builderObject builder object of ietfNetwork4
+     */
+<span class="nc" id="L62">    protected IetfNetwork4OpParam(IetfNetwork4Builder builderObject) {</span>
+<span class="nc" id="L63">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="nc" id="L64">    }</span>
+
+    @Override
+    public IetfNetwork4 processSubtreeFiltering(IetfNetwork4 appInstance, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L68">        IetfNetwork4Builder subTreeFilteringResultBuilder = new IetfNetwork4Builder();</span>
+<span class="nc" id="L69">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (!processChildNodesSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L72">            return null;</span>
+        }
+<span class="nc bnc" id="L74" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L75">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L77">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processChildNodesSubTreeFiltering(IetfNetwork4 appInstance, IetfNetwork4Builder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L82">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of ietfNetwork4OpParam.
+     */
+<span class="nc" id="L89">    protected IetfNetwork4OpParam() {</span>
+<span class="nc" id="L90">    }</span>
+
+    /**
+     * Returns the attribute IetfNetwork4Builder.
+     *
+     * @return value of IetfNetwork4Builder
+     */
+    public static IetfNetwork4Builder builder() {
+<span class="nc" id="L98">        return new IetfNetwork4Builder();</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of ietfNetwork4.
+     */
+    public static class IetfNetwork4Builder {
+
+        protected OnosYangNodeOperationType onosYangNodeOperationType;
+
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L110">            return onosYangNodeOperationType;</span>
+        }
+
+        /**
+         * Returns the builder object of onosYangNodeOperationType.
+         *
+         * @param onosYangNodeOperationType value of onosYangNodeOperationType
+         * @return builder object of onosYangNodeOperationType
+         */
+        public IetfNetwork4Builder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+<span class="nc" id="L120">            this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L121">            return this;</span>
+        }
+
+        public IetfNetwork4 build() {
+<span class="nc" id="L125">            return new IetfNetwork4OpParam(this);</span>
+        }
+
+        /**
+         * Creates an instance of ietfNetwork4Builder.
+         */
+<span class="nc" id="L131">        public IetfNetwork4Builder() {</span>
+<span class="nc" id="L132">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

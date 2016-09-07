@@ -1,0 +1,996 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>YdtBuilderFromYo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yms.app.ytb</a> &gt; <span class="el_source">YdtBuilderFromYo.java</span></div><h1>YdtBuilderFromYo.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yms.app.ytb;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Set;
+
+import org.onosproject.yangutils.datamodel.YangLeaf;
+import org.onosproject.yangutils.datamodel.YangLeafList;
+import org.onosproject.yangutils.datamodel.YangLeafRef;
+import org.onosproject.yangutils.datamodel.YangLeavesHolder;
+import org.onosproject.yangutils.datamodel.YangNode;
+import org.onosproject.yangutils.datamodel.YangNotification;
+import org.onosproject.yangutils.datamodel.YangRpc;
+import org.onosproject.yangutils.datamodel.YangSchemaNode;
+import org.onosproject.yangutils.datamodel.YangType;
+import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
+import org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes;
+import org.onosproject.yangutils.translator.tojava.javamodel.JavaLeafInfoContainer;
+import org.onosproject.yms.app.ydt.AppType;
+import org.onosproject.yms.app.ydt.YdtExtendedBuilder;
+import org.onosproject.yms.app.ydt.YdtExtendedContext;
+import org.onosproject.yms.app.ysr.YangSchemaRegistry;
+import org.onosproject.yms.ydt.YdtContextOperationType;
+
+import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_MULTI_INSTANCE_NODE;
+import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_SINGLE_INSTANCE_NODE;
+import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.BOOLEAN;
+import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.DECIMAL64;
+import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.EMPTY;
+import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.INT16;
+import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.INT32;
+import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.INT64;
+import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.INT8;
+import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.LEAFREF;
+import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.UINT16;
+import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.UINT32;
+import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.UINT64;
+import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.UINT8;
+import static org.onosproject.yms.app.ytb.TraversalType.CHILD;
+import static org.onosproject.yms.app.ytb.TraversalType.PARENT;
+import static org.onosproject.yms.app.ytb.TraversalType.ROOT;
+import static org.onosproject.yms.app.ytb.TraversalType.SIBLING;
+import static org.onosproject.yms.ydt.YdtContextOperationType.NONE;
+
+/**
+ * Represents traversal through YANG node and its corresponding object,
+ * resulting in building of the YDT tree.
+ */
+public class YdtBuilderFromYo {
+
+    private static final String OPERATION_TYPE = &quot;onosYangNodeOperationType&quot;;
+    private static final String STR_NONE = &quot;NONE&quot;;
+    private static final String TRUE = &quot;true&quot;;
+    private static final String ENUM_LEAF_IDENTIFIER = &quot;$LeafIdentifier&quot;;
+    private static final String IS_LEAF_VALUE_SET_METHOD = &quot;isLeafValueSet&quot;;
+    private static final String EQUALS_TO = &quot;=&quot;;
+    private static final String STR_NULL = &quot;null&quot;;
+    private static final String STR_TYPE = &quot;type&quot;;
+    private static final String STR_SUBJECT = &quot;subject&quot;;
+    private static final String SCHEMA_NAME_IN_ENUM = &quot;schemaName&quot;;
+
+    /**
+     * YANG schema registry of the application.
+     */
+    private YangSchemaRegistry appSchemaRegistry;
+
+    /**
+     * Current instance of the YDT builder.
+     */
+    private YdtExtendedBuilder ydtExtendedBuilder;
+
+    /**
+     * YANG root object that is required for walking through the node,
+     * object and building YDT simultaneously.
+     */
+    private Object rootObject;
+
+    /**
+     * YANG root node that is required for walking through the node,
+     * object and building YDT simultaneously.
+     */
+    private YangSchemaNode schemaRoot;
+
+    /**
+     * Sets YDT extended builder.
+     *
+     * @param ydtExtendedBuilder YDT extended builder
+     */
+    public void setYdtExtendedBuilder(YdtExtendedBuilder ydtExtendedBuilder) {
+<span class="nc" id="L112">        this.ydtExtendedBuilder = ydtExtendedBuilder;</span>
+<span class="nc" id="L113">    }</span>
+
+    /**
+     * Returns YDT extended builder.
+     *
+     * @return YDT extended builder
+     */
+    public YdtExtendedBuilder getYdtExtendedBuilder() {
+<span class="fc" id="L121">        return ydtExtendedBuilder;</span>
+    }
+
+    /**
+     * Returns root node object.
+     *
+     * @return root node object
+     */
+    public Object getRootObject() {
+<span class="fc" id="L130">        return rootObject;</span>
+    }
+
+    /**
+     * Sets root node object.
+     *
+     * @param rootObject root node object
+     */
+    public void setRootObject(Object rootObject) {
+<span class="fc" id="L139">        this.rootObject = rootObject;</span>
+<span class="fc" id="L140">    }</span>
+
+    /**
+     * Returns schema root node.
+     *
+     * @return schema root node
+     */
+    public YangSchemaNode getSchemaRoot() {
+<span class="fc" id="L148">        return schemaRoot;</span>
+    }
+
+    /**
+     * Returns application's YANG schema registry.
+     *
+     * @return schema registry of application
+     */
+    public YangSchemaRegistry getAppSchemaRegistry() {
+<span class="fc" id="L157">        return appSchemaRegistry;</span>
+    }
+
+    /**
+     * Sets application's YANG schema registry.
+     *
+     * @param appSchemaRegistry schema registry of application
+     */
+    public void setAppSchemaRegistry(YangSchemaRegistry appSchemaRegistry) {
+<span class="nc" id="L166">        this.appSchemaRegistry = appSchemaRegistry;</span>
+<span class="nc" id="L167">    }</span>
+
+    /**
+     * Sets schema root node.
+     *
+     * @param schemaRoot schema root node
+     */
+    public void setSchemaRoot(YangSchemaNode schemaRoot) {
+<span class="fc" id="L175">        this.schemaRoot = schemaRoot;</span>
+<span class="fc" id="L176">    }</span>
+
+    /**
+     * Creates object and gets the schema YANG node from YSR.
+     *
+     * @param logicalRootModuleBuilder logical root node builder
+     * @param rootObject               logical root node object
+     * @param appSchemaRegistry        YANG schema registry of the application
+     */
+    public YdtBuilderFromYo(YdtExtendedBuilder logicalRootModuleBuilder,
+                            Object rootObject, YangSchemaRegistry
+<span class="fc" id="L187">                                    appSchemaRegistry) {</span>
+<span class="fc" id="L188">        ydtExtendedBuilder = logicalRootModuleBuilder;</span>
+<span class="fc" id="L189">        this.rootObject = rootObject;</span>
+<span class="fc" id="L190">        this.appSchemaRegistry = appSchemaRegistry;</span>
+<span class="fc" id="L191">    }</span>
+
+    /**
+     * Returns schema root node received from YSR from root object from YAB/YSB.
+     *
+     * @param yangObject root node object
+     */
+    public void getModuleNodeFromYsr(Object yangObject) {
+<span class="fc" id="L199">        Class interfaceClass = getInterfaceClassFromImplClass(yangObject);</span>
+<span class="fc" id="L200">        YangSchemaNode schemaRootNode = getAppSchemaRegistry()</span>
+<span class="fc" id="L201">                .getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName(</span>
+<span class="fc" id="L202">                        interfaceClass.getName());</span>
+<span class="fc" id="L203">        setSchemaRoot(schemaRootNode);</span>
+<span class="fc" id="L204">    }</span>
+
+    /**
+     * Returns schema notification node received from YSR from notification
+     * object from YAB/YSB.
+     *
+     * @param notificationObject notification object
+     */
+    public void getRootYangNodeWithNotificationFromYsr(
+            Object notificationObject) {
+<span class="fc" id="L214">        YangSchemaNode schemaNotificationNode = getAppSchemaRegistry().</span>
+<span class="fc" id="L215">                getRootYangSchemaNodeForNotification(</span>
+<span class="fc" id="L216">                        notificationObject.getClass().getName());</span>
+<span class="fc" id="L217">        setSchemaRoot(schemaNotificationNode);</span>
+<span class="fc" id="L218">    }</span>
+
+    public void createModuleNodeInYdt() {
+
+        // Adds the module node to the logical root node.
+<span class="fc" id="L223">        ydtExtendedBuilder.addChild(NONE, getSchemaRoot());</span>
+        try {
+            // Gets the schema node from root node of YSR and sets that as root schema node.
+<span class="fc" id="L226">            setSchemaRoot(getSchemaNodeOfNotification());</span>
+            // Gets the YANG object class of notification and sets that as root YANG object.
+<span class="fc" id="L228">            setRootObject(getYangObjectOfNotification());</span>
+<span class="nc" id="L229">        } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | NoSuchFieldException |</span>
+                DataModelException e) {
+<span class="nc" id="L231">            throw new YtbException(e.getMessage());</span>
+<span class="fc" id="L232">        }</span>
+<span class="fc" id="L233">    }</span>
+
+    /**
+     * Creates YDT tree from the root object, by traversing through YANG data
+     * model node, and simultaneously checking the object nodes presence and
+     * walking the object also.
+     */
+    public void createYdtFromRootObject() {
+<span class="fc" id="L241">        YangNode curSchemaNode = (YangNode) getSchemaRoot();</span>
+<span class="fc" id="L242">        TraversalType curTraversal = ROOT;</span>
+<span class="fc" id="L243">        YtbNodeInfo previousNodeInfo = null;</span>
+
+<span class="fc bfc" id="L245" title="All 2 branches covered.">        while (curSchemaNode != null) {</span>
+
+            /*
+             * Process the node if it is being visited for the 1st time in the schema.
+             * If the schema node is being retraced to a multi instance node, check if it has multi instance node.
+             */
+<span class="fc bfc" id="L251" title="All 2 branches covered.">            if (curTraversal != PARENT</span>
+<span class="fc bfc" id="L252" title="All 2 branches covered.">                    || curSchemaNode.getYangSchemaNodeType() ==</span>
+                    YANG_MULTI_INSTANCE_NODE) {
+                Object processedObjectNode;
+
+<span class="fc bfc" id="L256" title="All 2 branches covered.">                if (curTraversal == PARENT</span>
+<span class="pc bpc" id="L257" title="1 of 2 branches missed.">                        &amp;&amp; curSchemaNode.getYangSchemaNodeType() ==</span>
+                        YANG_MULTI_INSTANCE_NODE) {
+                    /*
+                     If the schema is being retraced for a multi-instance node,
+                     means, it has already entered for this multi-instance node earlier.
+                     Now we need to re process the same schema node for the any additional list object.
+                    */
+<span class="fc" id="L264">                    previousNodeInfo =</span>
+<span class="fc" id="L265">                            getCurNodeYtbInfoAndTraverseToYtbParent();</span>
+                }
+
+                try {
+<span class="fc bfc" id="L269" title="All 2 branches covered.">                    if (curTraversal == ROOT) {</span>
+                    /*
+                     * Add the application root node to YDT.
+                     */
+<span class="fc" id="L273">                        processApplicationRootNode();</span>
+                    } else {
+                        /*
+                         * Get the data from the object corresponding to the current schema node.
+                         * If present add the corresponding YDT node to the tree and return the object.
+                         * Otherwise return null;
+                         */
+<span class="fc" id="L280">                        processedObjectNode =</span>
+<span class="fc" id="L281">                                processCurSchemaNodeAndAddToYdt(curSchemaNode,</span>
+                                                                previousNodeInfo);
+
+<span class="fc" id="L284">                        previousNodeInfo = null;</span>
+
+<span class="fc bfc" id="L286" title="All 2 branches covered.">                        if (processedObjectNode == null) {</span>
+                        /*
+                        The Yang object does not have the attribute corresponding to current schema node.
+                        Otherwise, if it was a list object, all the instance of the list object is already
+                        added to the YDT. None of the notification flow can be processed as sibling, because
+                        notification can only be a root node.
+                         */
+<span class="fc bfc" id="L293" title="All 2 branches covered.">                            if (curSchemaNode.getNextSibling() != null &amp;&amp;</span>
+<span class="pc bpc" id="L294" title="1 of 2 branches missed.">                                    !(curSchemaNode.getNextSibling()</span>
+                                            instanceof YangNotification) &amp;&amp;
+<span class="fc bfc" id="L296" title="All 2 branches covered.">                                    !(curSchemaNode.getNextSibling() instanceof</span>
+                                            YangRpc)) {
+                            /*If there is any sibling, then change the current schema to sibling
+                            * since the YDT, is still the parent, new node will be added under current
+                            * YDT parent
+                            */
+<span class="fc" id="L302">                                curTraversal = SIBLING;</span>
+<span class="fc" id="L303">                                curSchemaNode = curSchemaNode.getNextSibling();</span>
+                            } else {
+
+                            /*change the current schema to parent.
+                            * Since the current schema is traversing to parent.
+                            */
+<span class="fc" id="L309">                                curTraversal = PARENT;</span>
+<span class="fc" id="L310">                                curSchemaNode = curSchemaNode.getParent();</span>
+                            }
+<span class="fc" id="L312">                            continue;</span>
+                            /*
+                            If multi instance root node has come for greater than one in the list, the rest of the
+                            children must be processed for the list as it is. So parent is made to go and check for
+                            the child in the complete list.
+                             */
+<span class="fc bfc" id="L318" title="All 2 branches covered.">                        } else if (curTraversal == PARENT) {</span>
+<span class="fc" id="L319">                            curTraversal = CHILD;</span>
+                        }
+                    }
+<span class="nc" id="L322">                } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException |</span>
+                        NoSuchFieldException e) {
+<span class="nc" id="L324">                    throw new YtbException(e.getMessage());</span>
+<span class="fc" id="L325">                }</span>
+
+            }
+
+            /*
+            None of the notification flow can be processed as sibling or child, because
+            notification can only be a root node.
+             */
+<span class="fc bfc" id="L333" title="All 4 branches covered.">            if (curTraversal != PARENT &amp;&amp; curSchemaNode.getChild() != null &amp;&amp;</span>
+<span class="pc bpc" id="L334" title="1 of 2 branches missed.">                    !(curSchemaNode.getChild()</span>
+                            instanceof YangNotification) &amp;&amp;
+<span class="pc bpc" id="L336" title="1 of 2 branches missed.">                    !(curSchemaNode.getChild() instanceof</span>
+                            YangRpc)) {
+<span class="fc" id="L338">                previousNodeInfo = null;</span>
+<span class="fc" id="L339">                curTraversal = CHILD;</span>
+<span class="fc" id="L340">                curSchemaNode = curSchemaNode.getChild();</span>
+<span class="fc bfc" id="L341" title="All 2 branches covered.">            } else if (curSchemaNode.getNextSibling() != null &amp;&amp;</span>
+<span class="fc bfc" id="L342" title="All 2 branches covered.">                    !(curSchemaNode.getNextSibling() instanceof</span>
+                            YangNotification) &amp;&amp;
+<span class="pc bpc" id="L344" title="1 of 2 branches missed.">                    !(curSchemaNode.getNextSibling() instanceof</span>
+                            YangRpc)) {
+<span class="fc bfc" id="L346" title="All 2 branches covered.">                if (curSchemaNode.getYangSchemaNodeType() ==</span>
+                        YANG_MULTI_INSTANCE_NODE) {
+<span class="fc" id="L348">                    previousNodeInfo =</span>
+<span class="fc" id="L349">                            getCurNodeYtbInfoAndTraverseToYtbParent();</span>
+<span class="fc" id="L350">                    continue;</span>
+                }
+
+<span class="fc" id="L353">                curTraversal = SIBLING;</span>
+<span class="fc" id="L354">                getYdtExtendedBuilder().traverseToParentExtended();</span>
+<span class="fc" id="L355">                curSchemaNode = curSchemaNode.getNextSibling();</span>
+            } else {
+<span class="fc bfc" id="L357" title="All 2 branches covered.">                if (curSchemaNode.getYangSchemaNodeType() ==</span>
+                        YANG_MULTI_INSTANCE_NODE) {
+<span class="fc" id="L359">                    previousNodeInfo =</span>
+<span class="fc" id="L360">                            getCurNodeYtbInfoAndTraverseToYtbParent();</span>
+<span class="fc" id="L361">                    continue;</span>
+                }
+<span class="fc" id="L363">                curTraversal = PARENT;</span>
+<span class="fc" id="L364">                getYdtExtendedBuilder().traverseToParentExtended();</span>
+<span class="fc" id="L365">                curSchemaNode = curSchemaNode.getParent();</span>
+            }
+        }
+<span class="fc" id="L368">    }</span>
+
+    /**
+     * Process root node and add as a child to the YDT extended builder obtained
+     * from logical root node.
+     */
+    private void processApplicationRootNode()
+            throws InvocationTargetException, NoSuchMethodException,
+            IllegalAccessException, NoSuchFieldException {
+
+        // Gets the operation type of the root node.
+<span class="fc" id="L379">        YdtContextOperationType operationType =</span>
+<span class="fc" id="L380">                getOperationTypeOfTheNode(rootObject);</span>
+        // Adds root node as the child to the logical root node in YDT.
+<span class="fc" id="L382">        ydtExtendedBuilder.addChild(operationType, getSchemaRoot());</span>
+
+        // Sets the YTB info of the root YDT node, such as root object, and application info.
+<span class="fc" id="L385">        YdtExtendedContext currentYdtNode =</span>
+<span class="fc" id="L386">                (YdtExtendedContext) ydtExtendedBuilder.getCurNode();</span>
+<span class="fc" id="L387">        YtbNodeInfo nodeInfo = new YtbNodeInfo();</span>
+<span class="fc" id="L388">        nodeInfo.setYangObject(getRootObject());</span>
+<span class="fc" id="L389">        nodeInfo.setSchemaNodeType(YANG_SINGLE_INSTANCE_NODE);</span>
+<span class="fc" id="L390">        currentYdtNode.setAppInfo(AppType.YTB, nodeInfo);</span>
+
+        // If root node has leaf or leaf-list those will be processed.
+<span class="fc" id="L393">        processLeafEntry((YangNode) getSchemaRoot());</span>
+<span class="fc" id="L394">        processLeafListEntry((YangNode) getSchemaRoot());</span>
+<span class="fc" id="L395">    }</span>
+
+    /**
+     * Returns the current YTB info for corresponding YDT builder,
+     * also makes YDT builder to switch back to parent.
+     *
+     * @return current YTB app info
+     */
+    private YtbNodeInfo getCurNodeYtbInfoAndTraverseToYtbParent() {
+<span class="fc" id="L404">        YdtExtendedContext ydtExtendedContext</span>
+<span class="fc" id="L405">                = (YdtExtendedContext) ydtExtendedBuilder.getCurNode();</span>
+<span class="fc" id="L406">        YtbNodeInfo appInfo =</span>
+<span class="fc" id="L407">                (YtbNodeInfo) ydtExtendedContext.getAppInfo(AppType.YTB);</span>
+<span class="fc" id="L408">        getYdtExtendedBuilder().traverseToParentExtended();</span>
+<span class="fc" id="L409">        return appInfo;</span>
+    }
+
+    /**
+     * Processes the current schema node and if necessary adds it to the YDT
+     * builder tree by extracting the information from the corresponding class
+     * object.
+     *
+     * @param currentSchemaNode current schema node
+     * @param previousNodeInfo  app info for the previous node has value when
+     *                          object in the list is present
+     * @return object of the schema node
+     * @throws NoSuchFieldException      no field exception from reflection
+     * @throws IllegalAccessException    illegal access exception from
+     *                                   reflection
+     * @throws NoSuchMethodException     no such method exception from
+     *                                   reflection
+     * @throws InvocationTargetException invocation target exception from
+     *                                   reflection
+     */
+    private Object processCurSchemaNodeAndAddToYdt(YangNode currentSchemaNode,
+                                                   YtbNodeInfo previousNodeInfo)
+            throws
+            InvocationTargetException, NoSuchMethodException,
+            IllegalAccessException, NoSuchFieldException {
+<span class="fc" id="L434">        YtbNodeInfo nodeInfo = new YtbNodeInfo();</span>
+<span class="fc" id="L435">        Object nodeObject = null;</span>
+
+        // Checks if it is a single instance node or multi instance node.
+<span class="fc bfc" id="L438" title="All 2 branches covered.">        if (currentSchemaNode.getYangSchemaNodeType() ==</span>
+                YANG_SINGLE_INSTANCE_NODE) {
+
+            /*
+            Retrieves the parent YTB info, mainly the YANG object of root node, so as to check the child attribute
+            from the node.
+             */
+<span class="fc" id="L445">            YdtExtendedContext parentYdtExtendedContext =</span>
+<span class="fc" id="L446">                    (YdtExtendedContext) ydtExtendedBuilder.getCurNode();</span>
+
+<span class="fc" id="L448">            String nodeJavaName = currentSchemaNode.getJavaAttributeName();</span>
+
+<span class="fc" id="L450">            YtbNodeInfo parentNodeInfo = (YtbNodeInfo) parentYdtExtendedContext</span>
+<span class="fc" id="L451">                    .getAppInfo(AppType.YTB);</span>
+
+            // From the app info and the current java attribute name the object of the current schema node is retrieved.
+<span class="fc" id="L454">            Object childObject =</span>
+<span class="fc" id="L455">                    getAttributeOfObject(parentNodeInfo.getYangObject(),</span>
+                                         nodeJavaName);
+
+<span class="fc bfc" id="L458" title="All 2 branches covered.">            if (childObject != null) {</span>
+
+                // When child object is present, it gets the operation type and adds the child to YDT.
+<span class="fc" id="L461">                YdtContextOperationType operationType =</span>
+<span class="fc" id="L462">                        getOperationTypeOfTheNode(childObject);</span>
+<span class="fc" id="L463">                ydtExtendedBuilder.addChild(operationType, currentSchemaNode);</span>
+<span class="fc" id="L464">                YdtExtendedContext currentYdtNode =</span>
+<span class="fc" id="L465">                        (YdtExtendedContext) ydtExtendedBuilder.getCurNode();</span>
+
+                // Corresponding app info with the child object is set to that child node.
+<span class="fc" id="L468">                nodeInfo.setSchemaNodeType(YANG_SINGLE_INSTANCE_NODE);</span>
+<span class="fc" id="L469">                nodeInfo.setYangObject(childObject);</span>
+<span class="fc" id="L470">                currentYdtNode.setAppInfo(AppType.YTB, nodeInfo);</span>
+
+<span class="fc" id="L472">                nodeObject = childObject;</span>
+            }
+<span class="fc bfc" id="L474" title="All 2 branches covered.">        } else if (currentSchemaNode.getYangSchemaNodeType() ==</span>
+                YANG_MULTI_INSTANCE_NODE) {
+<span class="fc" id="L476">            Object childObject = null;</span>
+
+            /*
+            When YANG list comes to this flow for first time, its YTB node will be null. When it comes for the second
+             or more content then the list would have been already set for that node. According to set or not set
+             this flow will be proceeded.
+             */
+<span class="fc bfc" id="L483" title="All 2 branches covered.">            if (previousNodeInfo == null) {</span>
+
+                /*
+                For the first time flow the parent node YTB node info is taken to get the attribute object of the list.
+                 */
+<span class="fc" id="L488">                YdtExtendedContext parentYdtExtendedContext =</span>
+<span class="fc" id="L489">                        (YdtExtendedContext) ydtExtendedBuilder.getCurNode();</span>
+
+<span class="fc" id="L491">                String nodeJavaName = currentSchemaNode.getJavaAttributeName();</span>
+
+<span class="fc" id="L493">                YtbNodeInfo parentNodeInfo =</span>
+                        (YtbNodeInfo) parentYdtExtendedContext
+<span class="fc" id="L495">                                .getAppInfo(AppType.YTB);</span>
+
+<span class="fc" id="L497">                List&lt;Object&gt; childObjectList =</span>
+<span class="fc" id="L498">                        (List&lt;Object&gt;) getAttributeOfObject(</span>
+<span class="fc" id="L499">                                parentNodeInfo.getYangObject(),</span>
+                                nodeJavaName);
+<span class="fc bfc" id="L501" title="All 2 branches covered.">                if (childObjectList != null) {</span>
+<span class="fc" id="L502">                    Iterator&lt;Object&gt; listIterator = childObjectList.iterator();</span>
+<span class="pc bpc" id="L503" title="1 of 2 branches missed.">                    if (!listIterator.hasNext()) {</span>
+<span class="nc" id="L504">                        return null;</span>
+                        //TODO: Handle the subtree filtering with no list entries.
+                    }
+                    // First object in the list is taken.
+<span class="fc" id="L508">                    childObject = listIterator.next();</span>
+                    // For that node the current iterator is set, which would have completed the first content.
+<span class="fc" id="L510">                    nodeInfo.setCurrentListIterator(listIterator);</span>
+
+                }
+
+<span class="fc" id="L514">            } else {</span>
+                /*
+                If the list value comes for second or more time, that list node will be having YTB node info, where
+                iterator can be retrieved and check if any more contents are present. If present those will be
+                processed.
+                 */
+<span class="fc" id="L520">                nodeInfo.setCurrentListIterator(</span>
+<span class="fc" id="L521">                        previousNodeInfo.getCurrentListIterator());</span>
+<span class="fc bfc" id="L522" title="All 2 branches covered.">                if (previousNodeInfo.getCurrentListIterator().hasNext()) {</span>
+<span class="fc" id="L523">                    childObject =</span>
+<span class="fc" id="L524">                            previousNodeInfo.getCurrentListIterator().next();</span>
+                }
+            }
+
+<span class="fc bfc" id="L528" title="All 2 branches covered.">            if (childObject != null) {</span>
+                // When the content object in the iteration is present, the child is added to YDT.
+<span class="fc" id="L530">                YdtContextOperationType operationType =</span>
+<span class="fc" id="L531">                        getOperationTypeOfTheNode(childObject);</span>
+<span class="fc" id="L532">                ydtExtendedBuilder.addChild(operationType, currentSchemaNode);</span>
+<span class="fc" id="L533">                YdtExtendedContext currentYdtNode =</span>
+<span class="fc" id="L534">                        (YdtExtendedContext) ydtExtendedBuilder.getCurNode();</span>
+
+                // That node's YTB node info is filled with the object and is been set.
+<span class="fc" id="L537">                nodeInfo.setSchemaNodeType(YANG_MULTI_INSTANCE_NODE);</span>
+<span class="fc" id="L538">                nodeInfo.setYangObject(childObject);</span>
+<span class="fc" id="L539">                currentYdtNode.setAppInfo(AppType.YTB, nodeInfo);</span>
+
+<span class="fc" id="L541">                nodeObject = childObject;</span>
+            }
+        }
+        // If the object of the current node is not null, the leaf and leaf-list are processed for that node.
+<span class="fc bfc" id="L545" title="All 2 branches covered.">        if (nodeObject != null) {</span>
+<span class="fc" id="L546">            processLeafEntry(currentSchemaNode);</span>
+<span class="fc" id="L547">            processLeafListEntry(currentSchemaNode);</span>
+        }
+<span class="fc" id="L549">        return nodeObject;</span>
+    }
+
+    /**
+     * Processes leaf entry for YANG schema node.
+     *
+     * @param yangSchemaNode YANG schema node
+     */
+    private void processLeafEntry(YangNode yangSchemaNode) {
+<span class="pc bpc" id="L558" title="1 of 2 branches missed.">        if (yangSchemaNode instanceof YangLeavesHolder) {</span>
+<span class="fc" id="L559">            List&lt;YangLeaf&gt; listOfLeaves =</span>
+<span class="fc" id="L560">                    ((YangLeavesHolder) yangSchemaNode).getListOfLeaf();</span>
+<span class="pc bpc" id="L561" title="1 of 4 branches missed.">            if (listOfLeaves != null &amp;&amp; !listOfLeaves.isEmpty()) {</span>
+<span class="fc" id="L562">                Iterator&lt;YangLeaf&gt; yangLeafIterator =</span>
+<span class="fc" id="L563">                        listOfLeaves.listIterator();</span>
+<span class="fc bfc" id="L564" title="All 2 branches covered.">                while (yangLeafIterator.hasNext()) {</span>
+
+                    // Initially sets the leaf type object as false.
+<span class="fc" id="L567">                    boolean leafTypeObject = false;</span>
+                    // Gets the leaf and its java name
+<span class="fc" id="L569">                    YangLeaf yangLeaf = yangLeafIterator.next();</span>
+<span class="fc" id="L570">                    JavaLeafInfoContainer leafInfo =</span>
+                            (JavaLeafInfoContainer) yangLeaf;
+                    // TODO: Get java name from the schema node.
+<span class="fc" id="L573">                    String javaNameOfLeaf = leafInfo.getJavaName(null);</span>
+
+                    // From the parent context get the object of the leaf.
+<span class="fc" id="L576">                    YdtExtendedContext ydtExtendedContext =</span>
+                            (YdtExtendedContext) ydtExtendedBuilder
+<span class="fc" id="L578">                                    .getCurNode();</span>
+<span class="fc" id="L579">                    YtbNodeInfo ytbNodeInfo = (YtbNodeInfo) ydtExtendedContext</span>
+<span class="fc" id="L580">                            .getAppInfo(AppType.YTB);</span>
+<span class="fc" id="L581">                    Object objectOfNode = ytbNodeInfo.getYangObject();</span>
+                    try {
+<span class="fc" id="L583">                        String fieldValue = null;</span>
+<span class="fc" id="L584">                        Object typeOfLeaf = getAttributeOfObject(objectOfNode,</span>
+                                                                 javaNameOfLeaf);
+
+                        // Checks of leaf type is primitive.
+<span class="fc bfc" id="L588" title="All 2 branches covered.">                        if (isTypePrimitive(yangLeaf.getDataType())) {</span>
+                            // If primitive check if value leaf set flag is present.
+<span class="fc" id="L590">                            String valueOfLeaf =</span>
+<span class="fc" id="L591">                                    isValueLeafSetForLeaf(objectOfNode,</span>
+                                                          javaNameOfLeaf);
+                            // If value set is done for that type then fetch the value of the type.
+<span class="pc bpc" id="L594" title="1 of 2 branches missed.">                            if (valueOfLeaf.equals(TRUE)) {</span>
+<span class="fc" id="L595">                                fieldValue = getStringFromDataType(typeOfLeaf,</span>
+<span class="fc" id="L596">                                                                   yangLeaf.getDataType());</span>
+                            }
+<span class="fc bfc" id="L598" title="All 2 branches covered.">                        } else if (typeOfLeaf != null) {</span>
+                            // If type is not primitive, check the object is not null.
+<span class="fc" id="L600">                            fieldValue = getStringFromDataType(typeOfLeaf,</span>
+<span class="fc" id="L601">                                                               yangLeaf.getDataType());</span>
+                        }
+
+                        // As we have to string helper, parsing of the value is required sometimes.
+<span class="fc bfc" id="L605" title="All 2 branches covered.">                        if (fieldValue != null &amp;&amp;</span>
+<span class="pc bpc" id="L606" title="1 of 2 branches missed.">                                !fieldValue.equals(STR_NULL) &amp;&amp;</span>
+<span class="pc bpc" id="L607" title="1 of 2 branches missed.">                                !fieldValue.isEmpty()) {</span>
+<span class="fc" id="L608">                            ydtExtendedBuilder.addLeaf(fieldValue, yangLeaf);</span>
+<span class="fc" id="L609">                            leafTypeObject = true;</span>
+                        }
+<span class="nc" id="L611">                    } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException |</span>
+                            NoSuchFieldException | ClassNotFoundException e) {
+<span class="nc" id="L613">                        throw new YtbException(e.getMessage());</span>
+<span class="fc" id="L614">                    }</span>
+                    // Only when child is added traverse back to parent.
+<span class="fc bfc" id="L616" title="All 2 branches covered.">                    if (leafTypeObject) {</span>
+<span class="fc" id="L617">                        ydtExtendedBuilder.traverseToParentExtended();</span>
+                    }
+<span class="fc" id="L619">                }</span>
+            }
+        }
+<span class="fc" id="L622">    }</span>
+
+    /**
+     * Processes leaf list entry for YANG schema node.
+     *
+     * @param yangSchemaNode YANG schema node
+     */
+    private void processLeafListEntry(YangNode yangSchemaNode) {
+<span class="pc bpc" id="L630" title="1 of 2 branches missed.">        if (yangSchemaNode instanceof YangLeavesHolder) {</span>
+<span class="fc" id="L631">            List&lt;YangLeafList&gt; listOfLeafList =</span>
+<span class="fc" id="L632">                    ((YangLeavesHolder) yangSchemaNode).getListOfLeafList();</span>
+<span class="pc bpc" id="L633" title="1 of 4 branches missed.">            if (listOfLeafList != null &amp;&amp; !listOfLeafList.isEmpty()) {</span>
+<span class="fc" id="L634">                Iterator&lt;YangLeafList&gt; leafListIterator =</span>
+<span class="fc" id="L635">                        listOfLeafList.listIterator();</span>
+<span class="fc bfc" id="L636" title="All 2 branches covered.">                while (leafListIterator.hasNext()) {</span>
+<span class="fc" id="L637">                    YangLeafList yangLeafList = leafListIterator.next();</span>
+<span class="fc" id="L638">                    JavaLeafInfoContainer leafListInfo =</span>
+                            (JavaLeafInfoContainer) yangLeafList;
+                    // TODO: Get java name from the schema node.
+<span class="fc" id="L641">                    String javaNameOfLeafList = leafListInfo.getJavaName(null);</span>
+
+                    // From the parent context get the object of the leaf.
+<span class="fc" id="L644">                    YdtExtendedContext ydtExtendedContext =</span>
+                            (YdtExtendedContext) ydtExtendedBuilder
+<span class="fc" id="L646">                                    .getCurNode();</span>
+<span class="fc" id="L647">                    YtbNodeInfo ytbNodeInfo = (YtbNodeInfo) ydtExtendedContext</span>
+<span class="fc" id="L648">                            .getAppInfo(AppType.YTB);</span>
+<span class="fc" id="L649">                    Object objectOfNode = ytbNodeInfo.getYangObject();</span>
+
+                    try {
+                        //TODO: Let the received object list be generic collection
+<span class="fc" id="L653">                        List&lt;Object&gt; leafListObject =</span>
+<span class="fc" id="L654">                                (List&lt;Object&gt;) getAttributeOfObject(</span>
+                                        objectOfNode,
+                                        javaNameOfLeafList);
+<span class="fc" id="L657">                        Set&lt;String&gt; leafListValue = new HashSet&lt;&gt;();</span>
+
+                        // If list is present, then add as child to the parent, consecutively traverse back to parent.
+<span class="fc bfc" id="L660" title="All 2 branches covered.">                        if (leafListObject != null &amp;&amp;</span>
+<span class="pc bpc" id="L661" title="1 of 2 branches missed.">                                !leafListObject.isEmpty()) {</span>
+<span class="fc" id="L662">                            Iterator&lt;Object&gt; objectIterator =</span>
+<span class="fc" id="L663">                                    leafListObject.iterator();</span>
+<span class="fc bfc" id="L664" title="All 2 branches covered.">                            while (objectIterator.hasNext()) {</span>
+<span class="fc" id="L665">                                String strValue = getStringFromDataType(</span>
+<span class="fc" id="L666">                                        objectIterator.next(),</span>
+<span class="fc" id="L667">                                        yangLeafList.getDataType());</span>
+<span class="fc" id="L668">                                leafListValue.add(strValue);</span>
+<span class="fc" id="L669">                            }</span>
+<span class="fc" id="L670">                            ydtExtendedBuilder</span>
+<span class="fc" id="L671">                                    .addLeaf(leafListValue, yangLeafList);</span>
+<span class="fc" id="L672">                            ydtExtendedBuilder.traverseToParentExtended();</span>
+                        }
+<span class="nc" id="L674">                    } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException |</span>
+                            NoSuchFieldException e) {
+<span class="nc" id="L676">                        throw new YtbException(e.getMessage());</span>
+<span class="fc" id="L677">                    }</span>
+<span class="fc" id="L678">                }</span>
+            }
+        }
+<span class="fc" id="L681">    }</span>
+
+    /**
+     * Returns the value of the variable by extracting it from string value of
+     * toStringHelper.
+     *
+     * @param strWithToStringHelper string retrieved from toStringHelper from
+     *                              YANG utils generated class
+     * @return value of the variable
+     */
+    private String getValueFromTheToStringHelper(String strWithToStringHelper) {
+<span class="fc bfc" id="L692" title="All 2 branches covered.">        if (strWithToStringHelper.contains(EQUALS_TO)) {</span>
+<span class="fc" id="L693">            int indexValue = strWithToStringHelper.lastIndexOf(EQUALS_TO);</span>
+<span class="pc bpc" id="L694" title="1 of 2 branches missed.">            if (indexValue != -1) {</span>
+<span class="fc" id="L695">                return strWithToStringHelper.substring(indexValue + 1,</span>
+                                                       strWithToStringHelper
+<span class="fc" id="L697">                                                               .length() - 1);</span>
+            }
+        }
+<span class="fc" id="L700">        return strWithToStringHelper;</span>
+    }
+
+    /**
+     * Returns the value of an attribute, in a class object.
+     *
+     * @param objectOfTheNode object of the root node
+     * @param nameOfTheField  name of the attribute
+     * @return object value received from the getter method of the field.
+     * @throws NoSuchFieldException      no field exception from reflection
+     * @throws IllegalAccessException    illegal access exception from
+     *                                   reflection
+     * @throws NoSuchMethodException     no such method exception from
+     *                                   reflection
+     * @throws InvocationTargetException invocation target exception from
+     *                                   reflection
+     */
+    public Object getAttributeOfObject(Object objectOfTheNode,
+                                       String nameOfTheField)
+            throws NoSuchFieldException,
+            IllegalAccessException, NoSuchMethodException,
+            InvocationTargetException {
+<span class="fc" id="L722">        Class classOfNode = objectOfTheNode.getClass();</span>
+<span class="fc" id="L723">        Method getterMethodOfField =</span>
+<span class="fc" id="L724">                classOfNode.getDeclaredMethod(nameOfTheField);</span>
+<span class="fc" id="L725">        Object valueOfMethod = getterMethodOfField.invoke(objectOfTheNode);</span>
+<span class="fc" id="L726">        return valueOfMethod;</span>
+    }
+
+    /**
+     * Returns the operation type value for a class object.
+     *
+     * @param objectOfTheNode object of the class
+     * @return operation type of the class
+     * @throws NoSuchFieldException      no field exception from reflection
+     * @throws IllegalAccessException    illegal access exception from
+     *                                   reflection
+     * @throws NoSuchMethodException     no such method exception from
+     *                                   reflection
+     * @throws InvocationTargetException invocation target exception from
+     *                                   reflection
+     */
+    public YdtContextOperationType getOperationTypeOfTheNode(
+            Object objectOfTheNode)
+            throws NoSuchFieldException,
+            IllegalAccessException, NoSuchMethodException,
+            InvocationTargetException {
+<span class="fc" id="L747">        Object operationTypeObject =</span>
+<span class="fc" id="L748">                getAttributeOfObject(objectOfTheNode, OPERATION_TYPE);</span>
+<span class="fc" id="L749">        String valueOfOpType = String.valueOf(operationTypeObject);</span>
+<span class="pc bpc" id="L750" title="1 of 4 branches missed.">        if (valueOfOpType.equals(STR_NULL) || valueOfOpType.isEmpty()) {</span>
+<span class="fc" id="L751">            valueOfOpType = STR_NONE;</span>
+        }
+<span class="fc" id="L753">        return YdtContextOperationType.valueOf(valueOfOpType);</span>
+    }
+
+    /**
+     * Decides if the data type of the leaf is primitive data type from its
+     * respective data type.
+     *
+     * @param yangType type of the leaf
+     * @return status of the type to be primitive data type
+     */
+    private boolean isTypePrimitive(YangType yangType) {
+<span class="pc bpc" id="L764" title="1 of 2 branches missed.">        if (yangType.getDataType() == LEAFREF) {</span>
+<span class="nc" id="L765">            YangLeafRef leafref =</span>
+<span class="nc" id="L766">                    (YangLeafRef) yangType.getDataTypeExtendedInfo();</span>
+<span class="nc" id="L767">            return isPrimitiveDataType(</span>
+<span class="nc" id="L768">                    leafref.getEffectiveDataType().getDataType());</span>
+        }
+<span class="fc" id="L770">        return isPrimitiveDataType(yangType.getDataType());</span>
+    }
+
+    /**
+     * Decides if the leaf data is actually set or not, by passing the enum
+     * value through reflection for primitive data types.
+     *
+     * @param objectOfNode   object of the node where leaf is an attribute
+     * @param javaNameOfLeaf java name of the leaf
+     * @return status of the leaf data is actually set
+     * @throws ClassNotFoundException    class not found exception from
+     *                                   reflection
+     * @throws IllegalAccessException    illegal access exception from
+     *                                   reflection
+     * @throws NoSuchMethodException     no such method exception from
+     *                                   reflection
+     * @throws InvocationTargetException invocation target exception from
+     *                                   reflection
+     */
+    private String isValueLeafSetForLeaf(Object objectOfNode,
+                                         String javaNameOfLeaf)
+            throws ClassNotFoundException,
+            NoSuchMethodException, InvocationTargetException,
+            IllegalAccessException {
+
+<span class="fc" id="L795">        Class classOfNode = objectOfNode.getClass();</span>
+<span class="fc" id="L796">        Class interfaceClass = getInterfaceClassFromImplClass(objectOfNode);</span>
+<span class="fc" id="L797">        String enumPackage = interfaceClass.getName() + ENUM_LEAF_IDENTIFIER;</span>
+<span class="fc" id="L798">        ClassLoader classLoader = interfaceClass.getClassLoader();</span>
+<span class="fc" id="L799">        Class leafIdentifierEnumeration = classLoader.loadClass(enumPackage);</span>
+<span class="fc" id="L800">        Enum valueOfEnum = Enum.valueOf(leafIdentifierEnumeration,</span>
+<span class="fc" id="L801">                                        javaNameOfLeaf.toUpperCase());</span>
+<span class="fc" id="L802">        Method methodMyMethod = classOfNode</span>
+<span class="fc" id="L803">                .getMethod(IS_LEAF_VALUE_SET_METHOD, leafIdentifierEnumeration);</span>
+<span class="fc" id="L804">        return String.valueOf(methodMyMethod.invoke(objectOfNode, valueOfEnum));</span>
+    }
+
+    /**
+     * Returns whether the data type is of primitive data type.
+     *
+     * @param dataType data type to be checked
+     * @return status of the data type as primitive
+     */
+    private boolean isPrimitiveDataType(YangDataTypes dataType) {
+<span class="pc bpc" id="L814" title="6 of 22 branches missed.">        return dataType == INT8</span>
+                || dataType == INT16
+                || dataType == INT32
+                || dataType == INT64
+                || dataType == UINT8
+                || dataType == UINT16
+                || dataType == UINT32
+                || dataType == UINT64
+                || dataType == DECIMAL64
+                || dataType == BOOLEAN
+                || dataType == EMPTY;
+
+    }
+
+    /**
+     * Returns interface class from an implementation class object.
+     *
+     * @param implClassObject implementation class object
+     * @return respective interface class
+     */
+    private Class getInterfaceClassFromImplClass(Object implClassObject) {
+<span class="fc" id="L835">        Class implClass = implClassObject.getClass();</span>
+<span class="fc" id="L836">        Class[] interfacesOfClass = implClass.getInterfaces();</span>
+        Class interfaceClass;
+<span class="pc bpc" id="L838" title="1 of 2 branches missed.">        if (interfacesOfClass.length == 1) {</span>
+<span class="fc" id="L839">            ListIterator&lt;Class&gt; rootClassInterfacesIterator =</span>
+<span class="fc" id="L840">                    Arrays.asList(interfacesOfClass).listIterator();</span>
+<span class="fc" id="L841">            interfaceClass = rootClassInterfacesIterator.next();</span>
+<span class="fc" id="L842">        } else {</span>
+<span class="nc" id="L843">            throw new YtbException(</span>
+                    &quot;YTB Error: Two interfaces are present for the implementation class &quot; +
+                            implClass + &quot;. Unable to handle it&quot;);
+        }
+<span class="fc" id="L847">        return interfaceClass;</span>
+    }
+
+    /**
+     * Returns the schema node of notification from the root node. Gets the enum
+     * value from event object and gives it to the root schema node for getting
+     * back the notification schema node.
+     *
+     * @return YANG schema node of notification
+     * @throws InvocationTargetException invocation target exception from
+     *                                   reflection
+     * @throws NoSuchMethodException     no such method exception from
+     *                                   reflection
+     * @throws IllegalAccessException    illegal access exception from
+     *                                   reflection
+     * @throws NoSuchFieldException      no field exception from reflection
+     * @throws DataModelException        data model exception from YANG utils
+     */
+    public YangSchemaNode getSchemaNodeOfNotification()
+            throws InvocationTargetException, NoSuchMethodException,
+            IllegalAccessException, NoSuchFieldException, DataModelException {
+<span class="fc" id="L868">        Class parentClass = getRootObject().getClass().getSuperclass();</span>
+<span class="fc" id="L869">        Object typeOfEventObject =</span>
+<span class="fc" id="L870">                getAttributeFromInheritance(parentClass, getRootObject(),</span>
+                                            STR_TYPE);
+<span class="fc" id="L872">        String valueOfOpType = String.valueOf(typeOfEventObject);</span>
+<span class="pc bpc" id="L873" title="2 of 4 branches missed.">        if (valueOfOpType.equals(STR_NULL) || valueOfOpType.isEmpty()) {</span>
+<span class="nc" id="L874">            throw new YtbException(</span>
+                    &quot;YTB error: There is no notification present for the event. Invalid input for &quot; +
+                            &quot;notification.&quot;);
+        }
+<span class="fc" id="L878">        YangSchemaNode notificationNode =</span>
+<span class="fc" id="L879">                getSchemaRoot().getNotificationSchemaNode(valueOfOpType);</span>
+<span class="fc" id="L880">        return notificationNode;</span>
+    }
+
+    /**
+     * Returns the object of the notification class by retrieving the attributes
+     * from the event class object.
+     *
+     * @return notification YANG object
+     * @throws InvocationTargetException invocation target exception from
+     *                                   reflection
+     * @throws NoSuchMethodException     no such method exception from
+     *                                   reflection
+     * @throws IllegalAccessException    illegal access exception from
+     *                                   reflection
+     * @throws NoSuchFieldException      no field exception from reflection
+     */
+    public Object getYangObjectOfNotification()
+            throws InvocationTargetException, NoSuchMethodException,
+            IllegalAccessException, NoSuchFieldException {
+<span class="fc" id="L899">        Class parentClass = getRootObject().getClass().getSuperclass();</span>
+<span class="fc" id="L900">        Object eventSubjectObject =</span>
+<span class="fc" id="L901">                getAttributeFromInheritance(parentClass, getRootObject(),</span>
+                                            STR_SUBJECT);
+<span class="fc" id="L903">        String notificationName = getSchemaRoot().getJavaAttributeName();</span>
+<span class="fc" id="L904">        return getAttributeOfObject(eventSubjectObject, notificationName);</span>
+    }
+
+    /**
+     * Returns the object of the declared method in parent class by invoking
+     * through the child class object.
+     *
+     * @param parentClass     parent class of the declared method
+     * @param childClass      child class which inherits the parent class
+     * @param nameOfTheMethod name of the declared method
+     * @return value of the method
+     * @throws NoSuchMethodException     no such method exception from
+     *                                   reflection
+     * @throws InvocationTargetException invocation target exception from
+     *                                   reflection
+     * @throws IllegalAccessException    illegal access exception from
+     *                                   reflection
+     */
+    private Object getAttributeFromInheritance(Class parentClass,
+                                               Object childClass,
+                                               String nameOfTheMethod)
+            throws
+            NoSuchMethodException, InvocationTargetException,
+            IllegalAccessException {
+<span class="fc" id="L928">        Method getterMethodOfField =</span>
+<span class="fc" id="L929">                parentClass.getDeclaredMethod(nameOfTheMethod);</span>
+<span class="fc" id="L930">        Object valueOfMethod = getterMethodOfField.invoke(childClass);</span>
+<span class="fc" id="L931">        return valueOfMethod;</span>
+    }
+
+    /**
+     * Returns the string value from the respective data types of the
+     * leaf/leaf-list.
+     *
+     * @param objectOfField object of the leaf/leaf-list field
+     * @param dataType      type of the leaf/leaf-list
+     * @return string value from the type
+     */
+    private String getStringFromDataType(Object objectOfField,
+                                         YangType dataType) {
+<span class="fc" id="L944">        YangDataTypes yangDataTypes = dataType.getDataType();</span>
+<span class="pc bpc" id="L945" title="2 of 5 branches missed.">        switch (yangDataTypes) {</span>
+            case INT8:
+            case INT16:
+            case INT32:
+            case INT64:
+            case UINT8:
+            case UINT16:
+            case UINT32:
+            case UINT64:
+            case EMPTY:
+            case IDENTITYREF:
+            case STRING:
+            case DECIMAL64:
+            case INSTANCE_IDENTIFIER:
+            case DERIVED:
+            case UNION:
+                //TODO: Generated code has to be changed, it must select the setting leaf and it must give back the
+                // corresponding toString of that type.
+            case BOOLEAN:
+            case BITS:
+<span class="fc" id="L965">                String valueOfTheField = String.valueOf(objectOfField);</span>
+<span class="fc" id="L966">                return getValueFromTheToStringHelper(valueOfTheField);</span>
+            case BINARY:
+<span class="fc" id="L968">                return Base64.getEncoder()</span>
+<span class="fc" id="L969">                        .encodeToString((byte[]) objectOfField);</span>
+            case LEAFREF:
+<span class="nc" id="L971">                YangLeafRef leafRef =</span>
+<span class="nc" id="L972">                        (YangLeafRef) dataType.getDataTypeExtendedInfo();</span>
+<span class="nc" id="L973">                YangType leafrefType = leafRef.getEffectiveDataType();</span>
+<span class="nc" id="L974">                return getStringFromDataType(objectOfField, leafrefType);</span>
+            case ENUMERATION:
+<span class="fc" id="L976">                Object value = null;</span>
+                try {
+<span class="fc" id="L978">                    value = getAttributeOfObject(objectOfField,</span>
+                                                 SCHEMA_NAME_IN_ENUM);
+<span class="nc" id="L980">                } catch (NoSuchFieldException e) {</span>
+<span class="nc" id="L981">                    e.printStackTrace();</span>
+<span class="nc" id="L982">                } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L983">                    e.printStackTrace();</span>
+<span class="nc" id="L984">                } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L985">                    e.printStackTrace();</span>
+<span class="nc" id="L986">                } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L987">                    e.printStackTrace();</span>
+<span class="pc" id="L988">                }</span>
+<span class="fc" id="L989">                String valueOfTheFieldInEnum = String.valueOf(value);</span>
+<span class="fc" id="L990">                return getValueFromTheToStringHelper(valueOfTheFieldInEnum);</span>
+            default:
+<span class="nc" id="L992">                return null;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

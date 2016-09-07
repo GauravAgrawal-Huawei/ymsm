@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultAigp.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.ych.combined.rev20160524.combined.attributes</a> &gt; <span class="el_source">DefaultAigp.java</span></div><h1>DefaultAigp.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.ych.combined.rev20160524.combined.attributes;
+
+import com.google.common.base.MoreObjects;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import org.onosproject.yang.gen.v1.ych.combined.rev20160524.combined.attributes.aigp.AigpTlv;
+
+/**
+ * Represents the implementation of aigp.
+ */
+public class DefaultAigp implements Aigp {
+
+<span class="pc" id="L31">    protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+    protected OnosYangNodeOperationType onosYangNodeOperationType;
+    protected AigpTlv aigpTlv;
+
+    @Override
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L37">        return onosYangNodeOperationType;</span>
+    }
+
+    @Override
+    public AigpTlv aigpTlv() {
+<span class="fc" id="L42">        return aigpTlv;</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L47">        return Objects.hash(onosYangNodeOperationType, aigpTlv);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L53">            return true;</span>
+        }
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (obj instanceof DefaultAigp) {</span>
+<span class="nc" id="L56">            DefaultAigp other = (DefaultAigp) obj;</span>
+<span class="nc" id="L57">            return</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">                 Objects.equals(onosYangNodeOperationType, other.onosYangNodeOperationType) &amp;&amp;</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">                 Objects.equals(aigpTlv, other.aigpTlv);</span>
+        }
+<span class="nc" id="L61">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L66">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L67">            .add(&quot;onosYangNodeOperationType&quot;, onosYangNodeOperationType)</span>
+<span class="nc" id="L68">            .add(&quot;aigpTlv&quot;, aigpTlv)</span>
+<span class="nc" id="L69">            .toString();</span>
+    }
+
+    @Override
+    public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L74">        return yangAugmentedInfoMap.get(classObject);</span>
+    }
+
+    @Override
+    public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="nc" id="L79">        return yangAugmentedInfoMap;</span>
+    }
+
+    /**
+     * Creates an instance of aigp.
+     *
+     * @param builderObject builder object of aigp
+     */
+<span class="fc" id="L87">    protected DefaultAigp(AigpBuilder builderObject) {</span>
+<span class="fc" id="L88">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="fc" id="L89">        this.aigpTlv = builderObject.aigpTlv();</span>
+<span class="fc" id="L90">        this.yangAugmentedInfoMap = builderObject.yangAugmentedInfoMap();</span>
+<span class="fc" id="L91">    }</span>
+
+    @Override
+    public Aigp processSubtreeFiltering(Aigp appInstance, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L95">        AigpBuilder subTreeFilteringResultBuilder = new AigpBuilder();</span>
+<span class="nc" id="L96">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        if (!processChildNodesSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L99">            return null;</span>
+        }
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        for (Object yangAugmentedInfo : this.yangAugmentedInfoMap().values()) {</span>
+<span class="nc" id="L102">            Object yangAugmentedOpParamInfo = appInstance.yangAugmentedInfo(yangAugmentedInfo.getClass());</span>
+            Object processSubtreeFiltering;
+            try {
+<span class="nc" id="L105">                Class&lt;?&gt;[] interfaces = yangAugmentedInfo.getClass().getInterfaces();</span>
+<span class="nc" id="L106">                processSubtreeFiltering = yangAugmentedInfo.getClass()</span>
+<span class="nc" id="L107">                    .getMethod(&quot;processSubtreeFiltering&quot;, interfaces[0]).invoke(yangAugmentedInfo,</span>
+                        yangAugmentedOpParamInfo);
+<span class="nc bnc" id="L109" title="All 2 branches missed.">                if (processSubtreeFiltering != null) {</span>
+<span class="nc" id="L110">                    subTreeFilteringResultBuilder</span>
+<span class="nc" id="L111">            .addYangAugmentedInfo(processSubtreeFiltering, processSubtreeFiltering.getClass());</span>
+                }
+<span class="nc" id="L113">            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {</span>
+<span class="nc" id="L114">                continue;</span>
+<span class="nc" id="L115">            }</span>
+<span class="nc" id="L116">        }</span>
+<span class="nc bnc" id="L117" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L118">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L120">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processChildNodesSubTreeFiltering(Aigp appInstance, AigpBuilder subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        if (aigpTlv()  != null) {</span>
+<span class="nc" id="L125">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">            if (appInstance.aigpTlv() != null) {</span>
+<span class="nc" id="L127">                AigpTlv result = aigpTlv.processSubtreeFiltering(appInstance.aigpTlv(), false);</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">                if (result != null) {</span>
+<span class="nc" id="L129">                    subTreeFilteringResultBuilder.aigpTlv(result);</span>
+                }
+            }
+        }
+
+<span class="nc" id="L134">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of defaultAigp.
+     */
+<span class="nc" id="L141">    protected DefaultAigp() {</span>
+<span class="nc" id="L142">    }</span>
+
+    /**
+     * Returns the attribute AigpBuilder.
+     *
+     * @return value of AigpBuilder
+     */
+    public static AigpBuilder builder() {
+<span class="nc" id="L150">        return new AigpBuilder();</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of aigp.
+     */
+    public static class AigpBuilder implements Aigp.AigpBuilder {
+
+<span class="fc" id="L159">        protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+        protected OnosYangNodeOperationType onosYangNodeOperationType;
+        protected AigpTlv aigpTlv;
+
+
+        @Override
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L166">            return onosYangNodeOperationType;</span>
+        }
+
+        @Override
+        public AigpTlv aigpTlv() {
+<span class="fc" id="L171">            return aigpTlv;</span>
+        }
+
+        @Override
+        public AigpBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+<span class="nc" id="L176">            this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L177">            return this;</span>
+        }
+
+        @Override
+        public AigpBuilder aigpTlv(AigpTlv aigpTlv) {
+<span class="fc" id="L182">            this.aigpTlv = aigpTlv;</span>
+<span class="fc" id="L183">            return this;</span>
+        }
+
+        @Override
+        public void addYangAugmentedInfo(Object value, Class classObject) {
+<span class="nc" id="L188">            yangAugmentedInfoMap.put(classObject, value);</span>
+<span class="nc" id="L189">        }</span>
+
+        @Override
+        public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L193">            return yangAugmentedInfoMap.get(classObject);</span>
+        }
+
+        @Override
+        public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="fc" id="L198">            return yangAugmentedInfoMap;</span>
+        }
+        @Override
+        public Aigp build() {
+<span class="fc" id="L202">            return new DefaultAigp(this);</span>
+        }
+
+        /**
+         * Creates an instance of aigpBuilder.
+         */
+<span class="fc" id="L208">        public AigpBuilder() {</span>
+<span class="fc" id="L209">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

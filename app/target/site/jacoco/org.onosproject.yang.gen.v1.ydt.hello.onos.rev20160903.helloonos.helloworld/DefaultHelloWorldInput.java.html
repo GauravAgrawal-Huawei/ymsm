@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultHelloWorldInput.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.ydt.hello.onos.rev20160903.helloonos.helloworld</a> &gt; <span class="el_source">DefaultHelloWorldInput.java</span></div><h1>DefaultHelloWorldInput.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.ydt.hello.onos.rev20160903.helloonos.helloworld;
+
+import com.google.common.base.MoreObjects;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import org.onosproject.yang.gen.v1.ydt.hello.onos.rev20160903.helloonos.helloworld.helloworldinput.StringList;
+
+/**
+ * Represents the implementation of helloWorldInput.
+ */
+public class DefaultHelloWorldInput implements HelloWorldInput {
+
+<span class="nc" id="L34">    protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+    protected String name;
+    protected String surName;
+    protected String inputDefault;
+    protected OnosYangNodeOperationType onosYangNodeOperationType;
+    protected List&lt;StringList&gt; stringList;
+    /**
+     * Identify the leafs whose value are explicitly set
+     * Applicable in protocol edit and query operation
+     */
+<span class="nc" id="L44">    private BitSet valueLeafFlags = new BitSet();</span>
+
+    /**
+     * Identify the leafs to be selected, in a query operation
+     */
+<span class="nc" id="L49">    private BitSet selectLeafFlags = new BitSet();</span>
+
+    @Override
+    public String name() {
+<span class="nc" id="L53">        return name;</span>
+    }
+
+    @Override
+    public String surName() {
+<span class="nc" id="L58">        return surName;</span>
+    }
+
+    @Override
+    public String inputDefault() {
+<span class="nc" id="L63">        return inputDefault;</span>
+    }
+
+    @Override
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L68">        return onosYangNodeOperationType;</span>
+    }
+
+    @Override
+    public List&lt;StringList&gt; stringList() {
+<span class="nc" id="L73">        return stringList;</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L78">        return Objects.hash(name, surName, inputDefault, onosYangNodeOperationType, stringList);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L84">            return true;</span>
+        }
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (obj instanceof DefaultHelloWorldInput) {</span>
+<span class="nc" id="L87">            DefaultHelloWorldInput other = (DefaultHelloWorldInput) obj;</span>
+<span class="nc" id="L88">            return</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">                 Objects.equals(name, other.name) &amp;&amp;</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">                 Objects.equals(surName, other.surName) &amp;&amp;</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">                 Objects.equals(inputDefault, other.inputDefault) &amp;&amp;</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">                 Objects.equals(onosYangNodeOperationType, other.onosYangNodeOperationType) &amp;&amp;</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">                 Objects.equals(stringList, other.stringList);</span>
+        }
+<span class="nc" id="L95">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L100">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L101">            .add(&quot;name&quot;, name)</span>
+<span class="nc" id="L102">            .add(&quot;surName&quot;, surName)</span>
+<span class="nc" id="L103">            .add(&quot;inputDefault&quot;, inputDefault)</span>
+<span class="nc" id="L104">            .add(&quot;onosYangNodeOperationType&quot;, onosYangNodeOperationType)</span>
+<span class="nc" id="L105">            .add(&quot;stringList&quot;, stringList)</span>
+<span class="nc" id="L106">            .toString();</span>
+    }
+
+    @Override
+    public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L111">        return yangAugmentedInfoMap.get(classObject);</span>
+    }
+
+    @Override
+    public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="nc" id="L116">        return yangAugmentedInfoMap;</span>
+    }
+
+    /**
+     * Creates an instance of helloWorldInput.
+     *
+     * @param builderObject builder object of helloWorldInput
+     */
+<span class="nc" id="L124">    protected DefaultHelloWorldInput(HelloWorldInputBuilder builderObject) {</span>
+<span class="nc" id="L125">        this.name = builderObject.name();</span>
+<span class="nc" id="L126">        this.surName = builderObject.surName();</span>
+<span class="nc" id="L127">        this.inputDefault = builderObject.inputDefault();</span>
+<span class="nc" id="L128">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="nc" id="L129">        this.stringList = builderObject.stringList();</span>
+<span class="nc" id="L130">        this.valueLeafFlags = builderObject.getValueLeafFlags();</span>
+<span class="nc" id="L131">        this.selectLeafFlags = builderObject.getSelectLeafFlags();</span>
+<span class="nc" id="L132">        this.yangAugmentedInfoMap = builderObject.yangAugmentedInfoMap();</span>
+<span class="nc" id="L133">    }</span>
+
+    @Override
+    public HelloWorldInput processSubtreeFiltering(HelloWorldInput appInstance, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L137">        HelloWorldInputBuilder subTreeFilteringResultBuilder = new HelloWorldInputBuilder();</span>
+<span class="nc" id="L138">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        if (!processLeafSubtreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L141">            return null;</span>
+        }
+<span class="nc bnc" id="L143" title="All 2 branches missed.">        if (!processChildNodesSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L145">            return null;</span>
+        }
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        for (Object yangAugmentedInfo : this.yangAugmentedInfoMap().values()) {</span>
+<span class="nc" id="L148">            Object yangAugmentedOpParamInfo = appInstance.yangAugmentedInfo(yangAugmentedInfo.getClass());</span>
+            Object processSubtreeFiltering;
+            try {
+<span class="nc" id="L151">                Class&lt;?&gt;[] interfaces = yangAugmentedInfo.getClass().getInterfaces();</span>
+<span class="nc" id="L152">                processSubtreeFiltering = yangAugmentedInfo.getClass()</span>
+<span class="nc" id="L153">                    .getMethod(&quot;processSubtreeFiltering&quot;, interfaces[0]).invoke(yangAugmentedInfo,</span>
+                        yangAugmentedOpParamInfo);
+<span class="nc bnc" id="L155" title="All 2 branches missed.">                if (processSubtreeFiltering != null) {</span>
+<span class="nc" id="L156">                    subTreeFilteringResultBuilder</span>
+<span class="nc" id="L157">            .addYangAugmentedInfo(processSubtreeFiltering, processSubtreeFiltering.getClass());</span>
+                }
+<span class="nc" id="L159">            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {</span>
+<span class="nc" id="L160">                continue;</span>
+<span class="nc" id="L161">            }</span>
+<span class="nc" id="L162">        }</span>
+<span class="nc bnc" id="L163" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L164">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L166">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processLeafSubtreeFiltering(HelloWorldInput appInstance, HelloWorldInputBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.NAME.getLeafIndex())) {</span>
+<span class="nc bnc" id="L172" title="All 4 branches missed.">            if (appInstance.name() == null || !(name().equals(appInstance.name()))) {</span>
+<span class="nc" id="L173">                return false;</span>
+            } else {
+<span class="nc" id="L175">                subTreeFilteringResultBuilder.name(appInstance.name());</span>
+            }
+<span class="nc bnc" id="L177" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.NAME.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L178">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L179">            subTreeFilteringResultBuilder.name(appInstance.name());</span>
+        }
+
+<span class="nc bnc" id="L182" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.SURNAME.getLeafIndex())) {</span>
+<span class="nc bnc" id="L183" title="All 4 branches missed.">            if (appInstance.surName() == null || !(surName().equals(appInstance.surName()))) {</span>
+<span class="nc" id="L184">                return false;</span>
+            } else {
+<span class="nc" id="L186">                subTreeFilteringResultBuilder.surName(appInstance.surName());</span>
+            }
+<span class="nc bnc" id="L188" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.SURNAME.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L189">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L190">            subTreeFilteringResultBuilder.surName(appInstance.surName());</span>
+        }
+
+<span class="nc bnc" id="L193" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.INPUTDEFAULT.getLeafIndex())) {</span>
+<span class="nc bnc" id="L194" title="All 4 branches missed.">            if (appInstance.inputDefault() == null || !(inputDefault().equals(appInstance.inputDefault()))) {</span>
+<span class="nc" id="L195">                return false;</span>
+            } else {
+<span class="nc" id="L197">                subTreeFilteringResultBuilder.inputDefault(appInstance.inputDefault());</span>
+            }
+<span class="nc bnc" id="L199" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.INPUTDEFAULT.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L200">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L201">            subTreeFilteringResultBuilder.inputDefault(appInstance.inputDefault());</span>
+        }
+
+<span class="nc" id="L204">        return true;</span>
+    }
+
+    private boolean processChildNodesSubTreeFiltering(HelloWorldInput appInstance, HelloWorldInputBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L210" title="All 2 branches missed.">        if (isSelectAllSchemaChild) {</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">            for (StringList stringList : appInstance.stringList()) {</span>
+<span class="nc" id="L212">                subTreeFilteringResultBuilder.addToStringList(stringList);</span>
+<span class="nc" id="L213">            }</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">        } else if (stringList() != null) {</span>
+<span class="nc" id="L215">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L216" title="All 2 branches missed.">            if (!stringList().isEmpty()) {</span>
+<span class="nc bnc" id="L217" title="All 4 branches missed.">                if (appInstance.stringList() != null &amp;&amp; !appInstance.stringList().isEmpty()) {</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">                    for (StringList stringList : stringList()) {</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">                        for (StringList stringList2 : appInstance.stringList()) {</span>
+<span class="nc" id="L220">                            StringList result = stringList.processSubtreeFiltering(stringList2, false);</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">                            if (result != null) {</span>
+<span class="nc" id="L222">                                subTreeFilteringResultBuilder.addToStringList(result);</span>
+                            }
+<span class="nc" id="L224">                        }</span>
+<span class="nc" id="L225">                    }</span>
+                }
+            } else {
+<span class="nc bnc" id="L228" title="All 4 branches missed.">                if (appInstance.stringList() != null &amp;&amp; !appInstance.stringList().isEmpty()) {</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">                    for (StringList stringList : appInstance.stringList()) {</span>
+<span class="nc" id="L230">                        subTreeFilteringResultBuilder.addToStringList(stringList);</span>
+<span class="nc" id="L231">                    }</span>
+                }
+            }
+        }
+
+<span class="nc" id="L236">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of defaultHelloWorldInput.
+     */
+<span class="nc" id="L243">    protected DefaultHelloWorldInput() {</span>
+<span class="nc" id="L244">    }</span>
+
+    /**
+     * Returns the attribute HelloWorldInputBuilder.
+     *
+     * @return value of HelloWorldInputBuilder
+     */
+    public static HelloWorldInputBuilder builder() {
+<span class="nc" id="L252">        return new HelloWorldInputBuilder();</span>
+    }
+
+    /**
+     * Returns the valueLeafFlags.
+     *
+     * @return value of valueLeafFlags
+     */
+    public BitSet getValueLeafFlags() {
+<span class="nc" id="L261">        return valueLeafFlags;</span>
+    }
+
+    /**
+     * Returns the selectLeafFlags.
+     *
+     * @return value of selectLeafFlags
+     */
+    public BitSet getSelectLeafFlags() {
+<span class="nc" id="L270">        return selectLeafFlags;</span>
+    }
+
+
+    @Override
+    public boolean isLeafValueSet(LeafIdentifier leaf) {
+<span class="nc" id="L276">        return getValueLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+    @Override
+    public boolean isSelectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L281">        return getSelectLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of helloWorldInput.
+     */
+    public static class HelloWorldInputBuilder implements HelloWorldInput.HelloWorldInputBuilder {
+
+<span class="nc" id="L290">        protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+        protected String name;
+        protected String surName;
+        protected String inputDefault;
+        protected OnosYangNodeOperationType onosYangNodeOperationType;
+        protected List&lt;StringList&gt; stringList;
+        /**
+         * Identify the leafs whose value are explicitly set
+         * Applicable in protocol edit and query operation
+         */
+<span class="nc" id="L300">        private BitSet valueLeafFlags = new BitSet();</span>
+
+        /**
+         * Identify the leafs to be selected, in a query operation
+         */
+<span class="nc" id="L305">        private BitSet selectLeafFlags = new BitSet();</span>
+
+
+        @Override
+        public String name() {
+<span class="nc" id="L310">            return name;</span>
+        }
+
+        @Override
+        public String surName() {
+<span class="nc" id="L315">            return surName;</span>
+        }
+
+        @Override
+        public String inputDefault() {
+<span class="nc" id="L320">            return inputDefault;</span>
+        }
+
+        @Override
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L325">            return onosYangNodeOperationType;</span>
+        }
+
+        @Override
+        public List&lt;StringList&gt; stringList() {
+<span class="nc" id="L330">            return stringList;</span>
+        }
+
+        @Override
+        public HelloWorldInputBuilder name(String name) {
+<span class="nc" id="L335">            getValueLeafFlags().set(LeafIdentifier.NAME.getLeafIndex());</span>
+<span class="nc" id="L336">            this.name = name;</span>
+<span class="nc" id="L337">            return this;</span>
+        }
+
+        @Override
+        public HelloWorldInputBuilder surName(String surName) {
+<span class="nc" id="L342">            getValueLeafFlags().set(LeafIdentifier.SURNAME.getLeafIndex());</span>
+<span class="nc" id="L343">            this.surName = surName;</span>
+<span class="nc" id="L344">            return this;</span>
+        }
+
+        @Override
+        public HelloWorldInputBuilder inputDefault(String inputDefault) {
+<span class="nc" id="L349">            getValueLeafFlags().set(LeafIdentifier.INPUTDEFAULT.getLeafIndex());</span>
+<span class="nc" id="L350">            this.inputDefault = inputDefault;</span>
+<span class="nc" id="L351">            return this;</span>
+        }
+
+        @Override
+        public HelloWorldInputBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+<span class="nc" id="L356">            this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L357">            return this;</span>
+        }
+
+        @Override
+        public HelloWorldInputBuilder stringList(List&lt;StringList&gt; stringList) {
+<span class="nc" id="L362">            this.stringList = stringList;</span>
+<span class="nc" id="L363">            return this;</span>
+        }
+
+        @Override
+        public HelloWorldInputBuilder addToStringList(StringList value) {
+<span class="nc bnc" id="L368" title="All 2 branches missed.">            if (stringList() == null) {</span>
+<span class="nc" id="L369">                stringList(new ArrayList&lt;&gt;());</span>
+            }
+<span class="nc" id="L371">            stringList().add(value);</span>
+<span class="nc" id="L372">            return this;</span>
+        }
+
+        /**
+         * Returns the valueLeafFlags.
+         *
+         * @return value of valueLeafFlags
+         */
+        public BitSet getValueLeafFlags() {
+<span class="nc" id="L381">            return valueLeafFlags;</span>
+        }
+
+        /**
+         * Returns the selectLeafFlags.
+         *
+         * @return value of selectLeafFlags
+         */
+        public BitSet getSelectLeafFlags() {
+<span class="nc" id="L390">            return selectLeafFlags;</span>
+        }
+
+
+
+        @Override
+        public HelloWorldInputBuilder selectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L397">            getSelectLeafFlags().set(leaf.getLeafIndex());</span>
+<span class="nc" id="L398">            return this;</span>
+        }
+
+        @Override
+        public void addYangAugmentedInfo(Object value, Class classObject) {
+<span class="nc" id="L403">            yangAugmentedInfoMap.put(classObject, value);</span>
+<span class="nc" id="L404">        }</span>
+
+        @Override
+        public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L408">            return yangAugmentedInfoMap.get(classObject);</span>
+        }
+
+        @Override
+        public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="nc" id="L413">            return yangAugmentedInfoMap;</span>
+        }
+        @Override
+        public HelloWorldInput build() {
+<span class="nc" id="L417">            return new DefaultHelloWorldInput(this);</span>
+        }
+
+        /**
+         * Creates an instance of helloWorldInputBuilder.
+         */
+<span class="nc" id="L423">        public HelloWorldInputBuilder() {</span>
+<span class="nc" id="L424">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

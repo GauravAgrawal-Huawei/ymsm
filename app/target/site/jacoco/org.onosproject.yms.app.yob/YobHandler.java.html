@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>YobHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yms.app.yob</a> &gt; <span class="el_source">YobHandler.java</span></div><h1>YobHandler.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yms.app.yob;
+
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
+import org.onosproject.yangutils.datamodel.RpcNotificationContainer;
+import org.onosproject.yangutils.datamodel.YangBinary;
+import org.onosproject.yangutils.datamodel.YangSchemaNode;
+import org.onosproject.yangutils.datamodel.YangType;
+import org.onosproject.yms.app.ydt.YdtExtendedContext;
+import org.onosproject.yms.app.ysr.YangSchemaRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
+import static org.onosproject.yms.app.ydt.AppType.YOB;
+import static org.onosproject.yms.app.yob.YobBuilderContainer.getQualifiedDefaultClassName;
+import static org.onosproject.yms.ydt.YdtType.MULTI_INSTANCE_NODE;
+
+/**
+ * Represents a YANG object builder handler to process the ydt content and
+ * build yang object.
+ */
+<span class="fc" id="L46">public abstract class YobHandler {</span>
+
+    private static final String FROMSTRING = &quot;fromString&quot;;
+    private static final String BUILD = &quot;build&quot;;
+    private static final String OPPARAM = &quot;OpParam&quot;;
+    private static final String DEFAULT = &quot;Default&quot;;
+    private static final String ADDTO = &quot;addTo&quot;;
+    private static final String VALUEOF = &quot;valueOf&quot;;
+
+    private YangSchemaRegistry registry;
+
+<span class="fc" id="L57">    private static final Logger log = LoggerFactory.getLogger(YobHandler.class);</span>
+
+    /**
+     * Creates a YANG builder object.
+     *
+     * @param curYdtNode  ydtExtendedContext is used to get application related
+     *                    information maintained in YDT
+     * @param rootYdtNode ydtRootNode is refers to module node
+     * @param registry
+     */
+    public void createYangBuilderObject(YdtExtendedContext curYdtNode,
+                                        YdtExtendedContext rootYdtNode,
+                                        YangSchemaRegistry registry) {
+        String packageName;
+        String className;
+<span class="fc" id="L72">        Class&lt;?&gt; yangDefaultClass = null;</span>
+<span class="fc" id="L73">        Class&lt;?&gt;[] yangDefaultClassBuilder = null;</span>
+<span class="fc" id="L74">        Object builderObject = null;</span>
+<span class="fc" id="L75">        setRegistry(registry);</span>
+
+
+<span class="fc" id="L78">        String qualifiedClassName = getQualifiedDefaultClassName(curYdtNode</span>
+<span class="fc" id="L79">                                                                         .getYangSchemaNode());</span>
+
+<span class="fc" id="L81">        ClassLoader classLoader = getClassLoader(registry,</span>
+                                                 qualifiedClassName,
+                                                 curYdtNode);
+
+<span class="fc" id="L85">        String setterMethodName = null;</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (curYdtNode != rootYdtNode) {</span>
+<span class="fc" id="L87">            setterMethodName = curYdtNode.getYangSchemaNode()</span>
+<span class="fc" id="L88">                    .getJavaAttributeName();</span>
+        }
+
+<span class="fc" id="L91">        builderObject = new YobBuilderContainer(</span>
+<span class="fc" id="L92">                curYdtNode.getYangSchemaNode(), classLoader,</span>
+                qualifiedClassName, setterMethodName);
+
+<span class="fc" id="L95">        curYdtNode.setAppInfo(YOB, builderObject);</span>
+<span class="fc" id="L96">    }</span>
+
+    /**
+     * Sets the YANG built object in corresponding parent class method.
+     *
+     * @param ydtNode        ydtExtendedContext is used to get application
+     *                       related information maintained in YDT
+     * @param schemaRegistry
+     */
+    public void setObjectInParent(YdtExtendedContext ydtNode,
+                                  YangSchemaRegistry schemaRegistry) {
+<span class="fc" id="L107">        Method method = null;</span>
+<span class="fc" id="L108">        YobBuilderContainer yobBuilderContainer</span>
+<span class="fc" id="L109">                = (YobBuilderContainer) ydtNode.getAppInfo(YOB);</span>
+<span class="fc" id="L110">        Object objectToSetinParent = yobBuilderContainer</span>
+<span class="fc" id="L111">                .getBuilderOrBuiltObjectOfScheam().getBuiltObject();</span>
+
+<span class="fc" id="L113">        YdtExtendedContext parentYdtNode =</span>
+<span class="fc" id="L114">                (YdtExtendedContext) ydtNode.getParent();</span>
+
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        if (parentYdtNode != null) {</span>
+<span class="fc" id="L117">            YobBuilderContainer parentYobBuilderContainer =</span>
+<span class="fc" id="L118">                    (YobBuilderContainer) parentYdtNode.getAppInfo(YOB);</span>
+<span class="fc" id="L119">            Object parentBuilderObject = parentYobBuilderContainer</span>
+<span class="fc" id="L120">                    .getBuilderOrBuiltObjectOfScheam().getBuilderObject();</span>
+
+<span class="fc" id="L122">            Class&lt;?&gt; parentBuilderClass = parentBuilderObject.getClass();</span>
+            try {
+<span class="fc" id="L124">                Field fieldName = parentBuilderClass.getDeclaredField(</span>
+<span class="fc" id="L125">                        ydtNode.getYangSchemaNode()</span>
+<span class="fc" id="L126">                                .getJavaAttributeName());</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">                if (ydtNode.getYdtType() == MULTI_INSTANCE_NODE) {</span>
+<span class="fc" id="L128">                    ParameterizedType genericListType =</span>
+<span class="fc" id="L129">                            (ParameterizedType) fieldName.getGenericType();</span>
+<span class="fc" id="L130">                    Class&lt;?&gt; genericListClass = (Class&lt;?&gt;) genericListType</span>
+<span class="fc" id="L131">                            .getActualTypeArguments()[0];</span>
+<span class="fc" id="L132">                    method = parentBuilderClass</span>
+<span class="fc" id="L133">                            .getDeclaredMethod(ADDTO +</span>
+<span class="fc" id="L134">                                                       getCapitalCase(</span>
+                                                               ydtNode
+<span class="fc" id="L136">                                                                       .getYangSchemaNode()</span>
+<span class="fc" id="L137">                                                                       .getJavaAttributeName()),</span>
+                                               genericListClass);
+<span class="fc" id="L139">                } else {</span>
+<span class="fc" id="L140">                    method = parentBuilderClass.getDeclaredMethod(</span>
+<span class="fc" id="L141">                            ydtNode.getYangSchemaNode()</span>
+<span class="fc" id="L142">                                    .getJavaAttributeName(),</span>
+<span class="fc" id="L143">                            fieldName.getType());</span>
+                }
+<span class="nc" id="L145">            } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L146">                log.error(&quot;YOB: failed to get method for class &quot; +</span>
+                                  parentBuilderClass);
+<span class="nc" id="L148">            } catch (NoSuchFieldException e) {</span>
+<span class="nc" id="L149">                e.printStackTrace();</span>
+<span class="pc" id="L150">            }</span>
+            try {
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">                if (method != null) {</span>
+<span class="fc" id="L153">                    method.invoke(parentBuilderObject, objectToSetinParent);</span>
+                }
+<span class="nc" id="L155">            } catch (InvocationTargetException | IllegalAccessException e) {</span>
+<span class="nc" id="L156">                log.error(&quot;YOB: failed to invoke method for class &quot; +</span>
+                                  parentBuilderClass);
+<span class="fc" id="L158">            }</span>
+        }
+<span class="fc" id="L160">        ydtNode.setAppInfo(YOB, yobBuilderContainer);</span>
+<span class="fc" id="L161">    }</span>
+
+    /**
+     * To build the object from builder method.
+     *
+     * @param ydtNode ydtExtendedContext is used to get application related
+     *                information maintained in YDT
+     */
+    public void buildObjectFromBuilder(YdtExtendedContext ydtNode) {
+        Method method;
+<span class="fc" id="L171">        YobBuilderContainer yobBuilderContainer = (YobBuilderContainer) ydtNode</span>
+<span class="fc" id="L172">                .getAppInfo(YOB);</span>
+
+<span class="fc" id="L174">        Object builderObject = yobBuilderContainer</span>
+<span class="fc" id="L175">                .getBuilderOrBuiltObjectOfScheam().getBuilderObject();</span>
+<span class="fc" id="L176">        Object builtObject = null;</span>
+<span class="fc" id="L177">        Class&lt;?&gt; defaultBuilderClass = yobBuilderContainer</span>
+<span class="fc" id="L178">                .getBuilderOrBuiltObjectOfScheam().yangDefaultClassBuilder[0];</span>
+<span class="fc" id="L179">        Class&lt;?&gt; defaultClass = yobBuilderContainer</span>
+<span class="fc" id="L180">                .getBuilderOrBuiltObjectOfScheam().yangDefaultClass;</span>
+<span class="fc" id="L181">        Object ydtContextOperationType = null;</span>
+<span class="fc" id="L182">        Class&lt;?&gt; interfaceClass = yobBuilderContainer</span>
+<span class="fc" id="L183">                .getBuilderOrBuiltObjectOfScheam()</span>
+                .yangInterfaceImplementedByDefaultClass[0];
+
+        // Setting the value into OnosYangNodeOperationType from ydtcontext
+        // operation type.
+        try {
+<span class="fc" id="L189">            Class&lt;?&gt;[] innerClasses = interfaceClass.getClasses();</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">            for (Class&lt;?&gt; innerEnumClass : innerClasses) {</span>
+<span class="fc" id="L191">                if (innerEnumClass.getSimpleName()</span>
+<span class="fc bfc" id="L192" title="All 2 branches covered.">                        .equals(&quot;OnosYangNodeOperationType&quot;)) {</span>
+<span class="fc" id="L193">                    Method valueOfMethod = innerEnumClass</span>
+<span class="fc" id="L194">                            .getDeclaredMethod(VALUEOF, String.class);</span>
+<span class="pc bpc" id="L195" title="1 of 2 branches missed.">                    if (ydtNode.getYdtContextOperationType() !=</span>
+                            null) {
+<span class="fc" id="L197">                        ydtContextOperationType =</span>
+<span class="fc" id="L198">                                valueOfMethod.invoke(null, ydtNode</span>
+<span class="fc" id="L199">                                        .getYdtContextOperationType()</span>
+<span class="fc" id="L200">                                        .toString());</span>
+                    }
+                }
+            }
+<span class="fc" id="L204">            Field onosYangNodeOperationType = defaultBuilderClass</span>
+<span class="fc" id="L205">                    .getDeclaredField(&quot;onosYangNodeOperationType&quot;);</span>
+<span class="fc" id="L206">            onosYangNodeOperationType.setAccessible(true);</span>
+<span class="fc" id="L207">            onosYangNodeOperationType</span>
+<span class="fc" id="L208">                    .set(builderObject, ydtContextOperationType);</span>
+<span class="nc" id="L209">        } catch (NoSuchFieldException | NoSuchMethodException |</span>
+                InvocationTargetException | IllegalAccessException e) {
+<span class="nc" id="L211">            log.error(&quot;YOB: failed to set onosYangNodeOperationType&quot;);</span>
+<span class="fc" id="L212">        }</span>
+        // Invoking the build method to get built object from build method.
+        try {
+<span class="fc" id="L215">            method = defaultBuilderClass.getDeclaredMethod(BUILD);</span>
+<span class="pc bpc" id="L216" title="1 of 2 branches missed.">            if (method != null) {</span>
+<span class="fc" id="L217">                builtObject = method.invoke(builderObject);</span>
+            }
+<span class="nc" id="L219">        } catch (NoSuchMethodException | InvocationTargetException |</span>
+                IllegalAccessException e) {
+<span class="nc" id="L221">            log.error(&quot;YOB: failed to get method for class &quot; +</span>
+                              defaultBuilderClass);
+<span class="fc" id="L223">        }</span>
+        // The built object will be maintained in ydt context and same will
+        // be used while setting into parent method.
+<span class="fc" id="L226">        yobBuilderContainer.getBuilderOrBuiltObjectOfScheam()</span>
+<span class="fc" id="L227">                .setBuiltObject(builtObject);</span>
+<span class="fc" id="L228">    }</span>
+
+    /**
+     * This method is used to set data from string value in parent method.
+     *
+     * @param type                refers to YANG type
+     * @param leafValue           leafValue argument is used to set the value in
+     *                            method
+     * @param parentSetterMethod  Invokes the underlying method represented by
+     *                            this parentSetterMethod
+     * @param parentBuilderObject the parentBuilderObject is to invoke the
+     *                            underlying method
+     * @param ydtExtendedContext  ydtExtendedContext is used to get application
+     *                            related information maintained in YDT
+     * @throws InvocationTargetException throws InvocationTargetException
+     * @throws IllegalAccessException    throws IllegalAccessException
+     * @throws NoSuchMethodException     throws NoSuchMethodException
+     */
+    public void setDataFromStringValue(YangType&lt;?&gt; type, String leafValue,
+                                       Method parentSetterMethod,
+                                       Object parentBuilderObject,
+                                       YdtExtendedContext ydtExtendedContext)
+            throws InvocationTargetException, IllegalAccessException,
+            NoSuchMethodException {
+<span class="pc bpc" id="L252" title="4 of 15 branches missed.">        switch (type.getDataType()) {</span>
+            case INT8: {
+<span class="fc" id="L254">                parentSetterMethod</span>
+<span class="fc" id="L255">                        .invoke(parentBuilderObject, Byte.parseByte(leafValue));</span>
+<span class="fc" id="L256">                break;</span>
+            }
+            case UINT8:
+            case INT16: {
+<span class="fc" id="L260">                parentSetterMethod.invoke(parentBuilderObject,</span>
+<span class="fc" id="L261">                                          Short.parseShort(leafValue));</span>
+<span class="fc" id="L262">                break;</span>
+            }
+            case UINT16:
+            case INT32: {
+<span class="fc" id="L266">                parentSetterMethod.invoke(parentBuilderObject,</span>
+<span class="fc" id="L267">                                          Integer.parseInt(leafValue));</span>
+<span class="fc" id="L268">                break;</span>
+            }
+            case UINT32:
+            case INT64: {
+<span class="fc" id="L272">                parentSetterMethod</span>
+<span class="fc" id="L273">                        .invoke(parentBuilderObject, Long.parseLong(leafValue));</span>
+<span class="fc" id="L274">                break;</span>
+            }
+            case UINT64: {
+<span class="fc" id="L277">                parentSetterMethod</span>
+<span class="fc" id="L278">                        .invoke(parentBuilderObject, new BigInteger(leafValue));</span>
+<span class="fc" id="L279">                break;</span>
+            }
+            case EMPTY:
+            case BOOLEAN: {
+<span class="fc" id="L283">                parentSetterMethod.invoke(parentBuilderObject,</span>
+<span class="fc" id="L284">                                          Boolean.parseBoolean(leafValue));</span>
+<span class="fc" id="L285">                break;</span>
+            }
+            case STRING: {
+<span class="fc" id="L288">                parentSetterMethod.invoke(parentBuilderObject, leafValue);</span>
+<span class="fc" id="L289">                break;</span>
+            }
+            case BINARY: {
+<span class="nc" id="L292">                parentSetterMethod</span>
+<span class="nc" id="L293">                        .invoke(parentBuilderObject, new YangBinary(leafValue));</span>
+<span class="nc" id="L294">                break;</span>
+            }
+            case BITS: {
+                //TODO
+<span class="nc" id="L298">                break;</span>
+            }
+            case DECIMAL64: {
+<span class="fc" id="L301">                parentSetterMethod</span>
+<span class="fc" id="L302">                        .invoke(parentBuilderObject, new BigDecimal(leafValue));</span>
+<span class="fc" id="L303">                break;</span>
+            }
+            case DERIVED: {
+<span class="fc" id="L306">                parseDerivedTypeInfo(ydtExtendedContext, parentSetterMethod,</span>
+                                     parentBuilderObject, leafValue, false);
+<span class="fc" id="L308">                break;</span>
+            }
+            case UNION: {
+                // TODO
+<span class="nc" id="L312">                break;</span>
+            }
+            case LEAFREF: {
+                // TODO
+<span class="fc" id="L316">                break;</span>
+            }
+            case ENUMERATION: {
+<span class="fc" id="L319">                parseDerivedTypeInfo(ydtExtendedContext, parentSetterMethod,</span>
+                                     parentBuilderObject, leafValue, true);
+<span class="fc" id="L321">                break;</span>
+            }
+            default: {
+<span class="nc" id="L324">                log.error(&quot;YOB: Given data type is not supported.&quot;);</span>
+            }
+        }
+<span class="fc" id="L327">    }</span>
+
+    /**
+     * To set data into parent setter method from string value for derived type.
+     *
+     * @param leafValue           leafValue argument is used to set the value in
+     *                            method
+     * @param parentSetterMethod  Invokes the underlying method represented by
+     *                            this parentSetterMethod
+     * @param parentBuilderObject the parentBuilderObject is to invoke the
+     *                            underlying method
+     * @param ydtExtendedContext  ydtExtendedContext is used to get application
+     *                            related information maintained in YDT
+     * @param isEnum              isEnum parameter is used to check whether type
+     *                            is enum or derived information maintained in
+     *                            YDT
+     * @throws InvocationTargetException throws InvocationTargetException
+     * @throws IllegalAccessException    throws IllegalAccessException
+     * @throws NoSuchMethodException     throws NoSuchMethodException
+     */
+    public void parseDerivedTypeInfo(YdtExtendedContext ydtExtendedContext,
+                                     Method parentSetterMethod,
+                                     Object parentBuilderObject,
+                                     String leafValue, boolean isEnum)
+            throws InvocationTargetException, IllegalAccessException,
+            NoSuchMethodException {
+        String packageName;
+        String className;
+<span class="fc" id="L355">        Class&lt;?&gt; childSetterClass = null;</span>
+<span class="fc" id="L356">        Constructor&lt;?&gt; childConstructor = null;</span>
+<span class="fc" id="L357">        Object childValue = null;</span>
+<span class="fc" id="L358">        Object childObject = null;</span>
+<span class="fc" id="L359">        Method childFromStringMethod = null;</span>
+
+<span class="fc" id="L361">        YangSchemaNode yangJavaModule = ydtExtendedContext.getYangSchemaNode();</span>
+<span class="fc" id="L362">        packageName = yangJavaModule.getJavaPackage();</span>
+<span class="fc" id="L363">        className = yangJavaModule.getJavaClassNameOrBuiltInType();</span>
+<span class="fc" id="L364">        className = getCapitalCase(className);</span>
+<span class="fc" id="L365">        String qualifiedClassName = packageName + &quot;.&quot; + className;</span>
+<span class="fc" id="L366">        ClassLoader classLoader = getClassLoader(getRegistry(),</span>
+                                                 qualifiedClassName,
+                                                 ydtExtendedContext);
+        try {
+<span class="fc" id="L370">            childSetterClass =</span>
+<span class="fc" id="L371">                    classLoader.loadClass(qualifiedClassName);</span>
+<span class="nc" id="L372">        } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L373">            log.error(&quot;YOB: failed to load class for class &quot; + className);</span>
+<span class="fc" id="L374">        }</span>
+<span class="fc bfc" id="L375" title="All 2 branches covered.">        if (!isEnum) {</span>
+
+<span class="pc bpc" id="L377" title="1 of 2 branches missed.">            if (childSetterClass != null) {</span>
+<span class="fc" id="L378">                childConstructor = childSetterClass.getDeclaredConstructor();</span>
+            }
+
+<span class="pc bpc" id="L381" title="1 of 2 branches missed.">            if (childConstructor != null) {</span>
+<span class="fc" id="L382">                childConstructor.setAccessible(true);</span>
+            }
+            try {
+<span class="pc bpc" id="L385" title="1 of 2 branches missed.">                if (childConstructor != null) {</span>
+<span class="fc" id="L386">                    childObject = childConstructor.newInstance();</span>
+                }
+<span class="nc" id="L388">            } catch (InstantiationException e) {</span>
+<span class="nc" id="L389">                log.error(&quot;YOB: failed to load constructor for class &quot; +</span>
+                                  className);
+<span class="fc" id="L391">            }</span>
+<span class="pc bpc" id="L392" title="1 of 2 branches missed.">            if (childSetterClass != null) {</span>
+<span class="fc" id="L393">                childFromStringMethod = childSetterClass</span>
+<span class="fc" id="L394">                        .getDeclaredMethod(FROMSTRING, String.class);</span>
+            }
+        } else {
+<span class="pc bpc" id="L397" title="1 of 2 branches missed.">            if (childSetterClass != null) {</span>
+<span class="fc" id="L398">                childFromStringMethod =</span>
+<span class="fc" id="L399">                        childSetterClass.getDeclaredMethod(&quot;of&quot;, String.class);</span>
+            }
+            //leafValue = JavaIdentifierSyntax.getEnumJavaAttribute(leafValue);
+            //leafValue = leafValue.toUpperCase();
+        }
+<span class="pc bpc" id="L404" title="1 of 2 branches missed.">        if (childFromStringMethod != null) {</span>
+<span class="fc" id="L405">            childValue = childFromStringMethod.invoke(childObject, leafValue);</span>
+        }
+
+<span class="fc" id="L408">        parentSetterMethod.invoke(parentBuilderObject, childValue);</span>
+<span class="fc" id="L409">    }</span>
+
+
+    /**
+     * Updates class loader for all the classes.
+     *
+     * @param registry           YANG schema registry
+     * @param context            YDT context
+     * @param qualifiedClassName qualified class name
+     * @return current class loader
+     */
+    private ClassLoader getClassLoader(YangSchemaRegistry registry,
+                                       String qualifiedClassName,
+                                       YdtExtendedContext context) {
+
+<span class="fc" id="L424">        YangSchemaNode yangSchemaNode = context.getYangSchemaNode();</span>
+<span class="fc bfc" id="L425" title="All 2 branches covered.">        if (yangSchemaNode instanceof RpcNotificationContainer) {</span>
+<span class="fc" id="L426">            Class&lt;?&gt; regClass = registry.getRegisteredClass(yangSchemaNode,</span>
+                                                            qualifiedClassName);
+<span class="fc" id="L428">            return regClass.getClassLoader();</span>
+        } else {
+
+<span class="fc" id="L431">            YdtExtendedContext parent =</span>
+<span class="fc" id="L432">                    (YdtExtendedContext) context.getParent();</span>
+            YobBuilderContainer
+<span class="fc" id="L434">                    parentBuilderContainer = (YobBuilderContainer) parent</span>
+<span class="fc" id="L435">                    .getAppInfo(YOB);</span>
+<span class="fc" id="L436">            Object parentObj = parentBuilderContainer</span>
+<span class="fc" id="L437">                    .getParentBuilderObjectFromAncestor(context, registry);</span>
+<span class="fc" id="L438">            return parentObj.getClass().getClassLoader();</span>
+        }
+    }
+
+
+    public YangSchemaRegistry getRegistry() {
+<span class="fc" id="L444">        return registry;</span>
+    }
+
+    public void setRegistry(YangSchemaRegistry registry) {
+<span class="fc" id="L448">        this.registry = registry;</span>
+<span class="fc" id="L449">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

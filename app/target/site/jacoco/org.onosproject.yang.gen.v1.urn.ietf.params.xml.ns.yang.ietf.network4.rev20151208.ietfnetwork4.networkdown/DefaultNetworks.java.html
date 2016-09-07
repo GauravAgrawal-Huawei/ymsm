@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultNetworks.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20151208.ietfnetwork4.networkdown</a> &gt; <span class="el_source">DefaultNetworks.java</span></div><h1>DefaultNetworks.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20151208.ietfnetwork4.networkdown;
+
+import com.google.common.base.MoreObjects;
+import java.lang.reflect.InvocationTargetException;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20151208.ietfnetwork4.networkdown
+            .networks.Network;
+
+/**
+ * Represents the implementation of networks.
+ */
+public class DefaultNetworks implements Networks {
+
+<span class="nc" id="L33">    protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+    protected int id;
+    protected OnosYangNodeOperationType onosYangNodeOperationType;
+    protected Network network;
+    /**
+     * Identify the leafs whose value are explicitly set
+     * Applicable in protocol edit and query operation
+     */
+<span class="nc" id="L41">    private BitSet valueLeafFlags = new BitSet();</span>
+
+    /**
+     * Identify the leafs to be selected, in a query operation
+     */
+<span class="nc" id="L46">    private BitSet selectLeafFlags = new BitSet();</span>
+
+    @Override
+    public int id() {
+<span class="nc" id="L50">        return id;</span>
+    }
+
+    @Override
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L55">        return onosYangNodeOperationType;</span>
+    }
+
+    @Override
+    public Network network() {
+<span class="nc" id="L60">        return network;</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L65">        return Objects.hash(id, onosYangNodeOperationType, network);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L71">            return true;</span>
+        }
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (obj instanceof DefaultNetworks) {</span>
+<span class="nc" id="L74">            DefaultNetworks other = (DefaultNetworks) obj;</span>
+<span class="nc" id="L75">            return</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">                 Objects.equals(id, other.id) &amp;&amp;</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">                 Objects.equals(onosYangNodeOperationType, other.onosYangNodeOperationType) &amp;&amp;</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">                 Objects.equals(network, other.network);</span>
+        }
+<span class="nc" id="L80">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L85">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L86">            .add(&quot;id&quot;, id)</span>
+<span class="nc" id="L87">            .add(&quot;onosYangNodeOperationType&quot;, onosYangNodeOperationType)</span>
+<span class="nc" id="L88">            .add(&quot;network&quot;, network)</span>
+<span class="nc" id="L89">            .toString();</span>
+    }
+
+    @Override
+    public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L94">        return yangAugmentedInfoMap.get(classObject);</span>
+    }
+
+    @Override
+    public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="nc" id="L99">        return yangAugmentedInfoMap;</span>
+    }
+
+    /**
+     * Creates an instance of networks.
+     *
+     * @param builderObject builder object of networks
+     */
+<span class="nc" id="L107">    protected DefaultNetworks(NetworksBuilder builderObject) {</span>
+<span class="nc" id="L108">        this.id = builderObject.id();</span>
+<span class="nc" id="L109">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="nc" id="L110">        this.network = builderObject.network();</span>
+<span class="nc" id="L111">        this.valueLeafFlags = builderObject.getValueLeafFlags();</span>
+<span class="nc" id="L112">        this.selectLeafFlags = builderObject.getSelectLeafFlags();</span>
+<span class="nc" id="L113">        this.yangAugmentedInfoMap = builderObject.yangAugmentedInfoMap();</span>
+<span class="nc" id="L114">    }</span>
+
+    @Override
+    public Networks processSubtreeFiltering(Networks appInstance, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L118">        NetworksBuilder subTreeFilteringResultBuilder = new NetworksBuilder();</span>
+<span class="nc" id="L119">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        if (!processLeafSubtreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L122">            return null;</span>
+        }
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        if (!processChildNodesSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L126">            return null;</span>
+        }
+<span class="nc bnc" id="L128" title="All 2 branches missed.">        for (Object yangAugmentedInfo : this.yangAugmentedInfoMap().values()) {</span>
+<span class="nc" id="L129">            Object yangAugmentedOpParamInfo = appInstance.yangAugmentedInfo(yangAugmentedInfo.getClass());</span>
+            Object processSubtreeFiltering;
+            try {
+<span class="nc" id="L132">                Class&lt;?&gt;[] interfaces = yangAugmentedInfo.getClass().getInterfaces();</span>
+<span class="nc" id="L133">                processSubtreeFiltering = yangAugmentedInfo.getClass()</span>
+<span class="nc" id="L134">                    .getMethod(&quot;processSubtreeFiltering&quot;, interfaces[0]).invoke(yangAugmentedInfo,</span>
+                        yangAugmentedOpParamInfo);
+<span class="nc bnc" id="L136" title="All 2 branches missed.">                if (processSubtreeFiltering != null) {</span>
+<span class="nc" id="L137">                    subTreeFilteringResultBuilder</span>
+<span class="nc" id="L138">            .addYangAugmentedInfo(processSubtreeFiltering, processSubtreeFiltering.getClass());</span>
+                }
+<span class="nc" id="L140">            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {</span>
+<span class="nc" id="L141">                continue;</span>
+<span class="nc" id="L142">            }</span>
+<span class="nc" id="L143">        }</span>
+<span class="nc bnc" id="L144" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L145">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L147">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processLeafSubtreeFiltering(Networks appInstance, NetworksBuilder subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L151" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.ID.getLeafIndex())) {</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">            if (appInstance.id() != id()) {</span>
+<span class="nc" id="L153">                return false;</span>
+            } else {
+<span class="nc" id="L155">                subTreeFilteringResultBuilder.id(appInstance.id());</span>
+            }
+<span class="nc bnc" id="L157" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.ID.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L158">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L159">            subTreeFilteringResultBuilder.id(appInstance.id());</span>
+        }
+
+<span class="nc" id="L162">        return true;</span>
+    }
+
+    private boolean processChildNodesSubTreeFiltering(Networks appInstance, NetworksBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L168" title="All 2 branches missed.">        if (network()  != null) {</span>
+<span class="nc" id="L169">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">            if (appInstance.network() != null) {</span>
+<span class="nc" id="L171">                Network result = network.processSubtreeFiltering(appInstance.network(), false);</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">                if (result != null) {</span>
+<span class="nc" id="L173">                    subTreeFilteringResultBuilder.network(result);</span>
+                }
+            }
+        }
+
+<span class="nc" id="L178">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of defaultNetworks.
+     */
+<span class="nc" id="L185">    protected DefaultNetworks() {</span>
+<span class="nc" id="L186">    }</span>
+
+    /**
+     * Returns the attribute NetworksBuilder.
+     *
+     * @return value of NetworksBuilder
+     */
+    public static NetworksBuilder builder() {
+<span class="nc" id="L194">        return new NetworksBuilder();</span>
+    }
+
+    /**
+     * Returns the valueLeafFlags.
+     *
+     * @return value of valueLeafFlags
+     */
+    public BitSet getValueLeafFlags() {
+<span class="nc" id="L203">        return valueLeafFlags;</span>
+    }
+
+    /**
+     * Returns the selectLeafFlags.
+     *
+     * @return value of selectLeafFlags
+     */
+    public BitSet getSelectLeafFlags() {
+<span class="nc" id="L212">        return selectLeafFlags;</span>
+    }
+
+
+    @Override
+    public boolean isLeafValueSet(LeafIdentifier leaf) {
+<span class="nc" id="L218">        return getValueLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+    @Override
+    public boolean isSelectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L223">        return getSelectLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of networks.
+     */
+    public static class NetworksBuilder implements Networks.NetworksBuilder {
+
+<span class="nc" id="L232">        protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+        protected int id;
+        protected OnosYangNodeOperationType onosYangNodeOperationType;
+        protected Network network;
+        /**
+         * Identify the leafs whose value are explicitly set
+         * Applicable in protocol edit and query operation
+         */
+<span class="nc" id="L240">        private BitSet valueLeafFlags = new BitSet();</span>
+
+        /**
+         * Identify the leafs to be selected, in a query operation
+         */
+<span class="nc" id="L245">        private BitSet selectLeafFlags = new BitSet();</span>
+
+
+        @Override
+        public int id() {
+<span class="nc" id="L250">            return id;</span>
+        }
+
+        @Override
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L255">            return onosYangNodeOperationType;</span>
+        }
+
+        @Override
+        public Network network() {
+<span class="nc" id="L260">            return network;</span>
+        }
+
+        @Override
+        public NetworksBuilder id(int id) {
+<span class="nc" id="L265">            getValueLeafFlags().set(LeafIdentifier.ID.getLeafIndex());</span>
+<span class="nc" id="L266">            this.id = id;</span>
+<span class="nc" id="L267">            return this;</span>
+        }
+
+        @Override
+        public NetworksBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+<span class="nc" id="L272">            this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L273">            return this;</span>
+        }
+
+        @Override
+        public NetworksBuilder network(Network network) {
+<span class="nc" id="L278">            this.network = network;</span>
+<span class="nc" id="L279">            return this;</span>
+        }
+
+        /**
+         * Returns the valueLeafFlags.
+         *
+         * @return value of valueLeafFlags
+         */
+        public BitSet getValueLeafFlags() {
+<span class="nc" id="L288">            return valueLeafFlags;</span>
+        }
+
+        /**
+         * Returns the selectLeafFlags.
+         *
+         * @return value of selectLeafFlags
+         */
+        public BitSet getSelectLeafFlags() {
+<span class="nc" id="L297">            return selectLeafFlags;</span>
+        }
+
+
+
+        @Override
+        public NetworksBuilder selectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L304">            getSelectLeafFlags().set(leaf.getLeafIndex());</span>
+<span class="nc" id="L305">            return this;</span>
+        }
+
+        @Override
+        public void addYangAugmentedInfo(Object value, Class classObject) {
+<span class="nc" id="L310">            yangAugmentedInfoMap.put(classObject, value);</span>
+<span class="nc" id="L311">        }</span>
+
+        @Override
+        public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L315">            return yangAugmentedInfoMap.get(classObject);</span>
+        }
+
+        @Override
+        public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="nc" id="L320">            return yangAugmentedInfoMap;</span>
+        }
+        @Override
+        public Networks build() {
+<span class="nc" id="L324">            return new DefaultNetworks(this);</span>
+        }
+
+        /**
+         * Creates an instance of networksBuilder.
+         */
+<span class="nc" id="L330">        public NetworksBuilder() {</span>
+<span class="nc" id="L331">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

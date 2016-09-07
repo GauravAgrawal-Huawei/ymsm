@@ -29,7 +29,7 @@ import org.onosproject.yms.ydt.YdtType;
 /**
  * Represents a multi instance node in YANG data tree.
  */
-class YdtMultiInstanceNode extends YdtNode {
+public class YdtMultiInstanceNode extends YdtNode {
 
     /**
      * Reference for list of key element's ydtContext.

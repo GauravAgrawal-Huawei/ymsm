@@ -21,8 +21,12 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import org.onosproject.yangutils.datamodel.TraversalType;
+import org.onosproject.yangutils.datamodel.YangAugment;
+import org.onosproject.yangutils.datamodel.YangAugmentableNode;
 import org.onosproject.yangutils.datamodel.YangInput;
+import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangRpc;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yms.app.yab.exceptions.YabException;
@@ -31,12 +35,14 @@ import org.onosproject.yms.app.ydt.YangResponseWorkBench;
 import org.onosproject.yms.app.ydt.YdtAppContext;
 import org.onosproject.yms.app.ydt.YdtAppNodeOperationType;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
+import org.onosproject.yms.app.ydt.YdtMultiInstanceNode;
 import org.onosproject.yms.app.ydt.YdtNode;
 import org.onosproject.yms.app.yob.DefaultYobBuilder;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.onosproject.yms.app.ytb.DefaultYangTreeBuilder;
 import org.onosproject.yms.ydt.YdtBuilder;
 import org.onosproject.yms.ydt.YdtContext;
+import org.onosproject.yms.ydt.YdtContextOperationType;
 import org.onosproject.yms.ydt.YdtResponse;
 import org.onosproject.yms.ydt.YmsOperationExecutionStatus;
 import org.slf4j.Logger;
@@ -392,18 +398,26 @@ public class YangApplicationBroker {
      */
     private void processDeleteRequestOfApplication(YdtAppContext appContext)
             throws CloneNotSupportedException, YabException {
+        TraversalType curTraversal = ROOT;
         List<YdtContext> deleteNodes = appContext.getDeleteNodes();
 
         if (deleteNodes != null && !deleteNodes.isEmpty()) {
             YdtContext deleteTree = buildDeleteTree(deleteNodes);
 
+//            deleteTree = updateDeleteTreeWithAugmentedNodes(deleteTree);
             Object deleteInputParamObject = getYangObject(deleteTree);
 
-            while (appContext.getFirstChild() != null) {
-                appContext = appContext.getFirstChild();
-            }
-
             do {
+                if (curTraversal == ROOT) {
+                    while (appContext.getLastChild() != null) {
+                        appContext = appContext.getLastChild();
+                    }
+                } else if (curTraversal == SIBILING) {
+                    while (appContext.getLastChild() != null) {
+                        appContext = appContext.getLastChild();
+                    }
+                }
+
                 // getAugmentApplication manager object
                 Object appManagerObject = getApplicationObject(appContext);
 
@@ -413,7 +427,13 @@ public class YangApplicationBroker {
                 // invoke application's getter method
                 invokeApplicationsMethod(appManagerObject, deleteInputParamObject, methodName);
 
-                appContext = appContext.getParent();
+                if (appContext.getPreviousSibling() != null) {
+                    curTraversal = SIBILING;
+                    appContext = appContext.getPreviousSibling();
+                } else if (appContext.getParent() != null) {
+                    curTraversal = PARENT;
+                    appContext = appContext.getParent();
+                }
             } while (appContext.getParent() != null);
         }
     }
@@ -435,6 +455,7 @@ public class YangApplicationBroker {
                 deleteTree = updateDeleteTree(deleteNode);
             }
         }
+
         while (deleteTree.getParent().getParent() != null) {
             deleteTree = deleteTree.getParent();
         }
@@ -471,6 +492,14 @@ public class YangApplicationBroker {
             // If node is not cloned yet
             if (nodeToClone.getClonedNode() == null) {
                 clonedNode = (YdtNode) nodeToClone.clone();
+                clonedNode.setParent(null);
+                clonedNode.setNextSibling(null);
+                clonedNode.setPreviousSibling(null);
+                clonedNode.setChild(null);
+                clonedNode.setLastChild(null);
+                if (nodeToClone instanceof YdtMultiInstanceNode) {
+                    addKeyLeavesToClonedNode(nodeToClone, clonedNode);
+                }
                 nodeToClone.setClonedNode(clonedNode);
             } else {
                 // already node is cloned
@@ -571,6 +600,103 @@ public class YangApplicationBroker {
             nextSiblingNode.setPreviousSibling(null);
         } else if (previousSiblingNode != null && nextSiblingNode == null) {
             previousSiblingNode.setNextSibling(nextSiblingNode);
+        }
+    }
+
+    private YdtContext updateDeleteTreeWithAugmentedNodes(YdtContext deleteTree) {
+        TraversalType curTraversal = ROOT;
+        YdtContext deleteNode = deleteTree.getFirstChild();
+
+        while (deleteNode != deleteTree) {
+            if (curTraversal != PARENT) {
+                YangSchemaNode yangNode = ((YdtNode) deleteNode).getYangSchemaNode();
+                if (yangNode instanceof YangAugmentableNode) {
+                    if (!((YangAugmentableNode) yangNode).getAugmentedInfoList().isEmpty()) {
+                        List<YangAugment> augmentList = ((YangAugmentableNode) yangNode).getAugmentedInfoList();
+                        updateYdtWithAugmentNodes(augmentList, deleteNode);
+                    }
+                }
+            }
+
+            if (curTraversal != PARENT && deleteNode.getFirstChild() != null) {
+                curTraversal = CHILD;
+                deleteNode = deleteNode.getFirstChild();
+            } else if (deleteNode.getNextSibling() != null) {
+                curTraversal = SIBILING;
+                deleteNode = deleteNode.getNextSibling();
+            } else {
+                curTraversal = PARENT;
+                deleteNode = deleteNode.getParent();
+            }
+        }
+        return deleteNode;
+    }
+
+    private void updateYdtWithAugmentNodes(List<YangAugment> augmentList, YdtContext deleteNode) {
+        if (augmentList != null && !augmentList.isEmpty()) {
+            Iterator<YangAugment> augmentListIterator = augmentList.listIterator();
+            while (augmentListIterator.hasNext()) {
+                YangAugment augment = augmentListIterator.next();
+                addContentsOfAugmentToYdt(augment, deleteNode);
+            }
+        }
+    }
+
+    private void addContentsOfAugmentToYdt(YangNode augment, YdtContext deleteNode) {
+        TraversalType curTraversal;
+        YangNode yangNode = augment;
+        YdtContext curYdtNode = deleteNode;
+
+        yangNode = yangNode.getChild();
+        if (yangNode == null) {
+            return;
+        } else {
+            // Yang augment node need not be added.
+            curTraversal = CHILD;
+        }
+
+        while (yangNode != augment) {
+            if (curTraversal == CHILD) {
+                curYdtNode = ((YangRequestWorkBench) curYdtNode).addChild(YdtContextOperationType.DELETE,
+                        yangNode);
+            } else if (curTraversal == SIBILING) {
+                curYdtNode = curYdtNode.getParent();
+                curYdtNode = ((YangRequestWorkBench) curYdtNode).addChild(YdtContextOperationType.DELETE,
+                        yangNode);
+            } else {
+                curYdtNode = curYdtNode.getParent();
+            }
+
+            if (curTraversal != PARENT && yangNode.getChild() != null) {
+                curTraversal = CHILD;
+                yangNode = yangNode.getChild();
+            } else if (yangNode.getNextSibling() != null) {
+                curTraversal = SIBILING;
+                yangNode = yangNode.getNextSibling();
+            } else {
+                curTraversal = PARENT;
+                yangNode = yangNode.getParent();
+            }
+        }
+    }
+
+    private void addKeyLeavesToClonedNode(YdtNode curNode, YdtNode clonedNode)
+            throws CloneNotSupportedException {
+        YdtNode keyLeaf;
+        YdtNode keyClonedLeaf;
+        Set<YdtContext> keyList = ((YdtMultiInstanceNode) curNode).getKeyNodeList();
+        if (keyList != null && !keyList.isEmpty()) {
+            Iterator<YdtContext> keyListIterator = keyList.iterator();
+            while (keyListIterator.hasNext()) {
+                keyLeaf = (YdtNode) keyListIterator.next();
+                keyClonedLeaf = (YdtNode) keyLeaf.clone();
+                keyClonedLeaf.setParent(null);
+                keyClonedLeaf.setNextSibling(null);
+                keyClonedLeaf.setPreviousSibling(null);
+                keyClonedLeaf.setChild(null);
+                keyClonedLeaf.setLastChild(null);
+                clonedNode.addChild(keyClonedLeaf, true);
+            }
         }
     }
 }

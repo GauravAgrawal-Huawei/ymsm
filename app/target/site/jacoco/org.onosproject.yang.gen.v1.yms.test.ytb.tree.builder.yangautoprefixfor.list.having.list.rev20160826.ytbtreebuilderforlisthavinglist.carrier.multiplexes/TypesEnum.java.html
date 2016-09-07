@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TypesEnum.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.ytbtreebuilderforlisthavinglist.carrier.multiplexes</a> &gt; <span class="el_source">TypesEnum.java</span></div><h1>TypesEnum.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
+            .ytbtreebuilderforlisthavinglist.carrier.multiplexes;
+
+/**
+ * Represents ENUM data of typesEnum.
+ */
+<span class="pc" id="L23">public enum TypesEnum {</span>
+
+    /**
+     * Represents spaceDivision.
+     */
+<span class="fc" id="L28">    SPACE_DIVISION(0, &quot;space-division&quot;),</span>
+
+    /**
+     * Represents frequencyDivision.
+     */
+<span class="fc" id="L33">    FREQUENCY_DIVISION(1, &quot;frequency-division&quot;),</span>
+
+    /**
+     * Represents timeDivision.
+     */
+<span class="fc" id="L38">    TIME_DIVISION(3, &quot;time-division&quot;);</span>
+
+    private int typesEnum;
+    private String schemaName;
+
+    /**
+     * Creates an instance of typesEnum.
+     *
+     * @param value value of typesEnum
+     */
+<span class="fc" id="L48">    TypesEnum(int value, String stringValue) {</span>
+<span class="fc" id="L49">        typesEnum = value;</span>
+<span class="fc" id="L50">        schemaName = stringValue;</span>
+<span class="fc" id="L51">    }</span>
+
+    /**
+     * Returns the object of typesEnumForValue.
+     *
+     * @param value value of typesEnumForValue
+     * @return Object of typesEnumForValue
+     */
+    public static TypesEnum of(int value) {
+<span class="nc bnc" id="L60" title="All 4 branches missed.">        switch (value) {</span>
+            case 0:
+<span class="nc" id="L62">                return TypesEnum.SPACE_DIVISION;</span>
+            case 1:
+<span class="nc" id="L64">                return TypesEnum.FREQUENCY_DIVISION;</span>
+            case 3:
+<span class="nc" id="L66">                return TypesEnum.TIME_DIVISION;</span>
+            default :
+<span class="nc" id="L68">                return null;</span>
+        }
+    }
+
+    /**
+     * Returns the object of typesEnumForSchemaName.
+     *
+     * @param value value of typesEnumForSchemaName
+     * @return Object of typesEnumForSchemaName
+     */
+    public static TypesEnum of(String value) {
+<span class="nc bnc" id="L79" title="All 14 branches missed.">        switch (value) {</span>
+            case &quot;space-division&quot;:
+<span class="nc" id="L81">                return TypesEnum.SPACE_DIVISION;</span>
+            case &quot;frequency-division&quot;:
+<span class="nc" id="L83">                return TypesEnum.FREQUENCY_DIVISION;</span>
+            case &quot;time-division&quot;:
+<span class="nc" id="L85">                return TypesEnum.TIME_DIVISION;</span>
+            default :
+<span class="nc" id="L87">                return null;</span>
+        }
+    }
+    /**
+     * Returns the attribute typesEnum.
+     *
+     * @return value of typesEnum
+     */
+    public int typesEnum() {
+<span class="nc" id="L96">        return typesEnum;</span>
+    }
+
+    /**
+     * Returns the attribute schemaName.
+     *
+     * @return value of schemaName
+     */
+    public String schemaName() {
+<span class="fc" id="L105">        return schemaName;</span>
+    }
+
+    /**
+     * Returns the object of typesEnum fromString input String.
+     *
+     * @param valInString input String
+     * @return Object of typesEnum
+     */
+    public static TypesEnum fromString(String valInString) {
+        try {
+<span class="nc" id="L116">            int tmpVal = Integer.parseInt(valInString);</span>
+<span class="nc" id="L117">            return of(tmpVal);</span>
+<span class="nc" id="L118">        } catch (Exception e) {</span>
+        }
+<span class="nc" id="L120">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

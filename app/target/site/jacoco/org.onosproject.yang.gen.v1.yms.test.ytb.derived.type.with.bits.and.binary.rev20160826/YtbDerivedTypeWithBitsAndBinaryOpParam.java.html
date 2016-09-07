@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>YtbDerivedTypeWithBitsAndBinaryOpParam.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826</a> &gt; <span class="el_source">YtbDerivedTypeWithBitsAndBinaryOpParam.java</span></div><h1>YtbDerivedTypeWithBitsAndBinaryOpParam.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826;
+
+import com.google.common.base.MoreObjects;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+import java.util.Objects;
+import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826
+            .ytbderivedtypewithbitsandbinary.Derivedbinarya;
+import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826
+            .ytbderivedtypewithbitsandbinary.Derivedbitsa;
+import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826
+            .ytbderivedtypewithbitsandbinary.ForunionUnion;
+
+/**
+ * Represents the implementation of ytbDerivedTypeWithBitsAndBinary.
+ */
+public class YtbDerivedTypeWithBitsAndBinaryOpParam implements YtbDerivedTypeWithBitsAndBinary {
+
+    protected Derivedbinarya forbinary;
+    protected Derivedbitsa forbits;
+    protected ForunionUnion forunion;
+    protected List&lt;Derivedbinarya&gt; forbinarylist;
+    protected List&lt;Derivedbitsa&gt; forbitslist;
+    protected OnosYangNodeOperationType onosYangNodeOperationType;
+    /**
+     * Identify the leafs whose value are explicitly set
+     * Applicable in protocol edit and query operation
+     */
+<span class="pc" id="L46">    private BitSet valueLeafFlags = new BitSet();</span>
+
+    /**
+     * Identify the leafs to be selected, in a query operation
+     */
+<span class="pc" id="L51">    private BitSet selectLeafFlags = new BitSet();</span>
+    public Derivedbinarya forbinary() {
+<span class="fc" id="L53">        return forbinary;</span>
+    }
+    public Derivedbitsa forbits() {
+<span class="fc" id="L56">        return forbits;</span>
+    }
+    public ForunionUnion forunion() {
+<span class="fc" id="L59">        return forunion;</span>
+    }
+    public List&lt;Derivedbinarya&gt; forbinarylist() {
+<span class="fc" id="L62">        return forbinarylist;</span>
+    }
+    public List&lt;Derivedbitsa&gt; forbitslist() {
+<span class="fc" id="L65">        return forbitslist;</span>
+    }
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L68">        return onosYangNodeOperationType;</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L73">        return Objects.hash(forbinary, forbits, forunion, forbinarylist, forbitslist, onosYangNodeOperationType);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L79">            return true;</span>
+        }
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (obj instanceof YtbDerivedTypeWithBitsAndBinaryOpParam) {</span>
+<span class="nc" id="L82">            YtbDerivedTypeWithBitsAndBinaryOpParam other = (YtbDerivedTypeWithBitsAndBinaryOpParam) obj;</span>
+<span class="nc" id="L83">            return</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">                 Objects.equals(forbinary, other.forbinary) &amp;&amp;</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">                 Objects.equals(forbits, other.forbits) &amp;&amp;</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">                 Objects.equals(forunion, other.forunion) &amp;&amp;</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">                 Objects.equals(forbinarylist, other.forbinarylist) &amp;&amp;</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">                 Objects.equals(forbitslist, other.forbitslist) &amp;&amp;</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">                 Objects.equals(onosYangNodeOperationType, other.onosYangNodeOperationType);</span>
+        }
+<span class="nc" id="L91">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L96">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L97">            .add(&quot;forbinary&quot;, forbinary)</span>
+<span class="nc" id="L98">            .add(&quot;forbits&quot;, forbits)</span>
+<span class="nc" id="L99">            .add(&quot;forunion&quot;, forunion)</span>
+<span class="nc" id="L100">            .add(&quot;forbinarylist&quot;, forbinarylist)</span>
+<span class="nc" id="L101">            .add(&quot;forbitslist&quot;, forbitslist)</span>
+<span class="nc" id="L102">            .add(&quot;onosYangNodeOperationType&quot;, onosYangNodeOperationType)</span>
+<span class="nc" id="L103">            .toString();</span>
+    }
+
+    /**
+     * Creates an instance of ytbDerivedTypeWithBitsAndBinary.
+     *
+     * @param builderObject builder object of ytbDerivedTypeWithBitsAndBinary
+     */
+<span class="fc" id="L111">    protected YtbDerivedTypeWithBitsAndBinaryOpParam(YtbDerivedTypeWithBitsAndBinaryBuilder builderObject) {</span>
+<span class="fc" id="L112">        this.forbinary = builderObject.forbinary();</span>
+<span class="fc" id="L113">        this.forbits = builderObject.forbits();</span>
+<span class="fc" id="L114">        this.forunion = builderObject.forunion();</span>
+<span class="fc" id="L115">        this.forbinarylist = builderObject.forbinarylist();</span>
+<span class="fc" id="L116">        this.forbitslist = builderObject.forbitslist();</span>
+<span class="fc" id="L117">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="fc" id="L118">        this.valueLeafFlags = builderObject.getValueLeafFlags();</span>
+<span class="fc" id="L119">        this.selectLeafFlags = builderObject.getSelectLeafFlags();</span>
+<span class="fc" id="L120">    }</span>
+
+    @Override
+    public YtbDerivedTypeWithBitsAndBinary processSubtreeFiltering(YtbDerivedTypeWithBitsAndBinary appInstance,
+            boolean
+            isSelectAllSchemaChild) {
+<span class="nc" id="L126">        YtbDerivedTypeWithBitsAndBinaryBuilder subTreeFilteringResultBuilder = new</span>
+            YtbDerivedTypeWithBitsAndBinaryBuilder();
+<span class="nc" id="L128">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (!processLeafSubtreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L131">            return null;</span>
+        }
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        if (!processLeafListSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L135">            return null;</span>
+        }
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        if (!processChildNodesSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L139">            return null;</span>
+        }
+<span class="nc bnc" id="L141" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L142">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L144">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processLeafSubtreeFiltering(YtbDerivedTypeWithBitsAndBinary appInstance,
+            YtbDerivedTypeWithBitsAndBinaryBuilder subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.FORBINARY.getLeafIndex())) {</span>
+<span class="nc bnc" id="L150" title="All 4 branches missed.">            if (appInstance.forbinary() == null || !(forbinary().equals(appInstance.forbinary()))) {</span>
+<span class="nc" id="L151">                return false;</span>
+            } else {
+<span class="nc" id="L153">                subTreeFilteringResultBuilder.forbinary(appInstance.forbinary());</span>
+            }
+<span class="nc bnc" id="L155" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.FORBINARY.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L156">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L157">            subTreeFilteringResultBuilder.forbinary(appInstance.forbinary());</span>
+        }
+
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.FORBITS.getLeafIndex())) {</span>
+<span class="nc bnc" id="L161" title="All 4 branches missed.">            if (appInstance.forbits() == null || !(forbits().equals(appInstance.forbits()))) {</span>
+<span class="nc" id="L162">                return false;</span>
+            } else {
+<span class="nc" id="L164">                subTreeFilteringResultBuilder.forbits(appInstance.forbits());</span>
+            }
+<span class="nc bnc" id="L166" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.FORBITS.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L167">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L168">            subTreeFilteringResultBuilder.forbits(appInstance.forbits());</span>
+        }
+
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.FORUNION.getLeafIndex())) {</span>
+<span class="nc bnc" id="L172" title="All 4 branches missed.">            if (appInstance.forunion() == null || !(forunion().equals(appInstance.forunion()))) {</span>
+<span class="nc" id="L173">                return false;</span>
+            } else {
+<span class="nc" id="L175">                subTreeFilteringResultBuilder.forunion(appInstance.forunion());</span>
+            }
+<span class="nc bnc" id="L177" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.FORUNION.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L178">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L179">            subTreeFilteringResultBuilder.forunion(appInstance.forunion());</span>
+        }
+
+<span class="nc" id="L182">        return true;</span>
+    }
+
+    private boolean processLeafListSubTreeFiltering(YtbDerivedTypeWithBitsAndBinary appInstance,
+            YtbDerivedTypeWithBitsAndBinaryBuilder subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L188" title="All 2 branches missed.">        if (isSelectAllSchemaChild) {</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">            for (Derivedbinarya forbinarylist : appInstance.forbinarylist()) {</span>
+<span class="nc" id="L190">                subTreeFilteringResultBuilder.addToForbinarylist(forbinarylist);</span>
+<span class="nc" id="L191">            }</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">        } else if (forbinarylist() != null) {</span>
+<span class="nc bnc" id="L193" title="All 2 branches missed.">            if (!forbinarylist().isEmpty()) {</span>
+<span class="nc bnc" id="L194" title="All 4 branches missed.">                if (appInstance.forbinarylist() == null || appInstance.forbinarylist().isEmpty()) {</span>
+<span class="nc" id="L195">                    return false;</span>
+                }
+<span class="nc bnc" id="L197" title="All 2 branches missed.">                for (Derivedbinarya forbinarylist : forbinarylist()) {</span>
+<span class="nc" id="L198">                    boolean flag = false;</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">                    for (Derivedbinarya forbinarylist2 : appInstance.forbinarylist()) {</span>
+<span class="nc bnc" id="L200" title="All 2 branches missed.">                        if (forbinarylist.equals(forbinarylist2)) {</span>
+<span class="nc" id="L201">                            flag = true;</span>
+<span class="nc" id="L202">                            subTreeFilteringResultBuilder.addToForbinarylist(forbinarylist2);</span>
+<span class="nc" id="L203">                            break;</span>
+                        }
+<span class="nc" id="L205">                    }</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">                    if (!flag) {</span>
+<span class="nc" id="L207">                        return false;</span>
+                    }
+<span class="nc" id="L209">                }</span>
+            } else {
+<span class="nc" id="L211">                isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L212" title="All 4 branches missed.">                if (appInstance.forbinarylist() != null &amp;&amp; !appInstance.forbinarylist().isEmpty()) {</span>
+<span class="nc bnc" id="L213" title="All 2 branches missed.">                    for (Derivedbinarya forbinarylist : appInstance.forbinarylist()) {</span>
+<span class="nc" id="L214">                        subTreeFilteringResultBuilder.addToForbinarylist(forbinarylist);</span>
+<span class="nc" id="L215">                    }</span>
+                }
+            }
+        }
+
+<span class="nc bnc" id="L220" title="All 2 branches missed.">        if (isSelectAllSchemaChild) {</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">            for (Derivedbitsa forbitslist : appInstance.forbitslist()) {</span>
+<span class="nc" id="L222">                subTreeFilteringResultBuilder.addToForbitslist(forbitslist);</span>
+<span class="nc" id="L223">            }</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">        } else if (forbitslist() != null) {</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">            if (!forbitslist().isEmpty()) {</span>
+<span class="nc bnc" id="L226" title="All 4 branches missed.">                if (appInstance.forbitslist() == null || appInstance.forbitslist().isEmpty()) {</span>
+<span class="nc" id="L227">                    return false;</span>
+                }
+<span class="nc bnc" id="L229" title="All 2 branches missed.">                for (Derivedbitsa forbitslist : forbitslist()) {</span>
+<span class="nc" id="L230">                    boolean flag = false;</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">                    for (Derivedbitsa forbitslist2 : appInstance.forbitslist()) {</span>
+<span class="nc bnc" id="L232" title="All 2 branches missed.">                        if (forbitslist.equals(forbitslist2)) {</span>
+<span class="nc" id="L233">                            flag = true;</span>
+<span class="nc" id="L234">                            subTreeFilteringResultBuilder.addToForbitslist(forbitslist2);</span>
+<span class="nc" id="L235">                            break;</span>
+                        }
+<span class="nc" id="L237">                    }</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">                    if (!flag) {</span>
+<span class="nc" id="L239">                        return false;</span>
+                    }
+<span class="nc" id="L241">                }</span>
+            } else {
+<span class="nc" id="L243">                isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L244" title="All 4 branches missed.">                if (appInstance.forbitslist() != null &amp;&amp; !appInstance.forbitslist().isEmpty()) {</span>
+<span class="nc bnc" id="L245" title="All 2 branches missed.">                    for (Derivedbitsa forbitslist : appInstance.forbitslist()) {</span>
+<span class="nc" id="L246">                        subTreeFilteringResultBuilder.addToForbitslist(forbitslist);</span>
+<span class="nc" id="L247">                    }</span>
+                }
+            }
+        }
+
+<span class="nc" id="L252">        return true;</span>
+    }
+
+    private boolean processChildNodesSubTreeFiltering(YtbDerivedTypeWithBitsAndBinary appInstance,
+            YtbDerivedTypeWithBitsAndBinaryBuilder subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L258">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of ytbDerivedTypeWithBitsAndBinaryOpParam.
+     */
+<span class="nc" id="L265">    protected YtbDerivedTypeWithBitsAndBinaryOpParam() {</span>
+<span class="nc" id="L266">    }</span>
+
+    /**
+     * Returns the attribute YtbDerivedTypeWithBitsAndBinaryBuilder.
+     *
+     * @return value of YtbDerivedTypeWithBitsAndBinaryBuilder
+     */
+    public static YtbDerivedTypeWithBitsAndBinaryBuilder builder() {
+<span class="nc" id="L274">        return new YtbDerivedTypeWithBitsAndBinaryBuilder();</span>
+    }
+
+    /**
+     * Returns the valueLeafFlags.
+     *
+     * @return value of valueLeafFlags
+     */
+    public BitSet getValueLeafFlags() {
+<span class="nc" id="L283">        return valueLeafFlags;</span>
+    }
+
+    /**
+     * Returns the selectLeafFlags.
+     *
+     * @return value of selectLeafFlags
+     */
+    public BitSet getSelectLeafFlags() {
+<span class="nc" id="L292">        return selectLeafFlags;</span>
+    }
+
+
+    @Override
+    public boolean isLeafValueSet(LeafIdentifier leaf) {
+<span class="nc" id="L298">        return getValueLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+    @Override
+    public boolean isSelectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L303">        return getSelectLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of ytbDerivedTypeWithBitsAndBinary.
+     */
+    public static class YtbDerivedTypeWithBitsAndBinaryBuilder {
+
+        protected Derivedbinarya forbinary;
+        protected Derivedbitsa forbits;
+        protected ForunionUnion forunion;
+        protected List&lt;Derivedbinarya&gt; forbinarylist;
+        protected List&lt;Derivedbitsa&gt; forbitslist;
+        protected OnosYangNodeOperationType onosYangNodeOperationType;
+        /**
+         * Identify the leafs whose value are explicitly set
+         * Applicable in protocol edit and query operation
+         */
+<span class="fc" id="L322">        private BitSet valueLeafFlags = new BitSet();</span>
+
+        /**
+         * Identify the leafs to be selected, in a query operation
+         */
+<span class="fc" id="L327">        private BitSet selectLeafFlags = new BitSet();</span>
+
+        public Derivedbinarya forbinary() {
+<span class="fc" id="L330">            return forbinary;</span>
+        }
+        public Derivedbitsa forbits() {
+<span class="fc" id="L333">            return forbits;</span>
+        }
+        public ForunionUnion forunion() {
+<span class="fc" id="L336">            return forunion;</span>
+        }
+        public List&lt;Derivedbinarya&gt; forbinarylist() {
+<span class="fc" id="L339">            return forbinarylist;</span>
+        }
+        public List&lt;Derivedbitsa&gt; forbitslist() {
+<span class="fc" id="L342">            return forbitslist;</span>
+        }
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L345">            return onosYangNodeOperationType;</span>
+        }
+
+        /**
+         * Returns the builder object of forbinary.
+         *
+         * @param forbinary value of forbinary
+         * @return builder object of forbinary
+         */
+        public YtbDerivedTypeWithBitsAndBinaryBuilder forbinary(Derivedbinarya forbinary) {
+<span class="fc" id="L355">            getValueLeafFlags().set(LeafIdentifier.FORBINARY.getLeafIndex());</span>
+<span class="fc" id="L356">            this.forbinary = forbinary;</span>
+<span class="fc" id="L357">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of forbits.
+         *
+         * @param forbits value of forbits
+         * @return builder object of forbits
+         */
+        public YtbDerivedTypeWithBitsAndBinaryBuilder forbits(Derivedbitsa forbits) {
+<span class="fc" id="L367">            getValueLeafFlags().set(LeafIdentifier.FORBITS.getLeafIndex());</span>
+<span class="fc" id="L368">            this.forbits = forbits;</span>
+<span class="fc" id="L369">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of forunion.
+         *
+         * @param forunion value of forunion
+         * @return builder object of forunion
+         */
+        public YtbDerivedTypeWithBitsAndBinaryBuilder forunion(ForunionUnion forunion) {
+<span class="fc" id="L379">            getValueLeafFlags().set(LeafIdentifier.FORUNION.getLeafIndex());</span>
+<span class="fc" id="L380">            this.forunion = forunion;</span>
+<span class="fc" id="L381">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of forbinarylist.
+         *
+         * @param forbinarylist list of forbinarylist
+         * @return builder object of forbinarylist
+         */
+        public YtbDerivedTypeWithBitsAndBinaryBuilder forbinarylist(List&lt;Derivedbinarya&gt; forbinarylist) {
+<span class="fc" id="L391">            this.forbinarylist = forbinarylist;</span>
+<span class="fc" id="L392">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of forbitslist.
+         *
+         * @param forbitslist list of forbitslist
+         * @return builder object of forbitslist
+         */
+        public YtbDerivedTypeWithBitsAndBinaryBuilder forbitslist(List&lt;Derivedbitsa&gt; forbitslist) {
+<span class="fc" id="L402">            this.forbitslist = forbitslist;</span>
+<span class="fc" id="L403">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of onosYangNodeOperationType.
+         *
+         * @param onosYangNodeOperationType value of onosYangNodeOperationType
+         * @return builder object of onosYangNodeOperationType
+         */
+        public YtbDerivedTypeWithBitsAndBinaryBuilder onosYangNodeOperationType(OnosYangNodeOperationType
+            onosYangNodeOperationType) {
+<span class="nc" id="L414">            this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L415">            return this;</span>
+        }
+        public YtbDerivedTypeWithBitsAndBinaryBuilder addToForbinarylist(Derivedbinarya value) {
+<span class="nc bnc" id="L418" title="All 2 branches missed.">            if (forbinarylist() == null) {</span>
+<span class="nc" id="L419">                forbinarylist(new ArrayList&lt;&gt;());</span>
+            }
+<span class="nc" id="L421">            forbinarylist().add(value);</span>
+<span class="nc" id="L422">            return this;</span>
+        }
+        public YtbDerivedTypeWithBitsAndBinaryBuilder addToForbitslist(Derivedbitsa value) {
+<span class="nc bnc" id="L425" title="All 2 branches missed.">            if (forbitslist() == null) {</span>
+<span class="nc" id="L426">                forbitslist(new ArrayList&lt;&gt;());</span>
+            }
+<span class="nc" id="L428">            forbitslist().add(value);</span>
+<span class="nc" id="L429">            return this;</span>
+        }
+
+        /**
+         * Returns the valueLeafFlags.
+         *
+         * @return value of valueLeafFlags
+         */
+        public BitSet getValueLeafFlags() {
+<span class="fc" id="L438">            return valueLeafFlags;</span>
+        }
+
+        /**
+         * Returns the selectLeafFlags.
+         *
+         * @return value of selectLeafFlags
+         */
+        public BitSet getSelectLeafFlags() {
+<span class="fc" id="L447">            return selectLeafFlags;</span>
+        }
+
+
+
+        public YtbDerivedTypeWithBitsAndBinaryBuilder selectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L453">            getSelectLeafFlags().set(leaf.getLeafIndex());</span>
+<span class="nc" id="L454">            return this;</span>
+        }
+
+        public YtbDerivedTypeWithBitsAndBinary build() {
+<span class="fc" id="L458">            return new YtbDerivedTypeWithBitsAndBinaryOpParam(this);</span>
+        }
+
+        /**
+         * Creates an instance of ytbDerivedTypeWithBitsAndBinaryBuilder.
+         */
+<span class="fc" id="L464">        public YtbDerivedTypeWithBitsAndBinaryBuilder() {</span>
+<span class="fc" id="L465">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

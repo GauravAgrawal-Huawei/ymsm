@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CodecHandlerFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yms.app.ych.codecutils</a> &gt; <span class="el_source">CodecHandlerFactory.java</span></div><h1>CodecHandlerFactory.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yms.app.ych.codecutils;
+
+
+import org.onosproject.yms.ych.YangProtocolEncodingFormat;
+import org.onosproject.yms.ydt.YdtContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Represents an ysb handle factory to create different types of YANG data tree
+ * node.
+ */
+public final class CodecHandlerFactory {
+
+<span class="fc" id="L31">    private static final Logger log = LoggerFactory.getLogger(CodecHandlerFactory.class);</span>
+
+    /**
+     * Utility factory class, hence the object creation is forbidden.
+     */
+<span class="nc" id="L36">    private CodecHandlerFactory() {</span>
+<span class="nc" id="L37">    }</span>
+
+    /**
+     * Creates single instance node handler.
+     */
+<span class="fc" id="L42">    private static XmlCodecSingleInstanceHandler singleInstanceNode = new XmlCodecSingleInstanceHandler();</span>
+
+    /**
+     * Creates multi instance node handler.
+     */
+<span class="fc" id="L47">    private static XmlCodecMultiInstanceHandler multiInstanceNode = new XmlCodecMultiInstanceHandler();</span>
+
+    /**
+     * Creates single instance leaf node handler.
+     */
+<span class="fc" id="L52">    private static XmlCodecSingleInstanceLeafHandler singleInstanceLeaf = new XmlCodecSingleInstanceLeafHandler();</span>
+
+    /**
+     * Creates multi instance leaf node handler.
+     */
+<span class="fc" id="L57">    private static XmlCodecMultiInstanceLeafHandler multiInstanceLeaf = new XmlCodecMultiInstanceLeafHandler();</span>
+
+    /**
+     * Returns YSB instance handler node instance.
+     *
+     * @param node                 YDT context node
+     * @param recvedDataFormat     data format type expected from driver
+     * @return                     returns YSB handler node instance
+     */
+    public static XmlCodecHandler getCodecHandlerForContext(YdtContext node,
+                                                            YangProtocolEncodingFormat recvedDataFormat) {
+<span class="pc bpc" id="L68" title="1 of 5 branches missed.">        switch (node.getYdtType()) {</span>
+            case SINGLE_INSTANCE_NODE: {
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">                if (recvedDataFormat == YangProtocolEncodingFormat.XML_ENCODING) {</span>
+<span class="fc" id="L71">                    return singleInstanceNode;</span>
+                } else {
+                    // TODO
+                }
+                break;
+            }
+
+            case MULTI_INSTANCE_NODE: {
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">                if (recvedDataFormat == YangProtocolEncodingFormat.XML_ENCODING) {</span>
+<span class="fc" id="L80">                    return multiInstanceNode;</span>
+                } else {
+                    // TODO
+                }
+                break;
+            }
+
+            case SINGLE_INSTANCE_LEAF_VALUE_NODE: {
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">                if (recvedDataFormat == YangProtocolEncodingFormat.XML_ENCODING) {</span>
+<span class="fc" id="L89">                    return singleInstanceLeaf;</span>
+                } else {
+                    // TODO
+                }
+                break;
+            }
+
+            case MULTI_INSTANCE_LEAF_VALUE_NODE: {
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">                if (recvedDataFormat == YangProtocolEncodingFormat.XML_ENCODING) {</span>
+<span class="fc" id="L98">                    return multiInstanceLeaf;</span>
+                } else {
+                    // TODO
+                }
+                break;
+            }
+            default: {
+<span class="nc" id="L105">                log.error(&quot;YCH: Given YDT type is not supported.&quot;);</span>
+            }
+        }
+
+<span class="nc" id="L109">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

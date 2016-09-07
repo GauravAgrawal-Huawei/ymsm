@@ -1,0 +1,703 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>YangApplicationBroker.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yms.app.yab</a> &gt; <span class="el_source">YangApplicationBroker.java</span></div><h1>YangApplicationBroker.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yms.app.yab;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import org.onosproject.yangutils.datamodel.TraversalType;
+import org.onosproject.yangutils.datamodel.YangAugment;
+import org.onosproject.yangutils.datamodel.YangAugmentableNode;
+import org.onosproject.yangutils.datamodel.YangInput;
+import org.onosproject.yangutils.datamodel.YangNode;
+import org.onosproject.yangutils.datamodel.YangRpc;
+import org.onosproject.yangutils.datamodel.YangSchemaNode;
+import org.onosproject.yms.app.yab.exceptions.YabException;
+import org.onosproject.yms.app.ydt.YangRequestWorkBench;
+import org.onosproject.yms.app.ydt.YangResponseWorkBench;
+import org.onosproject.yms.app.ydt.YdtAppContext;
+import org.onosproject.yms.app.ydt.YdtAppNodeOperationType;
+import org.onosproject.yms.app.ydt.YdtExtendedContext;
+import org.onosproject.yms.app.ydt.YdtMultiInstanceNode;
+import org.onosproject.yms.app.ydt.YdtNode;
+import org.onosproject.yms.app.yob.DefaultYobBuilder;
+import org.onosproject.yms.app.ysr.YangSchemaRegistry;
+import org.onosproject.yms.app.ytb.DefaultYangTreeBuilder;
+import org.onosproject.yms.ydt.YdtBuilder;
+import org.onosproject.yms.ydt.YdtContext;
+import org.onosproject.yms.ydt.YdtContextOperationType;
+import org.onosproject.yms.ydt.YdtResponse;
+import org.onosproject.yms.ydt.YmsOperationExecutionStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.onosproject.yangutils.datamodel.TraversalType.CHILD;
+import static org.onosproject.yangutils.datamodel.TraversalType.PARENT;
+import static org.onosproject.yangutils.datamodel.TraversalType.ROOT;
+import static org.onosproject.yangutils.datamodel.TraversalType.SIBILING;
+import static org.onosproject.yms.ydt.YdtContextOperationType.DELETE;
+
+/**
+ * Represents YANG application broker. It acts as a broker between Protocol and YANG
+ * based application. NBI protocol translates the protocol specific operation request
+ * into a protocol abstract YANG data tree using the YdtBuilder.
+ * NBI protocol's uses YANG data tree as the abstract data tree with
+ * operation request.
+ */
+public class YangApplicationBroker {
+
+<span class="fc" id="L66">    private static final Logger log = LoggerFactory.getLogger(YangApplicationBroker.class);</span>
+
+    /**
+     * Static attribute for get.
+     */
+    private static final String GET = &quot;get&quot;;
+
+    /**
+     * Static attribute for set.
+     */
+    private static final String SET = &quot;set&quot;;
+
+    /**
+     * Schema registry of application.
+     */
+    private YangSchemaRegistry schemaRegistry;
+
+    /**
+     * Creates a new YANG application broker.
+     *
+     * @param schemaRegistry YANG schema registry
+     */
+<span class="fc" id="L88">    public YangApplicationBroker(YangSchemaRegistry schemaRegistry) {</span>
+<span class="fc" id="L89">        this.schemaRegistry = schemaRegistry;</span>
+<span class="fc" id="L90">    }</span>
+
+    /**
+     * Processes query request of a NBI protocol.
+     *
+     * @param ydtWorkBench YANG request work bench
+     * @return YANG response data tree node context
+     */
+    public YdtResponse processQuery(YdtBuilder ydtWorkBench) throws YabException {
+<span class="fc" id="L99">        List&lt;Object&gt; responseObjects = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L100">        YangRequestWorkBench workBench = ((YangRequestWorkBench) ydtWorkBench);</span>
+<span class="fc" id="L101">        YdtContext rootYdtContext = workBench.getRootNode();</span>
+<span class="fc" id="L102">        YdtAppContext appRootNode = workBench.getAppRootNode();</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        for (YdtAppContext appContext = appRootNode.getFirstChild(); appContext != null;</span>
+<span class="fc" id="L104">             appContext = appContext.getNextSibling()) {</span>
+<span class="fc" id="L105">            Object responseObject = processQueryOfApplication(appContext);</span>
+<span class="fc" id="L106">            responseObjects.add(responseObject);</span>
+        }
+<span class="fc" id="L108">        YdtBuilder responseYdt = buildResponseYdtTree(responseObjects, rootYdtContext.getName(),</span>
+<span class="fc" id="L109">                rootYdtContext.getNamespace());</span>
+
+<span class="fc" id="L111">        return new YangResponseWorkBench(responseYdt.getRootNode(),</span>
+                YmsOperationExecutionStatus.EXECUTION_SUCCESS,
+<span class="fc" id="L113">                ydtWorkBench.getYmsOperationType());</span>
+    }
+
+    /**
+     * Processes edit request of a NBI protocol.
+     *
+     * @param ydtWorkBench YANG request work bench
+     * @return YANG response data tree node context
+     * @throws CloneNotSupportedException clone is not supported
+     */
+
+    public YdtResponse processEdit(YdtBuilder ydtWorkBench)
+            throws CloneNotSupportedException, YabException {
+<span class="fc" id="L126">        YangRequestWorkBench workBench = ((YangRequestWorkBench) ydtWorkBench);</span>
+<span class="fc" id="L127">        YdtAppContext appRootNode = workBench.getAppRootNode();</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        for (YdtAppContext appContext = appRootNode.getFirstChild(); appContext != null;</span>
+<span class="fc" id="L129">             appContext = appContext.getNextSibling()) {</span>
+<span class="fc" id="L130">            processEditOfApplication(appContext);</span>
+        }
+<span class="fc" id="L132">        return new YangResponseWorkBench(null,</span>
+                YmsOperationExecutionStatus.EXECUTION_SUCCESS,
+<span class="fc" id="L134">                workBench.getYmsOperationType());</span>
+    }
+
+    /**
+     * Processes operation request of a NBI protocol.
+     *
+     * @param ydtWorkBench YANG request work bench
+     * @return YANG response data tree node context
+     */
+    public YdtResponse processOperation(YdtBuilder ydtWorkBench) throws YabException {
+<span class="nc" id="L144">        List&lt;Object&gt; responseObjects = new LinkedList&lt;&gt;();</span>
+<span class="nc" id="L145">        YangRequestWorkBench workBench = ((YangRequestWorkBench) ydtWorkBench);</span>
+<span class="nc" id="L146">        YdtContext rootYdtContext = workBench.getRootNode();</span>
+<span class="nc" id="L147">        YdtContext ydtNode = ydtWorkBench.getRootNode().getFirstChild();</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        while (ydtNode != null) {</span>
+<span class="nc" id="L149">            YdtContext childNode = ydtNode.getFirstChild();</span>
+<span class="nc" id="L150">            YangSchemaNode yangNode = ((YdtNode) childNode).getYangSchemaNode();</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">            if (yangNode instanceof YangRpc) {</span>
+<span class="nc" id="L152">                YdtContext inputNode = getInputYdtNode(childNode);</span>
+<span class="nc" id="L153">                Object inputParamObject = getYangObject(inputNode);</span>
+<span class="nc" id="L154">                Object appObject = getApplicationObject(ydtNode);</span>
+<span class="nc" id="L155">                Object outputObject = invokeApplicationsMethod(appObject, inputParamObject,</span>
+<span class="nc" id="L156">                        yangNode.getName());</span>
+<span class="nc" id="L157">                responseObjects.add(outputObject);</span>
+<span class="nc" id="L158">                YdtBuilder responseYdt = buildResponseYdtTree(responseObjects, rootYdtContext.getName(),</span>
+<span class="nc" id="L159">                        rootYdtContext.getNamespace());</span>
+<span class="nc" id="L160">                return new YangResponseWorkBench(responseYdt.getRootNode(),</span>
+                        YmsOperationExecutionStatus.EXECUTION_SUCCESS,
+<span class="nc" id="L162">                        ydtWorkBench.getYmsOperationType());</span>
+            }
+<span class="nc" id="L164">            ydtNode = ydtNode.getNextSibling();</span>
+<span class="nc" id="L165">        }</span>
+<span class="nc" id="L166">        return null;</span>
+    }
+
+    /**
+     * Processes query request of an application.
+     *
+     * @param appContext application context
+     * @return response object from application
+     */
+    private Object processQueryOfApplication(YdtAppContext appContext)
+            throws YabException {
+
+        // get YdtContext from appContext
+<span class="fc" id="L179">        YdtContext ydtNode = appContext.getModuleNode();</span>
+
+        // get YangObject of YdtContext from YOB
+<span class="fc" id="L182">        Object outputObject = getYangObject(ydtNode);</span>
+
+<span class="fc" id="L184">        TraversalType curTraversal = ROOT;</span>
+        do {
+<span class="pc bpc" id="L186" title="1 of 2 branches missed.">            if (curTraversal != PARENT) {</span>
+
+                // find application and get application's object using YSR
+<span class="fc" id="L189">                Object appManagerObject = getApplicationObject(appContext);</span>
+
+                // find which method to invoke
+<span class="fc" id="L192">                String methodName = getApplicationGetterMethodName(appContext);</span>
+
+                // invoke application's getter method
+<span class="fc" id="L195">                outputObject = invokeApplicationsMethod(appManagerObject, outputObject, methodName);</span>
+            }
+
+            // appContext may contain other nodes if it is augmented, so traverse the appContext tree
+<span class="fc" id="L199">            curTraversal = traverseApplicationContext(curTraversal, appContext);</span>
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">        } while (appContext.getParent().getParent() != null);</span>
+<span class="fc" id="L201">        return outputObject;</span>
+    }
+
+    /**
+     * Returns YANG object for YDT node.
+     *
+     * @param ydtNode YANG data node
+     * @return YANG object for YDT node
+     */
+    private Object getYangObject(YdtContext ydtNode) {
+<span class="pc bpc" id="L211" title="1 of 2 branches missed.">        if (ydtNode != null) {</span>
+<span class="fc" id="L212">            DefaultYobBuilder yobBuilder = new DefaultYobBuilder();</span>
+<span class="fc" id="L213">            return yobBuilder.getYangObject(((YdtExtendedContext) ydtNode), schemaRegistry);</span>
+        }
+<span class="nc" id="L215">        return null;</span>
+    }
+
+    /**
+     * Returns application manager object for YDT node.
+     *
+     * @param ydtNode YANG data node
+     * @return application manager object
+     */
+    private Object getApplicationObject(YdtContext ydtNode) {
+<span class="nc" id="L225">        YangSchemaNode yangSchemaNode = ((YdtNode) ydtNode).getYangSchemaNode();</span>
+<span class="nc" id="L226">        return schemaRegistry.getRegisteredApplication(yangSchemaNode);</span>
+    }
+
+    /**
+     * Returns application manager object of application.
+     *
+     * @param appContext application context
+     * @return application manager object
+     */
+    private Object getApplicationObject(YdtAppContext appContext) {
+        YangSchemaNode yangSchemaNode;
+<span class="pc bpc" id="L237" title="1 of 2 branches missed.">        if (appContext.getModuleNode() != null) {</span>
+<span class="fc" id="L238">            yangSchemaNode = ((YdtNode) appContext.getModuleNode()).getYangSchemaNode();</span>
+        } else {
+<span class="nc" id="L240">            yangSchemaNode = appContext.getAugmentingModuleSchemaNode();</span>
+        }
+<span class="fc" id="L242">        return schemaRegistry.getRegisteredApplication(yangSchemaNode);</span>
+    }
+
+    /**
+     * Convert name to capital case.
+     *
+     * @param yangIdentifier identifier
+     * @return name to capital case
+     */
+    private String getCapitalCase(String yangIdentifier) {
+<span class="fc" id="L252">        return yangIdentifier.substring(0, 1).toUpperCase() + yangIdentifier.substring(1);</span>
+    }
+
+    /**
+     * Returns get method name for application's query request.
+     *
+     * @param appContext application context
+     * @return get method name for application's query request
+     */
+    private String getApplicationGetterMethodName(YdtAppContext appContext) {
+<span class="fc" id="L262">        return GET + getJavaNameOfApp(appContext);</span>
+    }
+
+    /**
+     * Returns set method name for application's edit request.
+     *
+     * @param appContext application context
+     * @return get method name for application's edit request
+     */
+    private String getApplicationSetterMethodName(YdtAppContext appContext) {
+<span class="fc" id="L272">        return SET + getJavaNameOfApp(appContext);</span>
+    }
+
+    /**
+     * Invokes application method for RPC request.
+     *
+     * @param appManagerObject application manager object
+     * @param inputParamObject input parameter object of method
+     * @param methodName       method name which should be invoked
+     * @return response object from application
+     */
+    private Object invokeApplicationsMethod(Object appManagerObject,
+                                            Object inputParamObject, String methodName) throws YabException {
+<span class="fc" id="L285">        Class&lt;?&gt; appClass = appManagerObject.getClass();</span>
+        Method methodObject;
+<span class="fc" id="L287">        Object responseObject = null;</span>
+        try {
+<span class="fc" id="L289">            methodObject = appClass.getDeclaredMethod(methodName, inputParamObject.getClass());</span>
+<span class="nc" id="L290">        } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L291">            log.error(&quot;YAB: failed to fetch method object from application object.&quot;);</span>
+<span class="nc" id="L292">            throw new YabException(e.getMessage());</span>
+<span class="fc" id="L293">        }</span>
+
+        try {
+<span class="pc bpc" id="L296" title="1 of 2 branches missed.">            if (methodObject != null) {</span>
+<span class="fc" id="L297">                responseObject = methodObject.invoke(appManagerObject, inputParamObject);</span>
+            }
+<span class="nc" id="L299">        } catch (IllegalAccessException | InvocationTargetException e) {</span>
+<span class="nc" id="L300">            log.error(&quot;YAB: failed to invoke method in application object.&quot;);</span>
+<span class="nc" id="L301">            throw new YabException(e.getMessage());</span>
+<span class="fc" id="L302">        }</span>
+<span class="fc" id="L303">        return responseObject;</span>
+    }
+
+    /**
+     * Traverse the application context tree.
+     *
+     * @param curTraversal current traversal type
+     * @param appContext   application context
+     * @return curTraversal current traversal type
+     */
+    private TraversalType traverseApplicationContext(TraversalType curTraversal, YdtAppContext appContext) {
+<span class="pc bpc" id="L314" title="2 of 4 branches missed.">        if (curTraversal != PARENT &amp;&amp; appContext.getFirstChild() != null) {</span>
+<span class="nc" id="L315">            curTraversal = CHILD;</span>
+<span class="nc" id="L316">            appContext = appContext.getFirstChild();</span>
+<span class="pc bpc" id="L317" title="1 of 2 branches missed.">        } else if (appContext.getNextSibling() != null) {</span>
+<span class="nc" id="L318">            curTraversal = SIBILING;</span>
+<span class="nc" id="L319">            appContext = appContext.getNextSibling();</span>
+        } else {
+<span class="fc" id="L321">            curTraversal = PARENT;</span>
+<span class="fc" id="L322">            appContext = appContext.getParent();</span>
+        }
+<span class="fc" id="L324">        return curTraversal;</span>
+    }
+
+    /**
+     * Returns rpc's input schema node.
+     *
+     * @param rpcNode rpc schema node
+     * @return rpc's input YANG data tree
+     */
+    private YdtContext getInputYdtNode(YdtContext rpcNode) {
+<span class="nc" id="L334">        YdtContext inputNode = rpcNode.getFirstChild();</span>
+<span class="nc bnc" id="L335" title="All 2 branches missed.">        while (inputNode != null) {</span>
+<span class="nc" id="L336">            YangSchemaNode yangInputNode = ((YdtNode) inputNode).getYangSchemaNode();</span>
+<span class="nc bnc" id="L337" title="All 2 branches missed.">            if (yangInputNode instanceof YangInput) {</span>
+<span class="nc" id="L338">                return inputNode;</span>
+            }
+<span class="nc" id="L340">            inputNode = rpcNode.getNextSibling();</span>
+<span class="nc" id="L341">        }</span>
+<span class="nc" id="L342">        return null;</span>
+    }
+
+    /**
+     * Returns response YANG data tree using YTB.
+     *
+     * @param responseObjects list of application's response objects
+     * @param name            application YANG name
+     * @param namespace       application YANG namespace
+     * @return response YANG data tree
+     */
+    private YdtBuilder buildResponseYdtTree(List&lt;Object&gt; responseObjects, String name, String namespace) {
+<span class="fc" id="L354">        DefaultYangTreeBuilder treeBuilder = new DefaultYangTreeBuilder();</span>
+<span class="fc" id="L355">        return treeBuilder.getYdtBuilderForYo(responseObjects,</span>
+                name, namespace, null, schemaRegistry);
+    }
+
+    /**
+     * Processes edit request of an application.
+     *
+     * @param appContext application context
+     */
+    private void processEditOfApplication(YdtAppContext appContext)
+            throws CloneNotSupportedException, YabException {
+<span class="fc bfc" id="L366" title="All 2 branches covered.">        if (appContext.getOperationType() != YdtAppNodeOperationType.OTHER_EDIT) {</span>
+<span class="fc" id="L367">            processDeleteRequestOfApplication(appContext);</span>
+<span class="pc bpc" id="L368" title="1 of 2 branches missed.">        } else if (appContext.getOperationType() != YdtAppNodeOperationType.DELETE_ONLY) {</span>
+<span class="fc" id="L369">            YdtContext ydtNode = appContext.getModuleNode();</span>
+
+            // get YO from YOB
+<span class="fc" id="L372">            Object outputObject = getYangObject(ydtNode);</span>
+
+<span class="fc" id="L374">            TraversalType curTraversal = ROOT;</span>
+            do {
+<span class="pc bpc" id="L376" title="1 of 2 branches missed.">                if (curTraversal != PARENT) {</span>
+
+                    // find application and get application's object using YSR
+<span class="fc" id="L379">                    Object appManagerObject = getApplicationObject(appContext);</span>
+
+                    // find which method to invoke
+<span class="fc" id="L382">                    String methodName = getApplicationSetterMethodName(appContext);</span>
+
+                    // invoke application's getter method
+<span class="fc" id="L385">                    invokeApplicationsMethod(appManagerObject, outputObject, methodName);</span>
+                }
+
+                // appContext may contain other nodes if it is augmented, so traverse the appContext tree
+<span class="fc" id="L389">                curTraversal = traverseApplicationContext(curTraversal, appContext);</span>
+<span class="pc bpc" id="L390" title="1 of 2 branches missed.">            } while (appContext.getParent().getParent() != null);</span>
+        }
+<span class="fc" id="L392">    }</span>
+
+    /**
+     * Processes delete request of an application.
+     *
+     * @param appContext application context
+     */
+    private void processDeleteRequestOfApplication(YdtAppContext appContext)
+            throws CloneNotSupportedException, YabException {
+<span class="fc" id="L401">        TraversalType curTraversal = ROOT;</span>
+<span class="fc" id="L402">        List&lt;YdtContext&gt; deleteNodes = appContext.getDeleteNodes();</span>
+
+<span class="pc bpc" id="L404" title="2 of 4 branches missed.">        if (deleteNodes != null &amp;&amp; !deleteNodes.isEmpty()) {</span>
+<span class="fc" id="L405">            YdtContext deleteTree = buildDeleteTree(deleteNodes);</span>
+
+//            deleteTree = updateDeleteTreeWithAugmentedNodes(deleteTree);
+<span class="fc" id="L408">            Object deleteInputParamObject = getYangObject(deleteTree);</span>
+
+            do {
+<span class="pc bpc" id="L411" title="1 of 2 branches missed.">                if (curTraversal == ROOT) {</span>
+<span class="pc bpc" id="L412" title="1 of 2 branches missed.">                    while (appContext.getLastChild() != null) {</span>
+<span class="nc" id="L413">                        appContext = appContext.getLastChild();</span>
+                    }
+<span class="nc bnc" id="L415" title="All 2 branches missed.">                } else if (curTraversal == SIBILING) {</span>
+<span class="nc bnc" id="L416" title="All 2 branches missed.">                    while (appContext.getLastChild() != null) {</span>
+<span class="nc" id="L417">                        appContext = appContext.getLastChild();</span>
+                    }
+                }
+
+                // getAugmentApplication manager object
+<span class="fc" id="L422">                Object appManagerObject = getApplicationObject(appContext);</span>
+
+                // find which method to invoke
+<span class="fc" id="L425">                String methodName = getApplicationSetterMethodName(appContext);</span>
+
+                // invoke application's getter method
+<span class="fc" id="L428">                invokeApplicationsMethod(appManagerObject, deleteInputParamObject, methodName);</span>
+
+<span class="pc bpc" id="L430" title="1 of 2 branches missed.">                if (appContext.getPreviousSibling() != null) {</span>
+<span class="nc" id="L431">                    curTraversal = SIBILING;</span>
+<span class="nc" id="L432">                    appContext = appContext.getPreviousSibling();</span>
+<span class="pc bpc" id="L433" title="1 of 2 branches missed.">                } else if (appContext.getParent() != null) {</span>
+<span class="fc" id="L434">                    curTraversal = PARENT;</span>
+<span class="fc" id="L435">                    appContext = appContext.getParent();</span>
+                }
+<span class="pc bpc" id="L437" title="1 of 2 branches missed.">            } while (appContext.getParent() != null);</span>
+        }
+<span class="fc" id="L439">    }</span>
+
+    /**
+     * Builds delete tree for list of delete nodes.
+     *
+     * @param deleteNodes list of delete nodes
+     * @return deleteTree YANG data tree for delete operation
+     * @throws CloneNotSupportedException clone is not supported
+     */
+    public YdtContext buildDeleteTree(List&lt;YdtContext&gt; deleteNodes) throws
+            CloneNotSupportedException {
+<span class="fc" id="L450">        Iterator&lt;YdtContext&gt; deleteNodeIterator = deleteNodes.iterator();</span>
+<span class="fc" id="L451">        YdtContext deleteTree = null;</span>
+<span class="fc bfc" id="L452" title="All 2 branches covered.">        while (deleteNodeIterator.hasNext()) {</span>
+<span class="fc" id="L453">            YdtContext deleteNode = deleteNodeIterator.next();</span>
+<span class="fc bfc" id="L454" title="All 2 branches covered.">            if (((YdtExtendedContext) deleteNode.getParent()).getYdtContextOperationType() != DELETE) {</span>
+<span class="fc" id="L455">                deleteTree = updateDeleteTree(deleteNode);</span>
+            }
+<span class="fc" id="L457">        }</span>
+
+<span class="fc bfc" id="L459" title="All 2 branches covered.">        while (deleteTree.getParent().getParent() != null) {</span>
+<span class="fc" id="L460">            deleteTree = deleteTree.getParent();</span>
+        }
+<span class="fc" id="L462">        return deleteTree;</span>
+    }
+
+    /**
+     * Unlinks the delete node from YDT tree and clones ancestors of
+     * delete node and updates delete tree.
+     *
+     * @param deleteNode node to be deleted
+     * @return updated delete tree
+     */
+    private YdtContext updateDeleteTree(YdtContext deleteNode)
+            throws CloneNotSupportedException {
+<span class="fc" id="L474">        cloneAncestorsOfDeleteNode(deleteNode);</span>
+<span class="fc" id="L475">        deleteNode = unlinkDeleteNodeFromCurrentTree(((YdtNode) deleteNode));</span>
+<span class="fc" id="L476">        return deleteNode;</span>
+    }
+
+    /**
+     * Clones ancestor nodes of delete node.
+     *
+     * @param deleteNode node to be deleted
+     */
+    private void cloneAncestorsOfDeleteNode(YdtContext deleteNode)
+            throws CloneNotSupportedException {
+        YdtNode clonedNode;
+<span class="fc" id="L487">        YdtNode previousClonedNode = null;</span>
+
+        // Clone the parents of delete node to form delete tree
+<span class="fc" id="L490">        YdtNode nodeToClone = (YdtNode) deleteNode.getParent();</span>
+<span class="fc bfc" id="L491" title="All 2 branches covered.">        while (nodeToClone != null) {</span>
+            // If node is not cloned yet
+<span class="fc bfc" id="L493" title="All 2 branches covered.">            if (nodeToClone.getClonedNode() == null) {</span>
+<span class="fc" id="L494">                clonedNode = (YdtNode) nodeToClone.clone();</span>
+<span class="fc" id="L495">                clonedNode.setParent(null);</span>
+<span class="fc" id="L496">                clonedNode.setNextSibling(null);</span>
+<span class="fc" id="L497">                clonedNode.setPreviousSibling(null);</span>
+<span class="fc" id="L498">                clonedNode.setChild(null);</span>
+<span class="fc" id="L499">                clonedNode.setLastChild(null);</span>
+<span class="fc bfc" id="L500" title="All 2 branches covered.">                if (nodeToClone instanceof YdtMultiInstanceNode) {</span>
+<span class="fc" id="L501">                    addKeyLeavesToClonedNode(nodeToClone, clonedNode);</span>
+                }
+<span class="fc" id="L503">                nodeToClone.setClonedNode(clonedNode);</span>
+            } else {
+                // already node is cloned
+<span class="fc" id="L506">                clonedNode = (YdtNode) nodeToClone.getClonedNode();</span>
+            }
+
+<span class="fc bfc" id="L509" title="All 2 branches covered.">            if (previousClonedNode != null) {</span>
+                /*
+                 * add previous cloned node as child of current cloned node
+                 * so that tree will be formed from delete node parent to logical
+                 * root node.
+                 */
+<span class="fc" id="L515">                clonedNode.addChild(previousClonedNode, false);</span>
+            }
+<span class="fc" id="L517">            previousClonedNode = clonedNode;</span>
+<span class="fc" id="L518">            nodeToClone = nodeToClone.getParent();</span>
+        }
+<span class="fc" id="L520">    }</span>
+
+    /**
+     * Unlinks delete node from current YANG data tree of application
+     * and links it to cloned delete tree.
+     *
+     * @param deleteNode node to be unlinked
+     * @return deleteNode delete node linked to cloned delete tree
+     */
+    private YdtNode unlinkDeleteNodeFromCurrentTree(YdtNode deleteNode) {
+<span class="fc" id="L530">        YdtNode parentClonedNode = (YdtNode) deleteNode.getParent().getClonedNode();</span>
+<span class="fc" id="L531">        unlinkNodeFromParent(deleteNode);</span>
+<span class="fc" id="L532">        unlinkNodeFromSibling(deleteNode);</span>
+
+        /*
+         * Set all the pointers of node to null before adding as child
+         * to parent's cloned node.
+         */
+<span class="fc" id="L538">        deleteNode.setParent(null);</span>
+<span class="fc" id="L539">        deleteNode.setPreviousSibling(null);</span>
+<span class="fc" id="L540">        deleteNode.setNextSibling(null);</span>
+
+<span class="fc" id="L542">        parentClonedNode.addChild(deleteNode, false);</span>
+<span class="fc" id="L543">        return deleteNode;</span>
+    }
+
+    /**
+     * Returns java name of an application.
+     *
+     * @param appContext application context
+     * @return java name of an application
+     */
+    private String getJavaNameOfApp(YdtAppContext appContext) {
+<span class="fc" id="L553">        String javaName = null;</span>
+<span class="pc bpc" id="L554" title="1 of 2 branches missed.">        if (appContext.getModuleNode() != null) {</span>
+<span class="fc" id="L555">            javaName = ((YdtNode) appContext.getModuleNode()).getYangSchemaNode().getJavaClassNameOrBuiltInType();</span>
+<span class="nc bnc" id="L556" title="All 2 branches missed.">        } else if (appContext.getAugmentingModuleSchemaNode() != null) {</span>
+<span class="nc" id="L557">            javaName = appContext.getAugmentingModuleSchemaNode().getJavaClassNameOrBuiltInType();</span>
+        } else {
+<span class="nc" id="L559">            log.error(&quot;YAB: failed to fetch yang nodes from application context.&quot;);</span>
+        }
+
+<span class="pc bpc" id="L562" title="1 of 2 branches missed.">        if (javaName != null) {</span>
+<span class="fc" id="L563">            return getCapitalCase(javaName);</span>
+        } else {
+            // TODO : throw exception
+<span class="nc" id="L566">            return null;</span>
+        }
+    }
+
+    /**
+     * Unlinks the current node from its parent.
+     *
+     * @param deleteNode node which should be unlinked from YDT tree
+     */
+    private void unlinkNodeFromParent(YdtNode deleteNode) {
+<span class="fc" id="L576">        YdtNode parentNode = deleteNode.getParent();</span>
+<span class="fc bfc" id="L577" title="All 2 branches covered.">        if (parentNode.getFirstChild() == deleteNode</span>
+<span class="fc bfc" id="L578" title="All 2 branches covered.">                &amp;&amp; parentNode.getLastChild() == deleteNode) {</span>
+<span class="fc" id="L579">            parentNode.setChild(null);</span>
+<span class="fc" id="L580">            parentNode.setLastChild(null);</span>
+<span class="fc bfc" id="L581" title="All 2 branches covered.">        } else if (parentNode.getFirstChild() == deleteNode) {</span>
+<span class="fc" id="L582">            parentNode.setChild(deleteNode.getNextSibling());</span>
+<span class="fc bfc" id="L583" title="All 2 branches covered.">        } else if (parentNode.getLastChild() == deleteNode) {</span>
+<span class="fc" id="L584">            parentNode.setLastChild(deleteNode.getPreviousSibling());</span>
+        }
+<span class="fc" id="L586">    }</span>
+
+    /**
+     * Unlinks the current node from its sibling.
+     *
+     * @param deleteNode node which should be unlinked from YDT tree
+     */
+    private void unlinkNodeFromSibling(YdtNode deleteNode) {
+<span class="fc" id="L594">        YdtNode previousSiblingNode = deleteNode.getPreviousSibling();</span>
+<span class="fc" id="L595">        YdtNode nextSiblingNode = deleteNode.getNextSibling();</span>
+<span class="fc bfc" id="L596" title="All 4 branches covered.">        if (nextSiblingNode != null &amp;&amp; previousSiblingNode != null) {</span>
+<span class="fc" id="L597">            previousSiblingNode.setNextSibling(nextSiblingNode);</span>
+<span class="fc" id="L598">            nextSiblingNode.setPreviousSibling(previousSiblingNode);</span>
+<span class="pc bpc" id="L599" title="1 of 4 branches missed.">        } else if (nextSiblingNode != null &amp;&amp; previousSiblingNode == null) {</span>
+<span class="fc" id="L600">            nextSiblingNode.setPreviousSibling(null);</span>
+<span class="pc bpc" id="L601" title="1 of 4 branches missed.">        } else if (previousSiblingNode != null &amp;&amp; nextSiblingNode == null) {</span>
+<span class="fc" id="L602">            previousSiblingNode.setNextSibling(nextSiblingNode);</span>
+        }
+<span class="fc" id="L604">    }</span>
+
+    private YdtContext updateDeleteTreeWithAugmentedNodes(YdtContext deleteTree) {
+<span class="nc" id="L607">        TraversalType curTraversal = ROOT;</span>
+<span class="nc" id="L608">        YdtContext deleteNode = deleteTree.getFirstChild();</span>
+
+<span class="nc bnc" id="L610" title="All 2 branches missed.">        while (deleteNode != deleteTree) {</span>
+<span class="nc bnc" id="L611" title="All 2 branches missed.">            if (curTraversal != PARENT) {</span>
+<span class="nc" id="L612">                YangSchemaNode yangNode = ((YdtNode) deleteNode).getYangSchemaNode();</span>
+<span class="nc bnc" id="L613" title="All 2 branches missed.">                if (yangNode instanceof YangAugmentableNode) {</span>
+<span class="nc bnc" id="L614" title="All 2 branches missed.">                    if (!((YangAugmentableNode) yangNode).getAugmentedInfoList().isEmpty()) {</span>
+<span class="nc" id="L615">                        List&lt;YangAugment&gt; augmentList = ((YangAugmentableNode) yangNode).getAugmentedInfoList();</span>
+<span class="nc" id="L616">                        updateYdtWithAugmentNodes(augmentList, deleteNode);</span>
+                    }
+                }
+            }
+
+<span class="nc bnc" id="L621" title="All 4 branches missed.">            if (curTraversal != PARENT &amp;&amp; deleteNode.getFirstChild() != null) {</span>
+<span class="nc" id="L622">                curTraversal = CHILD;</span>
+<span class="nc" id="L623">                deleteNode = deleteNode.getFirstChild();</span>
+<span class="nc bnc" id="L624" title="All 2 branches missed.">            } else if (deleteNode.getNextSibling() != null) {</span>
+<span class="nc" id="L625">                curTraversal = SIBILING;</span>
+<span class="nc" id="L626">                deleteNode = deleteNode.getNextSibling();</span>
+            } else {
+<span class="nc" id="L628">                curTraversal = PARENT;</span>
+<span class="nc" id="L629">                deleteNode = deleteNode.getParent();</span>
+            }
+        }
+<span class="nc" id="L632">        return deleteNode;</span>
+    }
+
+    private void updateYdtWithAugmentNodes(List&lt;YangAugment&gt; augmentList, YdtContext deleteNode) {
+<span class="nc bnc" id="L636" title="All 4 branches missed.">        if (augmentList != null &amp;&amp; !augmentList.isEmpty()) {</span>
+<span class="nc" id="L637">            Iterator&lt;YangAugment&gt; augmentListIterator = augmentList.listIterator();</span>
+<span class="nc bnc" id="L638" title="All 2 branches missed.">            while (augmentListIterator.hasNext()) {</span>
+<span class="nc" id="L639">                YangAugment augment = augmentListIterator.next();</span>
+<span class="nc" id="L640">                addContentsOfAugmentToYdt(augment, deleteNode);</span>
+<span class="nc" id="L641">            }</span>
+        }
+<span class="nc" id="L643">    }</span>
+
+    private void addContentsOfAugmentToYdt(YangNode augment, YdtContext deleteNode) {
+        TraversalType curTraversal;
+<span class="nc" id="L647">        YangNode yangNode = augment;</span>
+<span class="nc" id="L648">        YdtContext curYdtNode = deleteNode;</span>
+
+<span class="nc" id="L650">        yangNode = yangNode.getChild();</span>
+<span class="nc bnc" id="L651" title="All 2 branches missed.">        if (yangNode == null) {</span>
+<span class="nc" id="L652">            return;</span>
+        } else {
+            // Yang augment node need not be added.
+<span class="nc" id="L655">            curTraversal = CHILD;</span>
+        }
+
+<span class="nc bnc" id="L658" title="All 2 branches missed.">        while (yangNode != augment) {</span>
+<span class="nc bnc" id="L659" title="All 2 branches missed.">            if (curTraversal == CHILD) {</span>
+<span class="nc" id="L660">                curYdtNode = ((YangRequestWorkBench) curYdtNode).addChild(YdtContextOperationType.DELETE,</span>
+                        yangNode);
+<span class="nc bnc" id="L662" title="All 2 branches missed.">            } else if (curTraversal == SIBILING) {</span>
+<span class="nc" id="L663">                curYdtNode = curYdtNode.getParent();</span>
+<span class="nc" id="L664">                curYdtNode = ((YangRequestWorkBench) curYdtNode).addChild(YdtContextOperationType.DELETE,</span>
+                        yangNode);
+            } else {
+<span class="nc" id="L667">                curYdtNode = curYdtNode.getParent();</span>
+            }
+
+<span class="nc bnc" id="L670" title="All 4 branches missed.">            if (curTraversal != PARENT &amp;&amp; yangNode.getChild() != null) {</span>
+<span class="nc" id="L671">                curTraversal = CHILD;</span>
+<span class="nc" id="L672">                yangNode = yangNode.getChild();</span>
+<span class="nc bnc" id="L673" title="All 2 branches missed.">            } else if (yangNode.getNextSibling() != null) {</span>
+<span class="nc" id="L674">                curTraversal = SIBILING;</span>
+<span class="nc" id="L675">                yangNode = yangNode.getNextSibling();</span>
+            } else {
+<span class="nc" id="L677">                curTraversal = PARENT;</span>
+<span class="nc" id="L678">                yangNode = yangNode.getParent();</span>
+            }
+        }
+<span class="nc" id="L681">    }</span>
+
+    private void addKeyLeavesToClonedNode(YdtNode curNode, YdtNode clonedNode)
+            throws CloneNotSupportedException {
+        YdtNode keyLeaf;
+        YdtNode keyClonedLeaf;
+<span class="fc" id="L687">        Set&lt;YdtContext&gt; keyList = ((YdtMultiInstanceNode) curNode).getKeyNodeList();</span>
+<span class="pc bpc" id="L688" title="2 of 4 branches missed.">        if (keyList != null &amp;&amp; !keyList.isEmpty()) {</span>
+<span class="fc" id="L689">            Iterator&lt;YdtContext&gt; keyListIterator = keyList.iterator();</span>
+<span class="fc bfc" id="L690" title="All 2 branches covered.">            while (keyListIterator.hasNext()) {</span>
+<span class="fc" id="L691">                keyLeaf = (YdtNode) keyListIterator.next();</span>
+<span class="fc" id="L692">                keyClonedLeaf = (YdtNode) keyLeaf.clone();</span>
+<span class="fc" id="L693">                keyClonedLeaf.setParent(null);</span>
+<span class="fc" id="L694">                keyClonedLeaf.setNextSibling(null);</span>
+<span class="fc" id="L695">                keyClonedLeaf.setPreviousSibling(null);</span>
+<span class="fc" id="L696">                keyClonedLeaf.setChild(null);</span>
+<span class="fc" id="L697">                keyClonedLeaf.setLastChild(null);</span>
+<span class="fc" id="L698">                clonedNode.addChild(keyClonedLeaf, true);</span>
+            }
+        }
+<span class="fc" id="L701">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

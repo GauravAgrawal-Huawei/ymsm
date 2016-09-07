@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PurchasingsupervisorOpParam.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.ydt.purchasing.supervisor.rev20160524</a> &gt; <span class="el_source">PurchasingsupervisorOpParam.java</span></div><h1>PurchasingsupervisorOpParam.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.ydt.purchasing.supervisor.rev20160524;
+
+import com.google.common.base.MoreObjects;
+import java.util.Objects;
+import org.onosproject.yang.gen.v1.ydt.purchasing.supervisor.rev20160524.purchasingsupervisor.Supervisor;
+
+/**
+ * Represents the implementation of purchasingsupervisor.
+ */
+public class PurchasingsupervisorOpParam implements Purchasingsupervisor {
+
+    protected OnosYangNodeOperationType onosYangNodeOperationType;
+    protected Supervisor supervisor;
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L31">        return onosYangNodeOperationType;</span>
+    }
+    public Supervisor supervisor() {
+<span class="nc" id="L34">        return supervisor;</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L39">        return Objects.hash(onosYangNodeOperationType, supervisor);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L45">            return true;</span>
+        }
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (obj instanceof PurchasingsupervisorOpParam) {</span>
+<span class="nc" id="L48">            PurchasingsupervisorOpParam other = (PurchasingsupervisorOpParam) obj;</span>
+<span class="nc" id="L49">            return</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">                 Objects.equals(onosYangNodeOperationType, other.onosYangNodeOperationType) &amp;&amp;</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">                 Objects.equals(supervisor, other.supervisor);</span>
+        }
+<span class="nc" id="L53">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L58">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L59">            .add(&quot;onosYangNodeOperationType&quot;, onosYangNodeOperationType)</span>
+<span class="nc" id="L60">            .add(&quot;supervisor&quot;, supervisor)</span>
+<span class="nc" id="L61">            .toString();</span>
+    }
+
+    /**
+     * Creates an instance of purchasingsupervisor.
+     *
+     * @param builderObject builder object of purchasingsupervisor
+     */
+<span class="fc" id="L69">    protected PurchasingsupervisorOpParam(PurchasingsupervisorBuilder builderObject) {</span>
+<span class="fc" id="L70">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="fc" id="L71">        this.supervisor = builderObject.supervisor();</span>
+<span class="fc" id="L72">    }</span>
+
+    @Override
+    public Purchasingsupervisor processSubtreeFiltering(Purchasingsupervisor appInstance, boolean
+            isSelectAllSchemaChild) {
+<span class="nc" id="L77">        PurchasingsupervisorBuilder subTreeFilteringResultBuilder = new PurchasingsupervisorBuilder();</span>
+<span class="nc" id="L78">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (!processChildNodesSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L81">            return null;</span>
+        }
+<span class="nc bnc" id="L83" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L84">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L86">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processChildNodesSubTreeFiltering(Purchasingsupervisor appInstance, PurchasingsupervisorBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (supervisor()  != null) {</span>
+<span class="nc" id="L92">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">            if (appInstance.supervisor() != null) {</span>
+<span class="nc" id="L94">                Supervisor result = supervisor.processSubtreeFiltering(appInstance.supervisor(), false);</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">                if (result != null) {</span>
+<span class="nc" id="L96">                    subTreeFilteringResultBuilder.supervisor(result);</span>
+                }
+            }
+        }
+
+<span class="nc" id="L101">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of purchasingsupervisorOpParam.
+     */
+<span class="nc" id="L108">    protected PurchasingsupervisorOpParam() {</span>
+<span class="nc" id="L109">    }</span>
+
+    /**
+     * Returns the attribute PurchasingsupervisorBuilder.
+     *
+     * @return value of PurchasingsupervisorBuilder
+     */
+    public static PurchasingsupervisorBuilder builder() {
+<span class="nc" id="L117">        return new PurchasingsupervisorBuilder();</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of purchasingsupervisor.
+     */
+    public static class PurchasingsupervisorBuilder {
+
+        protected OnosYangNodeOperationType onosYangNodeOperationType;
+        protected Supervisor supervisor;
+
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L130">            return onosYangNodeOperationType;</span>
+        }
+        public Supervisor supervisor() {
+<span class="fc" id="L133">            return supervisor;</span>
+        }
+
+        /**
+         * Returns the builder object of onosYangNodeOperationType.
+         *
+         * @param onosYangNodeOperationType value of onosYangNodeOperationType
+         * @return builder object of onosYangNodeOperationType
+         */
+        public PurchasingsupervisorBuilder onosYangNodeOperationType(OnosYangNodeOperationType
+            onosYangNodeOperationType) {
+<span class="nc" id="L144">            this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L145">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of supervisor.
+         *
+         * @param supervisor value of supervisor
+         * @return builder object of supervisor
+         */
+        public PurchasingsupervisorBuilder supervisor(Supervisor supervisor) {
+<span class="fc" id="L155">            this.supervisor = supervisor;</span>
+<span class="fc" id="L156">            return this;</span>
+        }
+
+        public Purchasingsupervisor build() {
+<span class="fc" id="L160">            return new PurchasingsupervisorOpParam(this);</span>
+        }
+
+        /**
+         * Creates an instance of purchasingsupervisorBuilder.
+         */
+<span class="fc" id="L166">        public PurchasingsupervisorBuilder() {</span>
+<span class="fc" id="L167">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

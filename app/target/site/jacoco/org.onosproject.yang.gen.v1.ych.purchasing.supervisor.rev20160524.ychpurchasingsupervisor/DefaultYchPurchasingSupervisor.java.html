@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultYchPurchasingSupervisor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.ych.purchasing.supervisor.rev20160524.ychpurchasingsupervisor</a> &gt; <span class="el_source">DefaultYchPurchasingSupervisor.java</span></div><h1>DefaultYchPurchasingSupervisor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.ych.purchasing.supervisor.rev20160524.ychpurchasingsupervisor;
+
+import com.google.common.base.MoreObjects;
+import java.lang.reflect.InvocationTargetException;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+/**
+ * Represents the implementation of ychPurchasingSupervisor.
+ */
+public class DefaultYchPurchasingSupervisor implements YchPurchasingSupervisor {
+
+<span class="pc" id="L31">    protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+    protected String ychPurchasingSpecialist;
+    protected String ychPurchasingSupport;
+    protected OnosYangNodeOperationType onosYangNodeOperationType;
+    /**
+     * Identify the leafs whose value are explicitly set
+     * Applicable in protocol edit and query operation
+     */
+<span class="pc" id="L39">    private BitSet valueLeafFlags = new BitSet();</span>
+
+    /**
+     * Identify the leafs to be selected, in a query operation
+     */
+<span class="pc" id="L44">    private BitSet selectLeafFlags = new BitSet();</span>
+
+    @Override
+    public String ychPurchasingSpecialist() {
+<span class="fc" id="L48">        return ychPurchasingSpecialist;</span>
+    }
+
+    @Override
+    public String ychPurchasingSupport() {
+<span class="fc" id="L53">        return ychPurchasingSupport;</span>
+    }
+
+    @Override
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L58">        return onosYangNodeOperationType;</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L63">        return Objects.hash(ychPurchasingSpecialist, ychPurchasingSupport, onosYangNodeOperationType);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L69">            return true;</span>
+        }
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        if (obj instanceof DefaultYchPurchasingSupervisor) {</span>
+<span class="nc" id="L72">            DefaultYchPurchasingSupervisor other = (DefaultYchPurchasingSupervisor) obj;</span>
+<span class="nc" id="L73">            return</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">                 Objects.equals(ychPurchasingSpecialist, other.ychPurchasingSpecialist) &amp;&amp;</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">                 Objects.equals(ychPurchasingSupport, other.ychPurchasingSupport) &amp;&amp;</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">                 Objects.equals(onosYangNodeOperationType, other.onosYangNodeOperationType);</span>
+        }
+<span class="nc" id="L78">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L83">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L84">            .add(&quot;ychPurchasingSpecialist&quot;, ychPurchasingSpecialist)</span>
+<span class="nc" id="L85">            .add(&quot;ychPurchasingSupport&quot;, ychPurchasingSupport)</span>
+<span class="nc" id="L86">            .add(&quot;onosYangNodeOperationType&quot;, onosYangNodeOperationType)</span>
+<span class="nc" id="L87">            .toString();</span>
+    }
+
+    @Override
+    public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L92">        return yangAugmentedInfoMap.get(classObject);</span>
+    }
+
+    @Override
+    public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="nc" id="L97">        return yangAugmentedInfoMap;</span>
+    }
+
+    /**
+     * Creates an instance of ychPurchasingSupervisor.
+     *
+     * @param builderObject builder object of ychPurchasingSupervisor
+     */
+<span class="fc" id="L105">    protected DefaultYchPurchasingSupervisor(YchPurchasingSupervisorBuilder builderObject) {</span>
+<span class="fc" id="L106">        this.ychPurchasingSpecialist = builderObject.ychPurchasingSpecialist();</span>
+<span class="fc" id="L107">        this.ychPurchasingSupport = builderObject.ychPurchasingSupport();</span>
+<span class="fc" id="L108">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="fc" id="L109">        this.valueLeafFlags = builderObject.getValueLeafFlags();</span>
+<span class="fc" id="L110">        this.selectLeafFlags = builderObject.getSelectLeafFlags();</span>
+<span class="fc" id="L111">        this.yangAugmentedInfoMap = builderObject.yangAugmentedInfoMap();</span>
+<span class="fc" id="L112">    }</span>
+
+    @Override
+    public YchPurchasingSupervisor processSubtreeFiltering(YchPurchasingSupervisor appInstance, boolean
+            isSelectAllSchemaChild) {
+<span class="nc" id="L117">        YchPurchasingSupervisorBuilder subTreeFilteringResultBuilder = new YchPurchasingSupervisorBuilder();</span>
+<span class="nc" id="L118">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (!processLeafSubtreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L121">            return null;</span>
+        }
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        for (Object yangAugmentedInfo : this.yangAugmentedInfoMap().values()) {</span>
+<span class="nc" id="L124">            Object yangAugmentedOpParamInfo = appInstance.yangAugmentedInfo(yangAugmentedInfo.getClass());</span>
+            Object processSubtreeFiltering;
+            try {
+<span class="nc" id="L127">                Class&lt;?&gt;[] interfaces = yangAugmentedInfo.getClass().getInterfaces();</span>
+<span class="nc" id="L128">                processSubtreeFiltering = yangAugmentedInfo.getClass()</span>
+<span class="nc" id="L129">                    .getMethod(&quot;processSubtreeFiltering&quot;, interfaces[0]).invoke(yangAugmentedInfo,</span>
+                        yangAugmentedOpParamInfo);
+<span class="nc bnc" id="L131" title="All 2 branches missed.">                if (processSubtreeFiltering != null) {</span>
+<span class="nc" id="L132">                    subTreeFilteringResultBuilder</span>
+<span class="nc" id="L133">            .addYangAugmentedInfo(processSubtreeFiltering, processSubtreeFiltering.getClass());</span>
+                }
+<span class="nc" id="L135">            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {</span>
+<span class="nc" id="L136">                continue;</span>
+<span class="nc" id="L137">            }</span>
+<span class="nc" id="L138">        }</span>
+<span class="nc bnc" id="L139" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L140">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L142">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processLeafSubtreeFiltering(YchPurchasingSupervisor appInstance, YchPurchasingSupervisorBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.YCHPURCHASINGSPECIALIST.getLeafIndex())) {</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">            if (appInstance.ychPurchasingSpecialist() == null || !(ychPurchasingSpecialist()</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">            .equals(appInstance.ychPurchasingSpecialist()))) {</span>
+<span class="nc" id="L150">                return false;</span>
+            } else {
+<span class="nc" id="L152">                subTreeFilteringResultBuilder.ychPurchasingSpecialist(appInstance.ychPurchasingSpecialist());</span>
+            }
+<span class="nc bnc" id="L154" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier</span>
+<span class="nc" id="L155">            .YCHPURCHASINGSPECIALIST.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L156">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L157">            subTreeFilteringResultBuilder.ychPurchasingSpecialist(appInstance.ychPurchasingSpecialist());</span>
+        }
+
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.YCHPURCHASINGSUPPORT.getLeafIndex())) {</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">            if (appInstance.ychPurchasingSupport() == null || !(ychPurchasingSupport()</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">            .equals(appInstance.ychPurchasingSupport()))) {</span>
+<span class="nc" id="L163">                return false;</span>
+            } else {
+<span class="nc" id="L165">                subTreeFilteringResultBuilder.ychPurchasingSupport(appInstance.ychPurchasingSupport());</span>
+            }
+<span class="nc bnc" id="L167" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier</span>
+<span class="nc" id="L168">            .YCHPURCHASINGSUPPORT.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L169">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L170">            subTreeFilteringResultBuilder.ychPurchasingSupport(appInstance.ychPurchasingSupport());</span>
+        }
+
+<span class="nc" id="L173">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of defaultYchPurchasingSupervisor.
+     */
+<span class="nc" id="L180">    protected DefaultYchPurchasingSupervisor() {</span>
+<span class="nc" id="L181">    }</span>
+
+    /**
+     * Returns the attribute YchPurchasingSupervisorBuilder.
+     *
+     * @return value of YchPurchasingSupervisorBuilder
+     */
+    public static YchPurchasingSupervisorBuilder builder() {
+<span class="nc" id="L189">        return new YchPurchasingSupervisorBuilder();</span>
+    }
+
+    /**
+     * Returns the valueLeafFlags.
+     *
+     * @return value of valueLeafFlags
+     */
+    public BitSet getValueLeafFlags() {
+<span class="nc" id="L198">        return valueLeafFlags;</span>
+    }
+
+    /**
+     * Returns the selectLeafFlags.
+     *
+     * @return value of selectLeafFlags
+     */
+    public BitSet getSelectLeafFlags() {
+<span class="nc" id="L207">        return selectLeafFlags;</span>
+    }
+
+
+    @Override
+    public boolean isLeafValueSet(LeafIdentifier leaf) {
+<span class="nc" id="L213">        return getValueLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+    @Override
+    public boolean isSelectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L218">        return getSelectLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of ychPurchasingSupervisor.
+     */
+    public static class YchPurchasingSupervisorBuilder implements YchPurchasingSupervisor
+            .YchPurchasingSupervisorBuilder {
+
+<span class="fc" id="L228">        protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+        protected String ychPurchasingSpecialist;
+        protected String ychPurchasingSupport;
+        protected OnosYangNodeOperationType onosYangNodeOperationType;
+        /**
+         * Identify the leafs whose value are explicitly set
+         * Applicable in protocol edit and query operation
+         */
+<span class="fc" id="L236">        private BitSet valueLeafFlags = new BitSet();</span>
+
+        /**
+         * Identify the leafs to be selected, in a query operation
+         */
+<span class="fc" id="L241">        private BitSet selectLeafFlags = new BitSet();</span>
+
+
+        @Override
+        public String ychPurchasingSpecialist() {
+<span class="fc" id="L246">            return ychPurchasingSpecialist;</span>
+        }
+
+        @Override
+        public String ychPurchasingSupport() {
+<span class="fc" id="L251">            return ychPurchasingSupport;</span>
+        }
+
+        @Override
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L256">            return onosYangNodeOperationType;</span>
+        }
+
+        @Override
+        public YchPurchasingSupervisorBuilder ychPurchasingSpecialist(String ychPurchasingSpecialist) {
+<span class="fc" id="L261">            getValueLeafFlags().set(LeafIdentifier.YCHPURCHASINGSPECIALIST.getLeafIndex());</span>
+<span class="fc" id="L262">            this.ychPurchasingSpecialist = ychPurchasingSpecialist;</span>
+<span class="fc" id="L263">            return this;</span>
+        }
+
+        @Override
+        public YchPurchasingSupervisorBuilder ychPurchasingSupport(String ychPurchasingSupport) {
+<span class="fc" id="L268">            getValueLeafFlags().set(LeafIdentifier.YCHPURCHASINGSUPPORT.getLeafIndex());</span>
+<span class="fc" id="L269">            this.ychPurchasingSupport = ychPurchasingSupport;</span>
+<span class="fc" id="L270">            return this;</span>
+        }
+
+        @Override
+        public YchPurchasingSupervisorBuilder onosYangNodeOperationType(OnosYangNodeOperationType
+            onosYangNodeOperationType) {
+<span class="fc" id="L276">            this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="fc" id="L277">            return this;</span>
+        }
+
+        /**
+         * Returns the valueLeafFlags.
+         *
+         * @return value of valueLeafFlags
+         */
+        public BitSet getValueLeafFlags() {
+<span class="fc" id="L286">            return valueLeafFlags;</span>
+        }
+
+        /**
+         * Returns the selectLeafFlags.
+         *
+         * @return value of selectLeafFlags
+         */
+        public BitSet getSelectLeafFlags() {
+<span class="fc" id="L295">            return selectLeafFlags;</span>
+        }
+
+
+
+        @Override
+        public YchPurchasingSupervisorBuilder selectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L302">            getSelectLeafFlags().set(leaf.getLeafIndex());</span>
+<span class="nc" id="L303">            return this;</span>
+        }
+
+        @Override
+        public void addYangAugmentedInfo(Object value, Class classObject) {
+<span class="nc" id="L308">            yangAugmentedInfoMap.put(classObject, value);</span>
+<span class="nc" id="L309">        }</span>
+
+        @Override
+        public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L313">            return yangAugmentedInfoMap.get(classObject);</span>
+        }
+
+        @Override
+        public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="fc" id="L318">            return yangAugmentedInfoMap;</span>
+        }
+        @Override
+        public YchPurchasingSupervisor build() {
+<span class="fc" id="L322">            return new DefaultYchPurchasingSupervisor(this);</span>
+        }
+
+        /**
+         * Creates an instance of ychPurchasingSupervisorBuilder.
+         */
+<span class="fc" id="L328">        public YchPurchasingSupervisorBuilder() {</span>
+<span class="fc" id="L329">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

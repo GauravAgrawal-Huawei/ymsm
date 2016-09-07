@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>YdtSingleInstanceLeafNode.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yms.app.ydt</a> &gt; <span class="el_source">YdtSingleInstanceLeafNode.java</span></div><h1>YdtSingleInstanceLeafNode.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yms.app.ydt;
+
+import org.onosproject.yangutils.datamodel.YangSchemaNodeIdentifier;
+import org.onosproject.yms.app.ydt.exceptions.YdtExceptions;
+import org.onosproject.yms.ydt.YdtType;
+
+/**
+ * Represents YDT single instance leaf node which is an atomic element and doesn't
+ * have any child.
+ */
+class YdtSingleInstanceLeafNode extends YdtNode {
+
+    /**
+     * Value of the leaf.
+     */
+    private String value;
+
+    /**
+     * Creates a YANG single instance leaf node.
+     *
+     * @param nodeIdentifier node identifier of YANG data tree single instance leaf node .
+     */
+    public YdtSingleInstanceLeafNode(YangSchemaNodeIdentifier nodeIdentifier) {
+<span class="fc" id="L40">        super(YdtType.SINGLE_INSTANCE_LEAF_VALUE_NODE, nodeIdentifier);</span>
+<span class="fc" id="L41">    }</span>
+
+    @Override
+    public String getValue() {
+<span class="fc" id="L45">        return value;</span>
+    }
+
+    @Override
+    public void addValue(String value) {
+        // check the value against corresponding data-type.
+        try {
+<span class="fc" id="L52">            this.getYangSchemaNode().isValueValid(value);</span>
+<span class="fc" id="L53">        } catch (Exception e) {</span>
+            // Free resources
+<span class="fc" id="L55">            freeRestResources();</span>
+<span class="fc" id="L56">            throw new YdtExceptions(e.getMessage());</span>
+<span class="fc" id="L57">        }</span>
+
+        // After validation is successful then add value to node.
+<span class="fc" id="L60">        this.value = value;</span>
+<span class="fc" id="L61">    }</span>
+
+
+    @Override
+    public void addValueWithoutValidation(String value) {
+<span class="fc" id="L66">        this.value = value;</span>
+<span class="fc" id="L67">    }</span>
+
+    @Override
+    public void isDuplicateEntriesValid() {
+        // Free resources
+<span class="fc" id="L72">        freeRestResources();</span>
+<span class="fc" id="L73">        String errorInfo = &quot;Duplicate entry with name &quot; + this.getYdtNodeIdentifier().getName() + &quot;.&quot;;</span>
+<span class="fc" id="L74">        throw new YdtExceptions(errorInfo);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

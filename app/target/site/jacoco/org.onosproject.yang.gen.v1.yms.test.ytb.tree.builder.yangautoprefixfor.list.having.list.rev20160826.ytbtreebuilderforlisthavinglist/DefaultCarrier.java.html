@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultCarrier.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.ytbtreebuilderforlisthavinglist</a> &gt; <span class="el_source">DefaultCarrier.java</span></div><h1>DefaultCarrier.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
+            .ytbtreebuilderforlisthavinglist;
+
+import com.google.common.base.MoreObjects;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
+            .ytbtreebuilderforlisthavinglist.carrier.Multiplexes;
+
+/**
+ * Represents the implementation of carrier.
+ */
+public class DefaultCarrier implements Carrier {
+
+<span class="pc" id="L35">    protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+    protected OnosYangNodeOperationType onosYangNodeOperationType;
+    protected List&lt;Multiplexes&gt; multiplexes;
+
+    @Override
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L41">        return onosYangNodeOperationType;</span>
+    }
+
+    @Override
+    public List&lt;Multiplexes&gt; multiplexes() {
+<span class="fc" id="L46">        return multiplexes;</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L51">        return Objects.hash(onosYangNodeOperationType, multiplexes);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L57">            return true;</span>
+        }
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if (obj instanceof DefaultCarrier) {</span>
+<span class="nc" id="L60">            DefaultCarrier other = (DefaultCarrier) obj;</span>
+<span class="nc" id="L61">            return</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">                 Objects.equals(onosYangNodeOperationType, other.onosYangNodeOperationType) &amp;&amp;</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">                 Objects.equals(multiplexes, other.multiplexes);</span>
+        }
+<span class="nc" id="L65">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L70">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L71">            .add(&quot;onosYangNodeOperationType&quot;, onosYangNodeOperationType)</span>
+<span class="nc" id="L72">            .add(&quot;multiplexes&quot;, multiplexes)</span>
+<span class="nc" id="L73">            .toString();</span>
+    }
+
+    @Override
+    public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L78">        return yangAugmentedInfoMap.get(classObject);</span>
+    }
+
+    @Override
+    public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="nc" id="L83">        return yangAugmentedInfoMap;</span>
+    }
+
+    /**
+     * Creates an instance of carrier.
+     *
+     * @param builderObject builder object of carrier
+     */
+<span class="fc" id="L91">    protected DefaultCarrier(CarrierBuilder builderObject) {</span>
+<span class="fc" id="L92">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="fc" id="L93">        this.multiplexes = builderObject.multiplexes();</span>
+<span class="fc" id="L94">        this.yangAugmentedInfoMap = builderObject.yangAugmentedInfoMap();</span>
+<span class="fc" id="L95">    }</span>
+
+    @Override
+    public Carrier processSubtreeFiltering(Carrier appInstance, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L99">        CarrierBuilder subTreeFilteringResultBuilder = new CarrierBuilder();</span>
+<span class="nc" id="L100">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        if (!processChildNodesSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L103">            return null;</span>
+        }
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        for (Object yangAugmentedInfo : this.yangAugmentedInfoMap().values()) {</span>
+<span class="nc" id="L106">            Object yangAugmentedOpParamInfo = appInstance.yangAugmentedInfo(yangAugmentedInfo.getClass());</span>
+            Object processSubtreeFiltering;
+            try {
+<span class="nc" id="L109">                Class&lt;?&gt;[] interfaces = yangAugmentedInfo.getClass().getInterfaces();</span>
+<span class="nc" id="L110">                processSubtreeFiltering = yangAugmentedInfo.getClass()</span>
+<span class="nc" id="L111">                    .getMethod(&quot;processSubtreeFiltering&quot;, interfaces[0]).invoke(yangAugmentedInfo,</span>
+                        yangAugmentedOpParamInfo);
+<span class="nc bnc" id="L113" title="All 2 branches missed.">                if (processSubtreeFiltering != null) {</span>
+<span class="nc" id="L114">                    subTreeFilteringResultBuilder</span>
+<span class="nc" id="L115">            .addYangAugmentedInfo(processSubtreeFiltering, processSubtreeFiltering.getClass());</span>
+                }
+<span class="nc" id="L117">            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {</span>
+<span class="nc" id="L118">                continue;</span>
+<span class="nc" id="L119">            }</span>
+<span class="nc" id="L120">        }</span>
+<span class="nc bnc" id="L121" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L122">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L124">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processChildNodesSubTreeFiltering(Carrier appInstance, CarrierBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (isSelectAllSchemaChild) {</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">            for (Multiplexes multiplexes : appInstance.multiplexes()) {</span>
+<span class="nc" id="L131">                subTreeFilteringResultBuilder.addToMultiplexes(multiplexes);</span>
+<span class="nc" id="L132">            }</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        } else if (multiplexes() != null) {</span>
+<span class="nc" id="L134">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">            if (!multiplexes().isEmpty()) {</span>
+<span class="nc bnc" id="L136" title="All 4 branches missed.">                if (appInstance.multiplexes() != null &amp;&amp; !appInstance.multiplexes().isEmpty()) {</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">                    for (Multiplexes multiplexes : multiplexes()) {</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">                        for (Multiplexes multiplexes2 : appInstance.multiplexes()) {</span>
+<span class="nc" id="L139">                            Multiplexes result = multiplexes.processSubtreeFiltering(multiplexes2, false);</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">                            if (result != null) {</span>
+<span class="nc" id="L141">                                subTreeFilteringResultBuilder.addToMultiplexes(result);</span>
+                            }
+<span class="nc" id="L143">                        }</span>
+<span class="nc" id="L144">                    }</span>
+                }
+            } else {
+<span class="nc bnc" id="L147" title="All 4 branches missed.">                if (appInstance.multiplexes() != null &amp;&amp; !appInstance.multiplexes().isEmpty()) {</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">                    for (Multiplexes multiplexes : appInstance.multiplexes()) {</span>
+<span class="nc" id="L149">                        subTreeFilteringResultBuilder.addToMultiplexes(multiplexes);</span>
+<span class="nc" id="L150">                    }</span>
+                }
+            }
+        }
+
+<span class="nc" id="L155">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of defaultCarrier.
+     */
+<span class="nc" id="L162">    protected DefaultCarrier() {</span>
+<span class="nc" id="L163">    }</span>
+
+    /**
+     * Returns the attribute CarrierBuilder.
+     *
+     * @return value of CarrierBuilder
+     */
+    public static CarrierBuilder builder() {
+<span class="nc" id="L171">        return new CarrierBuilder();</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of carrier.
+     */
+    public static class CarrierBuilder implements Carrier.CarrierBuilder {
+
+<span class="fc" id="L180">        protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+        protected OnosYangNodeOperationType onosYangNodeOperationType;
+        protected List&lt;Multiplexes&gt; multiplexes;
+
+
+        @Override
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L187">            return onosYangNodeOperationType;</span>
+        }
+
+        @Override
+        public List&lt;Multiplexes&gt; multiplexes() {
+<span class="fc" id="L192">            return multiplexes;</span>
+        }
+
+        @Override
+        public CarrierBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+<span class="nc" id="L197">            this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L198">            return this;</span>
+        }
+
+        @Override
+        public CarrierBuilder multiplexes(List&lt;Multiplexes&gt; multiplexes) {
+<span class="fc" id="L203">            this.multiplexes = multiplexes;</span>
+<span class="fc" id="L204">            return this;</span>
+        }
+
+        @Override
+        public CarrierBuilder addToMultiplexes(Multiplexes value) {
+<span class="nc bnc" id="L209" title="All 2 branches missed.">            if (multiplexes() == null) {</span>
+<span class="nc" id="L210">                multiplexes(new ArrayList&lt;&gt;());</span>
+            }
+<span class="nc" id="L212">            multiplexes().add(value);</span>
+<span class="nc" id="L213">            return this;</span>
+        }
+
+        @Override
+        public void addYangAugmentedInfo(Object value, Class classObject) {
+<span class="nc" id="L218">            yangAugmentedInfoMap.put(classObject, value);</span>
+<span class="nc" id="L219">        }</span>
+
+        @Override
+        public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L223">            return yangAugmentedInfoMap.get(classObject);</span>
+        }
+
+        @Override
+        public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="fc" id="L228">            return yangAugmentedInfoMap;</span>
+        }
+        @Override
+        public Carrier build() {
+<span class="fc" id="L232">            return new DefaultCarrier(this);</span>
+        }
+
+        /**
+         * Creates an instance of carrierBuilder.
+         */
+<span class="fc" id="L238">        public CarrierBuilder() {</span>
+<span class="fc" id="L239">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

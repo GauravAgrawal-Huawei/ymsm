@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Ipv6Address.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.ietfinettypes</a> &gt; <span class="el_source">Ipv6Address.java</span></div><h1>Ipv6Address.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.ietfinettypes;
+
+import java.util.Objects;
+import com.google.common.base.MoreObjects;
+
+/**
+ * Represents the implementation of ipv6Address.
+ */
+public final class Ipv6Address {
+
+    private String string;
+
+    /**
+     * Creates an instance of ipv6Address.
+     */
+<span class="nc" id="L32">    private Ipv6Address() {</span>
+<span class="nc" id="L33">    }</span>
+
+    /**
+     * Creates an instance of ipv6AddressForTypeString.
+     *
+     * @param value value of ipv6AddressForTypeString
+     */
+<span class="nc" id="L40">    public Ipv6Address(String value) {</span>
+<span class="nc" id="L41">        this.string = value;</span>
+<span class="nc" id="L42">    }</span>
+
+    /**
+     * Returns the object of ipv6AddressForTypeString.
+     *
+     * @param value value of ipv6AddressForTypeString
+     * @return Object of ipv6AddressForTypeString
+     */
+    public static Ipv6Address of(String value) {
+<span class="nc" id="L51">        return new Ipv6Address(value);</span>
+    }
+
+    /**
+     * Returns the attribute string.
+     *
+     * @return value of string
+     */
+    public String string() {
+<span class="nc" id="L60">        return string;</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L65">        return Objects.hash(string);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L71">            return true;</span>
+        }
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (obj instanceof Ipv6Address) {</span>
+<span class="nc" id="L74">            Ipv6Address other = (Ipv6Address) obj;</span>
+<span class="nc" id="L75">            return</span>
+<span class="nc" id="L76">                 Objects.equals(string, other.string);</span>
+        }
+<span class="nc" id="L78">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L83">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L84">            .add(&quot;string&quot;, string)</span>
+<span class="nc" id="L85">            .toString();</span>
+    }
+
+    /**
+     * Returns the object of ipv6Address fromString input String.
+     *
+     * @param valInString input String
+     * @return Object of ipv6Address
+     */
+    public static Ipv6Address fromString(String valInString) {
+        try {
+<span class="nc" id="L96">            String tmpVal = (valInString);</span>
+<span class="nc" id="L97">            return of(tmpVal);</span>
+<span class="nc" id="L98">        } catch (Exception e) {</span>
+        }
+<span class="nc" id="L100">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>YdtNodeFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yms.app.ydt</a> &gt; <span class="el_source">YdtNodeFactory.java</span></div><h1>YdtNodeFactory.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yms.app.ydt;
+
+import org.onosproject.yangutils.datamodel.YangSchemaNode;
+import org.onosproject.yangutils.datamodel.YangSchemaNodeIdentifier;
+import org.onosproject.yangutils.datamodel.YangSchemaNodeType;
+import org.onosproject.yms.app.ydt.exceptions.YdtExceptions;
+
+/**
+ * Represents an YANG node factory to create different types of YANG data tree
+ * node.
+ */
+final class YdtNodeFactory {
+
+    /**
+     * Utility factory class, hence the object creation is forbidden.
+     */
+<span class="nc" id="L33">    private YdtNodeFactory() {</span>
+<span class="nc" id="L34">    }</span>
+
+    /**
+     * Returns a YANG data tree node for a given name, set of values and instance type.
+     *
+     * @param nodeIdentifier       dataNodeIdentifier of data tree node
+     * @param yangSchemaNode       data node as per YANG schema metadata
+     * @param requestedCardinality requested cardinality of node
+     * @param callType             call type to identify the its a leaf node or other node
+     * @return YANG data tree node
+     */
+    public static YdtNode getNode(YangSchemaNodeIdentifier nodeIdentifier, YangSchemaNode yangSchemaNode,
+                                  RequestedCardinality requestedCardinality, RequestedCallType
+                                          callType) {
+
+        YdtNode newNode;
+<span class="fc" id="L50">        YangSchemaNodeType yangSchemaNodeType = yangSchemaNode.getYangSchemaNodeType();</span>
+
+<span class="pc bpc" id="L52" title="3 of 6 branches missed.">        switch (requestedCardinality) {</span>
+
+            case UNKNOWN:
+                /**
+                 * if requested node type is UNKNOWN, check corresponding yang data node type
+                 * and create respective type node.
+                 */
+<span class="fc" id="L59">                newNode = getYangSchemaNodeTypeSpecificContext(nodeIdentifier, yangSchemaNodeType, callType);</span>
+<span class="fc" id="L60">                break;</span>
+
+            /**
+             *if requested node type is specified and it exist as node of some other type in data model
+             * then throw exception
+             */
+            case SINGLE_INSTANCE:
+<span class="nc bnc" id="L67" title="All 2 branches missed.">                if (yangSchemaNodeType == YangSchemaNodeType.YANG_SINGLE_INSTANCE_NODE) {</span>
+<span class="nc" id="L68">                    newNode = new YdtSingleInstanceNode(nodeIdentifier);</span>
+<span class="nc" id="L69">                    break;</span>
+                } else {
+<span class="nc" id="L71">                    String errorInfo = &quot;Schema node with name &quot; + nodeIdentifier.getName() + &quot; doesn't exist.&quot;;</span>
+<span class="nc" id="L72">                    throw new YdtExceptions(errorInfo);</span>
+                }
+
+            case MULTI_INSTANCE:
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                if (yangSchemaNodeType == YangSchemaNodeType.YANG_MULTI_INSTANCE_NODE) {</span>
+<span class="fc" id="L77">                    newNode = new YdtMultiInstanceNode(nodeIdentifier);</span>
+<span class="fc" id="L78">                    break;</span>
+                } else {
+<span class="nc" id="L80">                    String errorInfo = &quot;Schema node with name &quot; + nodeIdentifier.getName() + &quot; doesn't exist.&quot;;</span>
+<span class="nc" id="L81">                    throw new YdtExceptions(errorInfo);</span>
+                }
+
+            case SINGLE_INSTANCE_LEAF:
+<span class="nc bnc" id="L85" title="All 2 branches missed.">                if (yangSchemaNodeType == YangSchemaNodeType.YANG_SINGLE_INSTANCE_LEAF_NODE) {</span>
+<span class="nc" id="L86">                    newNode = new YdtSingleInstanceLeafNode(nodeIdentifier);</span>
+<span class="nc" id="L87">                    break;</span>
+                } else {
+<span class="nc" id="L89">                    String errorInfo = &quot;Schema node with name &quot; + nodeIdentifier.getName() + &quot; doesn't exist.&quot;;</span>
+<span class="nc" id="L90">                    throw new YdtExceptions(errorInfo);</span>
+                }
+
+            case MULTI_INSTANCE_LEAF:
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">                if (yangSchemaNodeType == YangSchemaNodeType.YANG_MULTI_INSTANCE_LEAF_NODE) {</span>
+<span class="fc" id="L95">                    newNode = new YdtMultiInstanceLeafNode(nodeIdentifier);</span>
+<span class="fc" id="L96">                    break;</span>
+                } else {
+<span class="nc" id="L98">                    String errorInfo = &quot;Schema node with name &quot; + nodeIdentifier.getName() + &quot; doesn't exist.&quot;;</span>
+<span class="nc" id="L99">                    throw new YdtExceptions(errorInfo);</span>
+                }
+
+            default:
+<span class="nc" id="L103">                String errorInfo = &quot;Schema node with name &quot; + nodeIdentifier.getName() + &quot; doesn't exist.&quot;;</span>
+<span class="nc" id="L104">                throw new YdtExceptions(errorInfo);</span>
+        }
+
+        // set reference of yang data node in the requested node.
+<span class="fc" id="L108">        newNode.setYangSchemaNode(yangSchemaNode);</span>
+
+<span class="fc" id="L110">        return newNode;</span>
+    }
+
+    /**
+     * Create Yang data tree node of YangSchemaNode type specific for
+     * requestedCardinality of type UNKNOWN and returns the same.
+     *
+     * @param nodeIdentifier     node identifier of data tree node
+     * @param yangSchemaNodeType schema node type as per YANG schema metadata
+     * @param callType           call type to identify the its a leaf node or other node
+     * @return YANG data tree node
+     */
+    private static YdtNode getYangSchemaNodeTypeSpecificContext(YangSchemaNodeIdentifier nodeIdentifier,
+                                                               YangSchemaNodeType yangSchemaNodeType, RequestedCallType
+                                                                       callType) {
+<span class="pc bpc" id="L125" title="1 of 4 branches missed.">        switch (callType) {</span>
+            case LEAF:
+<span class="pc bpc" id="L127" title="1 of 3 branches missed.">                switch (yangSchemaNodeType) {</span>
+
+                    case YANG_SINGLE_INSTANCE_LEAF_NODE:
+<span class="fc" id="L130">                        return new YdtSingleInstanceLeafNode(nodeIdentifier);</span>
+
+                    case YANG_MULTI_INSTANCE_LEAF_NODE:
+<span class="fc" id="L133">                        return new YdtMultiInstanceLeafNode(nodeIdentifier);</span>
+
+                    default:
+<span class="nc" id="L136">                        String errorInfo = &quot;Schema node with name &quot; + nodeIdentifier.getName() + &quot; doesn't exist.&quot;;</span>
+<span class="nc" id="L137">                        throw new YdtExceptions(errorInfo);</span>
+                }
+
+            case OTHER:
+<span class="pc bpc" id="L141" title="1 of 3 branches missed.">                switch (yangSchemaNodeType) {</span>
+
+                    case YANG_SINGLE_INSTANCE_NODE:
+<span class="fc" id="L144">                        return new YdtSingleInstanceNode(nodeIdentifier);</span>
+
+                    case YANG_MULTI_INSTANCE_NODE:
+<span class="fc" id="L147">                        return new YdtMultiInstanceNode(nodeIdentifier);</span>
+
+                    default:
+<span class="nc" id="L150">                        String errorInfo = &quot;Schema node with name &quot; + nodeIdentifier.getName() + &quot; doesn't exist.&quot;;</span>
+<span class="nc" id="L151">                        throw new YdtExceptions(errorInfo);</span>
+                }
+            case UNKNOWN:
+<span class="pc bpc" id="L154" title="1 of 3 branches missed.">                switch (yangSchemaNodeType) {</span>
+
+                    case YANG_MULTI_INSTANCE_LEAF_NODE:
+<span class="fc" id="L157">                        return new YdtMultiInstanceLeafNode(nodeIdentifier);</span>
+
+                    case YANG_MULTI_INSTANCE_NODE:
+<span class="fc" id="L160">                        return new YdtMultiInstanceNode(nodeIdentifier);</span>
+
+                    default:
+<span class="nc" id="L163">                        String errorInfo = &quot;Schema node with name &quot; + nodeIdentifier.getName() + &quot; doesn't exist.&quot;;</span>
+<span class="nc" id="L164">                        throw new YdtExceptions(errorInfo);</span>
+                }
+            default:
+<span class="nc" id="L167">                String errorInfo = &quot;Schema node with name &quot; + nodeIdentifier.getName() + &quot; doesn't exist.&quot;;</span>
+<span class="nc" id="L168">                throw new YdtExceptions(errorInfo);</span>
+        }
+
+    }
+
+    /**
+     * Create Yang data tree node of YangSchemaNode type specific and returns the same.
+     *
+     * @param nodeIdentifier     node identifier of data tree node
+     * @param yangSchemaNodeType schema node type as per YANG schema metadata
+     * @return YANG data tree node
+     */
+    public static YdtNode getYangSchemaNodeTypeSpecificContext(YangSchemaNodeIdentifier nodeIdentifier,
+                                                               YangSchemaNodeType yangSchemaNodeType) {
+
+<span class="pc bpc" id="L183" title="1 of 5 branches missed.">        switch (yangSchemaNodeType) {</span>
+
+            case YANG_SINGLE_INSTANCE_LEAF_NODE:
+<span class="fc" id="L186">                return new YdtSingleInstanceLeafNode(nodeIdentifier);</span>
+
+            case YANG_MULTI_INSTANCE_LEAF_NODE:
+<span class="fc" id="L189">                return new YdtMultiInstanceLeafNode(nodeIdentifier);</span>
+
+            case YANG_SINGLE_INSTANCE_NODE:
+<span class="fc" id="L192">                return new YdtSingleInstanceNode(nodeIdentifier);</span>
+
+            case YANG_MULTI_INSTANCE_NODE:
+<span class="fc" id="L195">                return new YdtMultiInstanceNode(nodeIdentifier);</span>
+
+            default:
+<span class="nc" id="L198">                String errorInfo = &quot;Schema node with name &quot; + nodeIdentifier.getName() + &quot; doesn't exist.&quot;;</span>
+<span class="nc" id="L199">                throw new YdtExceptions(errorInfo);</span>
+        }
+
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

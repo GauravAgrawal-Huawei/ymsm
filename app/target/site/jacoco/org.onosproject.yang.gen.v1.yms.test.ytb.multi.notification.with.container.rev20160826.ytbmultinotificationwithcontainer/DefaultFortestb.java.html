@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultFortestb.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer</a> &gt; <span class="el_source">DefaultFortestb.java</span></div><h1>DefaultFortestb.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826
+            .ytbmultinotificationwithcontainer;
+
+import com.google.common.base.MoreObjects;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+/**
+ * Represents the implementation of fortestb.
+ */
+public class DefaultFortestb implements Fortestb {
+
+<span class="nc" id="L34">    protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+    protected List&lt;Boolean&gt; notileaflist;
+    protected OnosYangNodeOperationType onosYangNodeOperationType;
+    /**
+     * Identify the leafs whose value are explicitly set
+     * Applicable in protocol edit and query operation
+     */
+<span class="nc" id="L41">    private BitSet valueLeafFlags = new BitSet();</span>
+
+    /**
+     * Identify the leafs to be selected, in a query operation
+     */
+<span class="nc" id="L46">    private BitSet selectLeafFlags = new BitSet();</span>
+
+    @Override
+    public List&lt;Boolean&gt; notileaflist() {
+<span class="nc" id="L50">        return notileaflist;</span>
+    }
+
+    @Override
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L55">        return onosYangNodeOperationType;</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L60">        return Objects.hash(notileaflist, onosYangNodeOperationType);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L66">            return true;</span>
+        }
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (obj instanceof DefaultFortestb) {</span>
+<span class="nc" id="L69">            DefaultFortestb other = (DefaultFortestb) obj;</span>
+<span class="nc" id="L70">            return</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">                 Objects.equals(notileaflist, other.notileaflist) &amp;&amp;</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">                 Objects.equals(onosYangNodeOperationType, other.onosYangNodeOperationType);</span>
+        }
+<span class="nc" id="L74">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L79">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L80">            .add(&quot;notileaflist&quot;, notileaflist)</span>
+<span class="nc" id="L81">            .add(&quot;onosYangNodeOperationType&quot;, onosYangNodeOperationType)</span>
+<span class="nc" id="L82">            .toString();</span>
+    }
+
+    @Override
+    public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L87">        return yangAugmentedInfoMap.get(classObject);</span>
+    }
+
+    @Override
+    public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="nc" id="L92">        return yangAugmentedInfoMap;</span>
+    }
+
+    /**
+     * Creates an instance of fortestb.
+     *
+     * @param builderObject builder object of fortestb
+     */
+<span class="nc" id="L100">    protected DefaultFortestb(FortestbBuilder builderObject) {</span>
+<span class="nc" id="L101">        this.notileaflist = builderObject.notileaflist();</span>
+<span class="nc" id="L102">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="nc" id="L103">        this.valueLeafFlags = builderObject.getValueLeafFlags();</span>
+<span class="nc" id="L104">        this.selectLeafFlags = builderObject.getSelectLeafFlags();</span>
+<span class="nc" id="L105">        this.yangAugmentedInfoMap = builderObject.yangAugmentedInfoMap();</span>
+<span class="nc" id="L106">    }</span>
+
+    @Override
+    public Fortestb processSubtreeFiltering(Fortestb appInstance, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L110">        FortestbBuilder subTreeFilteringResultBuilder = new FortestbBuilder();</span>
+<span class="nc" id="L111">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        if (!processLeafListSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L114">            return null;</span>
+        }
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        for (Object yangAugmentedInfo : this.yangAugmentedInfoMap().values()) {</span>
+<span class="nc" id="L117">            Object yangAugmentedOpParamInfo = appInstance.yangAugmentedInfo(yangAugmentedInfo.getClass());</span>
+            Object processSubtreeFiltering;
+            try {
+<span class="nc" id="L120">                Class&lt;?&gt;[] interfaces = yangAugmentedInfo.getClass().getInterfaces();</span>
+<span class="nc" id="L121">                processSubtreeFiltering = yangAugmentedInfo.getClass()</span>
+<span class="nc" id="L122">                    .getMethod(&quot;processSubtreeFiltering&quot;, interfaces[0]).invoke(yangAugmentedInfo,</span>
+                        yangAugmentedOpParamInfo);
+<span class="nc bnc" id="L124" title="All 2 branches missed.">                if (processSubtreeFiltering != null) {</span>
+<span class="nc" id="L125">                    subTreeFilteringResultBuilder</span>
+<span class="nc" id="L126">            .addYangAugmentedInfo(processSubtreeFiltering, processSubtreeFiltering.getClass());</span>
+                }
+<span class="nc" id="L128">            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {</span>
+<span class="nc" id="L129">                continue;</span>
+<span class="nc" id="L130">            }</span>
+<span class="nc" id="L131">        }</span>
+<span class="nc bnc" id="L132" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L133">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L135">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processLeafListSubTreeFiltering(Fortestb appInstance, FortestbBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L140" title="All 2 branches missed.">        if (isSelectAllSchemaChild) {</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">            for (Boolean notileaflist : appInstance.notileaflist()) {</span>
+<span class="nc" id="L142">                subTreeFilteringResultBuilder.addToNotileaflist(notileaflist);</span>
+<span class="nc" id="L143">            }</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        } else if (notileaflist() != null) {</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">            if (!notileaflist().isEmpty()) {</span>
+<span class="nc bnc" id="L146" title="All 4 branches missed.">                if (appInstance.notileaflist() == null || appInstance.notileaflist().isEmpty()) {</span>
+<span class="nc" id="L147">                    return false;</span>
+                }
+<span class="nc bnc" id="L149" title="All 2 branches missed.">                for (Boolean notileaflist : notileaflist()) {</span>
+<span class="nc" id="L150">                    boolean flag = false;</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">                    for (Boolean notileaflist2 : appInstance.notileaflist()) {</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">                        if (notileaflist.equals(notileaflist2)) {</span>
+<span class="nc" id="L153">                            flag = true;</span>
+<span class="nc" id="L154">                            subTreeFilteringResultBuilder.addToNotileaflist(notileaflist2);</span>
+<span class="nc" id="L155">                            break;</span>
+                        }
+<span class="nc" id="L157">                    }</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">                    if (!flag) {</span>
+<span class="nc" id="L159">                        return false;</span>
+                    }
+<span class="nc" id="L161">                }</span>
+            } else {
+<span class="nc" id="L163">                isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L164" title="All 4 branches missed.">                if (appInstance.notileaflist() != null &amp;&amp; !appInstance.notileaflist().isEmpty()) {</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">                    for (Boolean notileaflist : appInstance.notileaflist()) {</span>
+<span class="nc" id="L166">                        subTreeFilteringResultBuilder.addToNotileaflist(notileaflist);</span>
+<span class="nc" id="L167">                    }</span>
+                }
+            }
+        }
+
+<span class="nc" id="L172">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of defaultFortestb.
+     */
+<span class="nc" id="L179">    protected DefaultFortestb() {</span>
+<span class="nc" id="L180">    }</span>
+
+    /**
+     * Returns the attribute FortestbBuilder.
+     *
+     * @return value of FortestbBuilder
+     */
+    public static FortestbBuilder builder() {
+<span class="nc" id="L188">        return new FortestbBuilder();</span>
+    }
+
+    /**
+     * Returns the valueLeafFlags.
+     *
+     * @return value of valueLeafFlags
+     */
+    public BitSet getValueLeafFlags() {
+<span class="nc" id="L197">        return valueLeafFlags;</span>
+    }
+
+    /**
+     * Returns the selectLeafFlags.
+     *
+     * @return value of selectLeafFlags
+     */
+    public BitSet getSelectLeafFlags() {
+<span class="nc" id="L206">        return selectLeafFlags;</span>
+    }
+
+
+    @Override
+    public boolean isLeafValueSet(LeafIdentifier leaf) {
+<span class="nc" id="L212">        return getValueLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+    @Override
+    public boolean isSelectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L217">        return getSelectLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of fortestb.
+     */
+    public static class FortestbBuilder implements Fortestb.FortestbBuilder {
+
+<span class="nc" id="L226">        protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+        protected List&lt;Boolean&gt; notileaflist;
+        protected OnosYangNodeOperationType onosYangNodeOperationType;
+        /**
+         * Identify the leafs whose value are explicitly set
+         * Applicable in protocol edit and query operation
+         */
+<span class="nc" id="L233">        private BitSet valueLeafFlags = new BitSet();</span>
+
+        /**
+         * Identify the leafs to be selected, in a query operation
+         */
+<span class="nc" id="L238">        private BitSet selectLeafFlags = new BitSet();</span>
+
+
+        @Override
+        public List&lt;Boolean&gt; notileaflist() {
+<span class="nc" id="L243">            return notileaflist;</span>
+        }
+
+        @Override
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L248">            return onosYangNodeOperationType;</span>
+        }
+
+        @Override
+        public FortestbBuilder notileaflist(List&lt;Boolean&gt; notileaflist) {
+<span class="nc" id="L253">            this.notileaflist = notileaflist;</span>
+<span class="nc" id="L254">            return this;</span>
+        }
+
+        @Override
+        public FortestbBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+<span class="nc" id="L259">            this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L260">            return this;</span>
+        }
+
+        @Override
+        public FortestbBuilder addToNotileaflist(Boolean value) {
+<span class="nc bnc" id="L265" title="All 2 branches missed.">            if (notileaflist() == null) {</span>
+<span class="nc" id="L266">                notileaflist(new ArrayList&lt;&gt;());</span>
+            }
+<span class="nc" id="L268">            notileaflist().add(value);</span>
+<span class="nc" id="L269">            return this;</span>
+        }
+
+        /**
+         * Returns the valueLeafFlags.
+         *
+         * @return value of valueLeafFlags
+         */
+        public BitSet getValueLeafFlags() {
+<span class="nc" id="L278">            return valueLeafFlags;</span>
+        }
+
+        /**
+         * Returns the selectLeafFlags.
+         *
+         * @return value of selectLeafFlags
+         */
+        public BitSet getSelectLeafFlags() {
+<span class="nc" id="L287">            return selectLeafFlags;</span>
+        }
+
+
+
+        @Override
+        public FortestbBuilder selectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L294">            getSelectLeafFlags().set(leaf.getLeafIndex());</span>
+<span class="nc" id="L295">            return this;</span>
+        }
+
+        @Override
+        public void addYangAugmentedInfo(Object value, Class classObject) {
+<span class="nc" id="L300">            yangAugmentedInfoMap.put(classObject, value);</span>
+<span class="nc" id="L301">        }</span>
+
+        @Override
+        public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L305">            return yangAugmentedInfoMap.get(classObject);</span>
+        }
+
+        @Override
+        public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="nc" id="L310">            return yangAugmentedInfoMap;</span>
+        }
+        @Override
+        public Fortestb build() {
+<span class="nc" id="L314">            return new DefaultFortestb(this);</span>
+        }
+
+        /**
+         * Creates an instance of fortestbBuilder.
+         */
+<span class="nc" id="L320">        public FortestbBuilder() {</span>
+<span class="nc" id="L321">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
