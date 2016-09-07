@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultStringList.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.ydt.hello.onos.rev20160903.helloonos.helloworld.helloworldinput</a> &gt; <span class="el_source">DefaultStringList.java</span></div><h1>DefaultStringList.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.ydt.hello.onos.rev20160903.helloonos.helloworld.helloworldinput;
+
+import com.google.common.base.MoreObjects;
+import java.lang.reflect.InvocationTargetException;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+/**
+ * Represents the implementation of stringList.
+ */
+public class DefaultStringList implements StringList {
+
+<span class="nc" id="L31">    protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+    protected String string1;
+    protected String string2;
+    protected String string3;
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, not applicable in query operation
+     */
+<span class="nc" id="L40">    public enum OnosYangNodeOperationType {</span>
+<span class="nc" id="L41">        MERGE,</span>
+<span class="nc" id="L42">        REPLACE,</span>
+<span class="nc" id="L43">        CREATE,</span>
+<span class="nc" id="L44">        DELETE,</span>
+<span class="nc" id="L45">        REMOVE,</span>
+<span class="nc" id="L46">        NONE</span>
+    }
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, will be ignored in query operation
+     */
+    private OnosYangNodeOperationType onosYangNodeOperationType;
+
+    /**
+     * Identify the leafs whose value are explicitly set
+     * Applicable in protocol edit and query operation
+     */
+<span class="nc" id="L59">    private BitSet valueLeafFlags = new BitSet();</span>
+
+    /**
+     * Identify the leafs to be selected, in a query operation
+     */
+<span class="nc" id="L64">    private BitSet selectLeafFlags = new BitSet();</span>
+
+    @Override
+    public String string1() {
+<span class="nc" id="L68">        return string1;</span>
+    }
+
+    @Override
+    public String string2() {
+<span class="nc" id="L73">        return string2;</span>
+    }
+
+    @Override
+    public String string3() {
+<span class="nc" id="L78">        return string3;</span>
+    }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L86">        return onosYangNodeOperationType;</span>
+    }
+
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L92">        return Objects.hash(string1, string2, string3);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L98">            return true;</span>
+        }
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        if (obj instanceof DefaultStringList) {</span>
+<span class="nc" id="L101">            DefaultStringList other = (DefaultStringList) obj;</span>
+<span class="nc" id="L102">            return</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">                 Objects.equals(string1, other.string1) &amp;&amp;</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">                 Objects.equals(string2, other.string2) &amp;&amp;</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">                 Objects.equals(string3, other.string3);</span>
+        }
+<span class="nc" id="L107">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L112">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L113">            .add(&quot;string1&quot;, string1)</span>
+<span class="nc" id="L114">            .add(&quot;string2&quot;, string2)</span>
+<span class="nc" id="L115">            .add(&quot;string3&quot;, string3)</span>
+<span class="nc" id="L116">            .toString();</span>
+    }
+
+    @Override
+    public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L121">        return yangAugmentedInfoMap.get(classObject);</span>
+    }
+
+    @Override
+    public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="nc" id="L126">        return yangAugmentedInfoMap;</span>
+    }
+
+    /**
+     * Creates an instance of stringList.
+     *
+     * @param builderObject builder object of stringList
+     */
+<span class="nc" id="L134">    protected DefaultStringList(StringListBuilder builderObject) {</span>
+<span class="nc" id="L135">        this.string1 = builderObject.string1();</span>
+<span class="nc" id="L136">        this.string2 = builderObject.string2();</span>
+<span class="nc" id="L137">        this.string3 = builderObject.string3();</span>
+<span class="nc" id="L138">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="nc" id="L139">        this.valueLeafFlags = builderObject.getValueLeafFlags();</span>
+<span class="nc" id="L140">        this.selectLeafFlags = builderObject.getSelectLeafFlags();</span>
+<span class="nc" id="L141">        this.yangAugmentedInfoMap = builderObject.yangAugmentedInfoMap();</span>
+<span class="nc" id="L142">    }</span>
+
+    @Override
+    public StringList processSubtreeFiltering(StringList appInstance, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L146">        StringListBuilder subTreeFilteringResultBuilder = new StringListBuilder();</span>
+<span class="nc" id="L147">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (!processLeafSubtreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L150">            return null;</span>
+        }
+<span class="nc bnc" id="L152" title="All 2 branches missed.">        for (Object yangAugmentedInfo : this.yangAugmentedInfoMap().values()) {</span>
+<span class="nc" id="L153">            Object yangAugmentedOpParamInfo = appInstance.yangAugmentedInfo(yangAugmentedInfo.getClass());</span>
+            Object processSubtreeFiltering;
+            try {
+<span class="nc" id="L156">                Class&lt;?&gt;[] interfaces = yangAugmentedInfo.getClass().getInterfaces();</span>
+<span class="nc" id="L157">                processSubtreeFiltering = yangAugmentedInfo.getClass()</span>
+<span class="nc" id="L158">                    .getMethod(&quot;processSubtreeFiltering&quot;, interfaces[0]).invoke(yangAugmentedInfo,</span>
+                        yangAugmentedOpParamInfo);
+<span class="nc bnc" id="L160" title="All 2 branches missed.">                if (processSubtreeFiltering != null) {</span>
+<span class="nc" id="L161">                    subTreeFilteringResultBuilder</span>
+<span class="nc" id="L162">            .addYangAugmentedInfo(processSubtreeFiltering, processSubtreeFiltering.getClass());</span>
+                }
+<span class="nc" id="L164">            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {</span>
+<span class="nc" id="L165">                continue;</span>
+<span class="nc" id="L166">            }</span>
+<span class="nc" id="L167">        }</span>
+<span class="nc bnc" id="L168" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L169">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L171">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processLeafSubtreeFiltering(StringList appInstance, StringListBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L176" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.STRING1.getLeafIndex())) {</span>
+<span class="nc bnc" id="L177" title="All 4 branches missed.">            if (appInstance.string1() == null || !(string1().equals(appInstance.string1()))) {</span>
+<span class="nc" id="L178">                return false;</span>
+            } else {
+<span class="nc" id="L180">                subTreeFilteringResultBuilder.string1(appInstance.string1());</span>
+            }
+<span class="nc bnc" id="L182" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.STRING1.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L183">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L184">            subTreeFilteringResultBuilder.string1(appInstance.string1());</span>
+        }
+
+<span class="nc bnc" id="L187" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.STRING2.getLeafIndex())) {</span>
+<span class="nc bnc" id="L188" title="All 4 branches missed.">            if (appInstance.string2() == null || !(string2().equals(appInstance.string2()))) {</span>
+<span class="nc" id="L189">                return false;</span>
+            } else {
+<span class="nc" id="L191">                subTreeFilteringResultBuilder.string2(appInstance.string2());</span>
+            }
+<span class="nc bnc" id="L193" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.STRING2.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L194">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L195">            subTreeFilteringResultBuilder.string2(appInstance.string2());</span>
+        }
+
+<span class="nc bnc" id="L198" title="All 2 branches missed.">        if (getValueLeafFlags().get(LeafIdentifier.STRING3.getLeafIndex())) {</span>
+<span class="nc bnc" id="L199" title="All 4 branches missed.">            if (appInstance.string3() == null || !(string3().equals(appInstance.string3()))) {</span>
+<span class="nc" id="L200">                return false;</span>
+            } else {
+<span class="nc" id="L202">                subTreeFilteringResultBuilder.string3(appInstance.string3());</span>
+            }
+<span class="nc bnc" id="L204" title="All 4 branches missed.">        } else if (getSelectLeafFlags().get(LeafIdentifier.STRING3.getLeafIndex()) || isSelectAllSchemaChild) {</span>
+<span class="nc" id="L205">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc" id="L206">            subTreeFilteringResultBuilder.string3(appInstance.string3());</span>
+        }
+
+<span class="nc" id="L209">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of defaultStringList.
+     */
+<span class="nc" id="L216">    protected DefaultStringList() {</span>
+<span class="nc" id="L217">    }</span>
+
+    /**
+     * Returns the attribute StringListBuilder.
+     *
+     * @return value of StringListBuilder
+     */
+    public static StringListBuilder builder() {
+<span class="nc" id="L225">        return new StringListBuilder();</span>
+    }
+
+    /**
+     * Returns the valueLeafFlags.
+     *
+     * @return value of valueLeafFlags
+     */
+    public BitSet getValueLeafFlags() {
+<span class="nc" id="L234">        return valueLeafFlags;</span>
+    }
+
+    /**
+     * Returns the selectLeafFlags.
+     *
+     * @return value of selectLeafFlags
+     */
+    public BitSet getSelectLeafFlags() {
+<span class="nc" id="L243">        return selectLeafFlags;</span>
+    }
+
+
+    @Override
+    public boolean isLeafValueSet(LeafIdentifier leaf) {
+<span class="nc" id="L249">        return getValueLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+    @Override
+    public boolean isSelectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L254">        return getSelectLeafFlags().get(leaf.getLeafIndex());</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of stringList.
+     */
+    public static class StringListBuilder implements StringList.StringListBuilder {
+
+<span class="nc" id="L263">        protected Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap = new HashMap&lt;&gt;();</span>
+        protected String string1;
+        protected String string2;
+        protected String string3;
+
+        /**
+         * Specify the node specific operation in protocols like NETCONF.
+         * Applicable in protocol edit operation, will be ignored in query operation
+         */
+        private OnosYangNodeOperationType onosYangNodeOperationType;
+
+        /**
+         * Identify the leafs whose value are explicitly set
+         * Applicable in protocol edit and query operation
+         */
+<span class="nc" id="L278">        private BitSet valueLeafFlags = new BitSet();</span>
+
+        /**
+         * Identify the leafs to be selected, in a query operation
+         */
+<span class="nc" id="L283">        private BitSet selectLeafFlags = new BitSet();</span>
+
+
+        @Override
+        public String string1() {
+<span class="nc" id="L288">            return string1;</span>
+        }
+
+        @Override
+        public String string2() {
+<span class="nc" id="L293">            return string2;</span>
+        }
+
+        @Override
+        public String string3() {
+<span class="nc" id="L298">            return string3;</span>
+        }
+
+        @Override
+        public StringListBuilder string1(String string1) {
+<span class="nc" id="L303">            getValueLeafFlags().set(LeafIdentifier.STRING1.getLeafIndex());</span>
+<span class="nc" id="L304">            this.string1 = string1;</span>
+<span class="nc" id="L305">            return this;</span>
+        }
+
+        @Override
+        public StringListBuilder string2(String string2) {
+<span class="nc" id="L310">            getValueLeafFlags().set(LeafIdentifier.STRING2.getLeafIndex());</span>
+<span class="nc" id="L311">            this.string2 = string2;</span>
+<span class="nc" id="L312">            return this;</span>
+        }
+
+        @Override
+        public StringListBuilder string3(String string3) {
+<span class="nc" id="L317">            getValueLeafFlags().set(LeafIdentifier.STRING3.getLeafIndex());</span>
+<span class="nc" id="L318">            this.string3 = string3;</span>
+<span class="nc" id="L319">            return this;</span>
+        }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L327">            return onosYangNodeOperationType;</span>
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public StringListBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+<span class="nc" id="L337">           this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L338">           return this;</span>
+        }
+
+
+        /**
+         * Returns the valueLeafFlags.
+         *
+         * @return value of valueLeafFlags
+         */
+        public BitSet getValueLeafFlags() {
+<span class="nc" id="L348">            return valueLeafFlags;</span>
+        }
+
+        /**
+         * Returns the selectLeafFlags.
+         *
+         * @return value of selectLeafFlags
+         */
+        public BitSet getSelectLeafFlags() {
+<span class="nc" id="L357">            return selectLeafFlags;</span>
+        }
+
+
+
+        @Override
+        public StringListBuilder selectLeaf(LeafIdentifier leaf) {
+<span class="nc" id="L364">            getSelectLeafFlags().set(leaf.getLeafIndex());</span>
+<span class="nc" id="L365">            return this;</span>
+        }
+
+        @Override
+        public void addYangAugmentedInfo(Object value, Class classObject) {
+<span class="nc" id="L370">            yangAugmentedInfoMap.put(classObject, value);</span>
+<span class="nc" id="L371">        }</span>
+
+        @Override
+        public Object yangAugmentedInfo(Class classObject) {
+<span class="nc" id="L375">            return yangAugmentedInfoMap.get(classObject);</span>
+        }
+
+        @Override
+        public Map&lt;Class&lt;?&gt;, Object&gt; yangAugmentedInfoMap() {
+<span class="nc" id="L380">            return yangAugmentedInfoMap;</span>
+        }
+        @Override
+        public StringList build() {
+<span class="nc" id="L384">            return new DefaultStringList(this);</span>
+        }
+
+        /**
+         * Creates an instance of stringListBuilder.
+         */
+<span class="nc" id="L390">        public StringListBuilder() {</span>
+<span class="nc" id="L391">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

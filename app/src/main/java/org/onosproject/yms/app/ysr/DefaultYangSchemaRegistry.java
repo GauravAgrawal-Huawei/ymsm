@@ -33,6 +33,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -201,6 +202,9 @@ public class DefaultYangSchemaRegistry
                 bundleContext.getBundle().getLocation(),
                 bundleContext.getProperty(USER_DIRECTORY));
 
+        //Check if service should be registered?
+        verifyApplicationRegistration(appObject, serviceClass);
+
         //Add app class to registered serice store.
         if (!getRegisterClassStore().containsKey(serviceClass.getName())) {
             updateServiceClass(serviceClass);
@@ -222,6 +226,24 @@ public class DefaultYangSchemaRegistry
 
         //Verifies if object is updated for app store.
         updateApplicationObject(appObject, serviceClass);
+    }
+
+    /**
+     * Verifies if service class should be registered or not.
+     *
+     * @param appObject application object
+     * @param appClass  application class
+     */
+    private void verifyApplicationRegistration(Object appObject, Class<?> appClass) {
+        Class<?> managerClass = appObject.getClass();
+        Class<?>[] services = managerClass.getInterfaces();
+        List<Class<?>> classes = new ArrayList<>();
+        Collections.addAll(classes, services);
+        if (!classes.contains(appClass)) {
+            throw new RuntimeException("YSR: service class " + appClass.getName()
+                                               + "is not being implemented by "
+                                               + managerClass.getName());
+        }
     }
 
     /**

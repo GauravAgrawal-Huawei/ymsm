@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RootlistOpParam.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yang.gen.v1.ydt.rootlist.rev20160624</a> &gt; <span class="el_source">RootlistOpParam.java</span></div><h1>RootlistOpParam.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yang.gen.v1.ydt.rootlist.rev20160624;
+
+import com.google.common.base.MoreObjects;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import org.onosproject.yang.gen.v1.ydt.rootlist.rev20160624.rootlist.Listwithcontainer;
+import org.onosproject.yang.gen.v1.ydt.rootlist.rev20160624.rootlist.Listwithoutcontainer;
+
+/**
+ * Represents the implementation of rootlist.
+ */
+public class RootlistOpParam implements Rootlist {
+
+<span class="pc" id="L31">    protected List&lt;Listwithoutcontainer&gt; listwithoutcontainer = new ArrayList&lt;&gt;();</span>
+<span class="pc" id="L32">    protected List&lt;Listwithcontainer&gt; listwithcontainer = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, not applicable in query operation
+     */
+<span class="fc" id="L38">    public enum OnosYangNodeOperationType {</span>
+<span class="fc" id="L39">        MERGE,</span>
+<span class="fc" id="L40">        REPLACE,</span>
+<span class="fc" id="L41">        CREATE,</span>
+<span class="fc" id="L42">        DELETE,</span>
+<span class="fc" id="L43">        REMOVE,</span>
+<span class="fc" id="L44">        NONE</span>
+    }
+
+    /**
+     * Specify the node specific operation in protocols like NETCONF.
+     * Applicable in protocol edit operation, will be ignored in query operation
+     */
+    private OnosYangNodeOperationType onosYangNodeOperationType;
+
+    public List&lt;Listwithoutcontainer&gt; listwithoutcontainer() {
+<span class="nc" id="L54">        return listwithoutcontainer;</span>
+    }
+    public List&lt;Listwithcontainer&gt; listwithcontainer() {
+<span class="nc" id="L57">        return listwithcontainer;</span>
+    }
+    /**
+     * Returns the onosYangNodeOperationType.
+     *
+     * @return value of onosYangNodeOperationType
+     */
+    public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="nc" id="L65">        return onosYangNodeOperationType;</span>
+    }
+
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L71">        return Objects.hash(listwithoutcontainer, listwithcontainer);</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L77">            return true;</span>
+        }
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (obj instanceof RootlistOpParam) {</span>
+<span class="nc" id="L80">            RootlistOpParam other = (RootlistOpParam) obj;</span>
+<span class="nc" id="L81">            return</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">                 Objects.equals(listwithoutcontainer, other.listwithoutcontainer) &amp;&amp;</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">                 Objects.equals(listwithcontainer, other.listwithcontainer);</span>
+        }
+<span class="nc" id="L85">        return false;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L90">        return MoreObjects.toStringHelper(getClass())</span>
+<span class="nc" id="L91">            .add(&quot;listwithoutcontainer&quot;, listwithoutcontainer)</span>
+<span class="nc" id="L92">            .add(&quot;listwithcontainer&quot;, listwithcontainer)</span>
+<span class="nc" id="L93">            .toString();</span>
+    }
+
+    /**
+     * Creates an instance of rootlist.
+     *
+     * @param builderObject builder object of rootlist
+     */
+<span class="fc" id="L101">    protected RootlistOpParam(RootlistBuilder builderObject) {</span>
+<span class="fc" id="L102">        this.listwithoutcontainer = builderObject.listwithoutcontainer();</span>
+<span class="fc" id="L103">        this.listwithcontainer = builderObject.listwithcontainer();</span>
+<span class="fc" id="L104">        this.onosYangNodeOperationType = builderObject.onosYangNodeOperationType();</span>
+<span class="fc" id="L105">    }</span>
+
+    @Override
+    public Rootlist processSubtreeFiltering(Rootlist appInstance, boolean isSelectAllSchemaChild) {
+<span class="nc" id="L109">        RootlistBuilder subTreeFilteringResultBuilder = new RootlistBuilder();</span>
+<span class="nc" id="L110">        Boolean isAnySelectOrContainmentNode = false;</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        if (!processChildNodesSubTreeFiltering(appInstance, subTreeFilteringResultBuilder,</span>
+            isAnySelectOrContainmentNode, isSelectAllSchemaChild)) {
+<span class="nc" id="L113">            return null;</span>
+        }
+<span class="nc bnc" id="L115" title="All 4 branches missed.">        if (!isSelectAllSchemaChild &amp;&amp; !isAnySelectOrContainmentNode) {</span>
+<span class="nc" id="L116">            return processSubtreeFiltering(appInstance, true);</span>
+        }
+<span class="nc" id="L118">        return subTreeFilteringResultBuilder.build();</span>
+    }
+    private boolean processChildNodesSubTreeFiltering(Rootlist appInstance, RootlistBuilder
+            subTreeFilteringResultBuilder,
+            Boolean isAnySelectOrContainmentNode, boolean isSelectAllSchemaChild) {
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        if (isSelectAllSchemaChild) {</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">            for (Listwithoutcontainer listwithoutcontainer : appInstance.listwithoutcontainer()) {</span>
+<span class="nc" id="L125">                subTreeFilteringResultBuilder.addToListwithoutcontainer(listwithoutcontainer);</span>
+<span class="nc" id="L126">            }</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        } else if (listwithoutcontainer() != null) {</span>
+<span class="nc" id="L128">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">            if (!listwithoutcontainer().isEmpty()) {</span>
+<span class="nc bnc" id="L130" title="All 4 branches missed.">                if (appInstance.listwithoutcontainer() != null &amp;&amp; !appInstance.listwithoutcontainer().isEmpty()) {</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">                    for (Listwithoutcontainer listwithoutcontainer : listwithoutcontainer()) {</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">                        for (Listwithoutcontainer listwithoutcontainer2 : appInstance.listwithoutcontainer()) {</span>
+<span class="nc" id="L133">                            Listwithoutcontainer result = listwithoutcontainer</span>
+<span class="nc" id="L134">            .processSubtreeFiltering(listwithoutcontainer2, false);</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">                            if (result != null) {</span>
+<span class="nc" id="L136">                                subTreeFilteringResultBuilder.addToListwithoutcontainer(result);</span>
+                            }
+<span class="nc" id="L138">                        }</span>
+<span class="nc" id="L139">                    }</span>
+                }
+            } else {
+<span class="nc bnc" id="L142" title="All 4 branches missed.">                if (appInstance.listwithoutcontainer() != null &amp;&amp; !appInstance.listwithoutcontainer().isEmpty()) {</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">                    for (Listwithoutcontainer listwithoutcontainer : appInstance.listwithoutcontainer()) {</span>
+<span class="nc" id="L144">                        subTreeFilteringResultBuilder.addToListwithoutcontainer(listwithoutcontainer);</span>
+<span class="nc" id="L145">                    }</span>
+                }
+            }
+        }
+
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (isSelectAllSchemaChild) {</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">            for (Listwithcontainer listwithcontainer : appInstance.listwithcontainer()) {</span>
+<span class="nc" id="L152">                subTreeFilteringResultBuilder.addToListwithcontainer(listwithcontainer);</span>
+<span class="nc" id="L153">            }</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">        } else if (listwithcontainer() != null) {</span>
+<span class="nc" id="L155">            isAnySelectOrContainmentNode = true;</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">            if (!listwithcontainer().isEmpty()) {</span>
+<span class="nc bnc" id="L157" title="All 4 branches missed.">                if (appInstance.listwithcontainer() != null &amp;&amp; !appInstance.listwithcontainer().isEmpty()) {</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">                    for (Listwithcontainer listwithcontainer : listwithcontainer()) {</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">                        for (Listwithcontainer listwithcontainer2 : appInstance.listwithcontainer()) {</span>
+<span class="nc" id="L160">                            Listwithcontainer result = listwithcontainer</span>
+<span class="nc" id="L161">            .processSubtreeFiltering(listwithcontainer2, false);</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">                            if (result != null) {</span>
+<span class="nc" id="L163">                                subTreeFilteringResultBuilder.addToListwithcontainer(result);</span>
+                            }
+<span class="nc" id="L165">                        }</span>
+<span class="nc" id="L166">                    }</span>
+                }
+            } else {
+<span class="nc bnc" id="L169" title="All 4 branches missed.">                if (appInstance.listwithcontainer() != null &amp;&amp; !appInstance.listwithcontainer().isEmpty()) {</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">                    for (Listwithcontainer listwithcontainer : appInstance.listwithcontainer()) {</span>
+<span class="nc" id="L171">                        subTreeFilteringResultBuilder.addToListwithcontainer(listwithcontainer);</span>
+<span class="nc" id="L172">                    }</span>
+                }
+            }
+        }
+
+<span class="nc" id="L177">        return true;</span>
+    }
+
+
+    /**
+     * Creates an instance of rootlistOpParam.
+     */
+<span class="nc" id="L184">    protected RootlistOpParam() {</span>
+<span class="nc" id="L185">    }</span>
+
+    /**
+     * Returns the attribute RootlistBuilder.
+     *
+     * @return value of RootlistBuilder
+     */
+    public static RootlistBuilder builder() {
+<span class="nc" id="L193">        return new RootlistBuilder();</span>
+    }
+
+
+    /**
+     * Represents the builder implementation of rootlist.
+     */
+    public static class RootlistBuilder {
+
+<span class="fc" id="L202">        protected List&lt;Listwithoutcontainer&gt; listwithoutcontainer = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L203">        protected List&lt;Listwithcontainer&gt; listwithcontainer = new ArrayList&lt;&gt;();</span>
+
+        /**
+         * Specify the node specific operation in protocols like NETCONF.
+         * Applicable in protocol edit operation, will be ignored in query operation
+         */
+        private OnosYangNodeOperationType onosYangNodeOperationType;
+
+
+        public List&lt;Listwithoutcontainer&gt; listwithoutcontainer() {
+<span class="fc" id="L213">            return listwithoutcontainer;</span>
+        }
+        public List&lt;Listwithcontainer&gt; listwithcontainer() {
+<span class="fc" id="L216">            return listwithcontainer;</span>
+        }
+
+        /**
+         * Returns the builder object of listwithoutcontainer.
+         *
+         * @param listwithoutcontainer list of listwithoutcontainer
+         * @return builder object of listwithoutcontainer
+         */
+        public RootlistBuilder listwithoutcontainer(List&lt;Listwithoutcontainer&gt; listwithoutcontainer) {
+<span class="nc" id="L226">            this.listwithoutcontainer = listwithoutcontainer;</span>
+<span class="nc" id="L227">            return this;</span>
+        }
+
+        /**
+         * Returns the builder object of listwithcontainer.
+         *
+         * @param listwithcontainer list of listwithcontainer
+         * @return builder object of listwithcontainer
+         */
+        public RootlistBuilder listwithcontainer(List&lt;Listwithcontainer&gt; listwithcontainer) {
+<span class="nc" id="L237">            this.listwithcontainer = listwithcontainer;</span>
+<span class="nc" id="L238">            return this;</span>
+        }
+        public RootlistBuilder addToListwithoutcontainer(Listwithoutcontainer value) {
+<span class="fc" id="L241">            listwithoutcontainer().add(value);</span>
+<span class="fc" id="L242">            return this;</span>
+        }
+        public RootlistBuilder addToListwithcontainer(Listwithcontainer value) {
+<span class="nc" id="L245">            listwithcontainer().add(value);</span>
+<span class="nc" id="L246">            return this;</span>
+        }
+        /**
+         * Returns the onosYangNodeOperationType.
+         *
+         * @return value of onosYangNodeOperationType
+         */
+        public OnosYangNodeOperationType onosYangNodeOperationType() {
+<span class="fc" id="L254">            return onosYangNodeOperationType;</span>
+        }
+
+        /**
+         * Set node operation type.
+         *
+         * @param onosYangNodeOperationType node operation type
+         * @return builder object for node operation type
+         */
+        public RootlistBuilder onosYangNodeOperationType(OnosYangNodeOperationType onosYangNodeOperationType) {
+<span class="nc" id="L264">           this.onosYangNodeOperationType = onosYangNodeOperationType;</span>
+<span class="nc" id="L265">           return this;</span>
+        }
+
+
+        public Rootlist build() {
+<span class="fc" id="L270">            return new RootlistOpParam(this);</span>
+        }
+
+        /**
+         * Creates an instance of rootlistBuilder.
+         */
+<span class="fc" id="L276">        public RootlistBuilder() {</span>
+<span class="fc" id="L277">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

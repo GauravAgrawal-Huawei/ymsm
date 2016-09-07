@@ -1,0 +1,978 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultYangSchemaRegistry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">onos-app-yms</a> &gt; <a href="index.source.html" class="el_package">org.onosproject.yms.app.ysr</a> &gt; <span class="el_source">DefaultYangSchemaRegistry.java</span></div><h1>DefaultYangSchemaRegistry.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onosproject.yms.app.ysr;
+
+import org.onosproject.yangutils.datamodel.RpcNotificationContainer;
+import org.onosproject.yangutils.datamodel.YangNode;
+import org.onosproject.yangutils.datamodel.YangRevision;
+import org.onosproject.yangutils.datamodel.YangSchemaNode;
+import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
+import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.regex.Pattern;
+
+import static org.apache.commons.io.FileUtils.deleteDirectory;
+import static org.onosproject.yangutils.utils.UtilConstants.*;
+import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
+import static org.osgi.framework.FrameworkUtil.getBundle;
+
+
+/**
+ * Represent YANG schema registry. Yang schema registry provides interface to
+ * an application to register its YANG schema
+ * with YMS. It provides YANG schema nodes to YDT, YNB and YSB.
+ */
+public class DefaultYangSchemaRegistry
+        implements YangSchemaRegistry {
+
+    private static final String SYSTEM = &quot;/system/&quot;;
+    private static final String MAVEN = &quot;mvn:&quot;;
+    private static final String HYPHEN = &quot;-&quot;;
+    private static final String DELIMITER = &quot;.&quot;;
+    private static final String SERVICE = &quot;Service&quot;;
+    private static final String SER = &quot;.ser&quot;;
+    private static final String JAR = &quot;.jar&quot;;
+    private static final String YANG = &quot;.yang&quot;;
+    private static final String USER_DIRECTORY = &quot;user.dir&quot;;
+<span class="fc" id="L71">    private static final String SLASH = File.separator;</span>
+
+<span class="fc" id="L73">    private static final Logger log =</span>
+<span class="fc" id="L74">            LoggerFactory.getLogger(DefaultYangSchemaRegistry.class);</span>
+
+    /**
+     * Map for storing app objects.
+     */
+    private ConcurrentMap&lt;String, YsrRegisteredAppContext&gt; appObjectStore;
+
+    /**
+     * Map for storing YANG schema nodes.
+     */
+    private ConcurrentMap&lt;String, YsrRegisteredAppContext&gt; yangSchemaStore;
+
+    /**
+     * Map for storing YANG schema nodes with respect to root's generated
+     * interface file name.
+     */
+    private ConcurrentMap&lt;String, YsrRegisteredAppContext&gt;
+            yangSchemaStoreForRootInterface;
+
+    /**
+     * Map for storing YANG schema nodes root's generated op param file name.
+     */
+    private ConcurrentMap&lt;String, YsrRegisteredAppContext&gt;
+            yangSchemaStoreForRootOpParam;
+
+    /**
+     * Map for storing YANG schema nodes with respect to notifications.
+     */
+    private ConcurrentMap&lt;String, YsrRegisteredAppContext&gt;
+            yangSchemaNotificationStore;
+
+    /**
+     * Map for storing registered classes.
+     */
+    private ConcurrentMap&lt;String, Class&lt;?&gt;&gt; registerClassStore;
+
+    /**
+     * Context of application which is registering with YMS.
+     */
+    private YsrRegisteredAppContext ysrRegisteredAppContext;
+
+    /**
+     * Context of application which is registering with YMS with multiple
+     * revision.
+     */
+    private YsrRegisteredAppContext ysrRegisteredAppContextForSchemaMap;
+
+    /**
+     * Context of application which is registering with YMS with multiple
+     * manager object.
+     */
+    private YsrRegisteredAppContext ysrAppContextForApplicationStore;
+
+    /**
+     * Creates an instance of YANG schema registry.
+     */
+<span class="fc" id="L130">    public DefaultYangSchemaRegistry() {</span>
+<span class="fc" id="L131">        appObjectStore = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L132">        yangSchemaStore = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L133">        yangSchemaStoreForRootInterface = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L134">        yangSchemaStoreForRootOpParam = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L135">        yangSchemaNotificationStore = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L136">        registerClassStore = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L137">    }</span>
+
+    /**
+     * Returns app object store.
+     *
+     * @return app object store
+     */
+    private ConcurrentMap&lt;String, YsrRegisteredAppContext&gt; getAppObjectStore() {
+<span class="fc" id="L145">        return appObjectStore;</span>
+    }
+
+    /**
+     * Returns register class store.
+     *
+     * @return register class store.
+     */
+    private ConcurrentMap&lt;String, Class&lt;?&gt;&gt; getRegisterClassStore() {
+<span class="fc" id="L154">        return registerClassStore;</span>
+    }
+
+    /**
+     * Returns schema store.
+     *
+     * @return schema store
+     */
+    private ConcurrentMap&lt;String, YsrRegisteredAppContext&gt; getYangSchemaStore() {
+<span class="fc" id="L163">        return yangSchemaStore;</span>
+    }
+
+    /**
+     * Returns schema store.
+     *
+     * @return schema store
+     */
+    private ConcurrentMap&lt;String, YsrRegisteredAppContext&gt;
+    getYangSchemaStoreForRootInterface() {
+<span class="fc" id="L173">        return yangSchemaStoreForRootInterface;</span>
+    }
+
+    /**
+     * Returns schema store.
+     *
+     * @return schema store
+     */
+    private ConcurrentMap&lt;String, YsrRegisteredAppContext&gt;
+    getYangSchemaStoreForRootOpParam() {
+<span class="fc" id="L183">        return yangSchemaStoreForRootOpParam;</span>
+    }
+
+    /**
+     * Returns schema notification store.
+     *
+     * @return schema notification store
+     */
+    private ConcurrentMap&lt;String, YsrRegisteredAppContext&gt;
+    getYangSchemaNotificationStore() {
+<span class="fc" id="L193">        return yangSchemaNotificationStore;</span>
+    }
+
+    @Override
+    public void registerApplication(Object appObject, Class&lt;?&gt; serviceClass) {
+
+<span class="nc" id="L199">        BundleContext bundleContext =</span>
+<span class="nc" id="L200">                getBundle(serviceClass).getBundleContext();</span>
+<span class="nc" id="L201">        String jarPath = getJarPathFromBundleLocation(</span>
+<span class="nc" id="L202">                bundleContext.getBundle().getLocation(),</span>
+<span class="nc" id="L203">                bundleContext.getProperty(USER_DIRECTORY));</span>
+
+        //Check if service should be registered?
+<span class="nc" id="L206">        verifyApplicationRegistration(appObject, serviceClass);</span>
+
+        //Add app class to registered serice store.
+<span class="nc bnc" id="L209" title="All 2 branches missed.">        if (!getRegisterClassStore().containsKey(serviceClass.getName())) {</span>
+<span class="nc" id="L210">            updateServiceClass(serviceClass);</span>
+        }
+
+        // process storing operations.
+<span class="nc bnc" id="L214" title="All 2 branches missed.">        if (!verifyIfApplicationAlreadyRegistered(serviceClass)) {</span>
+<span class="nc" id="L215">            List&lt;YangSchemaNode&gt; curNodes =</span>
+<span class="nc" id="L216">                    processJarParsingOperations(jarPath);</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">            for (YangSchemaNode schemaNode : curNodes) {</span>
+<span class="nc" id="L218">                processApplicationContext(schemaNode);</span>
+<span class="nc" id="L219">            }</span>
+<span class="nc" id="L220">            ysrAppContext().jarPath(jarPath);</span>
+<span class="nc" id="L221">            ysrAppContextForSchemaStore().jarPath(jarPath);</span>
+<span class="nc" id="L222">            ysrAppContextForApplicationStore().jarPath(jarPath);</span>
+            //Store the YANG file handles.
+<span class="nc" id="L224">            updateYangFileSet(jarPath);</span>
+        }
+
+        //Verifies if object is updated for app store.
+<span class="nc" id="L228">        updateApplicationObject(appObject, serviceClass);</span>
+<span class="nc" id="L229">    }</span>
+
+    /**
+     * Verifies if service class should be registered or not.
+     *
+     * @param appObject application object
+     * @param appClass  application class
+     */
+    private void verifyApplicationRegistration(Object appObject, Class&lt;?&gt; appClass) {
+<span class="nc" id="L238">        Class&lt;?&gt; managerClass = appObject.getClass();</span>
+<span class="nc" id="L239">        Class&lt;?&gt;[] services = managerClass.getInterfaces();</span>
+<span class="nc" id="L240">        List&lt;Class&lt;?&gt;&gt; classes = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L241">        Collections.addAll(classes, services);</span>
+<span class="nc bnc" id="L242" title="All 2 branches missed.">        if (!classes.contains(appClass)) {</span>
+<span class="nc" id="L243">            throw new RuntimeException(&quot;YSR: service class &quot; + appClass.getName()</span>
+                                               + &quot;is not being implemented by &quot;
+<span class="nc" id="L245">                                               + managerClass.getName());</span>
+        }
+<span class="nc" id="L247">    }</span>
+
+    /**
+     * Verifies if application is already registered with YMS.
+     *
+     * @param appClass application class
+     * @return true if application already registered
+     */
+    private boolean verifyIfApplicationAlreadyRegistered(Class&lt;?&gt; appClass) {
+<span class="nc" id="L256">        String appName = appClass.getSimpleName();</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">        if (!getAppObjectStore().containsKey(appClass.getName())) {</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">            if (appName.contains(OP_PARAM)) {</span>
+<span class="nc" id="L259">                return getYangSchemaStoreForRootOpParam().containsKey(appClass.getName());</span>
+            } else {
+<span class="nc" id="L261">                return getYangSchemaStoreForRootInterface().containsKey(appClass.getName());</span>
+            }
+        }
+<span class="nc" id="L264">        return true;</span>
+    }
+
+    /**
+     * Verifies if service is being implemented by some new object.
+     *
+     * @param appObject application's object
+     * @param appClass  application's class
+     */
+    private void updateApplicationObject(Object appObject, Class&lt;?&gt; appClass) {
+<span class="nc bnc" id="L274" title="All 2 branches missed.">        if (getAppObjectStore().containsKey(appClass.getName())) {</span>
+<span class="nc" id="L275">            YsrRegisteredAppContext appContext = getAppObjectStore().get(appClass.getName());</span>
+<span class="nc" id="L276">            YangSchemaNode schemaNode = appContext.curNode();</span>
+<span class="nc" id="L277">            String name = schemaNode.getJavaPackage() + PERIOD +</span>
+<span class="nc" id="L278">                    getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType());</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">            if (appContext.appObject() == null) {</span>
+                //update in application store.
+<span class="nc" id="L281">                appContext.appObject(appObject);</span>
+<span class="nc bnc" id="L282" title="All 2 branches missed.">                if (getYangSchemaStoreForRootInterface().containsKey(name)) {</span>
+<span class="nc" id="L283">                    getYangSchemaStoreForRootInterface().get(name).appObject(appObject);</span>
+                }
+<span class="nc bnc" id="L285" title="All 2 branches missed.">                if (getYangSchemaStoreForRootOpParam().containsKey(name + OP_PARAM)) {</span>
+<span class="nc" id="L286">                    getYangSchemaStoreForRootOpParam().get(name + OP_PARAM).appObject(appObject);</span>
+                }
+            }
+        }
+<span class="nc" id="L290">    }</span>
+
+    @Override
+    public void unRegisterApplication(Object managerObject,
+                                      Class&lt;?&gt; serviceClass) {
+<span class="fc" id="L295">        YangSchemaNode curNode = null;</span>
+<span class="fc" id="L296">        String appName = serviceClass.getName();</span>
+
+        //Remove registered class from store.
+<span class="pc bpc" id="L299" title="1 of 2 branches missed.">        if (getRegisterClassStore().containsKey(serviceClass.getName())) {</span>
+<span class="nc" id="L300">            getRegisterClassStore().remove(serviceClass.getName());</span>
+        }
+
+        //check if service is in app store.
+<span class="fc bfc" id="L304" title="All 2 branches covered.">        if (getAppObjectStore().containsKey(serviceClass.getName())) {</span>
+<span class="fc" id="L305">            curNode = retrieveNodeForUnregister(appName, getAppObjectStore());</span>
+<span class="fc" id="L306">        } else if (getYangSchemaStoreForRootInterface()</span>
+<span class="pc bpc" id="L307" title="1 of 2 branches missed.">                .containsKey(serviceClass.getName())) {</span>
+            //check if service is in interface store.
+<span class="nc" id="L309">            curNode = retrieveNodeForUnregister(appName,</span>
+<span class="nc" id="L310">                                                getYangSchemaStoreForRootInterface());</span>
+<span class="fc" id="L311">        } else if (getYangSchemaStoreForRootOpParam()</span>
+<span class="pc bpc" id="L312" title="1 of 2 branches missed.">                .containsKey(serviceClass.getName())) {</span>
+            //check if service is in op param store.
+<span class="nc" id="L314">            curNode = retrieveNodeForUnregister(appName,</span>
+<span class="nc" id="L315">                                                getYangSchemaStoreForRootOpParam());</span>
+        }
+<span class="fc bfc" id="L317" title="All 2 branches covered.">        if (curNode != null) {</span>
+<span class="fc" id="L318">            String javaName = curNode.getJavaPackage() + PERIOD +</span>
+<span class="fc" id="L319">                    getCapitalCase(curNode.getJavaClassNameOrBuiltInType());</span>
+<span class="fc" id="L320">            removeFromYangSchemaStore(curNode);</span>
+<span class="fc" id="L321">            removeFromYangNotificationStore(curNode, javaName);</span>
+<span class="fc" id="L322">            removeFromAppSchemaStore(appName);</span>
+<span class="fc" id="L323">            removeFromYangSchemaNodeForRootInterface(javaName);</span>
+<span class="fc" id="L324">            removeFromYangSchemaNodeForRootOpParam(javaName);</span>
+<span class="fc" id="L325">            log.info(&quot;YSR: service &quot; + serviceClass.getSimpleName() +</span>
+                             &quot; is unregistered.&quot;);
+<span class="fc" id="L327">        } else {</span>
+<span class="fc" id="L328">            log.error(&quot;YSR: service &quot; + serviceClass.getSimpleName() + &quot; was &quot; +</span>
+                              &quot;not registered.&quot;);
+        }
+<span class="fc" id="L331">    }</span>
+
+    @Override
+    public Object getRegisteredApplication(YangSchemaNode schemaNode) {
+<span class="fc bfc" id="L335" title="All 2 branches covered.">        if (schemaNode != null) {</span>
+<span class="fc" id="L336">            String name = schemaNode.getJavaPackage() + PERIOD +</span>
+<span class="fc" id="L337">                    getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType());</span>
+<span class="pc bpc" id="L338" title="1 of 2 branches missed.">            if (getYangSchemaStoreForRootInterface().containsKey(name)) {</span>
+<span class="fc" id="L339">                return getYangSchemaStoreForRootInterface().get(name)</span>
+<span class="fc" id="L340">                        .appObject();</span>
+            }
+<span class="nc" id="L342">            log.error(&quot;YSR: &quot; + name + &quot; not found.&quot;);</span>
+        }
+<span class="fc" id="L344">        return null;</span>
+    }
+
+    @Override
+    public YangSchemaNode getYangSchemaNodeUsingSchemaName(String schemaName) {
+<span class="fc bfc" id="L349" title="All 2 branches covered.">        if (getYangSchemaStore().containsKey(schemaName)) {</span>
+<span class="fc" id="L350">            return getSchemaNodeUsingSchemaNameWithRev(schemaName);</span>
+        }
+<span class="fc" id="L352">        log.error(&quot;YSR: &quot; + schemaName + &quot; not found.&quot;);</span>
+<span class="fc" id="L353">        return null;</span>
+    }
+
+    @Override
+    public YangSchemaNode getYangSchemaNodeUsingAppName(String appName) {
+<span class="fc bfc" id="L358" title="All 2 branches covered.">        if (getAppObjectStore().containsKey(appName)) {</span>
+<span class="fc" id="L359">            return getAppObjectStore().get(appName).curNode();</span>
+        }
+<span class="fc" id="L361">        log.error(&quot;YSR: &quot; + appName + &quot; not found.&quot;);</span>
+<span class="fc" id="L362">        return null;</span>
+    }
+
+    @Override
+    public YangSchemaNode
+    getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName(
+            String rootInterfaceFileName) {
+<span class="fc" id="L369">        if (getYangSchemaStoreForRootInterface()</span>
+<span class="fc bfc" id="L370" title="All 2 branches covered.">                .containsKey(rootInterfaceFileName)) {</span>
+<span class="fc" id="L371">            return getYangSchemaStoreForRootInterface()</span>
+<span class="fc" id="L372">                    .get(rootInterfaceFileName).curNode();</span>
+        }
+<span class="fc" id="L374">        log.error(&quot;YSR: &quot; + rootInterfaceFileName + &quot; not found.&quot;);</span>
+<span class="fc" id="L375">        return null;</span>
+    }
+
+    @Override
+    public YangSchemaNode getYangSchemaNodeUsingGeneratedRootNodeOpPramFileName(
+            String rootOpParamFileName) {
+<span class="fc" id="L381">        if (getYangSchemaStoreForRootOpParam()</span>
+<span class="fc bfc" id="L382" title="All 2 branches covered.">                .containsKey(rootOpParamFileName)) {</span>
+<span class="fc" id="L383">            return getYangSchemaStoreForRootOpParam().get(rootOpParamFileName)</span>
+<span class="fc" id="L384">                    .curNode();</span>
+        }
+<span class="fc" id="L386">        log.error(&quot;YSR: &quot; + rootOpParamFileName + &quot; not found.&quot;);</span>
+<span class="fc" id="L387">        return null;</span>
+    }
+
+    @Override
+    public YangSchemaNode getRootYangSchemaNodeForNotification(
+            String eventSubject) {
+<span class="fc bfc" id="L393" title="All 2 branches covered.">        if (getYangSchemaNotificationStore().containsKey(eventSubject)) {</span>
+<span class="fc" id="L394">            return getYangSchemaNotificationStore().get(eventSubject).curNode();</span>
+        }
+<span class="fc" id="L396">        log.error(&quot;YSR: &quot; + eventSubject + &quot; not found.&quot;);</span>
+<span class="fc" id="L397">        return null;</span>
+    }
+
+    public Class&lt;?&gt; getRegisteredClass(YangSchemaNode schemaNode,
+                                       String appName) {
+<span class="fc" id="L402">        String interfaceName = schemaNode.getJavaPackage() + PERIOD +</span>
+<span class="fc" id="L403">                getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType());</span>
+<span class="fc" id="L404">        String serviceName = interfaceName + SERVICE;</span>
+        String defaultClass;
+<span class="pc bpc" id="L406" title="1 of 2 branches missed.">        if (schemaNode instanceof RpcNotificationContainer) {</span>
+<span class="fc" id="L407">            defaultClass = schemaNode.getJavaPackage()</span>
+<span class="fc" id="L408">                    + getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType()</span>
+                                             + OP_PARAM);
+        } else {
+<span class="nc" id="L411">            defaultClass = schemaNode.getJavaPackage() + PERIOD</span>
+<span class="nc" id="L412">                    + getCapitalCase(DEFAULT) +</span>
+<span class="nc" id="L413">                    getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType());</span>
+        }
+        //If application class is registered.
+<span class="pc bpc" id="L416" title="1 of 2 branches missed.">        if (getRegisterClassStore().containsKey(appName)) {</span>
+<span class="nc" id="L417">            return getRegisterClassStore().get(appName);</span>
+<span class="pc bpc" id="L418" title="1 of 2 branches missed.">        } else if (getRegisterClassStore().containsKey(interfaceName)) {</span>
+            //If interface class is registered.
+<span class="fc" id="L420">            return getRegisterClassStore().get(interfaceName);</span>
+<span class="nc bnc" id="L421" title="All 2 branches missed.">        } else if (getRegisterClassStore().containsKey(serviceName)) {</span>
+            //If service class is registered.
+<span class="nc" id="L423">            return getRegisterClassStore().get(serviceName);</span>
+<span class="nc bnc" id="L424" title="All 2 branches missed.">        } else if (getRegisterClassStore().containsKey(defaultClass)) {</span>
+            //If default class is registered.
+<span class="nc" id="L426">            return getRegisterClassStore().get(defaultClass);</span>
+        }
+<span class="nc" id="L428">        return null;</span>
+    }
+
+    /**
+     * Returns notification schema store.
+     *
+     * @return notification schema store
+     */
+    private ConcurrentMap&lt;String, YsrRegisteredAppContext&gt;
+    getNotificationSchemaMap() {
+<span class="nc" id="L438">        return getYangSchemaNotificationStore();</span>
+    }
+
+    /**
+     * Updates service class store.
+     *
+     * @param serviceClass service class
+     */
+    void updateServiceClass(Class&lt;?&gt; serviceClass) {
+<span class="fc" id="L447">        getRegisterClassStore().put(serviceClass.getName(), serviceClass);</span>
+<span class="fc" id="L448">    }</span>
+
+    /**
+     * Updates application object store.
+     *
+     * @param appName application name
+     */
+    private void updateAppObjectStore(String appName) {
+<span class="fc" id="L456">        getAppObjectStore().put(appName, ysrAppContextForApplicationStore());</span>
+<span class="fc" id="L457">    }</span>
+
+    /**
+     * Updates YANG schema object store.
+     *
+     * @param schemaNode application's schema node
+     */
+    private void updateYangSchemaStore(YangSchemaNode schemaNode) {
+<span class="fc" id="L465">        addSchemaNodeUsingSchemaNameWithRev(schemaNode);</span>
+<span class="fc" id="L466">    }</span>
+
+    /**
+     * Updates YANG schema notification object store.
+     *
+     * @param notificationName application's notification name
+     */
+    private void updateYangNotificationStore(String notificationName) {
+<span class="fc" id="L474">        getYangSchemaNotificationStore()</span>
+<span class="fc" id="L475">                .put(notificationName, ysrAppContext());</span>
+<span class="fc" id="L476">    }</span>
+
+    /**
+     * Updates YANG schema object store for root interface file name.
+     *
+     * @param rootInterfaceFileName name of generated interface file for root
+     *                              node
+     */
+    private void updateYangSchemaForRootInterfaceFileNameStore(
+            String rootInterfaceFileName) {
+<span class="fc" id="L486">        getYangSchemaStoreForRootInterface()</span>
+<span class="fc" id="L487">                .put(rootInterfaceFileName, ysrAppContext());</span>
+<span class="fc" id="L488">    }</span>
+
+    /**
+     * Updates YANG schema object store  for root op param file name.
+     *
+     * @param rootOpParamFileName name of generated op param file for root node
+     */
+    private void updateYangSchemaForRootOpParamFileNameStore(
+            String rootOpParamFileName) {
+<span class="fc" id="L497">        getYangSchemaStoreForRootOpParam()</span>
+<span class="fc" id="L498">                .put(rootOpParamFileName, ysrAppContext());</span>
+<span class="fc" id="L499">    }</span>
+
+    /**
+     * Updates the YANG file set.
+     *
+     * @param path YANG file path
+     */
+    private void updateYangFileSet(String path) {
+<span class="nc" id="L507">        File yangFilePath = new File(path);</span>
+<span class="nc" id="L508">        File[] fileArray = yangFilePath.listFiles();</span>
+<span class="nc bnc" id="L509" title="All 2 branches missed.">        if (fileArray != null) {</span>
+<span class="nc bnc" id="L510" title="All 2 branches missed.">            for (File curFile : fileArray) {</span>
+<span class="nc bnc" id="L511" title="All 2 branches missed.">                if (curFile.getName().endsWith(YANG)) {</span>
+<span class="nc" id="L512">                    ysrAppContext().addToYangFileSet(curFile);</span>
+<span class="nc" id="L513">                    ysrAppContextForSchemaStore()</span>
+<span class="nc" id="L514">                            .addToYangFileSet(curFile);</span>
+<span class="nc" id="L515">                    ysrAppContextForApplicationStore().addToYangFileSet(curFile);</span>
+                }
+            }
+        }
+<span class="nc" id="L519">    }</span>
+
+    /**
+     * Process jar file for fetching YANG nodes.
+     *
+     * @param path jar file path
+     * @return YANG schema nodes
+     */
+    private List&lt;YangSchemaNode&gt; processJarParsingOperations(String path) {
+        //Deserialize data model and get the YANG node set.
+<span class="nc" id="L529">        return parseJarFile(path + JAR, path);</span>
+    }
+
+    /**
+     * Process an application an updates the maps for YANG schema registry.
+     *
+     * @param appNode application YANG schema nodes
+     */
+    void processApplicationContext(YangSchemaNode appNode) {
+
+<span class="fc" id="L539">        String appName = appNode.getJavaPackage() + PERIOD +</span>
+<span class="fc" id="L540">                getCapitalCase(appNode.getJavaClassNameOrBuiltInType());</span>
+
+        //Create a new instance of ysr app context for each node.
+<span class="fc" id="L543">        ysrAppContext(new YsrRegisteredAppContext());</span>
+<span class="fc" id="L544">        ysrAppContextForSchemaStore(new YsrRegisteredAppContext());</span>
+<span class="fc" id="L545">        ysrAppContextForApplicationStore(new YsrRegisteredAppContext());</span>
+
+        //add cur node to app context.
+<span class="fc" id="L548">        ysrAppContext().curNode(appNode);</span>
+<span class="fc" id="L549">        ysrAppContextForApplicationStore().curNode(appNode);</span>
+
+        //Updates maps wih schema nodes
+<span class="fc" id="L552">        updateAppObjectStore(appName + SERVICE);</span>
+        // Updates schema store
+<span class="fc" id="L554">        updateYangSchemaStore(appNode);</span>
+        // update interface store
+<span class="fc" id="L556">        updateYangSchemaForRootInterfaceFileNameStore(appName);</span>
+        //update op param store
+<span class="fc" id="L558">        updateYangSchemaForRootOpParamFileNameStore(appName + OP_PARAM);</span>
+        //Checks if notification is present then update notification store map.
+<span class="fc" id="L560">        String eventSubject = null;</span>
+        try {
+<span class="fc bfc" id="L562" title="All 2 branches covered.">            if (appNode.isNotificationPresent()) {</span>
+<span class="fc" id="L563">                eventSubject = appName.toLowerCase() + PERIOD +</span>
+<span class="fc" id="L564">                        getCapitalCase(</span>
+<span class="fc" id="L565">                                appNode.getJavaClassNameOrBuiltInType()) +</span>
+                        EVENT_STRING;
+            }
+<span class="nc" id="L568">        } catch (DataModelException e) {</span>
+<span class="nc" id="L569">            e.printStackTrace();</span>
+<span class="fc" id="L570">        }</span>
+<span class="fc bfc" id="L571" title="All 2 branches covered.">        if (eventSubject != null) {</span>
+<span class="fc" id="L572">            updateYangNotificationStore(eventSubject);</span>
+        }
+<span class="fc" id="L574">        log.info(&quot;YSR: successfully registered this application &quot; + appName +</span>
+                         SERVICE);
+
+<span class="fc" id="L577">    }</span>
+
+    /**
+     * Parses jar file and returns list of serialized file names.
+     *
+     * @param jarFile   jar file to be parsed
+     * @param directory directory where to search
+     * @return list of serialized files
+     */
+    private List&lt;YangSchemaNode&gt; parseJarFile(String jarFile,
+                                              String directory) {
+
+<span class="nc" id="L589">        List&lt;YangSchemaNode&gt; nodes = new ArrayList&lt;&gt;();</span>
+        try {
+<span class="nc" id="L591">            JarFile jar = new JarFile(jarFile);</span>
+<span class="nc" id="L592">            Enumeration&lt;?&gt; enumEntries = jar.entries();</span>
+
+<span class="nc bnc" id="L594" title="All 2 branches missed.">            while (enumEntries.hasMoreElements()) {</span>
+<span class="nc" id="L595">                JarEntry file = (JarEntry) enumEntries.nextElement();</span>
+<span class="nc bnc" id="L596" title="All 2 branches missed.">                if (file.getName().endsWith(SER)) {</span>
+<span class="nc bnc" id="L597" title="All 2 branches missed.">                    if (file.getName().contains(SLASH)) {</span>
+<span class="nc" id="L598">                        String[] strArray = file.getName().split(SLASH);</span>
+<span class="nc" id="L599">                        String tempPath = &quot;&quot;;</span>
+<span class="nc bnc" id="L600" title="All 2 branches missed.">                        for (int i = 0; i &lt; strArray.length - 1; i++) {</span>
+<span class="nc" id="L601">                            tempPath = SLASH + tempPath + SLASH + strArray[i];</span>
+                        }
+<span class="nc" id="L603">                        File dir = new File(directory + tempPath);</span>
+<span class="nc" id="L604">                        dir.mkdirs();</span>
+                    }
+<span class="nc" id="L606">                    File serializedFile =</span>
+<span class="nc" id="L607">                            new File(directory + SLASH + file.getName());</span>
+<span class="nc bnc" id="L608" title="All 2 branches missed.">                    if (file.isDirectory()) {</span>
+<span class="nc" id="L609">                        serializedFile.mkdirs();</span>
+<span class="nc" id="L610">                        continue;</span>
+                    }
+<span class="nc" id="L612">                    InputStream inputStream = jar.getInputStream(file);</span>
+
+<span class="nc" id="L614">                    FileOutputStream fileOutputStream =</span>
+                            new FileOutputStream(serializedFile);
+<span class="nc bnc" id="L616" title="All 2 branches missed.">                    while (inputStream.available() &gt; 0) {</span>
+<span class="nc" id="L617">                        fileOutputStream.write(inputStream.read());</span>
+                    }
+<span class="nc" id="L619">                    fileOutputStream.close();</span>
+<span class="nc" id="L620">                    inputStream.close();</span>
+<span class="nc" id="L621">                    nodes.addAll(</span>
+<span class="nc" id="L622">                            deSerializeDataModel(serializedFile.toString()));</span>
+                }
+<span class="nc" id="L624">            }</span>
+<span class="nc" id="L625">            jar.close();</span>
+<span class="nc" id="L626">        } catch (IOException e) {</span>
+<span class="nc" id="L627">            log.error(</span>
+                    &quot;YSR: failed to fetch yang nodes from jar file for &quot; +
+                            &quot;application &quot; +
+<span class="nc" id="L630">                            ysrAppContext().appObject());</span>
+<span class="nc" id="L631">            e.printStackTrace();</span>
+<span class="nc" id="L632">        }</span>
+<span class="nc" id="L633">        return nodes;</span>
+    }
+
+
+    /**
+     * Returns jar path from bundle mvnLocationPath.
+     *
+     * @param mvnLocationPath mvnLocationPath of bundle
+     * @return path of jar
+     */
+    private String getJarPathFromBundleLocation(String mvnLocationPath,
+                                                String currentDirectory) {
+<span class="nc" id="L645">        String path = currentDirectory + SYSTEM;</span>
+<span class="nc" id="L646">        String[] strArray = mvnLocationPath.split(MAVEN);</span>
+<span class="nc" id="L647">        String[] split = strArray[1].split(File.separator);</span>
+<span class="nc" id="L648">        String[] groupId = split[0].split(Pattern.quote(DELIMITER));</span>
+
+<span class="nc" id="L650">        path = path + groupId[0] + SLASH + groupId[1] + SLASH + split[1] +</span>
+                SLASH + split[2] + SLASH + split[1] + HYPHEN + split[2];
+<span class="nc" id="L652">        return path;</span>
+    }
+
+    /**
+     * Returns de-serializes YANG data-model nodes.
+     *
+     * @param serializedFileInfo serialized File Info
+     * @return de-serializes YANG data-model nodes
+     */
+    Set&lt;YangSchemaNode&gt; deSerializeDataModel(String serializedFileInfo) {
+
+<span class="fc" id="L663">        Set&lt;YangSchemaNode&gt; nodes = new HashSet&lt;&gt;();</span>
+        try {
+<span class="fc" id="L665">            FileInputStream fileInputStream =</span>
+                    new FileInputStream(serializedFileInfo);
+<span class="fc" id="L667">            ObjectInputStream objectInputStream =</span>
+                    new ObjectInputStream(fileInputStream);
+<span class="fc" id="L669">            nodes = (Set&lt;YangSchemaNode&gt;) objectInputStream.readObject();</span>
+<span class="fc" id="L670">            objectInputStream.close();</span>
+<span class="fc" id="L671">            fileInputStream.close();</span>
+<span class="nc" id="L672">        } catch (IOException | ClassNotFoundException e) {</span>
+<span class="nc" id="L673">            e.printStackTrace();</span>
+<span class="nc" id="L674">            log.error(serializedFileInfo + &quot; not found.&quot;);</span>
+<span class="fc" id="L675">        }</span>
+
+<span class="fc" id="L677">        return nodes;</span>
+    }
+
+    /**
+     * Returns ysr app context.
+     *
+     * @return ysr app context
+     */
+    YsrRegisteredAppContext ysrAppContext() {
+<span class="fc" id="L686">        return ysrRegisteredAppContext;</span>
+    }
+
+    /**
+     * Sets ysr app context.
+     *
+     * @param ysrRegisteredAppContext ysr app context
+     */
+    void ysrAppContext(
+            YsrRegisteredAppContext ysrRegisteredAppContext) {
+<span class="fc" id="L696">        this.ysrRegisteredAppContext = ysrRegisteredAppContext;</span>
+<span class="fc" id="L697">    }</span>
+
+    /**
+     * Returns schema node based on the revision.
+     *
+     * @param name name of the schema node
+     * @return schema node based on the revision.
+     */
+    private YangSchemaNode getSchemaNodeUsingSchemaNameWithRev(String name) {
+        YsrRegisteredAppContext appContext;
+        YangSchemaNode schemaNode;
+<span class="pc bpc" id="L708" title="1 of 2 branches missed.">        if (name.contains(&quot;@&quot;)) {</span>
+<span class="nc" id="L709">            String[] revArray = name.split(&quot;@&quot;);</span>
+<span class="nc" id="L710">            appContext = getYangSchemaStore().get(revArray[0]);</span>
+<span class="nc" id="L711">            schemaNode = appContext.getSchemaNodeForRevisionStore(name);</span>
+<span class="nc bnc" id="L712" title="All 2 branches missed.">            if (schemaNode != null) {</span>
+<span class="nc" id="L713">                return schemaNode;</span>
+            }
+<span class="nc" id="L715">            return appContext.curNode();</span>
+        }
+<span class="fc" id="L717">        appContext = getYangSchemaStore().get(name);</span>
+<span class="pc bpc" id="L718" title="1 of 2 branches missed.">        if (appContext != null) {</span>
+<span class="fc" id="L719">            Iterator&lt;YangSchemaNode&gt; iterator =</span>
+<span class="fc" id="L720">                    appContext.getYangSchemaNodeForRevisionStore().values()</span>
+<span class="fc" id="L721">                            .iterator();</span>
+<span class="pc bpc" id="L722" title="1 of 2 branches missed.">            if (iterator.hasNext()) {</span>
+<span class="fc" id="L723">                return appContext.getYangSchemaNodeForRevisionStore().values()</span>
+<span class="fc" id="L724">                        .iterator().next();</span>
+            } else {
+<span class="nc" id="L726">                return null;</span>
+            }
+        }
+<span class="nc" id="L729">        return null;</span>
+    }
+
+    /**
+     * Adds schema node when different revision of node has received.
+     *
+     * @param schemaNode schema node
+     */
+    private void addSchemaNodeUsingSchemaNameWithRev(
+            YangSchemaNode schemaNode) {
+
+<span class="fc" id="L740">        String date = getDateInStringFormat(schemaNode);</span>
+<span class="fc" id="L741">        String name = schemaNode.getName();</span>
+<span class="fc bfc" id="L742" title="All 2 branches covered.">        if (!date.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L743">            name = name + &quot;@&quot; + date;</span>
+        }
+        //check if already present.
+<span class="fc bfc" id="L746" title="All 2 branches covered.">        if (!getYangSchemaStore().containsKey(schemaNode.getName())) {</span>
+<span class="fc" id="L747">            ysrAppContextForSchemaStore().curNode(schemaNode);</span>
+            //if revision is not present no need to add in revision store.
+<span class="fc" id="L749">            ysrAppContextForSchemaStore()</span>
+<span class="fc" id="L750">                    .addSchemaNodeWithRevisionStore(name, schemaNode);</span>
+<span class="fc" id="L751">            getYangSchemaStore().put(schemaNode.getName(),</span>
+<span class="fc" id="L752">                                     ysrAppContextForSchemaStore());</span>
+        } else {
+<span class="fc" id="L754">            YsrRegisteredAppContext appContext =</span>
+<span class="fc" id="L755">                    getYangSchemaStore().get(schemaNode.getName());</span>
+<span class="fc" id="L756">            appContext.addSchemaNodeWithRevisionStore(name, schemaNode);</span>
+<span class="fc" id="L757">            appContext.curNode(schemaNode);</span>
+        }
+<span class="fc" id="L759">    }</span>
+
+    /**
+     * Returns date in string format.
+     *
+     * @param schemaNode schema node
+     * @return date in string format.
+     */
+    private String getDateInStringFormat(YangSchemaNode schemaNode) {
+<span class="pc bpc" id="L768" title="1 of 2 branches missed.">        if (schemaNode != null) {</span>
+<span class="fc bfc" id="L769" title="All 2 branches covered.">            if (((YangNode) schemaNode).getRevision() != null) {</span>
+<span class="fc" id="L770">                return new SimpleDateFormat(&quot;yyyy-mm-dd&quot;)</span>
+<span class="fc" id="L771">                        .format(((YangNode) schemaNode).getRevision()</span>
+<span class="fc" id="L772">                                        .getRevDate());</span>
+            }
+        }
+<span class="fc" id="L775">        return &quot;&quot;;</span>
+    }
+
+    /**
+     * Removes schema node from schema map.
+     *
+     * @param removableNode schema node which needs to be removed
+     */
+    private void removeSchemaNode(YangSchemaNode removableNode) {
+
+<span class="fc" id="L785">        YangRevision removeNodeRev = ((YangNode) removableNode).getRevision();</span>
+<span class="fc" id="L786">        String name = removableNode.getName();</span>
+<span class="fc bfc" id="L787" title="All 2 branches covered.">        if (removeNodeRev != null) {</span>
+<span class="fc" id="L788">            name = removableNode.getName() + &quot;@&quot; +</span>
+<span class="fc" id="L789">                    getDateInStringFormat(removableNode);</span>
+        }
+<span class="fc" id="L791">        YsrRegisteredAppContext appContext = getYangSchemaStore()</span>
+<span class="fc" id="L792">                .get(removableNode.getName());</span>
+<span class="pc bpc" id="L793" title="1 of 2 branches missed.">        if (!appContext.getYangSchemaNodeForRevisionStore().isEmpty()</span>
+<span class="fc bfc" id="L794" title="All 2 branches covered.">                &amp;&amp; appContext.getYangSchemaNodeForRevisionStore().size() != 1) {</span>
+<span class="fc" id="L795">            appContext.removeSchemaNodeForRevisionStore(name);</span>
+        } else {
+<span class="fc" id="L797">            getYangSchemaStore().remove(removableNode.getName());</span>
+        }
+<span class="fc" id="L799">    }</span>
+
+    /**
+     * Verifies if the manager object is already registered with notification
+     * handler.
+     *
+     * @param serviceClass service class
+     * @return true if the manager object is already registered with
+     * notification handler.
+     */
+    public boolean verifyNotificationObject(Class&lt;?&gt; serviceClass) {
+<span class="nc" id="L810">        YangSchemaNode schemaNode = null;</span>
+<span class="nc bnc" id="L811" title="All 2 branches missed.">        if (getAppObjectStore().containsKey(serviceClass.getName())) {</span>
+<span class="nc" id="L812">            schemaNode = getYangSchemaNodeUsingAppName(serviceClass.getName());</span>
+<span class="nc" id="L813">        } else if (getYangSchemaStoreForRootInterface()</span>
+<span class="nc bnc" id="L814" title="All 2 branches missed.">                .containsKey(serviceClass.getName())) {</span>
+<span class="nc" id="L815">            schemaNode =</span>
+<span class="nc" id="L816">                    getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName(</span>
+<span class="nc" id="L817">                            serviceClass.getName());</span>
+<span class="nc" id="L818">        } else if (getYangSchemaStoreForRootOpParam()</span>
+<span class="nc bnc" id="L819" title="All 2 branches missed.">                .containsKey(serviceClass.getName())) {</span>
+<span class="nc" id="L820">            schemaNode = getYangSchemaNodeUsingGeneratedRootNodeOpPramFileName(</span>
+<span class="nc" id="L821">                    serviceClass.getName());</span>
+        }
+
+<span class="nc bnc" id="L824" title="All 2 branches missed.">        if (schemaNode != null) {</span>
+<span class="nc" id="L825">            String name = (schemaNode.getJavaPackage() + PERIOD +</span>
+<span class="nc" id="L826">                    schemaNode.getJavaClassNameOrBuiltInType() + PERIOD)</span>
+<span class="nc" id="L827">                    .toLowerCase()</span>
+                    +
+<span class="nc" id="L829">                    getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType()) +</span>
+                    EVENT_STRING;
+
+<span class="nc bnc" id="L832" title="All 2 branches missed.">            if (getNotificationSchemaMap().containsKey(name)) {</span>
+<span class="nc" id="L833">                if (!getNotificationSchemaMap().get(name)</span>
+<span class="nc bnc" id="L834" title="All 2 branches missed.">                        .isNotificationRegistered()) {</span>
+<span class="nc" id="L835">                    getNotificationSchemaMap().get(name)</span>
+<span class="nc" id="L836">                            .setNotificationRegistered(true);</span>
+<span class="nc" id="L837">                    return true;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L842">        return false;</span>
+
+    }
+
+    /**
+     * Returns YSR application context for schema map.
+     *
+     * @return YSR application context for schema map
+     */
+    YsrRegisteredAppContext ysrAppContextForSchemaStore() {
+<span class="fc" id="L852">        return ysrRegisteredAppContextForSchemaMap;</span>
+    }
+
+    /**
+     * Sets YSR application context for schema map.
+     *
+     * @param ysrRegisteredAppContextForSchemaMap YSR application context for
+     *                                            schema map
+     */
+    void ysrAppContextForSchemaStore(
+            YsrRegisteredAppContext ysrRegisteredAppContextForSchemaMap) {
+<span class="fc" id="L863">        this.ysrRegisteredAppContextForSchemaMap =</span>
+                ysrRegisteredAppContextForSchemaMap;
+<span class="fc" id="L865">    }</span>
+
+    /**
+     * Returns YSR app context for application store.
+     *
+     * @return YSR app context for application store
+     */
+    YsrRegisteredAppContext ysrAppContextForApplicationStore() {
+<span class="fc" id="L873">        return ysrAppContextForApplicationStore;</span>
+    }
+
+    /**
+     * Sets YSR app context for application store.
+     *
+     * @param ysrAppContextForApplicationMap YSR app context for application store
+     */
+    void ysrAppContextForApplicationStore(YsrRegisteredAppContext ysrAppContextForApplicationMap) {
+<span class="fc" id="L882">        this.ysrAppContextForApplicationStore = ysrAppContextForApplicationMap;</span>
+<span class="fc" id="L883">    }</span>
+
+    /**
+     * Retrieves schema node from the store and deletes jar file path.
+     *
+     * @param appName application name
+     * @param store   YSR stores
+     * @return schema node from the store
+     */
+    private YangSchemaNode retrieveNodeForUnregister(String appName,
+                                                     ConcurrentMap&lt;String,
+                                                             YsrRegisteredAppContext&gt; store) {
+<span class="fc" id="L895">        YsrRegisteredAppContext curContext = store.get(appName);</span>
+<span class="fc" id="L896">        YangSchemaNode curNode = curContext.curNode();</span>
+        //Delete all the generated ysr information in application's package.
+<span class="pc bpc" id="L898" title="1 of 2 branches missed.">        if (curContext.jarPath() != null) {</span>
+<span class="nc" id="L899">            File jarPath = new File(curContext.jarPath());</span>
+<span class="nc bnc" id="L900" title="All 2 branches missed.">            if (jarPath.exists()) {</span>
+                try {
+<span class="nc" id="L902">                    deleteDirectory(new File(curContext.jarPath()));</span>
+<span class="nc" id="L903">                } catch (IOException e) {</span>
+<span class="nc" id="L904">                    log.error(&quot;failed to delete ysr resources for &quot; + appName);</span>
+<span class="nc" id="L905">                    e.printStackTrace();</span>
+<span class="nc" id="L906">                }</span>
+            }
+        }
+<span class="fc" id="L909">        return curNode;</span>
+    }
+
+    /**
+     * Removes from YANG schema store.
+     *
+     * @param curNode schema node
+     */
+    private void removeFromYangSchemaStore(YangSchemaNode curNode) {
+<span class="pc bpc" id="L918" title="1 of 2 branches missed.">        if (getYangSchemaStore().containsKey(curNode.getName())) {</span>
+<span class="fc" id="L919">            removeSchemaNode(curNode);</span>
+        }
+<span class="fc" id="L921">    }</span>
+
+    /**
+     * Removes from YANG schema  notification store.
+     *
+     * @param curNode schema node
+     */
+    private void removeFromYangNotificationStore(YangSchemaNode curNode,
+                                                 String appName) {
+<span class="fc" id="L930">        appName = appName.toLowerCase() + PERIOD +</span>
+<span class="fc" id="L931">                getCapitalCase(curNode.getJavaClassNameOrBuiltInType()) +</span>
+                EVENT_STRING;
+<span class="fc" id="L933">        if (getYangSchemaNotificationStore()</span>
+<span class="fc bfc" id="L934" title="All 2 branches covered.">                .containsKey(appName)) {</span>
+<span class="fc" id="L935">            getYangSchemaNotificationStore()</span>
+<span class="fc" id="L936">                    .remove(appName);</span>
+        }
+<span class="fc" id="L938">    }</span>
+
+    /**
+     * Removes from app store.
+     *
+     * @param appName application name
+     */
+    private void removeFromAppSchemaStore(String appName) {
+<span class="pc bpc" id="L946" title="1 of 2 branches missed.">        if (getAppObjectStore().containsKey(appName)) {</span>
+<span class="fc" id="L947">            getAppObjectStore().remove(appName);</span>
+        }
+<span class="fc" id="L949">    }</span>
+
+    /**
+     * Removes from interface store.
+     *
+     * @param appName application name
+     */
+    private void removeFromYangSchemaNodeForRootInterface(String appName) {
+<span class="fc" id="L957">        if (getYangSchemaStoreForRootInterface()</span>
+<span class="pc bpc" id="L958" title="1 of 2 branches missed.">                .containsKey(appName)) {</span>
+<span class="fc" id="L959">            getYangSchemaStoreForRootInterface().remove(appName);</span>
+        }
+<span class="fc" id="L961">    }</span>
+
+    /**
+     * Removes from op param store.
+     *
+     * @param appName application name
+     */
+    private void removeFromYangSchemaNodeForRootOpParam(String appName) {
+<span class="fc" id="L969">        if (getYangSchemaStoreForRootOpParam()</span>
+<span class="pc bpc" id="L970" title="1 of 2 branches missed.">                .containsKey(appName + OP_PARAM)) {</span>
+<span class="fc" id="L971">            getYangSchemaStoreForRootOpParam()</span>
+<span class="fc" id="L972">                    .remove(appName + OP_PARAM);</span>
+        }
+<span class="fc" id="L974">    }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
