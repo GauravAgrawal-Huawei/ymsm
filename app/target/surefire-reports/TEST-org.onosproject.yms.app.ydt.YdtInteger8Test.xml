@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="org.onosproject.yms.app.ydt.YdtInteger8Test" time="1.024" tests="4" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="org.onosproject.yms.app.ydt.YdtInteger8Test" time="1.03" tests="4" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-oracle/jre/lib/amd64"/>
@@ -59,8 +59,8 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase name="negative1Test" classname="org.onosproject.yms.app.ydt.YdtInteger8Test" time="0.372"/>
-  <testcase name="negative2Test" classname="org.onosproject.yms.app.ydt.YdtInteger8Test" time="0.468"/>
-  <testcase name="negative3Test" classname="org.onosproject.yms.app.ydt.YdtInteger8Test" time="0.159"/>
+  <testcase name="negative1Test" classname="org.onosproject.yms.app.ydt.YdtInteger8Test" time="0.357"/>
+  <testcase name="negative2Test" classname="org.onosproject.yms.app.ydt.YdtInteger8Test" time="0.501"/>
+  <testcase name="negative3Test" classname="org.onosproject.yms.app.ydt.YdtInteger8Test" time="0.147"/>
   <testcase name="positiveTest" classname="org.onosproject.yms.app.ydt.YdtInteger8Test" time="0.025"/>
 </testsuite>

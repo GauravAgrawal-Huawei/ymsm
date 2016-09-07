@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.768" tests="15" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.607" tests="15" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-oracle/jre/lib/amd64"/>
@@ -59,19 +59,19 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase name="proceessCodecHandlerForLeafList" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.066"/>
-  <testcase name="proceessCodecDecodeFunction" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.096"/>
-  <testcase name="proceessCodecDecodeFunctionForGetData" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.058"/>
-  <testcase name="proceessCodecDecodeFunctionForGetConfigData" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.055"/>
-  <testcase name="proceessCodecHandlerForMultipleModule" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.053"/>
-  <testcase name="proceessCodecDecodeFunctionForOperTypeTest" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.056"/>
-  <testcase name="proceessCodecHandlerForEmptyContainer" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.051"/>
-  <testcase name="proceessCodecDecodeFunctionForEmptyContainer" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.051"/>
-  <testcase name="proceessCodecHandlerForListInsideList" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.089"/>
-  <testcase name="proceessCodecDecodeFunctionForGet" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.03"/>
-  <testcase name="proceessCodecHandlerForContainer" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.027"/>
-  <testcase name="proceessCodecDecodeFunctionForListInsideList" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.032"/>
-  <testcase name="proceessCodecHandlerForLeaf" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.034"/>
-  <testcase name="proceessCodecHandlerForList" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.035"/>
-  <testcase name="proceessCodecDecodeFunctionForGetConfig" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.034"/>
+  <testcase name="proceessCodecHandlerForLeafList" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.09"/>
+  <testcase name="proceessCodecDecodeFunction" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.095"/>
+  <testcase name="proceessCodecDecodeFunctionForGetData" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.034"/>
+  <testcase name="proceessCodecDecodeFunctionForGetConfigData" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.029"/>
+  <testcase name="proceessCodecHandlerForMultipleModule" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.042"/>
+  <testcase name="proceessCodecDecodeFunctionForOperTypeTest" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.03"/>
+  <testcase name="proceessCodecHandlerForEmptyContainer" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.029"/>
+  <testcase name="proceessCodecDecodeFunctionForEmptyContainer" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.04"/>
+  <testcase name="proceessCodecHandlerForListInsideList" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.084"/>
+  <testcase name="proceessCodecDecodeFunctionForGet" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.024"/>
+  <testcase name="proceessCodecHandlerForContainer" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.023"/>
+  <testcase name="proceessCodecDecodeFunctionForListInsideList" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.021"/>
+  <testcase name="proceessCodecHandlerForLeaf" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.02"/>
+  <testcase name="proceessCodecHandlerForList" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.022"/>
+  <testcase name="proceessCodecDecodeFunctionForGetConfig" classname="org.onosproject.yms.app.ych.DefaultYangCodecHandlerTest" time="0.022"/>
 </testsuite>

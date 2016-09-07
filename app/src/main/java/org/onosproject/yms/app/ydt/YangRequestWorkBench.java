@@ -541,6 +541,13 @@ public class YangRequestWorkBench
 
     @Override
     public void traverseToParent() {
+
+        // If traverse back to parent for logical root node comes
+        if (curNode == rootNode) {
+            throw new YdtExceptions(
+                    "Can't invoke get parent at logical root node.");
+        }
+
         // If node is of multiInstanceNode type then check key uniqueness.
         if (curNode.getYdtType() == YdtType.MULTI_INSTANCE_NODE) {
             curNode.createKeyNodeList();

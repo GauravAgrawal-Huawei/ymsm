@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.271" tests="12" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.243" tests="12" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-oracle/jre/lib/amd64"/>
@@ -59,16 +59,16 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase name="processModuleAndLeafList" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.02"/>
-  <testcase name="processYtbUnionType" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.025"/>
-  <testcase name="processModuleAndLeaf" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.026"/>
-  <testcase name="processMultiNotificationWithContainer" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.026"/>
-  <testcase name="processLeafAndLeafListWithTypeEnum" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.021"/>
-  <testcase name="processModuleWithList" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.025"/>
-  <testcase name="processTreeBuilderForBinaryAndBits" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.023"/>
-  <testcase name="processInvalidListInputForNotification" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.01"/>
-  <testcase name="processTreeBuilderForListHavingList" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.039"/>
-  <testcase name="processInvalidListInput" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0"/>
+  <testcase name="processModuleAndLeafList" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.022"/>
+  <testcase name="processYtbUnionType" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.023"/>
+  <testcase name="processModuleAndLeaf" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.021"/>
+  <testcase name="processMultiNotificationWithContainer" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.025"/>
+  <testcase name="processLeafAndLeafListWithTypeEnum" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.02"/>
+  <testcase name="processModuleWithList" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.022"/>
+  <testcase name="processTreeBuilderForBinaryAndBits" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.021"/>
+  <testcase name="processInvalidListInputForNotification" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.006"/>
+  <testcase name="processTreeBuilderForListHavingList" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.027"/>
+  <testcase name="processInvalidListInput" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.001"/>
   <testcase name="processModuleWithContainer" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.028"/>
-  <testcase name="processMultiModule" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.026"/>
+  <testcase name="processMultiModule" classname="org.onosproject.yms.app.ytb.DefaultYangTreeBuilderTest" time="0.027"/>
 </testsuite>

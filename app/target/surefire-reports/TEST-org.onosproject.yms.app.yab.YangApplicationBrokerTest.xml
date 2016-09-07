@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.271" tests="12" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.033" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-oracle/jre/lib/amd64"/>
@@ -59,16 +59,115 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase name="testSiblingsInDeleteTree" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.024"/>
-  <testcase name="testLastChildInYdtTree" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.021"/>
-  <testcase name="validateListDeleteTree" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.02"/>
-  <testcase name="testYdtTreeWithAllDeleteNodes" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.02"/>
-  <testcase name="testExecuteEditOperationWithDelete" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.033"/>
-  <testcase name="testExecuteListQueryOperation" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.025"/>
-  <testcase name="testExecuteListEditOperationWithoutDelete" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.021"/>
-  <testcase name="testExecuteListEditOperationWithDelete" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.02"/>
-  <testcase name="testKeyLeavesInDeleteTree" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.022"/>
-  <testcase name="testExecuteEditOperationWithoutDelete" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.024"/>
+  <testcase name="testSiblingsInDeleteTree" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.021"/>
+  <testcase name="testLastChildInYdtTree" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.019"/>
+  <testcase name="validateListDeleteTree" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.019"/>
+  <testcase name="testYdtTreeWithAllDeleteNodes" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.019"/>
+  <testcase name="testExecuteEditOperationWithDelete" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.039"/>
+  <testcase name="testExecuteListQueryOperation" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.042"/>
+  <testcase name="testExecuteListEditOperationWithoutDelete" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.022"/>
+  <testcase name="testExecuteListEditOperationWithDelete" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.019"/>
+  <testcase name="testKeyLeavesInDeleteTree" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.032">
+    <flakyFailure message="&#10;Expected: is &lt;false&gt;&#10;     but: was &lt;true&gt;" type="java.lang.AssertionError"><![CDATA[java.lang.AssertionError: 
+
+Expected: is <false>
+     but: was <true>
+	at org.onosproject.yms.app.yab.YangApplicationBrokerTest.testKeyLeavesInDeleteTree(YangApplicationBrokerTest.java:798)
+]]>
+      <system-err><![CDATA[Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826.YtbIetfScheduleService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev20151208.IetfNetwork2Service
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.list.rev20160826.YtbModuleWithListService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network1.rev20151208.IetfNetwork1Service
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.decimal64.rev20160524.Decimal64Service
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.emptydata.rev20160524.EmptydataService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer8.rev20160524.Integer8Service
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.YtbTreeBuilderForListHavingListService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.combined.rev20160524.CombinedService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20171208.IetfNetwork4Service
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.YtbModuleWithContainerService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer32.rev20160524.Integer32Service
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20141208.IetfNetwork4Service
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.yangautoprefixboolean.rev20160524.BoolService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network3.rev20151208.IetfNetwork3Service
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.rootlist.rev20160624.RootlistService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.food.rev20160624.FoodService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.logistics.manager.rev20160524.LogisticsmanagerService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.bit.rev20160524.BitService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.IetfNetworkService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer16.rev20160524.Integer16Service
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.material.supervisor.rev20160524.MaterialsupervisorService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.hello.onos.rev20160903.HelloOnosService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.test6.rev20160524.Test6Service
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.YtbMultiNotificationWithContainerService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.employee.id.rev20160524.EmployeeidService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.binarytest.rev20160524.BinarytestService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev20130715.IetfInetTypesService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.merchandiser.supervisor.rev20160524.MerchandisersupervisorService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.integer64.rev20160524.Integer64Service
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20161208.IetfNetwork4Service
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.rev20151208.IetfNetwork4Service
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.warehouse.supervisor.rev20160524.WarehousesupervisorService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.empty.container.rev20160524.EmptyContainerService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.enumtest.rev20160524.EnumtestService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.trading.supervisor.rev20160524.TradingsupervisorService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.purchasing.supervisor.rev20160524.PurchasingsupervisorService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ych.purchasing.supervisor.rev20160524.YchPurchasingsupervisorService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826.YtbDerivedTypeWithBitsAndBinaryService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network4.IetfNetwork4Service
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.YtbMultiModulebService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaflist.rev20160826.YtbModuleWithLeafListService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.customs.supervisor.rev20160524.CustomssupervisorService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.ydt.root.rev20160524.LogisticsManagerService
+Sep 07, 2016 11:00:07 PM org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry processApplicationContext
+INFO: YSR: successfully registered this application org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.a.rev20160826.YtbMultiModuleaService
+]]></system-err>
+    </flakyFailure>
+  </testcase>
+  <testcase name="testExecuteEditOperationWithoutDelete" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.028"/>
   <testcase name="testExecuteQueryOperation" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.02"/>
-  <testcase name="validateDeleteTreeOnlyOneNodeInDeleteList" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.02"/>
+  <testcase name="validateDeleteTreeOnlyOneNodeInDeleteList" classname="org.onosproject.yms.app.yab.YangApplicationBrokerTest" time="0.019"/>
 </testsuite>

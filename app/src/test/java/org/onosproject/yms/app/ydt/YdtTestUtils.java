@@ -249,8 +249,6 @@ public class YdtTestUtils
         defaultYdtBuilder.traverseToParent();
         defaultYdtBuilder.traverseToParent();
         defaultYdtBuilder.traverseToParent();
-        defaultYdtBuilder.traverseToParent();
-        defaultYdtBuilder.traverseToParent();
 
         testYangSchemaNodeProvider.unregisterService(appName);
         testYangSchemaNodeProvider.unregisterAllService();
