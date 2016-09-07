@@ -16,6 +16,15 @@
 
 package org.onosproject.yms.app.ysr;
 
+import org.onosproject.yangutils.datamodel.RpcNotificationContainer;
+import org.onosproject.yangutils.datamodel.YangNode;
+import org.onosproject.yangutils.datamodel.YangRevision;
+import org.onosproject.yangutils.datamodel.YangSchemaNode;
+import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
+import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -35,20 +44,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
-import org.onosproject.yangutils.datamodel.RpcNotificationContainer;
-import org.onosproject.yangutils.datamodel.YangNode;
-import org.onosproject.yangutils.datamodel.YangRevision;
-import org.onosproject.yangutils.datamodel.YangSchemaNode;
-import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
-import org.osgi.framework.BundleContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import static org.apache.commons.io.FileUtils.deleteDirectory;
-import static org.onosproject.yangutils.utils.UtilConstants.DEFAULT;
-import static org.onosproject.yangutils.utils.UtilConstants.EVENT_STRING;
-import static org.onosproject.yangutils.utils.UtilConstants.OP_PARAM;
-import static org.onosproject.yangutils.utils.UtilConstants.PERIOD;
+import static org.onosproject.yangutils.utils.UtilConstants.*;
 import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
 import static org.osgi.framework.FrameworkUtil.getBundle;
 
@@ -211,6 +208,10 @@ public class DefaultYangSchemaRegistry
             ysrRegisteredAppContextForSchemaMap().jarPath(jarPath);
             //Store the YANG file handles.
             updateYangFileSet(jarPath);
+        } else {
+            if (!verifyApplicationObject(appObject, serviceClass)) {
+                getAppObjectStore().get(serviceClass.getName()).appObject(appObject);
+            }
         }
     }
 
@@ -230,6 +231,18 @@ public class DefaultYangSchemaRegistry
             }
         }
         return true;
+    }
+
+    /**
+     * Verfies if service is being implemented by some new object.
+     *
+     * @param appObject application's object
+     * @param appClass  application's class
+     * @return true if object is same object
+     */
+    private boolean verifyApplicationObject(Object appObject, Class<?> appClass) {
+        Object obj = getAppObjectStore().get(appClass.getName()).appObject();
+        return obj.equals(appObject);
     }
 
     @Override
