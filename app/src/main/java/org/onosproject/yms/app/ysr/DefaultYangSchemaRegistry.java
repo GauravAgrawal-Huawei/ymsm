@@ -18,22 +18,17 @@ package org.onosproject.yms.app.ysr;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
 import org.onosproject.yangutils.datamodel.RpcNotificationContainer;
@@ -46,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.apache.commons.io.FileUtils.deleteDirectory;
+import static org.onosproject.yangutils.datamodel.utils.DataModelUtils.parseJarFile;
 import static org.onosproject.yangutils.utils.UtilConstants.DEFAULT;
 import static org.onosproject.yangutils.utils.UtilConstants.EVENT_STRING;
 import static org.onosproject.yangutils.utils.UtilConstants.OP_PARAM;
@@ -209,6 +205,18 @@ public class DefaultYangSchemaRegistry
         String jarPath = getJarPathFromBundleLocation(
                 bundleContext.getBundle().getLocation(),
                 bundleContext.getProperty(USER_DIRECTORY));
+        processRegistration(serviceClass, appObject, jarPath);
+    }
+
+    /**
+     * Process application registration.
+     *
+     * @param serviceClass service class
+     * @param appObject    application object
+     * @param jarPath      jar path
+     */
+    void processRegistration(Class<?> serviceClass, Object appObject,
+                             String jarPath) {
 
         // set class loader for service class.
         setClassLoader(serviceClass.getClassLoader());
@@ -223,7 +231,7 @@ public class DefaultYangSchemaRegistry
 
         // process storing operations.
         if (!verifyIfApplicationAlreadyRegistered(serviceClass)) {
-            List<YangSchemaNode> curNodes =
+            List<YangNode> curNodes =
                     processJarParsingOperations(jarPath);
             for (YangSchemaNode schemaNode : curNodes) {
                 processApplicationContext(schemaNode);
@@ -365,11 +373,7 @@ public class DefaultYangSchemaRegistry
 
     @Override
     public YangSchemaNode getYangSchemaNodeUsingSchemaName(String schemaName) {
-        if (getYangSchemaStore().containsKey(schemaName)) {
-            return getSchemaNodeUsingSchemaNameWithRev(schemaName);
-        }
-        log.error("YSR: " + schemaName + " not found.");
-        return null;
+        return getSchemaNodeUsingSchemaNameWithRev(schemaName);
     }
 
     @Override
@@ -553,9 +557,15 @@ public class DefaultYangSchemaRegistry
      * @param path jar file path
      * @return YANG schema nodes
      */
-    private List<YangSchemaNode> processJarParsingOperations(String path) {
+    private List<YangNode> processJarParsingOperations(String path) {
         //Deserialize data model and get the YANG node set.
-        return parseJarFile(path + JAR, path);
+        try {
+            return parseJarFile(path + JAR, path);
+        } catch (IOException e) {
+            log.error("YSR: failed to parse the jar file in path " + path);
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -605,64 +615,6 @@ public class DefaultYangSchemaRegistry
                          SERVICE);
 
     }
-
-    /**
-     * Parses jar file and returns list of serialized file names.
-     *
-     * @param jarFile   jar file to be parsed
-     * @param directory directory where to search
-     * @return list of serialized files
-     */
-    private List<YangSchemaNode> parseJarFile(String jarFile,
-                                              String directory) {
-
-        List<YangSchemaNode> nodes = new ArrayList<>();
-        try {
-            JarFile jar = new JarFile(jarFile);
-            Enumeration<?> enumEntries = jar.entries();
-
-            while (enumEntries.hasMoreElements()) {
-                JarEntry file = (JarEntry) enumEntries.nextElement();
-                if (file.getName().endsWith(SER)) {
-                    if (file.getName().contains(SLASH)) {
-                        String[] strArray = file.getName().split(SLASH);
-                        String tempPath = "";
-                        for (int i = 0; i < strArray.length - 1; i++) {
-                            tempPath = SLASH + tempPath + SLASH + strArray[i];
-                        }
-                        File dir = new File(directory + tempPath);
-                        dir.mkdirs();
-                    }
-                    File serializedFile =
-                            new File(directory + SLASH + file.getName());
-                    if (file.isDirectory()) {
-                        serializedFile.mkdirs();
-                        continue;
-                    }
-                    InputStream inputStream = jar.getInputStream(file);
-
-                    FileOutputStream fileOutputStream =
-                            new FileOutputStream(serializedFile);
-                    while (inputStream.available() > 0) {
-                        fileOutputStream.write(inputStream.read());
-                    }
-                    fileOutputStream.close();
-                    inputStream.close();
-                    nodes.addAll(
-                            deSerializeDataModel(serializedFile.toString()));
-                }
-            }
-            jar.close();
-        } catch (IOException e) {
-            log.error(
-                    "YSR: failed to fetch yang nodes from jar file for " +
-                            "application " +
-                            ysrAppContext().appObject());
-            e.printStackTrace();
-        }
-        return nodes;
-    }
-
 
     /**
      * Returns jar path from bundle mvnLocationPath.
@@ -744,18 +696,22 @@ public class DefaultYangSchemaRegistry
             }
             return appContext.curNode();
         }
-        appContext = getYangSchemaStore().get(name);
-        if (appContext != null) {
-            Iterator<YangSchemaNode> iterator =
-                    appContext.getYangSchemaNodeForRevisionStore().values()
-                            .iterator();
-            if (iterator.hasNext()) {
-                return appContext.getYangSchemaNodeForRevisionStore().values()
-                        .iterator().next();
-            } else {
-                return null;
+        if (getYangSchemaStore().containsKey(name)) {
+            appContext = getYangSchemaStore().get(name);
+            if (appContext != null) {
+                Iterator<YangSchemaNode> iterator =
+                        appContext.getYangSchemaNodeForRevisionStore().values()
+                                .iterator();
+                if (iterator.hasNext()) {
+                    return appContext.getYangSchemaNodeForRevisionStore()
+                            .values()
+                            .iterator().next();
+                } else {
+                    return null;
+                }
             }
         }
+        log.error("YSR: " + name + " not found.");
         return null;
     }
 
@@ -794,7 +750,7 @@ public class DefaultYangSchemaRegistry
      * @param schemaNode schema node
      * @return date in string format.
      */
-    private String getDateInStringFormat(YangSchemaNode schemaNode) {
+    String getDateInStringFormat(YangSchemaNode schemaNode) {
         if (schemaNode != null) {
             if (((YangNode) schemaNode).getRevision() != null) {
                 return new SimpleDateFormat("yyyy-mm-dd")

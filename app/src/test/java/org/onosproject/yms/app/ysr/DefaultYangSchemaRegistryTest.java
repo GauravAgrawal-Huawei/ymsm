@@ -19,8 +19,14 @@ package org.onosproject.yms.app.ysr;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.IetfNetwork;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.IetfNetworkOpParam;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.IetfNetworkService;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev20151208.IetfNetwork2Service;
 import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
+import org.onosproject.yms.app.ynh.YangNotificationExtendedService;
+import org.onosproject.yms.app.ynh.YangNotificationManager;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -582,6 +588,91 @@ public class DefaultYangSchemaRegistryTest {
         yangNode = registry.getYangSchemaNodeUsingSchemaName(schemaName);
         assertThat(true, is((yangNode != null)));
 
+        testYangSchemaNodeProvider.unregisterAllService();
+    }
+
+    /**
+     * Unit test case should not generate any exceptions.
+     */
+    @Test
+    public void testRegistration() {
+        testYangSchemaNodeProvider.processSchemaRegistry(null);
+        testYangSchemaNodeProvider.processRegistrationOfApp();
+        testYangSchemaNodeProvider.unregisterAllService();
+    }
+
+    /**
+     * Unit test case should not generate any exceptions and should
+     * return specific revision node.
+     */
+    @Test
+    public void testGetWithSpecificRevision() {
+        testYangSchemaNodeProvider.processSchemaRegistry(null);
+        YangSchemaNode schemaNode = testYangSchemaNodeProvider
+                .getDefaultYangSchemaRegistry()
+                .getYangSchemaNodeUsingSchemaName("ietf-network4@2014-00-08");
+
+        assertThat(true, is(schemaNode.getName().equals("ietf-network4")));
+        String date = testYangSchemaNodeProvider
+                .getDefaultYangSchemaRegistry()
+                .getDateInStringFormat(schemaNode);
+        assertThat(true, is(date.equals("2014-00-08")));
+        testYangSchemaNodeProvider.unregisterAllService();
+    }
+
+    /**
+     * Unit test case should not generate any exceptions
+     * verify notification should be checked for registration.
+     */
+    @Test
+    public void testNotification() {
+        testYangSchemaNodeProvider.processSchemaRegistry(null);
+        boolean isRegWithNotification =
+                testYangSchemaNodeProvider.getDefaultYangSchemaRegistry()
+                        .verifyNotificationObject(IetfNetworkService.class);
+        assertThat(false, is(isRegWithNotification));
+        isRegWithNotification = testYangSchemaNodeProvider
+                .getDefaultYangSchemaRegistry()
+                .verifyNotificationObject(IetfNetwork.class);
+        assertThat(false, is(isRegWithNotification));
+        isRegWithNotification = testYangSchemaNodeProvider
+                .getDefaultYangSchemaRegistry()
+                .verifyNotificationObject(IetfNetworkOpParam.class);
+        assertThat(false, is(isRegWithNotification));
+        testYangSchemaNodeProvider.unregisterAllService();
+    }
+
+    /**
+     * Unit test case should not generate any exceptions.
+     */
+    @Test
+    public void testNotificationRegistrationInYnh() {
+        testYangSchemaNodeProvider.processSchemaRegistry(null);
+        testYangSchemaNodeProvider.getDefaultYangSchemaRegistry()
+                .verifyNotificationObject(IetfNetworkService.class);
+        testYangSchemaNodeProvider.getDefaultYangSchemaRegistry()
+                .verifyNotificationObject(IetfNetwork.class);
+        testYangSchemaNodeProvider.getDefaultYangSchemaRegistry()
+                .verifyNotificationObject(IetfNetworkOpParam.class);
+        Ietf ietf = new Ietf();
+        YangNotificationExtendedService extendedService = new
+                YangNotificationManager(
+                testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
+
+        boolean isRegWithNotification = testYangSchemaNodeProvider
+                .getDefaultYangSchemaRegistry()
+                .verifyNotificationObject(IetfNetwork2Service.class);
+        extendedService.registerAsListener(ietf);
+
+        //Register should work.
+        assertThat(true, is(isRegWithNotification));
+        isRegWithNotification = testYangSchemaNodeProvider
+                .getDefaultYangSchemaRegistry()
+                .verifyNotificationObject(IetfNetwork2Service.class);
+
+        //Re register should not happen
+        assertThat(false, is(isRegWithNotification));
+        extendedService.registerAsListener(ietf);
         testYangSchemaNodeProvider.unregisterAllService();
     }
 
