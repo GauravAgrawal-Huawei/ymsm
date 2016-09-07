@@ -31,12 +31,9 @@ import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.onosproject.yangutils.datamodel.YangSchemaNodeType
-        .YANG_AUGMENT_NODE;
-import static org.onosproject.yangutils.datamodel.YangSchemaNodeType
-        .YANG_CHOICE_NODE;
-import static org.onosproject.yangutils.utils.io.impl.YangIoUtils
-        .getCapitalCase;
+import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_AUGMENT_NODE;
+import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_CHOICE_NODE;
+import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
 import static org.onosproject.yms.app.yob.YobConstants.DEFAULT;
 import static org.onosproject.yms.app.yob.YobConstants.OPPARAM;
 
@@ -191,8 +188,8 @@ public class YobBuilderContainer {
                                     descendentSchemaContext,
                                     descendentSchemaIdentifier,
                                     curBuilderContainer, registry);
-                    curBuilderContainer.builderContainerMap.put
-                            (descendentSchemaIdentifier, newBuilderContainer);
+                    curBuilderContainer.builderContainerMap
+                            .put(descendentSchemaIdentifier, newBuilderContainer);
                     curBuilderContainer = newBuilderContainer;
                 } else {
                     curBuilderContainer = descendentBuilderContainer;
@@ -287,7 +284,7 @@ public class YobBuilderContainer {
     }
 
     /**
-     * Returns the class loader to be used for the switched context schema node
+     * Returns the class loader to be used for the switched context schema node.
      *
      * @param currentClassLoader current context class loader
      * @param switchedContext    switched context

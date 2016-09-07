@@ -49,8 +49,7 @@ import static org.onosproject.yangutils.utils.UtilConstants.DEFAULT;
 import static org.onosproject.yangutils.utils.UtilConstants.EVENT_STRING;
 import static org.onosproject.yangutils.utils.UtilConstants.OP_PARAM;
 import static org.onosproject.yangutils.utils.UtilConstants.PERIOD;
-import static org.onosproject.yangutils.utils.io.impl.YangIoUtils
-        .getCapitalCase;
+import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
 import static org.osgi.framework.FrameworkUtil.getBundle;
 
 
@@ -156,8 +155,7 @@ public class DefaultYangSchemaRegistry
      *
      * @return schema store
      */
-    private ConcurrentMap<String, YsrRegisteredAppContext> getYangSchemaStore
-    () {
+    private ConcurrentMap<String, YsrRegisteredAppContext> getYangSchemaStore() {
         return yangSchemaStore;
     }
 
@@ -199,7 +197,11 @@ public class DefaultYangSchemaRegistry
         String jarPath = getJarPathFromBundleLocation(
                 bundleContext.getBundle().getLocation(),
                 bundleContext.getProperty(USER_DIRECTORY));
-        if (!getAppObjectStore().containsKey(serviceClass.getName())) {
+
+        if (!getRegisterClassStore().containsKey(serviceClass.getName())) {
+            updateServiceClass(serviceClass);
+        }
+        if (!verifyIfApplicationAlreadyRegistered(serviceClass)) {
             List<YangSchemaNode> curNodes =
                     processJarParsingOperations(jarPath);
             for (YangSchemaNode schemaNode : curNodes) {
@@ -209,8 +211,25 @@ public class DefaultYangSchemaRegistry
             ysrRegisteredAppContextForSchemaMap().jarPath(jarPath);
             //Store the YANG file handles.
             updateYangFileSet(jarPath);
-            updateServiceClass(serviceClass);
         }
+    }
+
+    /**
+     * Verifies if application is already registered with YMS.
+     *
+     * @param appClass application class
+     * @return true if application already registered
+     */
+    private boolean verifyIfApplicationAlreadyRegistered(Class<?> appClass) {
+        String appName = appClass.getSimpleName();
+        if (!getAppObjectStore().containsKey(appClass.getName())) {
+            if (appName.contains(OP_PARAM)) {
+                return getYangSchemaStoreForRootOpParam().containsKey(appClass.getName());
+            } else {
+                return getYangSchemaStoreForRootInterface().containsKey(appClass.getName());
+            }
+        }
+        return true;
     }
 
     @Override
@@ -333,7 +352,7 @@ public class DefaultYangSchemaRegistry
         }
         //If application class is registered.
         if (getRegisterClassStore().containsKey(appName)) {
-            return getRegisterClassStore().get(interfaceName);
+            return getRegisterClassStore().get(appName);
         } else if (getRegisterClassStore().containsKey(interfaceName)) {
             //If interface class is registered.
             return getRegisterClassStore().get(interfaceName);
