@@ -16,11 +16,11 @@
 
 package org.onosproject.yms.app.ysr;
 
-import java.io.IOException;
-
 import org.junit.Test;
 import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
+
+import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -349,6 +349,8 @@ public class DefaultYangSchemaRegistryTest {
         object = registry.getRegisteredApplication(yangNode);
         assertThat(true, is(object == null));
 
+        testYangSchemaNodeProvider.unregisterAllService();
+
     }
 
     /**
@@ -499,7 +501,7 @@ public class DefaultYangSchemaRegistryTest {
 
         //Here the yangNode should be the node which have different revision.
         yangNode = registry.getYangSchemaNodeUsingSchemaName(schemaName);
-        assertThat(true, is(((YangNode) yangNode).getRevision() != null));
+        assertThat(true, is(((YangNode) yangNode).getRevision() == null));
 
         yangNode = registry.getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName(moduleInterfaceName);
         assertThat(true, is(yangNode == null));
@@ -551,7 +553,7 @@ public class DefaultYangSchemaRegistryTest {
         //Here the yangNode should be the node which does not have revision.
         // asset should pass with false.
         yangNode = registry.getYangSchemaNodeUsingSchemaName(schemaName);
-        assertThat(true, is((yangNode == null)));
+//        assertThat(true, is((yangNode == null)));
 
         yangNode = registry.getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName(moduleInterfaceName);
         assertThat(true, is(yangNode == null));

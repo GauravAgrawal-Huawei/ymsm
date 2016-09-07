@@ -54,20 +54,15 @@ public class TestYangSchemaNodeProvider {
      */
     public void processSchemaRegistry(Object appObject) {
 
-        //Update schema registry.
-        YsrRegisteredAppContext ysrRegisteredAppContext = new YsrRegisteredAppContext();
-        ysrRegisteredAppContext.appObject(appObject);
-        defaultYangSchemaRegistry.ysrAppContext(ysrRegisteredAppContext);
-        defaultYangSchemaRegistry.ysrAppContextForApplicationStore(ysrRegisteredAppContext);
-        defaultYangSchemaRegistry.ysrAppContextForSchemaStore(ysrRegisteredAppContext);
-
-
         Set<YangSchemaNode> appNode = defaultYangSchemaRegistry.deSerializeDataModel(PATH + SER_FILE_PATH);
-
+        YsrRegisteredAppContext appContext = new YsrRegisteredAppContext();
+        defaultYangSchemaRegistry.ysrAppContextForSchemaStore(appContext);
         String appName;
         for (YangSchemaNode node : appNode) {
             defaultYangSchemaRegistry.processApplicationContext(node);
-
+            defaultYangSchemaRegistry.ysrAppContext().appObject(appObject);
+            defaultYangSchemaRegistry.ysrAppContextForApplicationStore().appObject(appObject);
+            defaultYangSchemaRegistry.ysrAppContextForSchemaStore().appObject(appObject);
             appName = node.getJavaPackage() + PERIOD +
                     getCapitalCase(node.getJavaClassNameOrBuiltInType());
             storeClasses(appName);

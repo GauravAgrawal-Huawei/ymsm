@@ -251,13 +251,18 @@ public class DefaultYangSchemaRegistry
     private void updateApplicationObject(Object appObject, Class<?> appClass) {
         if (getAppObjectStore().containsKey(appClass.getName())) {
             YsrRegisteredAppContext appContext = getAppObjectStore().get(appClass.getName());
+            YangSchemaNode schemaNode = appContext.curNode();
+            String name = schemaNode.getJavaPackage() + PERIOD +
+                    getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType());
             if (appContext.appObject() == null) {
                 //update in application store.
                 appContext.appObject(appObject);
-                //update in application interface/op param store.
-                ysrAppContext().appObject(appObject);
-                //update in schema store.
-                ysrAppContextForSchemaStore().appObject(appObject);
+                if (getYangSchemaStoreForRootInterface().containsKey(name)) {
+                    getYangSchemaStoreForRootInterface().get(name).appObject(appObject);
+                }
+                if (getYangSchemaStoreForRootOpParam().containsKey(name + OP_PARAM)) {
+                    getYangSchemaStoreForRootOpParam().get(name + OP_PARAM).appObject(appObject);
+                }
             }
         }
     }
@@ -267,6 +272,11 @@ public class DefaultYangSchemaRegistry
                                       Class<?> serviceClass) {
         YangSchemaNode curNode = null;
         String appName = serviceClass.getName();
+
+        //Remove registered class from store.
+        if (getRegisterClassStore().containsKey(serviceClass.getName())) {
+            getRegisterClassStore().remove(serviceClass.getName());
+        }
 
         //check if service is in app store.
         if (getAppObjectStore().containsKey(serviceClass.getName())) {
@@ -650,7 +660,7 @@ public class DefaultYangSchemaRegistry
      *
      * @return ysr app context
      */
-    private YsrRegisteredAppContext ysrAppContext() {
+    YsrRegisteredAppContext ysrAppContext() {
         return ysrRegisteredAppContext;
     }
 
@@ -756,8 +766,14 @@ public class DefaultYangSchemaRegistry
             name = removableNode.getName() + "@" +
                     getDateInStringFormat(removableNode);
         }
-        getYangSchemaStore().get(removableNode.getName())
-                .removeSchemaNodeForRevisionStore(name);
+        YsrRegisteredAppContext appContext = getYangSchemaStore()
+                .get(removableNode.getName());
+        if (!appContext.getYangSchemaNodeForRevisionStore().isEmpty()
+                && appContext.getYangSchemaNodeForRevisionStore().size() != 1) {
+            appContext.removeSchemaNodeForRevisionStore(name);
+        } else {
+            getYangSchemaStore().remove(removableNode.getName());
+        }
     }
 
     /**
@@ -810,7 +826,7 @@ public class DefaultYangSchemaRegistry
      *
      * @return YSR application context for schema map
      */
-    private YsrRegisteredAppContext ysrAppContextForSchemaStore() {
+    YsrRegisteredAppContext ysrAppContextForSchemaStore() {
         return ysrRegisteredAppContextForSchemaMap;
     }
 
@@ -831,7 +847,7 @@ public class DefaultYangSchemaRegistry
      *
      * @return YSR app context for application store
      */
-    private YsrRegisteredAppContext ysrAppContextForApplicationStore() {
+    YsrRegisteredAppContext ysrAppContextForApplicationStore() {
         return ysrAppContextForApplicationStore;
     }
 
