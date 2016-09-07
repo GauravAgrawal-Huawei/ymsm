@@ -16,28 +16,33 @@
 
 package org.onosproject.yms.app.ysr;
 
-import org.onosproject.yangutils.datamodel.YangSchemaNode;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static org.onosproject.yangutils.utils.UtilConstants.*;
+import org.onosproject.yangutils.datamodel.YangSchemaNode;
+
+import static org.onosproject.yangutils.utils.UtilConstants.PERIOD;
+import static org.onosproject.yangutils.utils.UtilConstants.SERVICE;
+import static org.onosproject.yangutils.utils.UtilConstants.TEMP;
 import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.deleteDirectory;
 import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
 
 /**
- * Represents mock bundle context. provides bundle context for YSR to do unit testing.
+ * Represents mock bundle context. provides bundle context for YSR to do unit
+ * testing.
  */
 public class TestYangSchemaNodeProvider {
 
     private static final String PATH = System.getProperty("user.dir")
             + File.separator + "target/classes/";
-    private static final String SER_FILE_PATH = "yang/resources/YangMetaData.ser";
+    private static final String SER_FILE_PATH =
+            "yang/resources/YangMetaData.ser";
     private static final String TEMP_FOLDER_PATH = PATH + TEMP;
-    private DefaultYangSchemaRegistry defaultYangSchemaRegistry = new DefaultYangSchemaRegistry();
+    private DefaultYangSchemaRegistry defaultYangSchemaRegistry =
+            new DefaultYangSchemaRegistry();
 
     private List<String> services = new ArrayList<>();
 
@@ -54,15 +59,20 @@ public class TestYangSchemaNodeProvider {
      */
     public void processSchemaRegistry(Object appObject) {
 
-        Set<YangSchemaNode> appNode = defaultYangSchemaRegistry.deSerializeDataModel(PATH + SER_FILE_PATH);
+        Set<YangSchemaNode> appNode = defaultYangSchemaRegistry
+                .deSerializeDataModel(PATH + SER_FILE_PATH);
         YsrRegisteredAppContext appContext = new YsrRegisteredAppContext();
         defaultYangSchemaRegistry.ysrAppContextForSchemaStore(appContext);
+        defaultYangSchemaRegistry
+                .setClassLoader(this.getClass().getClassLoader());
         String appName;
         for (YangSchemaNode node : appNode) {
             defaultYangSchemaRegistry.processApplicationContext(node);
             defaultYangSchemaRegistry.ysrAppContext().appObject(appObject);
-            defaultYangSchemaRegistry.ysrAppContextForApplicationStore().appObject(appObject);
-            defaultYangSchemaRegistry.ysrAppContextForSchemaStore().appObject(appObject);
+            defaultYangSchemaRegistry.ysrAppContextForApplicationStore()
+                    .appObject(appObject);
+            defaultYangSchemaRegistry.ysrAppContextForSchemaStore()
+                    .appObject(appObject);
             appName = node.getJavaPackage() + PERIOD +
                     getCapitalCase(node.getJavaClassNameOrBuiltInType());
             storeClasses(appName);
@@ -78,11 +88,13 @@ public class TestYangSchemaNodeProvider {
 
     private void storeClasses(String name) {
         ClassLoader classLoader = this.getClass().getClassLoader();
-        try {
-            Class<?> nodeClass = classLoader.loadClass(name);
-            getDefaultYangSchemaRegistry().updateServiceClass(nodeClass);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        if (getDefaultYangSchemaRegistry().verifyClassExistence(name)) {
+            try {
+                Class<?> nodeClass = classLoader.loadClass(name);
+                getDefaultYangSchemaRegistry().updateServiceClass(nodeClass);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -93,18 +105,21 @@ public class TestYangSchemaNodeProvider {
      */
     public void unregisterService(String appName) {
 
-        try {
-            Class<?> curClass = Class.forName(appName);
-            getDefaultYangSchemaRegistry().unRegisterApplication(null, curClass);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        if (getDefaultYangSchemaRegistry().verifyClassExistence(appName)) {
+            try {
+                Class<?> curClass = Class.forName(appName);
+                getDefaultYangSchemaRegistry()
+                        .unRegisterApplication(null, curClass);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     /**
      * Unregisters all the service.
      */
-    void unregisterAllService() {
+    public void unregisterAllService() {
         for (String appName : services) {
             unregisterService(appName);
         }

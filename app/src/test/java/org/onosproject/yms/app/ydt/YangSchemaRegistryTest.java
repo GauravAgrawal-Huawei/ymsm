@@ -65,6 +65,7 @@ public class YangSchemaRegistryTest implements YangSchemaRegistry {
         DefaultYangSchemaRegistry registry = testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
         YangSchemaNode yangNode = registry.getYangSchemaNodeUsingSchemaName(appName);
         assertThat(true, is(appName.equals(yangNode.getName())));
+        testYangSchemaNodeProvider.unregisterAllService();
 
         return yangNode;
     }

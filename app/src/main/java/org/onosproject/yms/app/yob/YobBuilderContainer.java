@@ -53,10 +53,10 @@ public class YobBuilderContainer {
     private ClassLoader registeredAppClassLoader;
 
     /**
-     * Map of the non schema descendent builders.
+     * Map of the non schema descendant builders.
      */
-    Map<YangSchemaNodeIdentifier, YobBuilderContainer> builderContainerMap
-            = new HashMap<>();
+    private Map<YangSchemaNodeIdentifier, YobBuilderContainer>
+            builderContainerMap = new HashMap<>();
 
     /**
      * Reference for data-model schema node.
@@ -189,7 +189,8 @@ public class YobBuilderContainer {
                                     descendentSchemaIdentifier,
                                     curBuilderContainer, registry);
                     curBuilderContainer.builderContainerMap
-                            .put(descendentSchemaIdentifier, newBuilderContainer);
+                            .put(descendentSchemaIdentifier,
+                                 newBuilderContainer);
                     curBuilderContainer = newBuilderContainer;
                 } else {
                     curBuilderContainer = descendentBuilderContainer;
@@ -211,8 +212,8 @@ public class YobBuilderContainer {
      *                                   requried
      * @param curBuilderContainer        current context bulter container
      * @param registry                   schema registry
-     * @return new builder container object corresponding to a context
-     * switch schema node.
+     * @return new builder container object corresponding to a context switch
+     * schema node.
      */
     private YobBuilderContainer getNewDescendentBuilderContainer(
             YangSchemaNodeContextInfo descendentSchemaContext,

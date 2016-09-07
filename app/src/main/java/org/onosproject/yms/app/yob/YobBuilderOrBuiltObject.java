@@ -47,6 +47,11 @@ public class YobBuilderOrBuiltObject {
      */
     Class<?>[] yangDefaultClassBuilder;
 
+    /**
+     * Interface implemented by the default Class.
+     */
+    Class<?>[] yangInterfaceImplementedByDefaultClass;
+
     public YobBuilderOrBuiltObject(
             String qualifiedClassName, ClassLoader registeredAppClassLoader) {
 
@@ -54,6 +59,8 @@ public class YobBuilderOrBuiltObject {
             yangDefaultClass =
                     registeredAppClassLoader.loadClass(qualifiedClassName);
             yangDefaultClassBuilder = yangDefaultClass.getDeclaredClasses();
+            yangInterfaceImplementedByDefaultClass = yangDefaultClass
+                    .getInterfaces();
             setBuilderObject(yangDefaultClassBuilder[0].newInstance());
         } catch (ClassNotFoundException e) {
             log.error("YOB: failed to load class for class "

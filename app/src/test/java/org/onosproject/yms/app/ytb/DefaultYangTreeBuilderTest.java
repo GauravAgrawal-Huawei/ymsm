@@ -22,23 +22,17 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 import java.util.Set;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826
-        .YtbDerivedTypeWithBitsAndBinary;
-import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826
-        .YtbDerivedTypeWithBitsAndBinaryOpParam;
-import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826
-        .ytbderivedtypewithbitsandbinary.Derivedbinarya;
-import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826
-        .ytbderivedtypewithbitsandbinary.Derivedbinaryb;
-import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826
-        .ytbderivedtypewithbitsandbinary.Derivedbitsa;
-import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826
-        .ytbderivedtypewithbitsandbinary.Derivedbitsb;
-import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826
-        .ytbderivedtypewithbitsandbinary.ForunionUnion;
+import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826.YtbDerivedTypeWithBitsAndBinary;
+import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826.YtbDerivedTypeWithBitsAndBinaryOpParam;
+import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826.ytbderivedtypewithbitsandbinary.Derivedbinarya;
+import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826.ytbderivedtypewithbitsandbinary.Derivedbinaryb;
+import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826.ytbderivedtypewithbitsandbinary.Derivedbitsa;
+import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826.ytbderivedtypewithbitsandbinary.Derivedbitsb;
+import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826.ytbderivedtypewithbitsandbinary.ForunionUnion;
 import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.YtbModuleWithContainer;
 import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.YtbModuleWithContainerOpParam;
 import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.ytbmodulewithcontainer.DefaultSched;
@@ -62,36 +56,21 @@ import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.YtbMu
 import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.YtbMultiModulebOpParam;
 import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.ytbmultimoduleb.DefaultYtbmultilistb;
 import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.ytbmultimoduleb.Ytbmultilistb;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826
-        .ytbmultinotificationwithcontainer.DefaultFortesta;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826
-        .ytbmultinotificationwithcontainer.Fortesta;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826
-        .ytbmultinotificationwithcontainer.YtbMultiNotificationWithContainerEvent;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826
-        .ytbmultinotificationwithcontainer.YtbMultiNotificationWithContainerEventSubject;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826
-        .ytbmultinotificationwithcontainer.fortesta.DefaultYtbnot;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826
-        .ytbmultinotificationwithcontainer.fortesta.Ytbnot;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
-        .YtbTreeBuilderForListHavingList;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
-        .YtbTreeBuilderForListHavingListOpParam;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
-        .ytbtreebuilderforlisthavinglist.Carrier;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
-        .ytbtreebuilderforlisthavinglist.DefaultCarrier;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
-        .ytbtreebuilderforlisthavinglist.carrier.DefaultMultiplexes;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
-        .ytbtreebuilderforlisthavinglist.carrier.Multiplexes;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
-        .ytbtreebuilderforlisthavinglist.carrier.multiplexes.ApplicationAreas;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
-        .ytbtreebuilderforlisthavinglist.carrier.multiplexes.DefaultApplicationAreas;
-import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
-        .ytbtreebuilderforlisthavinglist.carrier.multiplexes.TypesEnum;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.DefaultFortesta;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.Fortesta;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.YtbMultiNotificationWithContainerEvent;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.YtbMultiNotificationWithContainerEventSubject;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.fortesta.DefaultYtbnot;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826.ytbmultinotificationwithcontainer.fortesta.Ytbnot;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.YtbTreeBuilderForListHavingList;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.YtbTreeBuilderForListHavingListOpParam;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.ytbtreebuilderforlisthavinglist.Carrier;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.ytbtreebuilderforlisthavinglist.DefaultCarrier;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.ytbtreebuilderforlisthavinglist.carrier.DefaultMultiplexes;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.ytbtreebuilderforlisthavinglist.carrier.Multiplexes;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.ytbtreebuilderforlisthavinglist.carrier.multiplexes.ApplicationAreas;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.ytbtreebuilderforlisthavinglist.carrier.multiplexes.DefaultApplicationAreas;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826.ytbtreebuilderforlisthavinglist.carrier.multiplexes.TypesEnum;
 import org.onosproject.yms.app.ydt.YdtExtendedBuilder;
 import org.onosproject.yms.app.ydt.YdtNode;
 import org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry;
@@ -103,8 +82,7 @@ import org.onosproject.yms.ydt.YmsOperationType;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826
-        .YtbIetfScheduleOpParam.OnosYangNodeOperationType.MERGE;
+import static org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826.YtbIetfSchedule.OnosYangNodeOperationType.MERGE;
 import static org.onosproject.yms.ydt.YmsOperationType.EDIT_CONFIG_REQUEST;
 
 /**
@@ -131,7 +109,7 @@ public class DefaultYangTreeBuilderTest {
                         " null.");
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         yangTreeBuilder.getYdtBuilderForYo(null, "rootName", "rootNamespace",
-                EDIT_CONFIG_REQUEST, null);
+                                           EDIT_CONFIG_REQUEST, null);
     }
 
     /**
@@ -174,7 +152,7 @@ public class DefaultYangTreeBuilderTest {
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         YdtExtendedBuilder ydtBuilder = yangTreeBuilder
                 .getYdtBuilderForYo(objectList, "rootName", "rootNamespace",
-                        EDIT_CONFIG_REQUEST, defaultTreeBuilder);
+                                    EDIT_CONFIG_REQUEST, defaultTreeBuilder);
 
         // Receive YDT context and check the tree that is built.
         YdtContext ydtContext = ydtBuilder.getRootNode();
@@ -182,7 +160,8 @@ public class DefaultYangTreeBuilderTest {
         // Get the first module from logical root node.
         YdtContext moduleNode = ydtContext.getFirstChild();
         String moduleNodeName = moduleNode.getName();
-        YdtContextOperationType operationType = ((YdtNode) moduleNode).getYdtContextOperationType();
+        YdtContextOperationType operationType =
+                ((YdtNode) moduleNode).getYdtContextOperationType();
         assertThat(moduleNodeName, is("YtbIetfSchedule"));
         assertThat(operationType, is(YdtContextOperationType.MERGE));
 
@@ -196,7 +175,8 @@ public class DefaultYangTreeBuilderTest {
     }
 
     /**
-     * Test for checking if for type enum ydt should have schema name instead of enum's contants.
+     * Test for checking if for type enum ydt should have schema name instead of
+     * enum's contants.
      */
     @Test
     public void processLeafAndLeafListWithTypeEnum() {
@@ -212,7 +192,8 @@ public class DefaultYangTreeBuilderTest {
         YtbIetfSchedule ietfSchedule =
                 new YtbIetfScheduleOpParam.YtbIetfScheduleBuilder()
                         .time((byte) 9)
-                        .onosYangNodeOperationType(MERGE).enum1(Enum1Enum.HUNDRED).enum2(enum2Ena)
+                        .onosYangNodeOperationType(MERGE)
+                        .enum1(Enum1Enum.HUNDRED).enum2(enum2Ena)
                         .build();
 
 
@@ -224,7 +205,7 @@ public class DefaultYangTreeBuilderTest {
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         YdtExtendedBuilder ydtBuilder = yangTreeBuilder
                 .getYdtBuilderForYo(objectList, "rootName", "rootNamespace",
-                        EDIT_CONFIG_REQUEST, defaultTreeBuilder);
+                                    EDIT_CONFIG_REQUEST, defaultTreeBuilder);
 
         // Receive YDT context and check the tree that is built.
         YdtContext ydtContext = ydtBuilder.getRootNode();
@@ -256,6 +237,7 @@ public class DefaultYangTreeBuilderTest {
         assertThat(true, is(valueSet.contains("hundred-100")));
         assertThat(leafName, is("enum2"));
 
+
     }
 
     /**
@@ -286,10 +268,10 @@ public class DefaultYangTreeBuilderTest {
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         YdtBuilder ydtBuilder =
                 yangTreeBuilder.getYdtBuilderForYo(objectList, "modulewithlist",
-                        "modulewithlistspace",
-                        YmsOperationType
-                                .QUERY_REQUEST,
-                        yangSchemaRegistryTest);
+                                                   "modulewithlistspace",
+                                                   YmsOperationType
+                                                           .QUERY_REQUEST,
+                                                   yangSchemaRegistryTest);
 
         // Receive YDT context and check the tree that is built.
         YdtContext ydtContext = ydtBuilder.getRootNode();
@@ -347,9 +329,9 @@ public class DefaultYangTreeBuilderTest {
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         YdtBuilder ydtBuilder = yangTreeBuilder
                 .getYdtBuilderForYo(objectList, "modulewithcontainer",
-                        "modulewithcontainerspace",
-                        YmsOperationType.QUERY_CONFIG_REQUEST,
-                        yangSchemaRegistryTest);
+                                    "modulewithcontainerspace",
+                                    YmsOperationType.QUERY_CONFIG_REQUEST,
+                                    yangSchemaRegistryTest);
 
         // Receive YDT context and check the tree that is built.
         YdtContext ydtContext = ydtBuilder.getRootNode();
@@ -371,7 +353,7 @@ public class DefaultYangTreeBuilderTest {
                         .getYdtContextOperationType();
 
         assertThat(operationTypeForContainer,
-                is(YdtContextOperationType.DELETE));
+                   is(YdtContextOperationType.DELETE));
         assertThat(containerName, is("sched"));
 
         YdtContext ydtContextForLeaf = ydtContextForContainer.getFirstChild();
@@ -425,9 +407,9 @@ public class DefaultYangTreeBuilderTest {
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         YdtBuilder ydtBuilder =
                 yangTreeBuilder.getYdtBuilderForYo(objectList, "modulewithlist",
-                        "modulewithlistspace",
-                        EDIT_CONFIG_REQUEST,
-                        yangSchemaRegistryTest);
+                                                   "modulewithlistspace",
+                                                   EDIT_CONFIG_REQUEST,
+                                                   yangSchemaRegistryTest);
 
         // Receives YDT context and check the tree that is built.
         YdtContext ydtContext = ydtBuilder.getRootNode();
@@ -508,7 +490,7 @@ public class DefaultYangTreeBuilderTest {
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         YdtContext ydtContext = yangTreeBuilder
                 .getYdtForNotification(event, "rootNotif",
-                        yangSchemaRegistryTest);
+                                       yangSchemaRegistryTest);
 
         // Gets the first module from logical root node.
         YdtContext moduleNode = ydtContext.getFirstChild();
@@ -529,7 +511,7 @@ public class DefaultYangTreeBuilderTest {
 
         // Checks the contents in the first notification.
         assertThat(operationTypeForNotification,
-                is(YdtContextOperationType.NONE));
+                   is(YdtContextOperationType.NONE));
         assertThat(notificationName, is("fortesta"));
 
         // Gets the contents of the first container in notification
@@ -615,9 +597,9 @@ public class DefaultYangTreeBuilderTest {
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         YdtBuilder ydtBuilder =
                 yangTreeBuilder.getYdtBuilderForYo(listOfModules, "multimodule",
-                        "multimodulespace",
-                        EDIT_CONFIG_REQUEST,
-                        yangSchemaRegistryTest);
+                                                   "multimodulespace",
+                                                   EDIT_CONFIG_REQUEST,
+                                                   yangSchemaRegistryTest);
 
         // Receives YDT context and check the tree that is built.
         YdtContext ydtContext = ydtBuilder.getRootNode();
@@ -760,9 +742,9 @@ public class DefaultYangTreeBuilderTest {
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         YdtBuilder ydtBuilder = yangTreeBuilder
                 .getYdtBuilderForYo(objectList, "RootNameOfListHavingList",
-                        "RootNameSpaceOfListHavingList",
-                        YmsOperationType.QUERY_CONFIG_REQUEST,
-                        yangSchemaRegistryTest);
+                                    "RootNameSpaceOfListHavingList",
+                                    YmsOperationType.QUERY_CONFIG_REQUEST,
+                                    yangSchemaRegistryTest);
 
         // Checks the module node and name under logical node.
         YdtContext ydtContext = ydtBuilder.getRootNode();
@@ -782,24 +764,27 @@ public class DefaultYangTreeBuilderTest {
         assertThat(leafOfParentA.getName(), is("types"));
         assertThat(leafOfParentA.getValue(), is("time-division"));
 
-        YdtContext ydtContextForChildListAOfParentA = leafOfParentA.getNextSibling();
+        YdtContext ydtContextForChildListAOfParentA =
+                leafOfParentA.getNextSibling();
         assertThat(ydtContextForChildListAOfParentA.getName(),
-                is("application-areas"));
+                   is("application-areas"));
 
-        YdtContext leaflistOfChildListAOfParentA = ydtContextForChildListAOfParentA.getFirstChild();
+        YdtContext leaflistOfChildListAOfParentA =
+                ydtContextForChildListAOfParentA.getFirstChild();
         assertThat(leaflistOfChildListAOfParentA.getName(),
-                is("destination-areas"));
+                   is("destination-areas"));
         Set leaflistAValue = leaflistOfChildListAOfParentA.getValueSet();
         // TODO: check the leaf-list value.
 
-        YdtContext ydtContextForChildListBOfParentA = ydtContextForChildListAOfParentA.getNextSibling();
+        YdtContext ydtContextForChildListBOfParentA =
+                ydtContextForChildListAOfParentA.getNextSibling();
         assertThat(ydtContextForChildListBOfParentA.getName(),
-                is("application-areas"));
+                   is("application-areas"));
 
         YdtContext leaflistOfChildListBOfParentA =
                 ydtContextForChildListBOfParentA.getFirstChild();
         assertThat(leaflistOfChildListBOfParentA.getName(),
-                is("destination-areas"));
+                   is("destination-areas"));
         Set leaflistBValue = leaflistOfChildListAOfParentA.getValueSet();
         // TODO: check the leaf-list value.
 
@@ -814,30 +799,31 @@ public class DefaultYangTreeBuilderTest {
         YdtContext ydtContextForChildListAOfParentB =
                 leafOfParentB.getNextSibling();
         assertThat(ydtContextForChildListAOfParentB.getName(),
-                is("application-areas"));
+                   is("application-areas"));
 
         YdtContext leaflistOfChildListAOfParentB =
                 ydtContextForChildListAOfParentB.getFirstChild();
         assertThat(leaflistOfChildListAOfParentB.getName(),
-                is("destination-areas"));
+                   is("destination-areas"));
         Set leaflistCValue = leaflistOfChildListAOfParentB.getValueSet();
         // TODO: check the leaf-list value.
 
         YdtContext ydtContextForChildListBOfParentB =
                 ydtContextForChildListAOfParentB.getNextSibling();
         assertThat(ydtContextForChildListBOfParentB.getName(),
-                is("application-areas"));
+                   is("application-areas"));
 
         YdtContext leaflistOfChildListBOfParentB =
                 ydtContextForChildListBOfParentB.getFirstChild();
         assertThat(leaflistOfChildListBOfParentB.getName(),
-                is("destination-areas"));
+                   is("destination-areas"));
         Set leaflistDValue = leaflistOfChildListBOfParentB.getValueSet();
         // TODO: check the leaf-list value.
     }
 
     /**
-     * Processes tree building from the derived type of leaf and leaf-list having binary and bits .
+     * Processes tree building from the derived type of leaf and leaf-list
+     * having binary and bits .
      */
     @Test
     public void processTreeBuilderForBinaryAndBits() {
@@ -891,9 +877,12 @@ public class DefaultYangTreeBuilderTest {
         derivedbitsaList.add(derivedbitsa2);
         derivedbitsaList.add(derivedbitsa3);
 
-        YtbDerivedTypeWithBitsAndBinary bitsAndBinary = new YtbDerivedTypeWithBitsAndBinaryOpParam
-                .YtbDerivedTypeWithBitsAndBinaryBuilder().forbinary(derivedbinarya).forbits(derivedbitsa)
-                .forbinarylist(derivedbinaryaList).forbitslist(derivedbitsaList).build();
+        YtbDerivedTypeWithBitsAndBinary bitsAndBinary =
+                new YtbDerivedTypeWithBitsAndBinaryOpParam
+                        .YtbDerivedTypeWithBitsAndBinaryBuilder()
+                        .forbinary(derivedbinarya).forbits(derivedbitsa)
+                        .forbinarylist(derivedbinaryaList)
+                        .forbitslist(derivedbitsaList).build();
 
         // YSB or YAB protocol to set the values for YTB.
         List<Object> objectList = new ArrayList<>();
@@ -902,8 +891,10 @@ public class DefaultYangTreeBuilderTest {
         // Build YANG tree.
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         YdtExtendedBuilder ydtBuilder = yangTreeBuilder
-                .getYdtBuilderForYo(objectList, "rootNameForBinary", "rootNamespaceForBinary",
-                        EDIT_CONFIG_REQUEST, yangSchemaRegistryTest);
+                .getYdtBuilderForYo(objectList, "rootNameForBinary",
+                                    "rootNamespaceForBinary",
+                                    EDIT_CONFIG_REQUEST,
+                                    yangSchemaRegistryTest);
         YdtContext rootContext = ydtBuilder.getRootNode();
         YdtContext moduleNode = rootContext.getFirstChild();
         assertThat(moduleNode.getName(), is("YtbDerivedTypeWithBitsAndBinary"));
@@ -942,11 +933,14 @@ public class DefaultYangTreeBuilderTest {
     @Test
     public void processYtbUnionType() {
         testYangSchemaNodeProvider.processSchemaRegistry(null);
-        DefaultYangSchemaRegistry yangSchemaRegistryTest = testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
+        DefaultYangSchemaRegistry yangSchemaRegistryTest =
+                testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
         byte[] unionBinary = new byte[]{0, 0, 0};
         ForunionUnion union = new ForunionUnion(unionBinary);
-        YtbDerivedTypeWithBitsAndBinary unionType = new YtbDerivedTypeWithBitsAndBinaryOpParam
-                .YtbDerivedTypeWithBitsAndBinaryBuilder().forunion(union).build();
+        YtbDerivedTypeWithBitsAndBinary unionType =
+                new YtbDerivedTypeWithBitsAndBinaryOpParam
+                        .YtbDerivedTypeWithBitsAndBinaryBuilder()
+                        .forunion(union).build();
         // YSB or YAB protocol to set the values for YTB.
         List<Object> objectList = new ArrayList<>();
         objectList.add(unionType);
@@ -954,8 +948,10 @@ public class DefaultYangTreeBuilderTest {
         // Build YANG tree.
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         YdtExtendedBuilder ydtBuilder = yangTreeBuilder
-                .getYdtBuilderForYo(objectList, "rootNameForBinary", "rootNamespaceForBinary",
-                        EDIT_CONFIG_REQUEST, yangSchemaRegistryTest);
+                .getYdtBuilderForYo(objectList, "rootNameForBinary",
+                                    "rootNamespaceForBinary",
+                                    EDIT_CONFIG_REQUEST,
+                                    yangSchemaRegistryTest);
         YdtContext rootNode = ydtBuilder.getRootNode();
         YdtContext moduleNode = rootNode.getFirstChild();
         YdtContext unionChild = moduleNode.getFirstChild();

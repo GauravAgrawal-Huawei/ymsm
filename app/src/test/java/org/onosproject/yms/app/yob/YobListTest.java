@@ -49,7 +49,8 @@ public class YobListTest {
         DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
 
         Object yangObject = defaultYobBuilder
-                .getYangObject((YdtExtendedContext) ydtContext1, YdtTestUtils.getSchemaRegistry());
+                .getYangObject((YdtExtendedContext) ydtContext1,
+                               YdtTestUtils.getSchemaRegistry());
         assertNotNull(yangObject);
         assertTrue(yangObject.getClass().getSimpleName()
                            .equals("RootlistOpParam"));
@@ -59,7 +60,7 @@ public class YobListTest {
                     yangObject.getClass().getDeclaredField("listwithcontainer");
             field.setAccessible(true);
             List listwithcontainer = (List) field.get(yangObject);
-            assertEquals(true, listwithcontainer.isEmpty());
+            assertEquals(true, listwithcontainer == null);
             Field field1 = yangObject.getClass()
                     .getDeclaredField("listwithoutcontainer");
             field1.setAccessible(true);
@@ -93,7 +94,8 @@ public class YobListTest {
         DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
 
         Object yangObject = defaultYobBuilder
-                .getYangObject((YdtExtendedContext) ydtContext1, YdtTestUtils.getSchemaRegistry());
+                .getYangObject((YdtExtendedContext) ydtContext1,
+                               YdtTestUtils.getSchemaRegistry());
         assertNotNull(yangObject);
         assertTrue(yangObject.getClass().getSimpleName()
                            .equals("RootlistOpParam"));

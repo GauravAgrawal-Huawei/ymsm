@@ -16,6 +16,11 @@
 
 package org.onosproject.yms.app.ymsm;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Test;
 import org.onosproject.yang.gen.v1.ydt.customs.supervisor.rev20160524.CustomssupervisorOpParam;
 import org.onosproject.yms.app.ych.codecutils.YchYangDataTreeCodec;
@@ -24,11 +29,6 @@ import org.onosproject.yms.ych.YangCodecHandler;
 import org.onosproject.yms.ych.YangCompositeEncoding;
 import org.onosproject.yms.ych.YangDataTreeCodec;
 import org.onosproject.yms.ych.YangProtocolEncodingFormat;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
 import static org.onosproject.yms.ych.YangProtocolEncodingFormat.XML_ENCODING;
@@ -39,9 +39,11 @@ import static org.onosproject.yms.ych.YangProtocolEncodingFormat.XML_ENCODING;
 public class YchCompositeHandlerTest {
 
     private static final String TARGET = "target/TestYangSchemaNodeProvider";
-    private TestYangSchemaNodeProvider testYangSchemaNodeProvider = new TestYangSchemaNodeProvider();
+    private TestYangSchemaNodeProvider testYangSchemaNodeProvider =
+            new TestYangSchemaNodeProvider();
 
-    private Map<YangProtocolEncodingFormat, YangDataTreeCodec> defaultCodecs = new HashMap<>();
+    private Map<YangProtocolEncodingFormat, YangDataTreeCodec> defaultCodecs =
+            new HashMap<>();
 
     /**
      * Unit test case in which verifying codec handler is null or not.
@@ -69,7 +71,8 @@ public class YchCompositeHandlerTest {
         List<Object> yangModuleList = new ArrayList<>();
 
         // Creating the object
-        Object object = CustomssupervisorOpParam.builder().supervisor("Customssupervisor").build();
+        Object object = CustomssupervisorOpParam.builder()
+                .supervisor("Customssupervisor").build();
         yangModuleList.add(object);
 
         // Get the xml string and compare
@@ -77,42 +80,56 @@ public class YchCompositeHandlerTest {
         tagAttr.put("type", "subtree");
 
         try {
-            yangCodecHandler.encodeOperation("filter", "ydt.filter-type", tagAttr, yangModuleList,
-                                             YangProtocolEncodingFormat.XML_ENCODING, null);
+            yangCodecHandler
+                    .encodeOperation("filter", "ydt.filter-type", tagAttr,
+                                     yangModuleList,
+                                     YangProtocolEncodingFormat.XML_ENCODING,
+                                     null);
         } catch (Exception e) {
-            if (!e.getMessage().equals("RegisterDataTreeCodec encodeYdtToProtocolFormat Called.")) {
+            if (!e.getMessage()
+                    .equals("RegisterDataTreeCodec encodeYdtToProtocolFormat Called.")) {
                 assertTrue(false);
             }
         }
 
         // Verify the received object list
         try {
-            yangCodecHandler.decode("XML String", YangProtocolEncodingFormat.XML_ENCODING, null);
+            yangCodecHandler.decode("XML String",
+                                    YangProtocolEncodingFormat.XML_ENCODING,
+                                    null);
         } catch (Exception e) {
-            if (!e.getMessage().equals("RegisterDataTreeCodec decodeProtocolDataToYdt Called.")) {
+            if (!e.getMessage()
+                    .equals("RegisterDataTreeCodec decodeProtocolDataToYdt Called.")) {
                 assertTrue(false);
             }
         }
 
         // Verify the received object list
         try {
-            yangCodecHandler.encodeCompositeOperation("filter", "ydt.filter-type", object,
-                                                      YangProtocolEncodingFormat.XML_ENCODING, null);
+            yangCodecHandler
+                    .encodeCompositeOperation("filter", "ydt.filter-type",
+                                              object,
+                                              YangProtocolEncodingFormat.XML_ENCODING,
+                                              null);
         } catch (Exception e) {
-            if (!e.getMessage().equals("RegisterDataTreeCodec encodeYdtToCompositeProtocolFormat Called.")) {
+            if (!e.getMessage()
+                    .equals("RegisterDataTreeCodec encodeYdtToCompositeProtocolFormat Called.")) {
                 assertTrue(false);
             }
         }
 
         // Verify the received object list
         try {
-            YangCompositeEncoding yangCompositeEncoding = new YangCompositeTest();
+            YangCompositeEncoding yangCompositeEncoding =
+                    new YangCompositeTest();
             yangCodecHandler.decode(yangCompositeEncoding, XML_ENCODING, null);
         } catch (Exception e) {
-            if (!e.getMessage().equals("RegisterDataTreeCodec decodeCompositeProtocolDataToYdt Called.")) {
+            if (!e.getMessage()
+                    .equals("RegisterDataTreeCodec decodeCompositeProtocolDataToYdt Called.")) {
                 assertTrue(false);
             }
         }
+
 
     }
 
@@ -133,7 +150,8 @@ public class YchCompositeHandlerTest {
         List<Object> yangModuleList = new ArrayList<>();
 
         // Creating the object
-        Object object = CustomssupervisorOpParam.builder().supervisor("Customssupervisor").build();
+        Object object = CustomssupervisorOpParam.builder()
+                .supervisor("Customssupervisor").build();
         yangModuleList.add(object);
 
         // Get the xml string and compare
@@ -142,23 +160,30 @@ public class YchCompositeHandlerTest {
 
         // Verify the received object list
         try {
-            yangCodecHandler.encodeCompositeOperation("filter", "ydt.filter-type", object,
-                                                      YangProtocolEncodingFormat.XML_ENCODING, null);
+            yangCodecHandler
+                    .encodeCompositeOperation("filter", "ydt.filter-type",
+                                              object,
+                                              YangProtocolEncodingFormat.XML_ENCODING,
+                                              null);
         } catch (Exception e) {
-            if (!e.getMessage().equals("Encode for composite protocol request not supported.")) {
+            if (!e.getMessage()
+                    .equals("Encode for composite protocol request not supported.")) {
                 assertTrue(false);
             }
         }
 
         // Verify the received object list
         try {
-            YangCompositeEncoding yangCompositeEncoding = new YangCompositeTest();
+            YangCompositeEncoding yangCompositeEncoding =
+                    new YangCompositeTest();
             yangCodecHandler.decode(yangCompositeEncoding, XML_ENCODING, null);
         } catch (Exception e) {
-            if (!e.getMessage().equals("Decode for composite protocol request not supported.")) {
+            if (!e.getMessage()
+                    .equals("Decode for composite protocol request not supported.")) {
                 assertTrue(false);
             }
         }
+
     }
 
     /**
@@ -180,7 +205,8 @@ public class YchCompositeHandlerTest {
         List<Object> yangModuleList = new ArrayList<>();
 
         // Creating the object
-        Object object = CustomssupervisorOpParam.builder().supervisor("Customssupervisor").build();
+        Object object = CustomssupervisorOpParam.builder()
+                .supervisor("Customssupervisor").build();
         yangModuleList.add(object);
 
         // Get the xml string and compare
@@ -188,42 +214,56 @@ public class YchCompositeHandlerTest {
         tagAttr.put("type", "subtree");
 
         try {
-            yangCodecHandler.encodeOperation("filter", "ydt.filter-type", tagAttr, yangModuleList,
-                                             YangProtocolEncodingFormat.XML_ENCODING, null);
+            yangCodecHandler
+                    .encodeOperation("filter", "ydt.filter-type", tagAttr,
+                                     yangModuleList,
+                                     YangProtocolEncodingFormat.XML_ENCODING,
+                                     null);
         } catch (Exception e) {
-            if (!e.getMessage().equals("OverridenDataTreeCodec encodeYdtToProtocolFormat Called.")) {
+            if (!e.getMessage()
+                    .equals("OverridenDataTreeCodec encodeYdtToProtocolFormat Called.")) {
                 assertTrue(false);
             }
         }
 
         // Verify the received object list
         try {
-            yangCodecHandler.decode("XML String", YangProtocolEncodingFormat.XML_ENCODING, null);
+            yangCodecHandler.decode("XML String",
+                                    YangProtocolEncodingFormat.XML_ENCODING,
+                                    null);
         } catch (Exception e) {
-            if (!e.getMessage().equals("OverridenDataTreeCodec decodeProtocolDataToYdt Called.")) {
+            if (!e.getMessage()
+                    .equals("OverridenDataTreeCodec decodeProtocolDataToYdt Called.")) {
                 assertTrue(false);
             }
         }
 
         // Verify the received object list
         try {
-            yangCodecHandler.encodeCompositeOperation("filter", "ydt.filter-type", object,
-                                                      YangProtocolEncodingFormat.XML_ENCODING, null);
+            yangCodecHandler
+                    .encodeCompositeOperation("filter", "ydt.filter-type",
+                                              object,
+                                              YangProtocolEncodingFormat.XML_ENCODING,
+                                              null);
         } catch (Exception e) {
-            if (!e.getMessage().equals("OverridenDataTreeCodec encodeYdtToCompositeProtocolFormat Called.")) {
+            if (!e.getMessage()
+                    .equals("OverridenDataTreeCodec encodeYdtToCompositeProtocolFormat Called.")) {
                 assertTrue(false);
             }
         }
 
         // Verify the received object list
         try {
-            YangCompositeEncoding yangCompositeEncoding = new YangCompositeTest();
+            YangCompositeEncoding yangCompositeEncoding =
+                    new YangCompositeTest();
             yangCodecHandler.decode(yangCompositeEncoding, XML_ENCODING, null);
         } catch (Exception e) {
-            if (!e.getMessage().equals("OverridenDataTreeCodec decodeCompositeProtocolDataToYdt Called.")) {
+            if (!e.getMessage()
+                    .equals("OverridenDataTreeCodec decodeCompositeProtocolDataToYdt Called.")) {
                 assertTrue(false);
             }
         }
+        testYangSchemaNodeProvider.unregisterAllService();
 
     }
 }

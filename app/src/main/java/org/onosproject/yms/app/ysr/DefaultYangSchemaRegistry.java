@@ -16,15 +16,6 @@
 
 package org.onosproject.yms.app.ysr;
 
-import org.onosproject.yangutils.datamodel.RpcNotificationContainer;
-import org.onosproject.yangutils.datamodel.YangNode;
-import org.onosproject.yangutils.datamodel.YangRevision;
-import org.onosproject.yangutils.datamodel.YangSchemaNode;
-import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
-import org.osgi.framework.BundleContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -45,8 +36,20 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
+import org.onosproject.yangutils.datamodel.RpcNotificationContainer;
+import org.onosproject.yangutils.datamodel.YangNode;
+import org.onosproject.yangutils.datamodel.YangRevision;
+import org.onosproject.yangutils.datamodel.YangSchemaNode;
+import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
+import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.apache.commons.io.FileUtils.deleteDirectory;
-import static org.onosproject.yangutils.utils.UtilConstants.*;
+import static org.onosproject.yangutils.utils.UtilConstants.DEFAULT;
+import static org.onosproject.yangutils.utils.UtilConstants.EVENT_STRING;
+import static org.onosproject.yangutils.utils.UtilConstants.OP_PARAM;
+import static org.onosproject.yangutils.utils.UtilConstants.PERIOD;
 import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
 import static org.osgi.framework.FrameworkUtil.getBundle;
 
@@ -123,6 +126,11 @@ public class DefaultYangSchemaRegistry
      * manager object.
      */
     private YsrRegisteredAppContext ysrAppContextForApplicationStore;
+
+    /**
+     * Class loader of service application.
+     */
+    private ClassLoader classLoader;
 
     /**
      * Creates an instance of YANG schema registry.
@@ -202,6 +210,9 @@ public class DefaultYangSchemaRegistry
                 bundleContext.getBundle().getLocation(),
                 bundleContext.getProperty(USER_DIRECTORY));
 
+        // set class loader for service class.
+        setClassLoader(serviceClass.getClassLoader());
+
         //Check if service should be registered?
         verifyApplicationRegistration(appObject, serviceClass);
 
@@ -234,15 +245,17 @@ public class DefaultYangSchemaRegistry
      * @param appObject application object
      * @param appClass  application class
      */
-    private void verifyApplicationRegistration(Object appObject, Class<?> appClass) {
+    private void verifyApplicationRegistration(Object appObject,
+                                               Class<?> appClass) {
         Class<?> managerClass = appObject.getClass();
         Class<?>[] services = managerClass.getInterfaces();
         List<Class<?>> classes = new ArrayList<>();
         Collections.addAll(classes, services);
         if (!classes.contains(appClass)) {
-            throw new RuntimeException("YSR: service class " + appClass.getName()
-                                               + "is not being implemented by "
-                                               + managerClass.getName());
+            throw new RuntimeException(
+                    "YSR: service class " + appClass.getName()
+                            + "is not being implemented by "
+                            + managerClass.getName());
         }
     }
 
@@ -256,9 +269,11 @@ public class DefaultYangSchemaRegistry
         String appName = appClass.getSimpleName();
         if (!getAppObjectStore().containsKey(appClass.getName())) {
             if (appName.contains(OP_PARAM)) {
-                return getYangSchemaStoreForRootOpParam().containsKey(appClass.getName());
+                return getYangSchemaStoreForRootOpParam()
+                        .containsKey(appClass.getName());
             } else {
-                return getYangSchemaStoreForRootInterface().containsKey(appClass.getName());
+                return getYangSchemaStoreForRootInterface()
+                        .containsKey(appClass.getName());
             }
         }
         return true;
@@ -272,7 +287,8 @@ public class DefaultYangSchemaRegistry
      */
     private void updateApplicationObject(Object appObject, Class<?> appClass) {
         if (getAppObjectStore().containsKey(appClass.getName())) {
-            YsrRegisteredAppContext appContext = getAppObjectStore().get(appClass.getName());
+            YsrRegisteredAppContext appContext =
+                    getAppObjectStore().get(appClass.getName());
             YangSchemaNode schemaNode = appContext.curNode();
             String name = schemaNode.getJavaPackage() + PERIOD +
                     getCapitalCase(schemaNode.getJavaClassNameOrBuiltInType());
@@ -280,10 +296,13 @@ public class DefaultYangSchemaRegistry
                 //update in application store.
                 appContext.appObject(appObject);
                 if (getYangSchemaStoreForRootInterface().containsKey(name)) {
-                    getYangSchemaStoreForRootInterface().get(name).appObject(appObject);
+                    getYangSchemaStoreForRootInterface().get(name)
+                            .appObject(appObject);
                 }
-                if (getYangSchemaStoreForRootOpParam().containsKey(name + OP_PARAM)) {
-                    getYangSchemaStoreForRootOpParam().get(name + OP_PARAM).appObject(appObject);
+                if (getYangSchemaStoreForRootOpParam()
+                        .containsKey(name + OP_PARAM)) {
+                    getYangSchemaStoreForRootOpParam().get(name + OP_PARAM)
+                            .appObject(appObject);
                 }
             }
         }
@@ -453,7 +472,10 @@ public class DefaultYangSchemaRegistry
      * @param appName application name
      */
     private void updateAppObjectStore(String appName) {
-        getAppObjectStore().put(appName, ysrAppContextForApplicationStore());
+        if (verifyClassExistence(appName)) {
+            getAppObjectStore()
+                    .put(appName, ysrAppContextForApplicationStore());
+        }
     }
 
     /**
@@ -471,8 +493,10 @@ public class DefaultYangSchemaRegistry
      * @param notificationName application's notification name
      */
     private void updateYangNotificationStore(String notificationName) {
-        getYangSchemaNotificationStore()
-                .put(notificationName, ysrAppContext());
+        if (verifyClassExistence(notificationName)) {
+            getYangSchemaNotificationStore()
+                    .put(notificationName, ysrAppContext());
+        }
     }
 
     /**
@@ -483,8 +507,10 @@ public class DefaultYangSchemaRegistry
      */
     private void updateYangSchemaForRootInterfaceFileNameStore(
             String rootInterfaceFileName) {
-        getYangSchemaStoreForRootInterface()
-                .put(rootInterfaceFileName, ysrAppContext());
+        if (verifyClassExistence(rootInterfaceFileName)) {
+            getYangSchemaStoreForRootInterface()
+                    .put(rootInterfaceFileName, ysrAppContext());
+        }
     }
 
     /**
@@ -494,8 +520,10 @@ public class DefaultYangSchemaRegistry
      */
     private void updateYangSchemaForRootOpParamFileNameStore(
             String rootOpParamFileName) {
-        getYangSchemaStoreForRootOpParam()
-                .put(rootOpParamFileName, ysrAppContext());
+        if (verifyClassExistence(rootOpParamFileName)) {
+            getYangSchemaStoreForRootOpParam()
+                    .put(rootOpParamFileName, ysrAppContext());
+        }
     }
 
     /**
@@ -512,7 +540,8 @@ public class DefaultYangSchemaRegistry
                     ysrAppContext().addToYangFileSet(curFile);
                     ysrAppContextForSchemaStore()
                             .addToYangFileSet(curFile);
-                    ysrAppContextForApplicationStore().addToYangFileSet(curFile);
+                    ysrAppContextForApplicationStore()
+                            .addToYangFileSet(curFile);
                 }
             }
         }
@@ -550,6 +579,7 @@ public class DefaultYangSchemaRegistry
 
         //Updates maps wih schema nodes
         updateAppObjectStore(appName + SERVICE);
+
         // Updates schema store
         updateYangSchemaStore(appNode);
         // update interface store
@@ -691,7 +721,7 @@ public class DefaultYangSchemaRegistry
      *
      * @param ysrRegisteredAppContext ysr app context
      */
-    void ysrAppContext(
+    private void ysrAppContext(
             YsrRegisteredAppContext ysrRegisteredAppContext) {
         this.ysrRegisteredAppContext = ysrRegisteredAppContext;
     }
@@ -876,9 +906,11 @@ public class DefaultYangSchemaRegistry
     /**
      * Sets YSR app context for application store.
      *
-     * @param ysrAppContextForApplicationMap YSR app context for application store
+     * @param ysrAppContextForApplicationMap YSR app context for application
+     *                                       store
      */
-    void ysrAppContextForApplicationStore(YsrRegisteredAppContext ysrAppContextForApplicationMap) {
+    private void ysrAppContextForApplicationStore(
+            YsrRegisteredAppContext ysrAppContextForApplicationMap) {
         this.ysrAppContextForApplicationStore = ysrAppContextForApplicationMap;
     }
 
@@ -973,5 +1005,37 @@ public class DefaultYangSchemaRegistry
         }
     }
 
+    /**
+     * Returns class loader of service class.
+     *
+     * @return class loader of service class
+     */
+    private ClassLoader getClassLoader() {
+        return classLoader;
+    }
+
+    /**
+     * Sets class loader of service class.
+     *
+     * @param classLoader class loader of service class
+     */
+    void setClassLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
+
+    /**
+     * Verifies if class with given name exists.
+     *
+     * @param appName application name
+     * @return true if class exists
+     */
+    boolean verifyClassExistence(String appName) {
+        try {
+            getClassLoader().loadClass(appName);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
 
 }
