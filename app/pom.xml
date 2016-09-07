@@ -57,12 +57,12 @@
         <dependency>
             <groupId>org.onosproject</groupId>
             <artifactId>onos-yang-maven-plugin</artifactId>
-            <version>1.8-SNAPSHOT</version>
+            <version>1.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.onosproject</groupId>
             <artifactId>onos-yang-datamodel</artifactId>
-            <version>1.8-SNAPSHOT</version>
+            <version>1.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.onosproject</groupId>
@@ -108,10 +108,11 @@
             <plugin>
                 <groupId>org.onosproject</groupId>
                 <artifactId>onos-yang-maven-plugin</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>1.9-SNAPSHOT</version>
                 <configuration>
                     <yangFilesDir>src/test/resources/</yangFilesDir>
-                    <classFileDir>target/unitTestCaseGeneratedCode</classFileDir>
+                    <classFileDir>target/unitTestCaseGeneratedCode
+                    </classFileDir>
                 </configuration>
                 <executions>
                     <execution>
