@@ -22,10 +22,23 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 import java.util.Set;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826
+        .YtbDerivedTypeWithBitsAndBinary;
+import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826
+        .YtbDerivedTypeWithBitsAndBinaryOpParam;
+import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826
+        .ytbderivedtypewithbitsandbinary.Derivedbinarya;
+import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826
+        .ytbderivedtypewithbitsandbinary.Derivedbinaryb;
+import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826
+        .ytbderivedtypewithbitsandbinary.Derivedbitsa;
+import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826
+        .ytbderivedtypewithbitsandbinary.Derivedbitsb;
+import org.onosproject.yang.gen.v1.yms.test.ytb.derived.type.with.bits.and.binary.rev20160826
+        .ytbderivedtypewithbitsandbinary.ForunionUnion;
 import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.YtbModuleWithContainer;
 import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.YtbModuleWithContainerOpParam;
 import org.onosproject.yang.gen.v1.yms.test.ytb.module.with.container.rev20160826.ytbmodulewithcontainer.DefaultSched;
@@ -49,18 +62,36 @@ import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.YtbMu
 import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.YtbMultiModulebOpParam;
 import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.ytbmultimoduleb.DefaultYtbmultilistb;
 import org.onosproject.yang.gen.v1.yms.test.ytb.multi.module.b.rev20160826.ytbmultimoduleb.Ytbmultilistb;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container
-        .rev20160826.ytbmultinotificationwithcontainer.DefaultFortesta;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container
-        .rev20160826.ytbmultinotificationwithcontainer.Fortesta;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container
-        .rev20160826.ytbmultinotificationwithcontainer.YtbMultiNotificationWithContainerEvent;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container
-        .rev20160826.ytbmultinotificationwithcontainer.YtbMultiNotificationWithContainerEventSubject;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container
-        .rev20160826.ytbmultinotificationwithcontainer.fortesta.DefaultYtbnot;
-import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container
-        .rev20160826.ytbmultinotificationwithcontainer.fortesta.Ytbnot;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826
+        .ytbmultinotificationwithcontainer.DefaultFortesta;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826
+        .ytbmultinotificationwithcontainer.Fortesta;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826
+        .ytbmultinotificationwithcontainer.YtbMultiNotificationWithContainerEvent;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826
+        .ytbmultinotificationwithcontainer.YtbMultiNotificationWithContainerEventSubject;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826
+        .ytbmultinotificationwithcontainer.fortesta.DefaultYtbnot;
+import org.onosproject.yang.gen.v1.yms.test.ytb.multi.notification.with.container.rev20160826
+        .ytbmultinotificationwithcontainer.fortesta.Ytbnot;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
+        .YtbTreeBuilderForListHavingList;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
+        .YtbTreeBuilderForListHavingListOpParam;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
+        .ytbtreebuilderforlisthavinglist.Carrier;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
+        .ytbtreebuilderforlisthavinglist.DefaultCarrier;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
+        .ytbtreebuilderforlisthavinglist.carrier.DefaultMultiplexes;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
+        .ytbtreebuilderforlisthavinglist.carrier.Multiplexes;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
+        .ytbtreebuilderforlisthavinglist.carrier.multiplexes.ApplicationAreas;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
+        .ytbtreebuilderforlisthavinglist.carrier.multiplexes.DefaultApplicationAreas;
+import org.onosproject.yang.gen.v1.yms.test.ytb.tree.builder.yangautoprefixfor.list.having.list.rev20160826
+        .ytbtreebuilderforlisthavinglist.carrier.multiplexes.TypesEnum;
 import org.onosproject.yms.app.ydt.YdtExtendedBuilder;
 import org.onosproject.yms.app.ydt.YdtNode;
 import org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry;
@@ -72,8 +103,8 @@ import org.onosproject.yms.ydt.YmsOperationType;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule
-        .rev20160826.YtbIetfScheduleOpParam.OnosYangNodeOperationType.MERGE;
+import static org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826
+        .YtbIetfScheduleOpParam.OnosYangNodeOperationType.MERGE;
 import static org.onosproject.yms.ydt.YmsOperationType.EDIT_CONFIG_REQUEST;
 
 /**
@@ -100,7 +131,7 @@ public class DefaultYangTreeBuilderTest {
                         " null.");
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         yangTreeBuilder.getYdtBuilderForYo(null, "rootName", "rootNamespace",
-                                           EDIT_CONFIG_REQUEST, null);
+                EDIT_CONFIG_REQUEST, null);
     }
 
     /**
@@ -143,7 +174,7 @@ public class DefaultYangTreeBuilderTest {
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         YdtExtendedBuilder ydtBuilder = yangTreeBuilder
                 .getYdtBuilderForYo(objectList, "rootName", "rootNamespace",
-                                    EDIT_CONFIG_REQUEST, defaultTreeBuilder);
+                        EDIT_CONFIG_REQUEST, defaultTreeBuilder);
 
         // Receive YDT context and check the tree that is built.
         YdtContext ydtContext = ydtBuilder.getRootNode();
@@ -151,8 +182,7 @@ public class DefaultYangTreeBuilderTest {
         // Get the first module from logical root node.
         YdtContext moduleNode = ydtContext.getFirstChild();
         String moduleNodeName = moduleNode.getName();
-        YdtContextOperationType operationType =
-                ((YdtNode) moduleNode).getYdtContextOperationType();
+        YdtContextOperationType operationType = ((YdtNode) moduleNode).getYdtContextOperationType();
         assertThat(moduleNodeName, is("YtbIetfSchedule"));
         assertThat(operationType, is(YdtContextOperationType.MERGE));
 
@@ -194,7 +224,7 @@ public class DefaultYangTreeBuilderTest {
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         YdtExtendedBuilder ydtBuilder = yangTreeBuilder
                 .getYdtBuilderForYo(objectList, "rootName", "rootNamespace",
-                                    EDIT_CONFIG_REQUEST, defaultTreeBuilder);
+                        EDIT_CONFIG_REQUEST, defaultTreeBuilder);
 
         // Receive YDT context and check the tree that is built.
         YdtContext ydtContext = ydtBuilder.getRootNode();
@@ -256,10 +286,10 @@ public class DefaultYangTreeBuilderTest {
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         YdtBuilder ydtBuilder =
                 yangTreeBuilder.getYdtBuilderForYo(objectList, "modulewithlist",
-                                                   "modulewithlistspace",
-                                                   YmsOperationType
-                                                           .QUERY_REQUEST,
-                                                   yangSchemaRegistryTest);
+                        "modulewithlistspace",
+                        YmsOperationType
+                                .QUERY_REQUEST,
+                        yangSchemaRegistryTest);
 
         // Receive YDT context and check the tree that is built.
         YdtContext ydtContext = ydtBuilder.getRootNode();
@@ -317,9 +347,9 @@ public class DefaultYangTreeBuilderTest {
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         YdtBuilder ydtBuilder = yangTreeBuilder
                 .getYdtBuilderForYo(objectList, "modulewithcontainer",
-                                    "modulewithcontainerspace",
-                                    YmsOperationType.QUERY_CONFIG_REQUEST,
-                                    yangSchemaRegistryTest);
+                        "modulewithcontainerspace",
+                        YmsOperationType.QUERY_CONFIG_REQUEST,
+                        yangSchemaRegistryTest);
 
         // Receive YDT context and check the tree that is built.
         YdtContext ydtContext = ydtBuilder.getRootNode();
@@ -341,7 +371,7 @@ public class DefaultYangTreeBuilderTest {
                         .getYdtContextOperationType();
 
         assertThat(operationTypeForContainer,
-                   is(YdtContextOperationType.DELETE));
+                is(YdtContextOperationType.DELETE));
         assertThat(containerName, is("sched"));
 
         YdtContext ydtContextForLeaf = ydtContextForContainer.getFirstChild();
@@ -395,9 +425,9 @@ public class DefaultYangTreeBuilderTest {
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         YdtBuilder ydtBuilder =
                 yangTreeBuilder.getYdtBuilderForYo(objectList, "modulewithlist",
-                                                   "modulewithlistspace",
-                                                   EDIT_CONFIG_REQUEST,
-                                                   yangSchemaRegistryTest);
+                        "modulewithlistspace",
+                        EDIT_CONFIG_REQUEST,
+                        yangSchemaRegistryTest);
 
         // Receives YDT context and check the tree that is built.
         YdtContext ydtContext = ydtBuilder.getRootNode();
@@ -478,7 +508,7 @@ public class DefaultYangTreeBuilderTest {
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         YdtContext ydtContext = yangTreeBuilder
                 .getYdtForNotification(event, "rootNotif",
-                                       yangSchemaRegistryTest);
+                        yangSchemaRegistryTest);
 
         // Gets the first module from logical root node.
         YdtContext moduleNode = ydtContext.getFirstChild();
@@ -499,7 +529,7 @@ public class DefaultYangTreeBuilderTest {
 
         // Checks the contents in the first notification.
         assertThat(operationTypeForNotification,
-                   is(YdtContextOperationType.NONE));
+                is(YdtContextOperationType.NONE));
         assertThat(notificationName, is("fortesta"));
 
         // Gets the contents of the first container in notification
@@ -585,9 +615,9 @@ public class DefaultYangTreeBuilderTest {
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         YdtBuilder ydtBuilder =
                 yangTreeBuilder.getYdtBuilderForYo(listOfModules, "multimodule",
-                                                   "multimodulespace",
-                                                   EDIT_CONFIG_REQUEST,
-                                                   yangSchemaRegistryTest);
+                        "multimodulespace",
+                        EDIT_CONFIG_REQUEST,
+                        yangSchemaRegistryTest);
 
         // Receives YDT context and check the tree that is built.
         YdtContext ydtContext = ydtBuilder.getRootNode();
@@ -645,166 +675,292 @@ public class DefaultYangTreeBuilderTest {
 
     /**
      * Processes tree building when a list node is having list inside it.
+     */
+    @Test
+    public void processTreeBuilderForListHavingList() {
 
-     @Test public void processTreeBuilderForListHavingList() {
+        testYangSchemaNodeProvider.processSchemaRegistry(null);
+        DefaultYangSchemaRegistry yangSchemaRegistryTest =
+                testYangSchemaNodeProvider
+                        .getDefaultYangSchemaRegistry();
 
-     testYangSchemaNodeProvider.processSchemaRegistry(null);
-     DefaultYangSchemaRegistry yangSchemaRegistryTest =
-     testYangSchemaNodeProvider
-     .getDefaultYangSchemaRegistry();
+        //Children leaf-list-a and leaf-list-b having leaf-list contents.
+        List<byte[]> byteArray = new ArrayList<>();
+        byte[] arr = new byte[]{1, 6, 3};
+        byte[] arr1 = new byte[]{2, 7, 4};
+        byteArray.add(arr);
+        byteArray.add(arr1);
 
-     //Children leaf-list-a and leaf-list-b having leaf-list contents.
-     List<byte[]> byteArray = new ArrayList<>();
-     byte[] arr = new byte[]{1, 6, 3};
-     byte[] arr1 = new byte[]{2, 7, 4};
-     byteArray.add(arr);
-     byteArray.add(arr1);
+        List<byte[]> byteArray1 = new ArrayList<>();
+        byte[] arr2 = new byte[]{3, 8, 4};
+        byte[] arr3 = new byte[]{5, 6, 1};
+        byteArray1.add(arr2);
+        byteArray1.add(arr3);
 
-     List<byte[]> byteArray1 = new ArrayList<>();
-     byte[] arr2 = new byte[]{3, 8, 4};
-     byte[] arr3 = new byte[]{5, 6, 1};
-     byteArray1.add(arr2);
-     byteArray1.add(arr3);
+        // Child list having respective leaf-lists.
+        ApplicationAreas applicationAreas1 =
+                new DefaultApplicationAreas.ApplicationAreasBuilder()
+                        .destinationAreas(byteArray).build();
+        ApplicationAreas applicationAreas2 =
+                new DefaultApplicationAreas.ApplicationAreasBuilder()
+                        .destinationAreas(byteArray1).build();
 
-     // Child list having respective leaf-lists.
-     ApplicationAreas applicationAreas1 =
-     new DefaultApplicationAreas.ApplicationAreasBuilder()
-     .destinationAreas(byteArray).build();
-     ApplicationAreas applicationAreas2 =
-     new DefaultApplicationAreas.ApplicationAreasBuilder()
-     .destinationAreas(byteArray1).build();
+        List<ApplicationAreas> applicationAreasList = new ArrayList<>();
+        applicationAreasList.add(applicationAreas1);
+        applicationAreasList.add(applicationAreas2);
+        Multiplexes multiplex1 = new DefaultMultiplexes.MultiplexesBuilder()
+                .types(TypesEnum.TIME_DIVISION)
+                .applicationAreas(applicationAreasList).build();
 
-     List<ApplicationAreas> applicationAreasList = new ArrayList<>();
-     applicationAreasList.add(applicationAreas1);
-     applicationAreasList.add(applicationAreas2);
-     Multiplexes multiplex1 = new DefaultMultiplexes.MultiplexesBuilder()
-     .types(TypesEnum.TIME_DIVISION)
-     .applicationAreas(applicationAreasList).build();
+        // Second set for parent list.
+        List<byte[]> byteArrayB = new ArrayList<>();
+        byte[] arrB = new byte[]{0, 0, 1};
+        byte[] arr1B = new byte[]{1, 0, 0};
+        byteArrayB.add(arrB);
+        byteArrayB.add(arr1B);
 
-     // Second set for parent list.
-     List<byte[]> byteArrayB = new ArrayList<>();
-     byte[] arrB = new byte[]{0, 0, 1};
-     byte[] arr1B = new byte[]{1, 0, 0};
-     byteArrayB.add(arrB);
-     byteArrayB.add(arr1B);
+        List<byte[]> byteArray1B = new ArrayList<>();
+        byte[] arr2B = new byte[]{7, 7, 7};
+        byte[] arr3B = new byte[]{0, 1};
+        byteArray1B.add(arr2B);
+        byteArray1B.add(arr3B);
 
-     List<byte[]> byteArray1B = new ArrayList<>();
-     byte[] arr2B = new byte[]{7, 7, 7};
-     byte[] arr3B = new byte[]{0, 1};
-     byteArray1B.add(arr2B);
-     byteArray1B.add(arr3B);
+        ApplicationAreas applicationAreas1B =
+                new DefaultApplicationAreas.ApplicationAreasBuilder()
+                        .destinationAreas(byteArrayB).build();
+        ApplicationAreas applicationAreas2B =
+                new DefaultApplicationAreas.ApplicationAreasBuilder()
+                        .destinationAreas(byteArray1B).build();
 
-     ApplicationAreas applicationAreas1B =
-     new DefaultApplicationAreas.ApplicationAreasBuilder()
-     .destinationAreas(byteArrayB).build();
-     ApplicationAreas applicationAreas2B =
-     new DefaultApplicationAreas.ApplicationAreasBuilder()
-     .destinationAreas(byteArray1B).build();
+        List<ApplicationAreas> applicationAreasListB = new ArrayList<>();
+        applicationAreasListB.add(applicationAreas1B);
+        applicationAreasListB.add(applicationAreas2B);
+        Multiplexes multiplex1B = new DefaultMultiplexes.MultiplexesBuilder()
+                .types(TypesEnum.FREQUENCY_DIVISION)
+                .applicationAreas(applicationAreasListB).build();
 
-     List<ApplicationAreas> applicationAreasListB = new ArrayList<>();
-     applicationAreasListB.add(applicationAreas1B);
-     applicationAreasListB.add(applicationAreas2B);
-     Multiplexes multiplex1B = new DefaultMultiplexes.MultiplexesBuilder()
-     .types(TypesEnum.FREQUENCY_DIVISION)
-     .applicationAreas(applicationAreasListB).build();
+        // Adds the child lists to the parent list.
+        List<Multiplexes> multiplexList = new ArrayList<>();
+        multiplexList.add(multiplex1);
+        multiplexList.add(multiplex1B);
 
-     // Adds the child lists to the parent list.
-     List<Multiplexes> multiplexList = new ArrayList<>();
-     multiplexList.add(multiplex1);
-     multiplexList.add(multiplex1B);
+        // Sets it in the container.
+        Carrier carrier =
+                new DefaultCarrier.CarrierBuilder().multiplexes(multiplexList)
+                        .build();
 
-     // Sets it in the container.
-     Carrier carrier =
-     new DefaultCarrier.CarrierBuilder().multiplexes(multiplexList)
-     .build();
+        YtbTreeBuilderForListHavingList treeBuilderForListHavingList = new
+                YtbTreeBuilderForListHavingListOpParam
+                        .YtbTreeBuilderForListHavingListBuilder()
+                .carrier(carrier)
+                .build();
 
-     YtbTreeBuilderForListHavingList treeBuilderForListHavingList = new
-     YtbTreeBuilderForListHavingListOpParam
-     .YtbTreeBuilderForListHavingListBuilder()
-     .carrier(carrier)
-     .build();
+        List<Object> objectList = new ArrayList<>();
+        objectList.add(treeBuilderForListHavingList);
+        DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
+        YdtBuilder ydtBuilder = yangTreeBuilder
+                .getYdtBuilderForYo(objectList, "RootNameOfListHavingList",
+                        "RootNameSpaceOfListHavingList",
+                        YmsOperationType.QUERY_CONFIG_REQUEST,
+                        yangSchemaRegistryTest);
 
-     List<Object> objectList = new ArrayList<>();
-     objectList.add(treeBuilderForListHavingList);
-     DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
-     YdtBuilder ydtBuilder = yangTreeBuilder
-     .getYdtBuilderForYo(objectList, "RootNameOfListHavingList",
-     "RootNameSpaceOfListHavingList",
-     YmsOperationType.QUERY_CONFIG_REQUEST,
-     yangSchemaRegistryTest);
+        // Checks the module node and name under logical node.
+        YdtContext ydtContext = ydtBuilder.getRootNode();
+        YdtContext moduleNode = ydtContext.getFirstChild();
+        assertThat(moduleNode.getName(), is("YtbTreeBuilderForListHavingList"));
 
-     // Checks the module node and name under logical node.
-     YdtContext ydtContext = ydtBuilder.getRootNode();
-     YdtContext moduleNode = ydtContext.getFirstChild();
-     assertThat(moduleNode.getName(), is("YtbTreeBuilderForListHavingList"));
+        // Checks the container node and name under module node.
+        YdtContext ydtContextForContainer = moduleNode.getFirstChild();
+        assertThat(ydtContextForContainer.getName(), is("carrier"));
 
-     // Checks the container node and name under module node.
-     YdtContext ydtContextForContainer = moduleNode.getFirstChild();
-     assertThat(ydtContextForContainer.getName(), is("carrier"));
+        // Checks the list node a and name under module node.
+        YdtContext ydtContextForParentListA =
+                ydtContextForContainer.getFirstChild();
+        assertThat(ydtContextForParentListA.getName(), is("multiplexes"));
 
-     // Checks the list node a and name under module node.
-     YdtContext ydtContextForParentListA =
-     ydtContextForContainer.getFirstChild();
-     assertThat(ydtContextForParentListA.getName(), is("multiplexes"));
+        YdtContext leafOfParentA = ydtContextForParentListA.getFirstChild();
+        assertThat(leafOfParentA.getName(), is("types"));
+        assertThat(leafOfParentA.getValue(), is("time-division"));
 
-     YdtContext leafOfParentA = ydtContextForParentListA.getFirstChild();
-     assertThat(leafOfParentA.getName(), is("types"));
-     assertThat(leafOfParentA.getValue(), is("TIME_DIVISION"));
+        YdtContext ydtContextForChildListAOfParentA = leafOfParentA.getNextSibling();
+        assertThat(ydtContextForChildListAOfParentA.getName(),
+                is("application-areas"));
 
-     YdtContext ydtContextForChildListAOfParentA =
-     leafOfParentA.getNextSibling();
-     assertThat(ydtContextForChildListAOfParentA.getName(),
-     is("application-areas"));
+        YdtContext leaflistOfChildListAOfParentA = ydtContextForChildListAOfParentA.getFirstChild();
+        assertThat(leaflistOfChildListAOfParentA.getName(),
+                is("destination-areas"));
+        Set leaflistAValue = leaflistOfChildListAOfParentA.getValueSet();
+        // TODO: check the leaf-list value.
 
-     YdtContext leaflistOfChildListAOfParentA =
-     ydtContextForChildListAOfParentA.getFirstChild();
-     assertThat(leaflistOfChildListAOfParentA.getName(),
-     is("destination-areas"));
-     Set leaflistAValue = leaflistOfChildListAOfParentA.getValueSet();
-     // TODO: check the leaf-list value.
+        YdtContext ydtContextForChildListBOfParentA = ydtContextForChildListAOfParentA.getNextSibling();
+        assertThat(ydtContextForChildListBOfParentA.getName(),
+                is("application-areas"));
 
-     YdtContext ydtContextForChildListBOfParentA =
-     ydtContextForChildListAOfParentA.getNextSibling();
-     assertThat(ydtContextForChildListBOfParentA.getName(),
-     is("application-areas"));
+        YdtContext leaflistOfChildListBOfParentA =
+                ydtContextForChildListBOfParentA.getFirstChild();
+        assertThat(leaflistOfChildListBOfParentA.getName(),
+                is("destination-areas"));
+        Set leaflistBValue = leaflistOfChildListAOfParentA.getValueSet();
+        // TODO: check the leaf-list value.
 
-     YdtContext leaflistOfChildListBOfParentA =
-     ydtContextForChildListBOfParentA.getFirstChild();
-     assertThat(leaflistOfChildListBOfParentA.getName(),
-     is("destination-areas"));
-     Set leaflistBValue = leaflistOfChildListAOfParentA.getValueSet();
-     // TODO: check the leaf-list value.
+        YdtContext ydtContextForParentListB =
+                ydtContextForParentListA.getNextSibling();
+        assertThat(ydtContextForParentListB.getName(), is("multiplexes"));
 
-     YdtContext ydtContextForParentListB =
-     ydtContextForParentListA.getNextSibling();
-     assertThat(ydtContextForParentListB.getName(), is("multiplexes"));
+        YdtContext leafOfParentB = ydtContextForParentListB.getFirstChild();
+        assertThat(leafOfParentB.getName(), is("types"));
+        assertThat(leafOfParentB.getValue(), is("frequency-division"));
 
-     YdtContext leafOfParentB = ydtContextForParentListB.getFirstChild();
-     assertThat(leafOfParentB.getName(), is("types"));
-     assertThat(leafOfParentB.getValue(), is("FREQUENCY_DIVISION"));
+        YdtContext ydtContextForChildListAOfParentB =
+                leafOfParentB.getNextSibling();
+        assertThat(ydtContextForChildListAOfParentB.getName(),
+                is("application-areas"));
 
-     YdtContext ydtContextForChildListAOfParentB =
-     leafOfParentB.getNextSibling();
-     assertThat(ydtContextForChildListAOfParentB.getName(),
-     is("application-areas"));
+        YdtContext leaflistOfChildListAOfParentB =
+                ydtContextForChildListAOfParentB.getFirstChild();
+        assertThat(leaflistOfChildListAOfParentB.getName(),
+                is("destination-areas"));
+        Set leaflistCValue = leaflistOfChildListAOfParentB.getValueSet();
+        // TODO: check the leaf-list value.
 
-     YdtContext leaflistOfChildListAOfParentB =
-     ydtContextForChildListAOfParentB.getFirstChild();
-     assertThat(leaflistOfChildListAOfParentB.getName(),
-     is("destination-areas"));
-     Set leaflistCValue = leaflistOfChildListAOfParentB.getValueSet();
-     // TODO: check the leaf-list value.
+        YdtContext ydtContextForChildListBOfParentB =
+                ydtContextForChildListAOfParentB.getNextSibling();
+        assertThat(ydtContextForChildListBOfParentB.getName(),
+                is("application-areas"));
 
-     YdtContext ydtContextForChildListBOfParentB =
-     ydtContextForChildListAOfParentB.getNextSibling();
-     assertThat(ydtContextForChildListBOfParentB.getName(),
-     is("application-areas"));
+        YdtContext leaflistOfChildListBOfParentB =
+                ydtContextForChildListBOfParentB.getFirstChild();
+        assertThat(leaflistOfChildListBOfParentB.getName(),
+                is("destination-areas"));
+        Set leaflistDValue = leaflistOfChildListBOfParentB.getValueSet();
+        // TODO: check the leaf-list value.
+    }
 
-     YdtContext leaflistOfChildListBOfParentB =
-     ydtContextForChildListBOfParentB.getFirstChild();
-     assertThat(leaflistOfChildListBOfParentB.getName(),
-     is("destination-areas"));
-     Set leaflistDValue = leaflistOfChildListBOfParentB.getValueSet();
-     // TODO: check the leaf-list value.
-     } */
+    /**
+     * Processes tree building from the derived type of leaf and leaf-list having binary and bits .
+     */
+    @Test
+    public void processTreeBuilderForBinaryAndBits() {
+        testYangSchemaNodeProvider.processSchemaRegistry(null);
+        DefaultYangSchemaRegistry yangSchemaRegistryTest =
+                testYangSchemaNodeProvider
+                        .getDefaultYangSchemaRegistry();
+
+        byte[] arrValue = new byte[]{5, 5, 5};
+        Derivedbinaryb derivedbinaryb = new Derivedbinaryb(arrValue);
+        Derivedbinarya derivedbinarya = new Derivedbinarya(derivedbinaryb);
+
+        // As an application create values.
+        BitSet bitSetleaf = new BitSet();
+        bitSetleaf.set(1);
+        bitSetleaf.set(100);
+        Derivedbitsb derivedbitsb = new Derivedbitsb(bitSetleaf);
+        Derivedbitsa derivedbitsa = new Derivedbitsa(derivedbitsb);
+
+        byte[] addValueToList1 = new byte[]{9, 9, 0};
+        byte[] addValueToList2 = new byte[]{12, 6, 0};
+        byte[] addValueToList3 = new byte[]{16, 29, 25};
+        Derivedbinaryb derivedbinaryb1 = new Derivedbinaryb(addValueToList1);
+        Derivedbinaryb derivedbinaryb2 = new Derivedbinaryb(addValueToList2);
+        Derivedbinaryb derivedbinaryb3 = new Derivedbinaryb(addValueToList3);
+        Derivedbinarya derivedbinarya1 = new Derivedbinarya(derivedbinaryb1);
+        Derivedbinarya derivedbinarya2 = new Derivedbinarya(derivedbinaryb2);
+        Derivedbinarya derivedbinarya3 = new Derivedbinarya(derivedbinaryb3);
+        List<Derivedbinarya> derivedbinaryaList = new ArrayList<>();
+        derivedbinaryaList.add(derivedbinarya1);
+        derivedbinaryaList.add(derivedbinarya2);
+        derivedbinaryaList.add(derivedbinarya3);
+
+        BitSet bitSetLeafList1 = new BitSet();
+        bitSetLeafList1.set(1);
+        BitSet bitSetLeafList2 = new BitSet();
+        bitSetLeafList2.set(1);
+        bitSetLeafList2.set(10);
+        BitSet bitSetLeafList3 = new BitSet();
+        bitSetLeafList3.set(1);
+        bitSetLeafList3.set(10);
+        bitSetLeafList3.set(100);
+        Derivedbitsb derivedbitsb1 = new Derivedbitsb(bitSetLeafList1);
+        Derivedbitsb derivedbitsb2 = new Derivedbitsb(bitSetLeafList2);
+        Derivedbitsb derivedbitsb3 = new Derivedbitsb(bitSetLeafList3);
+        Derivedbitsa derivedbitsa1 = new Derivedbitsa(derivedbitsb1);
+        Derivedbitsa derivedbitsa2 = new Derivedbitsa(derivedbitsb2);
+        Derivedbitsa derivedbitsa3 = new Derivedbitsa(derivedbitsb3);
+        List<Derivedbitsa> derivedbitsaList = new ArrayList<>();
+        derivedbitsaList.add(derivedbitsa1);
+        derivedbitsaList.add(derivedbitsa2);
+        derivedbitsaList.add(derivedbitsa3);
+
+        YtbDerivedTypeWithBitsAndBinary bitsAndBinary = new YtbDerivedTypeWithBitsAndBinaryOpParam
+                .YtbDerivedTypeWithBitsAndBinaryBuilder().forbinary(derivedbinarya).forbits(derivedbitsa)
+                .forbinarylist(derivedbinaryaList).forbitslist(derivedbitsaList).build();
+
+        // YSB or YAB protocol to set the values for YTB.
+        List<Object> objectList = new ArrayList<>();
+        objectList.add(bitsAndBinary);
+
+        // Build YANG tree.
+        DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
+        YdtExtendedBuilder ydtBuilder = yangTreeBuilder
+                .getYdtBuilderForYo(objectList, "rootNameForBinary", "rootNamespaceForBinary",
+                        EDIT_CONFIG_REQUEST, yangSchemaRegistryTest);
+        YdtContext rootContext = ydtBuilder.getRootNode();
+        YdtContext moduleNode = rootContext.getFirstChild();
+        assertThat(moduleNode.getName(), is("YtbDerivedTypeWithBitsAndBinary"));
+        YdtContext leafInModule = moduleNode.getFirstChild();
+        assertThat(leafInModule.getName(), is("forbinary"));
+
+        String leafValueInModule = leafInModule.getValue();
+        assertThat(leafValueInModule, is("BQUF"));
+
+        YdtContext bitsLeafInModule = leafInModule.getNextSibling();
+        assertThat(bitsLeafInModule.getName(), is("forbits"));
+
+        String bitsLeafValueInModule = bitsLeafInModule.getValue();
+        // TODO: The value of bits should be mapped text string.
+        assertThat(bitsLeafValueInModule, is("{1, 100}"));
+
+        YdtContext binaryLeafListInModule = bitsLeafInModule.getNextSibling();
+        assertThat(binaryLeafListInModule.getName(), is("forbinarylist"));
+        Set valueOfBinaryLeafList = binaryLeafListInModule.getValueSet();
+        assertThat(valueOfBinaryLeafList.contains("CQkA"), is(true));
+        assertThat(valueOfBinaryLeafList.contains("DAYA"), is(true));
+        assertThat(valueOfBinaryLeafList.contains("EB0Z"), is(true));
+
+        // TODO: The value of bits should be mapped text string.
+        YdtContext bitsLeafList = binaryLeafListInModule.getNextSibling();
+        assertThat(bitsLeafList.getName(), is("forbitslist"));
+        Set valueOfBitsLeafList = bitsLeafList.getValueSet();
+        assertThat(valueOfBitsLeafList.contains("{1, 10}"), is(true));
+        assertThat(valueOfBitsLeafList.contains("{1}"), is(true));
+        assertThat(valueOfBitsLeafList.contains("{1, 10, 100}"), is(true));
+    }
+
+    /**
+     * Processes tree building for the union type.
+     */
+    @Test
+    public void processYtbUnionType() {
+        testYangSchemaNodeProvider.processSchemaRegistry(null);
+        DefaultYangSchemaRegistry yangSchemaRegistryTest = testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
+        byte[] unionBinary = new byte[]{0, 0, 0};
+        ForunionUnion union = new ForunionUnion(unionBinary);
+        YtbDerivedTypeWithBitsAndBinary unionType = new YtbDerivedTypeWithBitsAndBinaryOpParam
+                .YtbDerivedTypeWithBitsAndBinaryBuilder().forunion(union).build();
+        // YSB or YAB protocol to set the values for YTB.
+        List<Object> objectList = new ArrayList<>();
+        objectList.add(unionType);
+
+        // Build YANG tree.
+        DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
+        YdtExtendedBuilder ydtBuilder = yangTreeBuilder
+                .getYdtBuilderForYo(objectList, "rootNameForBinary", "rootNamespaceForBinary",
+                        EDIT_CONFIG_REQUEST, yangSchemaRegistryTest);
+        YdtContext rootNode = ydtBuilder.getRootNode();
+        YdtContext moduleNode = rootNode.getFirstChild();
+        YdtContext unionChild = moduleNode.getFirstChild();
+        assertThat(unionChild.getName(), is("forunion"));
+        //TODO: Correct it once union generated code is fixed.
+        assertThat(unionChild.getValue(), is("0"));
+    }
 }
