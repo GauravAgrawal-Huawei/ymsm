@@ -16,17 +16,15 @@
 
 package org.onosproject.yms.app.ysr;
 
+import org.onosproject.yangutils.datamodel.YangSchemaNode;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.onosproject.yangutils.datamodel.YangSchemaNode;
-
-import static org.onosproject.yangutils.utils.UtilConstants.PERIOD;
-import static org.onosproject.yangutils.utils.UtilConstants.SERVICE;
-import static org.onosproject.yangutils.utils.UtilConstants.TEMP;
+import static org.onosproject.yangutils.utils.UtilConstants.*;
 import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.deleteDirectory;
 import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
 
@@ -58,13 +56,17 @@ public class TestYangSchemaNodeProvider {
 
         //Update schema registry.
         YsrRegisteredAppContext ysrRegisteredAppContext = new YsrRegisteredAppContext();
-        defaultYangSchemaRegistry.ysrRegisteredAppContext(ysrRegisteredAppContext);
+        ysrRegisteredAppContext.appObject(appObject);
+        defaultYangSchemaRegistry.ysrAppContext(ysrRegisteredAppContext);
+        defaultYangSchemaRegistry.ysrAppContextForApplicationStore(ysrRegisteredAppContext);
+        defaultYangSchemaRegistry.ysrAppContextForSchemaStore(ysrRegisteredAppContext);
+
 
         Set<YangSchemaNode> appNode = defaultYangSchemaRegistry.deSerializeDataModel(PATH + SER_FILE_PATH);
 
         String appName;
         for (YangSchemaNode node : appNode) {
-            defaultYangSchemaRegistry.processApplicationContext(node, appObject);
+            defaultYangSchemaRegistry.processApplicationContext(node);
 
             appName = node.getJavaPackage() + PERIOD +
                     getCapitalCase(node.getJavaClassNameOrBuiltInType());

@@ -118,6 +118,12 @@ public class DefaultYangSchemaRegistry
     private YsrRegisteredAppContext ysrRegisteredAppContextForSchemaMap;
 
     /**
+     * Context of application which is registering with YMS with multiple
+     * manager object.
+     */
+    private YsrRegisteredAppContext ysrAppContextForApplicationStore;
+
+    /**
      * Creates an instance of YANG schema registry.
      */
     public DefaultYangSchemaRegistry() {
@@ -195,24 +201,27 @@ public class DefaultYangSchemaRegistry
                 bundleContext.getBundle().getLocation(),
                 bundleContext.getProperty(USER_DIRECTORY));
 
+        //Add app class to registered serice store.
         if (!getRegisterClassStore().containsKey(serviceClass.getName())) {
             updateServiceClass(serviceClass);
         }
+
+        // process storing operations.
         if (!verifyIfApplicationAlreadyRegistered(serviceClass)) {
             List<YangSchemaNode> curNodes =
                     processJarParsingOperations(jarPath);
             for (YangSchemaNode schemaNode : curNodes) {
-                processApplicationContext(schemaNode, appObject);
+                processApplicationContext(schemaNode);
             }
-            ysrRegisteredAppContext().jarPath(jarPath);
-            ysrRegisteredAppContextForSchemaMap().jarPath(jarPath);
+            ysrAppContext().jarPath(jarPath);
+            ysrAppContextForSchemaStore().jarPath(jarPath);
+            ysrAppContextForApplicationStore().jarPath(jarPath);
             //Store the YANG file handles.
             updateYangFileSet(jarPath);
-        } else {
-            if (!verifyApplicationObject(appObject, serviceClass)) {
-                getAppObjectStore().get(serviceClass.getName()).appObject(appObject);
-            }
         }
+
+        //Verifies if object is updated for app store.
+        updateApplicationObject(appObject, serviceClass);
     }
 
     /**
@@ -234,15 +243,23 @@ public class DefaultYangSchemaRegistry
     }
 
     /**
-     * Verfies if service is being implemented by some new object.
+     * Verifies if service is being implemented by some new object.
      *
      * @param appObject application's object
      * @param appClass  application's class
-     * @return true if object is same object
      */
-    private boolean verifyApplicationObject(Object appObject, Class<?> appClass) {
-        Object obj = getAppObjectStore().get(appClass.getName()).appObject();
-        return obj.equals(appObject);
+    private void updateApplicationObject(Object appObject, Class<?> appClass) {
+        if (getAppObjectStore().containsKey(appClass.getName())) {
+            YsrRegisteredAppContext appContext = getAppObjectStore().get(appClass.getName());
+            if (appContext.appObject() == null) {
+                //update in application store.
+                appContext.appObject(appObject);
+                //update in application interface/op param store.
+                ysrAppContext().appObject(appObject);
+                //update in schema store.
+                ysrAppContextForSchemaStore().appObject(appObject);
+            }
+        }
     }
 
     @Override
@@ -276,7 +293,7 @@ public class DefaultYangSchemaRegistry
             log.info("YSR: service " + serviceClass.getSimpleName() +
                              " is unregistered.");
         } else {
-            log.error("YSR: service " + serviceClass.getSimpleName() + " is " +
+            log.error("YSR: service " + serviceClass.getSimpleName() + " was " +
                               "not registered.");
         }
     }
@@ -404,7 +421,7 @@ public class DefaultYangSchemaRegistry
      * @param appName application name
      */
     private void updateAppObjectStore(String appName) {
-        getAppObjectStore().put(appName, ysrRegisteredAppContext());
+        getAppObjectStore().put(appName, ysrAppContextForApplicationStore());
     }
 
     /**
@@ -423,7 +440,7 @@ public class DefaultYangSchemaRegistry
      */
     private void updateYangNotificationStore(String notificationName) {
         getYangSchemaNotificationStore()
-                .put(notificationName, ysrRegisteredAppContext());
+                .put(notificationName, ysrAppContext());
     }
 
     /**
@@ -435,7 +452,7 @@ public class DefaultYangSchemaRegistry
     private void updateYangSchemaForRootInterfaceFileNameStore(
             String rootInterfaceFileName) {
         getYangSchemaStoreForRootInterface()
-                .put(rootInterfaceFileName, ysrRegisteredAppContext());
+                .put(rootInterfaceFileName, ysrAppContext());
     }
 
     /**
@@ -446,7 +463,7 @@ public class DefaultYangSchemaRegistry
     private void updateYangSchemaForRootOpParamFileNameStore(
             String rootOpParamFileName) {
         getYangSchemaStoreForRootOpParam()
-                .put(rootOpParamFileName, ysrRegisteredAppContext());
+                .put(rootOpParamFileName, ysrAppContext());
     }
 
     /**
@@ -460,9 +477,10 @@ public class DefaultYangSchemaRegistry
         if (fileArray != null) {
             for (File curFile : fileArray) {
                 if (curFile.getName().endsWith(YANG)) {
-                    ysrRegisteredAppContext().addToYangFileSet(curFile);
-                    ysrRegisteredAppContextForSchemaMap()
+                    ysrAppContext().addToYangFileSet(curFile);
+                    ysrAppContextForSchemaStore()
                             .addToYangFileSet(curFile);
+                    ysrAppContextForApplicationStore().addToYangFileSet(curFile);
                 }
             }
         }
@@ -482,28 +500,29 @@ public class DefaultYangSchemaRegistry
     /**
      * Process an application an updates the maps for YANG schema registry.
      *
-     * @param appNode   application YANG schema nodes
-     * @param appObject application's object
+     * @param appNode application YANG schema nodes
      */
-    void processApplicationContext(YangSchemaNode appNode, Object appObject) {
+    void processApplicationContext(YangSchemaNode appNode) {
 
-        String appName;
-        //Search the YANG node.
-        //Create a new instance of ysr app context for each node.
-        ysrRegisteredAppContext(new YsrRegisteredAppContext());
-        ysrRegisteredAppContextForSchemaMap(new YsrRegisteredAppContext());
-        if (appObject != null) {
-            ysrRegisteredAppContext().appObject(appObject);
-            ysrRegisteredAppContextForSchemaMap().appObject(appObject);
-        }
-
-        appName = appNode.getJavaPackage() + PERIOD +
+        String appName = appNode.getJavaPackage() + PERIOD +
                 getCapitalCase(appNode.getJavaClassNameOrBuiltInType());
-        ysrRegisteredAppContext().curNode(appNode);
-        //Updates maps wih app objects and schema nodes
+
+        //Create a new instance of ysr app context for each node.
+        ysrAppContext(new YsrRegisteredAppContext());
+        ysrAppContextForSchemaStore(new YsrRegisteredAppContext());
+        ysrAppContextForApplicationStore(new YsrRegisteredAppContext());
+
+        //add cur node to app context.
+        ysrAppContext().curNode(appNode);
+        ysrAppContextForApplicationStore().curNode(appNode);
+
+        //Updates maps wih schema nodes
         updateAppObjectStore(appName + SERVICE);
+        // Updates schema store
         updateYangSchemaStore(appNode);
+        // update interface store
         updateYangSchemaForRootInterfaceFileNameStore(appName);
+        //update op param store
         updateYangSchemaForRootOpParamFileNameStore(appName + OP_PARAM);
         //Checks if notification is present then update notification store map.
         String eventSubject = null;
@@ -576,7 +595,7 @@ public class DefaultYangSchemaRegistry
             log.error(
                     "YSR: failed to fetch yang nodes from jar file for " +
                             "application " +
-                            ysrRegisteredAppContext().appObject());
+                            ysrAppContext().appObject());
             e.printStackTrace();
         }
         return nodes;
@@ -631,7 +650,7 @@ public class DefaultYangSchemaRegistry
      *
      * @return ysr app context
      */
-    private YsrRegisteredAppContext ysrRegisteredAppContext() {
+    private YsrRegisteredAppContext ysrAppContext() {
         return ysrRegisteredAppContext;
     }
 
@@ -640,7 +659,7 @@ public class DefaultYangSchemaRegistry
      *
      * @param ysrRegisteredAppContext ysr app context
      */
-    void ysrRegisteredAppContext(
+    void ysrAppContext(
             YsrRegisteredAppContext ysrRegisteredAppContext) {
         this.ysrRegisteredAppContext = ysrRegisteredAppContext;
     }
@@ -693,12 +712,12 @@ public class DefaultYangSchemaRegistry
         }
         //check if already present.
         if (!getYangSchemaStore().containsKey(schemaNode.getName())) {
-            ysrRegisteredAppContextForSchemaMap().curNode(schemaNode);
+            ysrAppContextForSchemaStore().curNode(schemaNode);
             //if revision is not present no need to add in revision store.
-            ysrRegisteredAppContextForSchemaMap()
+            ysrAppContextForSchemaStore()
                     .addSchemaNodeWithRevisionStore(name, schemaNode);
             getYangSchemaStore().put(schemaNode.getName(),
-                                     ysrRegisteredAppContextForSchemaMap());
+                                     ysrAppContextForSchemaStore());
         } else {
             YsrRegisteredAppContext appContext =
                     getYangSchemaStore().get(schemaNode.getName());
@@ -791,7 +810,7 @@ public class DefaultYangSchemaRegistry
      *
      * @return YSR application context for schema map
      */
-    private YsrRegisteredAppContext ysrRegisteredAppContextForSchemaMap() {
+    private YsrRegisteredAppContext ysrAppContextForSchemaStore() {
         return ysrRegisteredAppContextForSchemaMap;
     }
 
@@ -801,12 +820,29 @@ public class DefaultYangSchemaRegistry
      * @param ysrRegisteredAppContextForSchemaMap YSR application context for
      *                                            schema map
      */
-    private void ysrRegisteredAppContextForSchemaMap(
+    void ysrAppContextForSchemaStore(
             YsrRegisteredAppContext ysrRegisteredAppContextForSchemaMap) {
         this.ysrRegisteredAppContextForSchemaMap =
                 ysrRegisteredAppContextForSchemaMap;
     }
 
+    /**
+     * Returns YSR app context for application store.
+     *
+     * @return YSR app context for application store
+     */
+    private YsrRegisteredAppContext ysrAppContextForApplicationStore() {
+        return ysrAppContextForApplicationStore;
+    }
+
+    /**
+     * Sets YSR app context for application store.
+     *
+     * @param ysrAppContextForApplicationMap YSR app context for application store
+     */
+    void ysrAppContextForApplicationStore(YsrRegisteredAppContext ysrAppContextForApplicationMap) {
+        this.ysrAppContextForApplicationStore = ysrAppContextForApplicationMap;
+    }
 
     /**
      * Retrieves schema node from the store and deletes jar file path.
@@ -898,4 +934,6 @@ public class DefaultYangSchemaRegistry
                     .remove(appName + OP_PARAM);
         }
     }
+
+
 }
