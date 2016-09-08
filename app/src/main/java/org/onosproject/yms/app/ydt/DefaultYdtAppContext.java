@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.onosproject.yangutils.datamodel.YangAugment;
 import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
@@ -35,7 +36,8 @@ import org.onosproject.yms.ydt.YdtContextOperationType;
  * request handling and methods to build and obtain YANG data tree
  * which is data (sub)instance representation, abstract of protocol.
  */
-public class DefaultYdtAppContext implements YdtAppContext {
+public class DefaultYdtAppContext
+        implements YdtAppContext {
 
     /**
      * Parent reference.
@@ -88,7 +90,8 @@ public class DefaultYdtAppContext implements YdtAppContext {
     private YdtAppNodeOperationType operationType;
 
     /**
-     * Ydt map to keep the track of uniqueness of key in multi instance node added in YDT.
+     * Ydt map to keep the track of uniqueness of key in multi instance node
+     * added in YDT.
      */
     private final Set<YangSchemaNode> ydtAppTreeSet = new HashSet<>();
 
@@ -100,8 +103,13 @@ public class DefaultYdtAppContext implements YdtAppContext {
     @Override
     public void updateAppOperationType(YdtContextOperationType childOpType) {
         YdtAppNodeOperationType opType = getAppOpTypeFromYdtOpType(childOpType);
-        if ((operationType != YdtAppNodeOperationType.BOTH) &&
-                (operationType != opType)) {
+        if (opType == null) {
+            return;
+        }
+        if ((operationType == null)) {
+            operationType = opType;
+        } else if (operationType != YdtAppNodeOperationType.BOTH &&
+                operationType != opType) {
             operationType = YdtAppNodeOperationType.BOTH;
         }
     }
@@ -165,7 +173,8 @@ public class DefaultYdtAppContext implements YdtAppContext {
     }
 
     @Override
-    public YdtAppNodeOperationType getAppOpTypeFromYdtOpType(YdtContextOperationType opType) {
+    public YdtAppNodeOperationType getAppOpTypeFromYdtOpType(
+            YdtContextOperationType opType) {
         // Get the app tree operation type.
         switch (opType) {
             case CREATE:
@@ -212,22 +221,26 @@ public class DefaultYdtAppContext implements YdtAppContext {
     }
 
     @Override
-    public void setAugmentingModuleSchemaNode(YangSchemaNode lastAugmentingModuleNode) {
+    public void setAugmentingModuleSchemaNode(
+            YangSchemaNode lastAugmentingModuleNode) {
         this.augmentedModuleSchemaNode = lastAugmentingModuleNode;
     }
 
     @Override
-    public YangSchemaNode getAugmentingSchemaNode(YangSchemaNodeIdentifier yangSchemaNodeIdentifier,
-                                                  YangSchemaNodeContextInfo yangSchemaNodeContextInfo) {
+    public YangSchemaNode getAugmentingSchemaNode(
+            YangSchemaNodeIdentifier yangSchemaNodeIdentifier,
+            YangSchemaNodeContextInfo yangSchemaNodeContextInfo) {
         YangSchemaNode lastAugmentingModuleNode = null;
-        YangSchemaNode contextSwitchedNode = yangSchemaNodeContextInfo.getContextSwitchedNode();
+        YangSchemaNode contextSwitchedNode =
+                yangSchemaNodeContextInfo.getContextSwitchedNode();
 
         while (null != contextSwitchedNode) {
             if (contextSwitchedNode instanceof YangAugment) {
                 lastAugmentingModuleNode = contextSwitchedNode;
             }
             try {
-                contextSwitchedNode = contextSwitchedNode.getChildSchema(yangSchemaNodeIdentifier)
+                contextSwitchedNode = contextSwitchedNode
+                        .getChildSchema(yangSchemaNodeIdentifier)
                         .getContextSwitchedNode();
             } catch (DataModelException e) {
                 throw new YdtExceptions(e.getMessage());
