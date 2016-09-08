@@ -30,7 +30,7 @@ class XmlCodecMultiInstanceLeafHandler extends XmlCodecHandler {
     @Override
     public void setXmlValue(YdtContext ydtContext, Stack<Element> domElementStack) {
 
-        if (ydtContext.getValueSet().isEmpty()) {
+        if (ydtContext.getValueSet() == null || ydtContext.getValueSet().isEmpty()) {
             return;
         }
 
