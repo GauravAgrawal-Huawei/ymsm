@@ -365,7 +365,9 @@ public class YangApplicationBroker {
             throws CloneNotSupportedException, YabException {
         if (appContext.getOperationType() != YdtAppNodeOperationType.OTHER_EDIT) {
             processDeleteRequestOfApplication(appContext);
-        } else if (appContext.getOperationType() != YdtAppNodeOperationType.DELETE_ONLY) {
+        }
+
+        if (appContext.getOperationType() != YdtAppNodeOperationType.DELETE_ONLY) {
             YdtContext ydtNode = appContext.getModuleNode();
 
             // get YO from YOB

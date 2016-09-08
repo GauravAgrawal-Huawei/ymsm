@@ -129,6 +129,7 @@ public class YchCompositeHandlerTest {
                 assertTrue(false);
             }
         }
+        testYangSchemaNodeProvider.unregisterAllService();
 
 
     }
@@ -184,6 +185,7 @@ public class YchCompositeHandlerTest {
             }
         }
 
+        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**

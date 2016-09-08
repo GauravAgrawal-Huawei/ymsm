@@ -121,9 +121,11 @@ public class TestYangSchemaNodeProvider {
      * Unregisters all the service.
      */
     public void unregisterAllService() {
-        for (String appName : services) {
-            unregisterService(appName);
-        }
+        defaultYangSchemaRegistry.getAppObjectStore().clear();
+        defaultYangSchemaRegistry.getYangSchemaStore().clear();
+        defaultYangSchemaRegistry.getYangSchemaStoreForRootInterface().clear();
+        defaultYangSchemaRegistry.getYangSchemaStoreForRootOpParam().clear();
+        defaultYangSchemaRegistry.getYangSchemaNotificationStore().clear();
     }
 
     /**

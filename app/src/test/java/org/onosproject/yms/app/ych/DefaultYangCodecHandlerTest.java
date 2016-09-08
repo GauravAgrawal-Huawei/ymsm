@@ -162,6 +162,7 @@ public class DefaultYangCodecHandlerTest {
                                           "</tradingsupervisor>" +
                                           "</config>");
         assertTrue(result);
+        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -227,6 +228,7 @@ public class DefaultYangCodecHandlerTest {
                                 "</materialsupervisor>" +
                                 "</filter>");
         assertTrue(result);
+        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -269,6 +271,7 @@ public class DefaultYangCodecHandlerTest {
                                 "<EmptyContainer xmlns=\"ych.Empty.Container\"/>" +
                                 "</filter>");
         assertTrue(result);
+        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -435,6 +438,7 @@ public class DefaultYangCodecHandlerTest {
         result = xmlOutput
                 .equals(getString());
         //assertTrue(result);
+        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     private String getString() {
@@ -571,6 +575,7 @@ public class DefaultYangCodecHandlerTest {
                                 "</ych-purchasingsupervisor>" +
                                 "</filter>");
         assertTrue(result);
+        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -652,6 +657,7 @@ public class DefaultYangCodecHandlerTest {
                                           "</warehousesupervisor>" +
                                           "</config>");
         assertTrue(result);
+        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -805,6 +811,7 @@ public class DefaultYangCodecHandlerTest {
                                           "</employeeid>" +
                                           "</config>");
         assertTrue(result);
+        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -868,6 +875,7 @@ public class DefaultYangCodecHandlerTest {
                 assertTrue(false);
             }
         }
+        testYangSchemaNodeProvider.unregisterAllService();
 
     }
 
@@ -921,6 +929,7 @@ public class DefaultYangCodecHandlerTest {
             }
         }
 
+        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -1083,6 +1092,7 @@ public class DefaultYangCodecHandlerTest {
                 assertTrue(false);
             }
         }*/
+        testYangSchemaNodeProvider.unregisterAllService();
 
     }
 
@@ -1152,6 +1162,7 @@ public class DefaultYangCodecHandlerTest {
                 assertTrue(false);
             }
         }
+        testYangSchemaNodeProvider.unregisterAllService();
 
     }
 
@@ -1205,6 +1216,7 @@ public class DefaultYangCodecHandlerTest {
                 assertTrue(false);
             }
         }
+        testYangSchemaNodeProvider.unregisterAllService();
 
     }
 
@@ -1259,6 +1271,7 @@ public class DefaultYangCodecHandlerTest {
                 assertTrue(false);
             }
         }
+        testYangSchemaNodeProvider.unregisterAllService();
 
     }
 
@@ -1312,6 +1325,7 @@ public class DefaultYangCodecHandlerTest {
                 assertTrue(false);
             }
         }
+        testYangSchemaNodeProvider.unregisterAllService();
 
     }
 
@@ -1366,6 +1380,7 @@ public class DefaultYangCodecHandlerTest {
                 assertTrue(false);
             }
         }
+        testYangSchemaNodeProvider.unregisterAllService();
 
     }
 }

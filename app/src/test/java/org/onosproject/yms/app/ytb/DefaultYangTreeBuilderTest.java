@@ -171,6 +171,7 @@ public class DefaultYangTreeBuilderTest {
         String value = ydtContextForLeaf.getValue();
         assertThat(value, is("9"));
         assertThat(leafName, is("time"));
+        testYangSchemaNodeProvider.unregisterAllService();
 
     }
 
@@ -236,6 +237,7 @@ public class DefaultYangTreeBuilderTest {
         Set<String> valueSet = ydtContextForLeaf.getValueSet();
         assertThat(true, is(valueSet.contains("hundred-100")));
         assertThat(leafName, is("enum2"));
+        testYangSchemaNodeProvider.unregisterAllService();
 
 
     }
@@ -292,6 +294,7 @@ public class DefaultYangTreeBuilderTest {
         assertThat(value.contains("2"), is(true));
         assertThat(value.contains("3"), is(true));
         assertThat(leafListName, is("time"));
+        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -361,6 +364,7 @@ public class DefaultYangTreeBuilderTest {
         String leafPredictValue = ydtContextForLeaf.getValue();
         assertThat(leafPredict, is("predict"));
         assertThat(leafPredictValue, is("98989"));
+        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -456,6 +460,7 @@ public class DefaultYangTreeBuilderTest {
         assertThat(leafListName2, is("prediction"));
         assertThat(leafListValue2.contains("true"), is(true));
         assertThat(leafListValue2.contains("false"), is(true));
+        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -530,6 +535,7 @@ public class DefaultYangTreeBuilderTest {
         String value = ydtLeafInContainer.getValue();
         // TODO: check the bits to string is okay.
         assertThat(value, is("{5, 7}"));
+        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -653,6 +659,7 @@ public class DefaultYangTreeBuilderTest {
         assertThat(value4.contains("catch"), is(true));
         assertThat(value4.contains("ball"), is(true));
         assertThat(value4.contains("bat"), is(true));
+        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -818,6 +825,7 @@ public class DefaultYangTreeBuilderTest {
         assertThat(leaflistOfChildListBOfParentB.getName(),
                    is("destination-areas"));
         Set leaflistDValue = leaflistOfChildListBOfParentB.getValueSet();
+        testYangSchemaNodeProvider.unregisterAllService();
         // TODO: check the leaf-list value.
     }
 
@@ -925,6 +933,7 @@ public class DefaultYangTreeBuilderTest {
         assertThat(valueOfBitsLeafList.contains("{1, 10}"), is(true));
         assertThat(valueOfBitsLeafList.contains("{1}"), is(true));
         assertThat(valueOfBitsLeafList.contains("{1, 10, 100}"), is(true));
+        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -958,5 +967,6 @@ public class DefaultYangTreeBuilderTest {
         assertThat(unionChild.getName(), is("forunion"));
         //TODO: Correct it once union generated code is fixed.
         assertThat(unionChild.getValue(), is("0"));
+        testYangSchemaNodeProvider.unregisterAllService();
     }
 }

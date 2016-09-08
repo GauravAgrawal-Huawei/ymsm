@@ -429,6 +429,7 @@ public class YdtTestUtils
         defaultYdtBuilder.traverseToParent();
         defaultYdtBuilder.traverseToParent();
         testYangSchemaNodeProvider.unregisterService(appName);
+        testYangSchemaNodeProvider.unregisterAllService();
 
         return defaultYdtBuilder;
     }
@@ -457,6 +458,7 @@ public class YdtTestUtils
         defaultYdtBuilder.addLeaf("boolean", null, "false");
         defaultYdtBuilder.traverseToParent();
         testYangSchemaNodeProvider.unregisterService(appName);
+        testYangSchemaNodeProvider.unregisterAllService();
 
         return defaultYdtBuilder;
     }
@@ -480,6 +482,7 @@ public class YdtTestUtils
         defaultYdtBuilder.addChild("emptyList", null);
         defaultYdtBuilder.addLeaf("empty", null, "");
         testYangSchemaNodeProvider.unregisterService(appName);
+        testYangSchemaNodeProvider.unregisterAllService();
 
         return defaultYdtBuilder;
     }
@@ -510,6 +513,7 @@ public class YdtTestUtils
         defaultYdtBuilder.addChild("enumList", null);
         defaultYdtBuilder.addLeaf("enumleaf", null, "thousand");
         testYangSchemaNodeProvider.unregisterService(appName);
+        testYangSchemaNodeProvider.unregisterAllService();
 
         return defaultYdtBuilder;
     }
@@ -686,6 +690,7 @@ public class YdtTestUtils
         defaultYdtBuilder.traverseToParent();
         defaultYdtBuilder.traverseToParent();
         testYangSchemaNodeProvider.unregisterService(appName);
+        testYangSchemaNodeProvider.unregisterAllService();
 
         return defaultYdtBuilder;
     }
@@ -862,6 +867,7 @@ public class YdtTestUtils
         defaultYdtBuilder.traverseToParent();
         defaultYdtBuilder.traverseToParent();
         testYangSchemaNodeProvider.unregisterService(appName);
+        testYangSchemaNodeProvider.unregisterAllService();
 
         return defaultYdtBuilder;
     }
@@ -1038,6 +1044,7 @@ public class YdtTestUtils
         defaultYdtBuilder.traverseToParent();
         defaultYdtBuilder.traverseToParent();
         testYangSchemaNodeProvider.unregisterService(appName);
+        testYangSchemaNodeProvider.unregisterAllService();
 
         return defaultYdtBuilder;
     }
@@ -1214,6 +1221,7 @@ public class YdtTestUtils
         defaultYdtBuilder.traverseToParent();
         defaultYdtBuilder.traverseToParent();
         testYangSchemaNodeProvider.unregisterService(appName);
+        testYangSchemaNodeProvider.unregisterAllService();
 
         return defaultYdtBuilder;
     }
@@ -1309,6 +1317,7 @@ public class YdtTestUtils
         defaultYdtBuilder.traverseToParent();
         defaultYdtBuilder.traverseToParent();
         testYangSchemaNodeProvider.unregisterService(appName);
+        testYangSchemaNodeProvider.unregisterAllService();
 
         return defaultYdtBuilder;
     }
@@ -1327,6 +1336,7 @@ public class YdtTestUtils
                                                      true);
         defaultYdtBuilder.addChild(moduleName, nameSpace);
         testYangSchemaNodeProvider.unregisterService(appName);
+        testYangSchemaNodeProvider.unregisterAllService();
 
         return defaultYdtBuilder;
     }
@@ -1375,6 +1385,7 @@ public class YdtTestUtils
         defaultYdtBuilder.traverseToParent();
         testYangSchemaNodeProvider.unregisterService(appName);
 
+        testYangSchemaNodeProvider.unregisterAllService();
         return defaultYdtBuilder;
     }
 

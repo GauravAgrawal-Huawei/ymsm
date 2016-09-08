@@ -145,7 +145,7 @@ public class DefaultYangSchemaRegistry
      *
      * @return app object store
      */
-    private ConcurrentMap<String, YsrRegisteredAppContext> getAppObjectStore() {
+    ConcurrentMap<String, YsrRegisteredAppContext> getAppObjectStore() {
         return appObjectStore;
     }
 
@@ -154,7 +154,7 @@ public class DefaultYangSchemaRegistry
      *
      * @return register class store.
      */
-    private ConcurrentMap<String, Class<?>> getRegisterClassStore() {
+    ConcurrentMap<String, Class<?>> getRegisterClassStore() {
         return registerClassStore;
     }
 
@@ -163,7 +163,7 @@ public class DefaultYangSchemaRegistry
      *
      * @return schema store
      */
-    private ConcurrentMap<String, YsrRegisteredAppContext> getYangSchemaStore() {
+    ConcurrentMap<String, YsrRegisteredAppContext> getYangSchemaStore() {
         return yangSchemaStore;
     }
 
@@ -172,7 +172,7 @@ public class DefaultYangSchemaRegistry
      *
      * @return schema store
      */
-    private ConcurrentMap<String, YsrRegisteredAppContext>
+    ConcurrentMap<String, YsrRegisteredAppContext>
     getYangSchemaStoreForRootInterface() {
         return yangSchemaStoreForRootInterface;
     }
@@ -182,7 +182,7 @@ public class DefaultYangSchemaRegistry
      *
      * @return schema store
      */
-    private ConcurrentMap<String, YsrRegisteredAppContext>
+    ConcurrentMap<String, YsrRegisteredAppContext>
     getYangSchemaStoreForRootOpParam() {
         return yangSchemaStoreForRootOpParam;
     }
@@ -192,7 +192,7 @@ public class DefaultYangSchemaRegistry
      *
      * @return schema notification store
      */
-    private ConcurrentMap<String, YsrRegisteredAppContext>
+    ConcurrentMap<String, YsrRegisteredAppContext>
     getYangSchemaNotificationStore() {
         return yangSchemaNotificationStore;
     }
