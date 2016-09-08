@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.junit.Test;
 import org.onosproject.yms.ydt.YdtContext;
 
@@ -172,7 +173,7 @@ public class ListTest {
             defaultYdtBuilder.traverseToParent();
         } catch (final Exception e) {
             assertThat(true, is(e.getMessage().contains("Some of the key elements are " +
-                    "not unique in listwithcontainer.")));
+                                                                "not unique in listwithcontainer.")));
         }
 
         List<String> keysValueList = new ArrayList<>();
@@ -184,7 +185,7 @@ public class ListTest {
             defaultYdtBuilder.addMultiInstanceChild("listwithcontainer", null, keysValueList);
         } catch (final Exception e) {
             assertThat(true, is(e.getMessage().contains("Too many key parameter in listwithcontainer." +
-                    " Expected fixed count 2.")));
+                                                                " Expected fixed count 2.")));
         }
 
         keysValueList.clear();
@@ -194,7 +195,7 @@ public class ListTest {
             defaultYdtBuilder.addMultiInstanceChild("listwithcontainer", null, keysValueList);
         } catch (final Exception e) {
             assertThat(true, is(e.getMessage().contains("Too few key parameter in listwithcontainer." +
-                    " Expected fixed count 2.")));
+                                                                " Expected fixed count 2.")));
         }
 
         try {
@@ -235,7 +236,7 @@ public class ListTest {
             defaultYdtBuilder.traverseToParent();
         } catch (final Exception e) {
             assertThat(true, is(e.getMessage().contains("Too many instances of listwithcontainer." +
-                    " Expected maximum instance 3.")));
+                                                                " Expected maximum instance 3.")));
         }
 
         defaultYdtBuilder = YdtTestUtils.getDefaultYdtBuilder("list", "rootlist", "ydt.rootlist", appName);
@@ -244,7 +245,7 @@ public class ListTest {
             defaultYdtBuilder.traverseToParent();
         } catch (final Exception e) {
             assertThat(true, is(e.getMessage().contains("rootlist is missing some of the " +
-                    "keys of listwithcontainer.")));
+                                                                "keys of listwithcontainer.")));
         }
 
         defaultYdtBuilder = YdtTestUtils.getDefaultYdtBuilder("list", "rootlist", "ydt.rootlist", appName);
@@ -259,7 +260,7 @@ public class ListTest {
             defaultYdtBuilder.addLeaf("invalidinterval", null, "12");
         } catch (final Exception e) {
             assertThat(true, is(e.getMessage().contains("Duplicate entry found under invalidinterval " +
-                    "leaf-list node.")));
+                                                                "leaf-list node.")));
         }
 
 
@@ -273,7 +274,7 @@ public class ListTest {
             defaultYdtBuilder.addLeaf("invalidinterval", null, "string");
         } catch (final Exception e) {
             assertThat(true, is(e.getMessage().contains("YANG file error : Input value \"string\" " +
-                    "is not a valid uint16.")));
+                                                                "is not a valid uint16.")));
         }
 
         valueSet.clear();
@@ -292,7 +293,7 @@ public class ListTest {
             defaultYdtBuilder.addLeaf("invalidinterval", null, valueSet);
         } catch (final Exception e) {
             assertThat(true, is(e.getMessage().contains("Duplicate entry found under invalidinterval " +
-                    "leaf-list node.")));
+                                                                "leaf-list node.")));
         }
 
         valueSet.clear();
@@ -309,7 +310,7 @@ public class ListTest {
             defaultYdtBuilder.addLeaf("invalidinterval", null, valueSet);
         } catch (final Exception e) {
             assertThat(true, is(e.getMessage().contains("YANG file error : Input value \"string\" " +
-                    "is not a valid uint16.")));
+                                                                "is not a valid uint16.")));
         }
     }
 }

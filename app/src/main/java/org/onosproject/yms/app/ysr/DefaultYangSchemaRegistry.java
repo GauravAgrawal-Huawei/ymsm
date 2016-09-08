@@ -31,11 +31,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
 
+import org.onosproject.event.ListenerService;
 import org.onosproject.yangutils.datamodel.RpcNotificationContainer;
 import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangRevision;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
+import org.onosproject.yms.app.ynh.YangNotificationExtendedService;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -197,14 +199,18 @@ public class DefaultYangSchemaRegistry
     }
 
     @Override
-    public void registerApplication(Object appObject, Class<?> serviceClass) {
+    public void registerApplication(Object appObject, Class<?> serviceClass,
+                                    YangNotificationExtendedService notificationExtendedService) {
 
         BundleContext bundleContext =
                 getBundle(serviceClass).getBundleContext();
         String jarPath = getJarPathFromBundleLocation(
                 bundleContext.getBundle().getLocation(),
                 bundleContext.getProperty(USER_DIRECTORY));
+        // process application registration.
         processRegistration(serviceClass, appObject, jarPath);
+        //process notification registration
+        processNotificationRegistration(serviceClass, appObject, notificationExtendedService);
     }
 
     /**
@@ -992,6 +998,24 @@ public class DefaultYangSchemaRegistry
             return true;
         } catch (ClassNotFoundException e) {
             return false;
+        }
+    }
+
+    /**
+     * Process notification registration for manager class object.
+     *
+     * @param yangService                 yang service
+     * @param yangManager                 yang manager
+     * @param notificationExtendedService notification extended service
+     */
+    private void processNotificationRegistration(Class<?> yangService, Object
+            yangManager, YangNotificationExtendedService notificationExtendedService) {
+
+        if (yangManager instanceof ListenerService) {
+            if (verifyNotificationObject(yangService)) {
+                notificationExtendedService.registerAsListener(
+                        (ListenerService) yangManager);
+            }
         }
     }
 

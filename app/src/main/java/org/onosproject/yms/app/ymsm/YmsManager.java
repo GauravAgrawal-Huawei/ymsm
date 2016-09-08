@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Deactivate;
@@ -29,7 +30,6 @@ import org.apache.felix.scr.annotations.ReferenceCardinality;
 import org.apache.felix.scr.annotations.Service;
 import org.onosproject.core.ApplicationId;
 import org.onosproject.core.CoreService;
-import org.onosproject.event.ListenerService;
 import org.onosproject.yms.app.yab.YangApplicationBroker;
 import org.onosproject.yms.app.yab.exceptions.YabException;
 import org.onosproject.yms.app.ych.DefaultYangCodecHandler;
@@ -105,7 +105,7 @@ public class YmsManager
                                     String rootNamespace,
                                     YmsOperationType operationType) {
         return new YangRequestWorkBench(logicalRootName, rootNamespace,
-                operationType, schemaRegistry, true);
+                                        operationType, schemaRegistry, true);
     }
 
     @Override
@@ -115,14 +115,14 @@ public class YmsManager
                                     Object schemaRegistryForYdt) {
         if (schemaRegistryForYdt != null) {
             return new YangRequestWorkBench(logicalRootName, rootNamespace,
-                    operationType,
-                    (YangSchemaRegistry)
-                            schemaRegistryForYdt,
-                    false);
+                                            operationType,
+                                            (YangSchemaRegistry)
+                                                    schemaRegistryForYdt,
+                                            false);
         } else {
             return new YangRequestWorkBench(logicalRootName, rootNamespace,
-                    operationType, this.schemaRegistry,
-                    true);
+                                            operationType, this.schemaRegistry,
+                                            true);
         }
     }
 
@@ -187,17 +187,8 @@ public class YmsManager
     public void registerService(Object yangManager, Class<?> yangService,
                                 List<String> supportedFeatureList) {
         schemaRegistryExecutor.execute(() -> schemaRegistry
-                .registerApplication(yangManager, yangService));
-
-        //For notification handler.
-        DefaultYangSchemaRegistry defaultYangSchemaRegistry =
-                (DefaultYangSchemaRegistry) schemaRegistry;
-        if (defaultYangSchemaRegistry.verifyNotificationObject(yangService)) {
-            getYangNotificationExtendedService().registerAsListener(
-                    (ListenerService) yangManager);
-            //TODO: register notification handler.
-        }
-
+                .registerApplication(yangManager, yangService,
+                                     getYangNotificationExtendedService()));
     }
 
     @Override
@@ -217,7 +208,7 @@ public class YmsManager
          * Create a new codec handler for the provider / driver
          */
         DefaultYangCodecHandler defaultYangCodecHandler = new DefaultYangCodecHandler(yangSchemaRegistry,
-                defaultCodecs);
+                                                                                      defaultCodecs);
 
         return defaultYangCodecHandler;
     }

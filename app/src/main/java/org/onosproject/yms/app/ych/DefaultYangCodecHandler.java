@@ -134,7 +134,7 @@ public class DefaultYangCodecHandler
 
     @Override
     public void addDeviceSchema(Class yangModule) {
-        getYangSchemaRegistry().registerApplication(null, yangModule);
+        getYangSchemaRegistry().registerApplication(null, yangModule, null);
     }
 
     @Override

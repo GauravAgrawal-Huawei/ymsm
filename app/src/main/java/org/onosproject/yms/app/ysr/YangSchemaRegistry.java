@@ -17,6 +17,7 @@
 package org.onosproject.yms.app.ysr;
 
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
+import org.onosproject.yms.app.ynh.YangNotificationExtendedService;
 
 /**
  * Abstraction of entity which provides interfaces to YANG schema registry.
@@ -26,10 +27,13 @@ public interface YangSchemaRegistry {
     /**
      * Registers applications to YMS.
      *
-     * @param managerObject application's object
-     * @param serviceClass  service class which needs to be registered
+     * @param managerObject               application's object
+     * @param serviceClass                service class which needs to be registered
+     * @param notificationExtendedService notification extended service to
+     *                                    register application object with YNH
      */
-    void registerApplication(Object managerObject, Class<?> serviceClass);
+    void registerApplication(Object managerObject, Class<?> serviceClass,
+                             YangNotificationExtendedService notificationExtendedService);
 
     /**
      * Unregisters applications to YMS.
