@@ -1,4 +1,4 @@
-   module ietf-network {
+   module yms-ietf-network {
      yang-version 1;
      namespace "urn:ietf:params:xml:ns:yang:ietf-network";
      prefix nd;

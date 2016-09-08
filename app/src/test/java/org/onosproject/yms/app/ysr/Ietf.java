@@ -19,9 +19,9 @@ package org.onosproject.yms.app.ysr;
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.onosproject.event.ListenerRegistry;
-import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.IetfNetwork;
-import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.IetfNetworkOpParam;
-import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.IetfNetworkService;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.YmsIetfNetwork;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.YmsIetfNetworkOpParam;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.YmsIetfNetworkService;
 import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev20151208.IetfNetwork2;
 import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev20151208.IetfNetwork2OpParam;
 import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev20151208.IetfNetwork2Service;
@@ -34,7 +34,7 @@ import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev
 @Component
 public class Ietf
         extends ListenerRegistry<IetfNetwork2Event, IetfNetwork2EventListener>
-        implements IetfNetworkService, IetfNetwork2Service {
+        implements YmsIetfNetworkService, IetfNetwork2Service {
 
     @Activate
     public void activate() {
@@ -42,12 +42,12 @@ public class Ietf
     }
 
     @Override
-    public IetfNetwork getIetfNetwork(IetfNetworkOpParam ietfNetwork) {
+    public YmsIetfNetwork getYmsIetfNetwork(YmsIetfNetworkOpParam ietfNetwork) {
         return null;
     }
 
     @Override
-    public void setIetfNetwork(IetfNetworkOpParam ietfNetwork) {
+    public void setYmsIetfNetwork(YmsIetfNetworkOpParam ietfNetwork) {
 
     }
 

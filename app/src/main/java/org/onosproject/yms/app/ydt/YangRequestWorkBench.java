@@ -16,6 +16,11 @@
 
 package org.onosproject.yms.app.ydt;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.onosproject.yangutils.datamodel.YangList;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeContextInfo;
@@ -26,11 +31,6 @@ import org.onosproject.yms.ydt.YdtContext;
 import org.onosproject.yms.ydt.YdtContextOperationType;
 import org.onosproject.yms.ydt.YdtType;
 import org.onosproject.yms.ydt.YmsOperationType;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -617,7 +617,8 @@ public class YangRequestWorkBench
             for (String value : keysValueList) {
                 curNode.addValue(value);
             }
-        } else {
+        } else if (curNode.getYdtType() == YdtType
+                .MULTI_INSTANCE_NODE) {
             YangList yangListHolder = (YangList) curNode.getYangSchemaNode();
             List<String> schemaKeyList = yangListHolder.getKeyList();
             actualSize = schemaKeyList.size();
@@ -637,6 +638,11 @@ public class YangRequestWorkBench
                     traverseToParentExtended();
                 }
             }
+            curNode = curNode.getParent();
+        } else {
+            throw new YdtExceptions("Adds an instance of a child list node, " +
+                                            "or adds a child leaf list with\n" +
+                                            " * multiple instance only.");
         }
     }
 

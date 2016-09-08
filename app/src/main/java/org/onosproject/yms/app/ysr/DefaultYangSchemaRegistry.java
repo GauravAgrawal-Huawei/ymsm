@@ -63,7 +63,6 @@ public class DefaultYangSchemaRegistry
     private static final String HYPHEN = "-";
     private static final String DELIMITER = ".";
     private static final String SERVICE = "Service";
-    private static final String SER = ".ser";
     private static final String JAR = ".jar";
     private static final String YANG = ".yang";
     private static final String USER_DIRECTORY = "user.dir";
@@ -154,7 +153,7 @@ public class DefaultYangSchemaRegistry
      *
      * @return register class store.
      */
-    ConcurrentMap<String, Class<?>> getRegisterClassStore() {
+    private ConcurrentMap<String, Class<?>> getRegisterClassStore() {
         return registerClassStore;
     }
 
@@ -224,7 +223,7 @@ public class DefaultYangSchemaRegistry
         //Check if service should be registered?
         verifyApplicationRegistration(appObject, serviceClass);
 
-        //Add app class to registered serice store.
+        //Add app class to registered service store.
         if (!getRegisterClassStore().containsKey(serviceClass.getName())) {
             updateServiceClass(serviceClass);
         }
@@ -233,14 +232,16 @@ public class DefaultYangSchemaRegistry
         if (!verifyIfApplicationAlreadyRegistered(serviceClass)) {
             List<YangNode> curNodes =
                     processJarParsingOperations(jarPath);
-            for (YangSchemaNode schemaNode : curNodes) {
-                processApplicationContext(schemaNode);
+            if (curNodes != null) {
+                for (YangSchemaNode schemaNode : curNodes) {
+                    processApplicationContext(schemaNode);
+                }
+                ysrAppContext().jarPath(jarPath);
+                ysrAppContextForSchemaStore().jarPath(jarPath);
+                ysrAppContextForApplicationStore().jarPath(jarPath);
+                //Store the YANG file handles.
+                updateYangFileSet(jarPath);
             }
-            ysrAppContext().jarPath(jarPath);
-            ysrAppContextForSchemaStore().jarPath(jarPath);
-            ysrAppContextForApplicationStore().jarPath(jarPath);
-            //Store the YANG file handles.
-            updateYangFileSet(jarPath);
         }
 
         //Verifies if object is updated for app store.
@@ -992,6 +993,18 @@ public class DefaultYangSchemaRegistry
         } catch (ClassNotFoundException e) {
             return false;
         }
+    }
+
+    /**
+     * Clears database for YSR.
+     */
+    public void flushYsrData() {
+        getAppObjectStore().clear();
+        getYangSchemaStore().clear();
+        getYangSchemaNotificationStore().clear();
+        getYangSchemaStoreForRootOpParam().clear();
+        getYangSchemaStoreForRootInterface().clear();
+        getRegisterClassStore().clear();
     }
 
 }

@@ -63,16 +63,16 @@ public class YdtTestUtils
                 testYangSchemaNodeProvider.getDefaultYangSchemaRegistry());
         String appName =
                 "org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang." +
-                        "ietf.network.rev20151208.IetfNetworkService";
+                        "ietf.network.rev20151208.YmsIetfNetworkService";
         testYangSchemaNodeProvider.processSchemaRegistry(null);
         YangRequestWorkBench defaultYdtBuilder;
-        String rootName = "ietf-network";
+        String rootName = "yms-ietf-network";
 
         defaultYdtBuilder = new YangRequestWorkBench(rootName, null, null,
                                                      testYangSchemaNodeProvider
                                                              .getDefaultYangSchemaRegistry(),
                                                      true);
-        defaultYdtBuilder.addChild("ietf-network",
+        defaultYdtBuilder.addChild("yms-ietf-network",
                                    "urn:ietf:params:xml:ns:yang:ietf-network");
 
         // Adding container
@@ -149,7 +149,6 @@ public class YdtTestUtils
         keysValueList.add("12");
         defaultYdtBuilder.addMultiInstanceChild("listwithcontainer", null,
                                                 keysValueList);
-        defaultYdtBuilder.traverseToParent();
         defaultYdtBuilder.addLeaf("invalidinterval", null, "1");
         defaultYdtBuilder.traverseToParent();
         defaultYdtBuilder.addLeaf("invalidinterval", null, "2");
@@ -224,7 +223,6 @@ public class YdtTestUtils
         keysValueList.add("1212");
         defaultYdtBuilder.addMultiInstanceChild("listwithcontainer", null,
                                                 keysValueList);
-        defaultYdtBuilder.traverseToParent();
 
         keysValueList.clear();
         keysValueList.add("12");
@@ -1385,7 +1383,6 @@ public class YdtTestUtils
         defaultYdtBuilder.traverseToParent();
         testYangSchemaNodeProvider.unregisterService(appName);
 
-        testYangSchemaNodeProvider.unregisterAllService();
         return defaultYdtBuilder;
     }
 

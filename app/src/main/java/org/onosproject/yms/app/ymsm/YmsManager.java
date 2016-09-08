@@ -93,6 +93,10 @@ public class YmsManager
     @Deactivate
     public void deactivate() {
         // TODO implementation.
+        DefaultYangSchemaRegistry registry =
+                (DefaultYangSchemaRegistry) schemaRegistry;
+        registry.flushYsrData();
+        schemaRegistryExecutor.shutdown();
         log.info("Stopped");
     }
 

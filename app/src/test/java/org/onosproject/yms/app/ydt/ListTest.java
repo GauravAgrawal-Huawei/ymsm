@@ -209,7 +209,6 @@ public class ListTest {
         defaultYdtBuilder = YdtTestUtils.getDefaultYdtBuilder("list", "rootlist", "ydt.rootlist", appName);
         defaultYdtBuilder.addMultiInstanceChild("listwithcontainer", null, keysValueList);
         defaultYdtBuilder.traverseToParent();
-        defaultYdtBuilder.traverseToParent();
 
         defaultYdtBuilder.addChild("listwithcontainer", null);
         defaultYdtBuilder.addLeaf("invalid", null, "12");

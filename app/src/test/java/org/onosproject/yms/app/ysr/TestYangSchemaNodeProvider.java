@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.IetfNetworkService;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.YmsIetfNetworkService;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 
 import static org.onosproject.yangutils.utils.UtilConstants.PERIOD;
@@ -139,7 +139,7 @@ public class TestYangSchemaNodeProvider {
 
     public void processRegistrationOfApp() {
         getDefaultYangSchemaRegistry()
-                .processRegistration(IetfNetworkService.class,
+                .processRegistration(YmsIetfNetworkService.class,
                                      new Ietf(), "target");
 
     }

@@ -19,9 +19,9 @@ package org.onosproject.yms.app.ysr;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.IetfNetwork;
-import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.IetfNetworkOpParam;
-import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.IetfNetworkService;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.YmsIetfNetwork;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.YmsIetfNetworkOpParam;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.YmsIetfNetworkService;
 import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev20151208.IetfNetwork2Service;
 import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
@@ -629,15 +629,15 @@ public class DefaultYangSchemaRegistryTest {
         testYangSchemaNodeProvider.processSchemaRegistry(null);
         boolean isRegWithNotification =
                 testYangSchemaNodeProvider.getDefaultYangSchemaRegistry()
-                        .verifyNotificationObject(IetfNetworkService.class);
+                        .verifyNotificationObject(YmsIetfNetworkService.class);
         assertThat(false, is(isRegWithNotification));
         isRegWithNotification = testYangSchemaNodeProvider
                 .getDefaultYangSchemaRegistry()
-                .verifyNotificationObject(IetfNetwork.class);
+                .verifyNotificationObject(YmsIetfNetwork.class);
         assertThat(false, is(isRegWithNotification));
         isRegWithNotification = testYangSchemaNodeProvider
                 .getDefaultYangSchemaRegistry()
-                .verifyNotificationObject(IetfNetworkOpParam.class);
+                .verifyNotificationObject(YmsIetfNetworkOpParam.class);
         assertThat(false, is(isRegWithNotification));
         testYangSchemaNodeProvider.unregisterAllService();
     }
@@ -649,11 +649,11 @@ public class DefaultYangSchemaRegistryTest {
     public void testNotificationRegistrationInYnh() {
         testYangSchemaNodeProvider.processSchemaRegistry(null);
         testYangSchemaNodeProvider.getDefaultYangSchemaRegistry()
-                .verifyNotificationObject(IetfNetworkService.class);
+                .verifyNotificationObject(YmsIetfNetworkService.class);
         testYangSchemaNodeProvider.getDefaultYangSchemaRegistry()
-                .verifyNotificationObject(IetfNetwork.class);
+                .verifyNotificationObject(YmsIetfNetwork.class);
         testYangSchemaNodeProvider.getDefaultYangSchemaRegistry()
-                .verifyNotificationObject(IetfNetworkOpParam.class);
+                .verifyNotificationObject(YmsIetfNetworkOpParam.class);
         Ietf ietf = new Ietf();
         YangNotificationExtendedService extendedService = new
                 YangNotificationManager(

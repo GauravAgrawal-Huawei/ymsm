@@ -47,8 +47,10 @@ public class IetfNetworkTest {
         // Logger list is used for walker testing.
         List<String> logger = YdtTestUtils.getLogger();
 
-        assertThat(true, is(logger.get(0).contentEquals("Entry Node is ietf-network.")));
-        assertThat(true, is(logger.get(1).contentEquals("Entry Node is ietf-network.")));
+        assertThat(true, is(logger.get(0).contentEquals("Entry Node is " +
+                                                                "yms-ietf-network.")));
+        assertThat(true, is(logger.get(1).contentEquals("Entry Node is " +
+                                                                "yms-ietf-network.")));
         assertThat(true, is(logger.get(2).contentEquals("Entry Node is networks.")));
         assertThat(true, is(logger.get(3).contentEquals("Entry Node is network.")));
         assertThat(true, is(logger.get(4).contentEquals("Entry Node is network-id.")));
@@ -78,8 +80,10 @@ public class IetfNetworkTest {
         assertThat(true, is(logger.get(27).contentEquals("Exit Node is server-provided.")));
         assertThat(true, is(logger.get(28).contentEquals("Exit Node is network.")));
         assertThat(true, is(logger.get(29).contentEquals("Exit Node is networks-state.")));
-        assertThat(true, is(logger.get(30).contentEquals("Exit Node is ietf-network.")));
-        assertThat(true, is(logger.get(31).contentEquals("Exit Node is ietf-network.")));
+        assertThat(true, is(logger.get(30).contentEquals("Exit Node is " +
+                                                                 "yms-ietf-network.")));
+        assertThat(true, is(logger.get(31).contentEquals("Exit Node is " +
+                                                                 "yms-ietf-network.")));
     }
 
 
@@ -87,10 +91,10 @@ public class IetfNetworkTest {
 
         // assign root node to ydtContext for validating purpose.
         YdtContext ydtContext = defaultYdtBuilder.getRootNode();
-        assertThat(true, is(ydtContext.getName().contentEquals("ietf-network")));
+        assertThat(true, is(ydtContext.getName().contentEquals("yms-ietf-network")));
 
         ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("ietf-network")));
+        assertThat(true, is(ydtContext.getName().contentEquals("yms-ietf-network")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("networks")));
         ydtContext = ydtContext.getFirstChild();
