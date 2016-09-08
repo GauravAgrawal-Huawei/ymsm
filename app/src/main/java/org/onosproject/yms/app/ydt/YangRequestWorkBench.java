@@ -16,11 +16,6 @@
 
 package org.onosproject.yms.app.ydt;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.onosproject.yangutils.datamodel.YangList;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeContextInfo;
@@ -31,6 +26,11 @@ import org.onosproject.yms.ydt.YdtContext;
 import org.onosproject.yms.ydt.YdtContextOperationType;
 import org.onosproject.yms.ydt.YdtType;
 import org.onosproject.yms.ydt.YmsOperationType;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -731,10 +731,13 @@ public class YangRequestWorkBench
 
     @Override
     public void traverseToParentExtended() {
-        //if (curNode != null) {
-        // FIXME: null pointer excpetion is coming at this point. at yab ut (testExecuteQueryOperation)
+        // If traverse back to parent for logical root node comes
+        if (curNode == rootNode) {
+            throw new YdtExceptions(
+                    "Can't invoke get parent at logical root node.");
+        }
+
         curNode = curNode.getParent();
-        //}
     }
 
 }
