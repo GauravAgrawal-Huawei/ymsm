@@ -433,7 +433,6 @@ public class YobBuilderContainer {
                     method  = parentBuilderClass
                             .getDeclaredMethod(ADDTO + getCapitalCase(yobBuilderContainer.getSetterMethodNameInParent()),
                                     classType);
-                    System.out.println("method " + method);
                 } else {
                     method  = parentBuilderClass
                             .getDeclaredMethod(yobBuilderContainer.getSetterMethodNameInParent(),
