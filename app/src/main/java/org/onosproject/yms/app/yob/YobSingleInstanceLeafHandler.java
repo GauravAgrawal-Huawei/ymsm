@@ -48,7 +48,9 @@ class YobSingleInstanceLeafHandler
     }
 
     @Override
-    public void buildObjectFromBuilder(YdtExtendedContext ydtNode) {
+    public void buildObjectFromBuilder(YdtExtendedContext ydtNode,
+                                       YdtExtendedContext ydtRootNode,
+                                       YangSchemaRegistry schemaRegistry) {
         // For single instance leaf no need to build object
     }
 

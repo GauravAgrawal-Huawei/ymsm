@@ -30,12 +30,12 @@ public class YobBuilderOrBuiltObject {
     /**
      * Is the contained object a built object.
      */
-    boolean isBuilt;
+    private boolean isBuilt;
 
     /**
      * Builder or built object.
      */
-    Object builderOrBuiltObject;
+    private Object builderOrBuiltObject;
 
     /**
      * Default / op param class.

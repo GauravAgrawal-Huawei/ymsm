@@ -95,7 +95,7 @@ public class YobListener
         YobHandler nodeHandler =
                 YobHandlerFactory.getYobHandlerForContext(ydtExtendedContext);
         if (nodeHandler != null) {
-            nodeHandler.buildObjectFromBuilder(ydtExtendedContext);
+            nodeHandler.buildObjectFromBuilder(ydtExtendedContext, getYdtRootNode(), getSchemaRegistry());
             // The current ydt context node and root node are same then return.
             if (!ydtExtendedContext.equals(getYdtRootNode())) {
                 nodeHandler.setObjectInParent(ydtExtendedContext,

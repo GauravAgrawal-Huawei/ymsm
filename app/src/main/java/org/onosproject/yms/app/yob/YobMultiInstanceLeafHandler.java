@@ -35,14 +35,13 @@ import org.slf4j.LoggerFactory;
 import static org.onosproject.yangutils.utils.io.impl.YangIoUtils
         .getCapitalCase;
 import static org.onosproject.yms.app.ydt.AppType.YOB;
+import static org.onosproject.yms.app.yob.YobConstants.ADDTO;
 
 /**
  * Represents a multi instance leaf node handler in YANG object builder.
  */
 public class YobMultiInstanceLeafHandler
         extends YobHandler {
-
-    private static final String ADDTO = "addTo";
 
     private static final Logger log =
             LoggerFactory.getLogger(YobMultiInstanceLeafHandler.class);
@@ -55,7 +54,9 @@ public class YobMultiInstanceLeafHandler
     }
 
     @Override
-    public void buildObjectFromBuilder(YdtExtendedContext ydtNode) {
+    public void buildObjectFromBuilder(YdtExtendedContext ydtNode,
+                                       YdtExtendedContext ydtRootNode,
+                                       YangSchemaRegistry schemaRegistry) {
         // For multi instance leaf no need to build object.
     }
 
