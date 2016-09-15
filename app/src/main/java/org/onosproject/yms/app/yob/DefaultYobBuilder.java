@@ -45,12 +45,9 @@ public class DefaultYobBuilder
                 new YobListener(ydtRootNode, schemaRegistry);
         if (ydtRootNode != null) {
             ydtExtendedWalker.walk(yobListener, ydtRootNode);
-            YobBuilderContainer
-                    yobBuilderContainer =
-                    (YobBuilderContainer) ydtRootNode.getAppInfo(YOB);
-
-            return yobBuilderContainer.getBuilderOrBuiltObjectOfScheam()
-                    .getBuiltObject();
+            YobWorkBench yobWorkBench =
+                    (YobWorkBench) ydtRootNode.getAppInfo(YOB);
+            return yobWorkBench.getBuilderOrBuiltObject().getBuiltObject();
         }
         return null;
     }

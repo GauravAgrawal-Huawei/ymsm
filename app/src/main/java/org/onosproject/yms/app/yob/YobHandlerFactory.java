@@ -16,18 +16,18 @@
 
 package org.onosproject.yms.app.yob;
 
-
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Represents an YANG object builder factory to create different types of YANG data tree
- * node.
+ * Represents an YANG object builder factory to create different types
+ * of YANG data tree node.
  */
-public final class YobHandlerFactory {
+final class YobHandlerFactory {
 
-    private static final Logger log = LoggerFactory.getLogger(YobSingleInstanceLeafHandler.class);
+    private static final Logger log =
+            LoggerFactory.getLogger(YobSingleInstanceLeafHandler.class);
 
     /**
      * Create instance of YobHandlerFactory.
@@ -42,7 +42,7 @@ public final class YobHandlerFactory {
      *                           related information maintained in YDT
      * @return YANG object builder node
      */
-    public static YobHandler getYobHandlerForContext(YdtExtendedContext ydtExtendedContext) {
+    static YobHandler getYobHandlerForContext(YdtExtendedContext ydtExtendedContext) {
         switch (ydtExtendedContext.getYdtType()) {
             /**
              * Single instance node.

@@ -19,5 +19,5 @@ package org.onosproject.yms.app.yob;
 /**
  * Represents a multi instance node handler in YANG object builder.
  */
-public class YobMultiInstanceHandler extends YobHandler {
+class YobMultiInstanceHandler extends YobHandler {
 }

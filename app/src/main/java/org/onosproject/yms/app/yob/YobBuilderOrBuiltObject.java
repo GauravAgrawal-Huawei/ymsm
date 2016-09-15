@@ -20,12 +20,31 @@ import org.onosproject.yms.app.yob.exception.YobExceptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.onosproject.yms.app.yob.YobConstants.BUILDER_IS_NOT_SET;
+import static org.onosproject.yms.app.yob.YobConstants.FAIL_TO_LOAD_CLASS;
+import static org.onosproject.yms.app.yob.YobConstants.BUILT_OBJ_IS_NOT_SET;
+import static org.onosproject.yms.app.yob.YobConstants
+        .OBJ_IS_ALREADY_BUILT_NOT_FETCH;
+import static org.onosproject.yms.app.yob.YobConstants.FAIL_TO_CREATE_OBJ;
+import static org.onosproject.yms.app.yob.YobConstants
+        .REFLECTION_FAIL_TO_CREATE_OBJ;
+import static org.onosproject.yms.app.yob.YobConstants
+        .OBJ_IS_ALREADY_BUILT_NOT_SET;
+import static org.onosproject.yms.app.yob.YobConstants
+        .BUILDER_IS_NOT_ALREADY_SET;
+import static org.onosproject.yms.app.yob.YobConstants
+        .OBJ_IS_NOT_SET_NOT_FETCH;
+import static org.onosproject.yms.app.yob.YobConstants
+        .OBJ_IS_ALREADY_BUILT_NOT_BUILD;
+import static org.onosproject.yms.app.yob.YobConstants
+        .OBJ_BUILDING_WITHOUT_BUILDER;
+
 /**
  * Represents the container of YANG object being built or the builder.
  */
-public class YobBuilderOrBuiltObject {
+class YobBuilderOrBuiltObject {
     private static final Logger log
-            = LoggerFactory.getLogger(YobBuilderContainer.class);
+            = LoggerFactory.getLogger(YobWorkBench.class);
 
     /**
      * Is the contained object a built object.
@@ -38,77 +57,31 @@ public class YobBuilderOrBuiltObject {
     private Object builderOrBuiltObject;
 
     /**
-     * Default / op param class.
-     */
-    Class<?> yangDefaultClass;
-
-    /**
      * Default / op param builder class.
      */
-    Class<?>[] yangDefaultClassBuilder;
+    Class<?> yangBuilderClass;
 
     /**
      * Interface implemented by the default Class.
      */
-    Class<?>[] yangInterfaceImplementedByDefaultClass;
+    Class<?>[] implementedInterfaces;
 
-    public YobBuilderOrBuiltObject(
-            String qualifiedClassName, ClassLoader registeredAppClassLoader) {
-
+    YobBuilderOrBuiltObject(String qualifiedClassName,
+                            ClassLoader registeredAppClassLoader) {
+        Class<?> yangDefaultClass;
         try {
             yangDefaultClass =
                     registeredAppClassLoader.loadClass(qualifiedClassName);
-            yangDefaultClassBuilder = yangDefaultClass.getDeclaredClasses();
-            yangInterfaceImplementedByDefaultClass = yangDefaultClass
-                    .getInterfaces();
-            setBuilderObject(yangDefaultClassBuilder[0].newInstance());
+            yangBuilderClass = yangDefaultClass.getDeclaredClasses()[0];
+            implementedInterfaces = yangDefaultClass.getInterfaces();
+            setBuilderObject(yangBuilderClass.newInstance());
         } catch (ClassNotFoundException e) {
-            log.error("YOB: failed to load class for class "
-                              + qualifiedClassName);
+            log.error(FAIL_TO_LOAD_CLASS + qualifiedClassName);
         } catch (InstantiationException | IllegalAccessException e) {
-            log.error("YOB: failed to create an object for class "
-                              + qualifiedClassName);
+            log.error(FAIL_TO_CREATE_OBJ + qualifiedClassName);
         } catch (NullPointerException e) {
-            log.error("YOB: Reflection failed to create an object for " +
-                              "class " + qualifiedClassName);
+            log.error(REFLECTION_FAIL_TO_CREATE_OBJ + qualifiedClassName);
         }
-
-    }
-
-    /**
-     * Return the built status of the contained object.
-     *
-     * @return if the object is a built object
-     */
-    public boolean isBuilt() {
-        return isBuilt;
-    }
-
-    /**
-     * Assign if the object is built or not.
-     *
-     * @param built status of built object
-     */
-    public void setBuilt(boolean built) {
-        isBuilt = built;
-    }
-
-    /**
-     * Returns the builder or built object.
-     *
-     * @return builder or built object
-     */
-    public Object getBuilderOrBuiltObject() {
-        return builderOrBuiltObject;
-    }
-
-    /**
-     * Sets the builder or built object.
-     *
-     * @param builderOrBuiltObject object to be mainted
-     */
-    public void setBuilderOrBuiltObject(Object builderOrBuiltObject) {
-        this.builderOrBuiltObject = builderOrBuiltObject;
     }
 
     /**
@@ -117,17 +90,16 @@ public class YobBuilderOrBuiltObject {
      * @return builder object
      * @throws YobExceptions builder is not available
      */
-    public Object getBuilderObject() {
-        if (isBuilt()) {
-            throw new YobExceptions("Object is already built, cannot fetch " +
-                                            "builder");
+    Object getBuilderObject() {
+        if (isBuilt) {
+            throw new YobExceptions(OBJ_IS_ALREADY_BUILT_NOT_FETCH);
         }
 
-        if (getBuilderOrBuiltObject() == null) {
-            throw new YobExceptions("Builder is not yet set, cannot fetch it");
+        if (builderOrBuiltObject == null) {
+            throw new YobExceptions(BUILDER_IS_NOT_SET);
         }
 
-        return getBuilderOrBuiltObject();
+        return builderOrBuiltObject;
     }
 
     /**
@@ -137,16 +109,15 @@ public class YobBuilderOrBuiltObject {
      * @param builderObject new builder object
      */
     private void setBuilderObject(Object builderObject) {
-        if (isBuilt()) {
-            throw new YobExceptions("Object is already built, cannot set " +
-                                            "builder");
+        if (isBuilt) {
+            throw new YobExceptions(OBJ_IS_ALREADY_BUILT_NOT_SET);
         }
 
-        if (getBuilderOrBuiltObject() != null) {
-            throw new YobExceptions("ERROR: Builder is not already set");
+        if (builderOrBuiltObject != null) {
+            throw new YobExceptions(BUILDER_IS_NOT_ALREADY_SET);
         }
 
-        setBuilderOrBuiltObject(builderObject);
+        builderOrBuiltObject = builderObject;
     }
 
     /**
@@ -154,29 +125,34 @@ public class YobBuilderOrBuiltObject {
      *
      * @return built object
      */
-    public Object getBuiltObject() {
-        if (!isBuilt()) {
-            throw new YobExceptions("Object is not built, cannot fetch it");
+    Object getBuiltObject() {
+        if (!isBuilt) {
+            throw new YobExceptions(OBJ_IS_NOT_SET_NOT_FETCH);
         }
 
-        if (getBuilderOrBuiltObject() == null) {
-            throw new YobExceptions("ERROR: Built object is not set");
+        if (builderOrBuiltObject == null) {
+            throw new YobExceptions(BUILT_OBJ_IS_NOT_SET);
         }
 
-        return getBuilderOrBuiltObject();
+        return builderOrBuiltObject;
     }
 
-    public void setBuiltObject(Object builtObject) {
-        if (isBuilt()) {
-            throw new YobExceptions("ERROR Object is already built, cannot " +
-                                            "build again");
+    /**
+     * Check if the built object is being initialized for the 1st time and
+     * set it.
+     *
+     * @param builtObject new built object
+     */
+    void setBuiltObject(Object builtObject) {
+        if (isBuilt) {
+            throw new YobExceptions(OBJ_IS_ALREADY_BUILT_NOT_BUILD);
         }
 
-        if (getBuilderOrBuiltObject() == null) {
-            throw new YobExceptions("ERROR: object building without builder");
+        if (builderOrBuiltObject == null) {
+            throw new YobExceptions(OBJ_BUILDING_WITHOUT_BUILDER);
         }
 
-        setBuilt(true);
-        setBuilderOrBuiltObject(builtObject);
+        isBuilt = true;
+        builderOrBuiltObject = builtObject;
     }
 }

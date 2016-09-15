@@ -28,11 +28,11 @@ public interface YobBuilder {
     /**
      * Returns the YANG object. This will be called by NBI broker.
      *
-     * @param ydtExtendedContext        ydtExtendedContext is used to get application related
-     *                                  information maintained in YDT
-     * @param schemaRegistry
+     * @param ydtExtendedContext ydtExtendedContext is used to get application
+     *                           related information maintained in YDT
      * @return YANG builder object
      */
-    Object getYangObject(YdtExtendedContext ydtExtendedContext, YangSchemaRegistry schemaRegistry);
+    Object getYangObject(YdtExtendedContext ydtExtendedContext,
+                         YangSchemaRegistry schemaRegistry);
 }
 
