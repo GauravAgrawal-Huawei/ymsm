@@ -36,7 +36,7 @@ import static org.onosproject.yangutils.utils.io.impl.YangIoUtils
 import static org.onosproject.yms.app.ydt.AppType.YOB;
 import static org.onosproject.yms.app.yob.YobConstants.DATA_TYPE_NOT_SUPPORT;
 import static org.onosproject.yms.app.yob.YobConstants.PERIOD;
-import static org.onosproject.yms.app.yob.YobConstants.FROMSTRING;
+import static org.onosproject.yms.app.yob.YobConstants.FROM_STRING;
 import static org.onosproject.yms.app.yob.YobConstants.OF;
 import static org.onosproject.yms.app.yob.YobConstants.FAIL_TO_LOAD_CLASS;
 import static org.onosproject.yms.app.yob.YobConstants.FAIL_TO_LOAD_CONSTRUCTOR;
@@ -70,20 +70,19 @@ public abstract class YobHandler {
                                         YangSchemaRegistry registry) {
         Object builderObject;
         String setterMethodName = null;
+        YangSchemaNode yangSchemaNode = curYdtNode.getYangSchemaNode();
 
         String qualifiedClassName =
-                getQualifiedDefaultClassName(curYdtNode.getYangSchemaNode());
+                getQualifiedDefaultClassName(yangSchemaNode);
         ClassLoader classLoader = getClassLoader(registry,
                                                  qualifiedClassName,
                                                  curYdtNode);
 
         if (curYdtNode != rootYdtNode) {
-            setterMethodName = curYdtNode.getYangSchemaNode()
-                    .getJavaAttributeName();
+            setterMethodName = yangSchemaNode.getJavaAttributeName();
         }
 
-        builderObject = new YobWorkBench(
-                curYdtNode.getYangSchemaNode(), classLoader,
+        builderObject = new YobWorkBench(yangSchemaNode, classLoader,
                 qualifiedClassName, setterMethodName);
 
         curYdtNode.setAppInfo(YOB, builderObject);
@@ -281,7 +280,7 @@ public abstract class YobHandler {
             }
             if (childSetterClass != null) {
                 childFromStringMethod = childSetterClass
-                        .getDeclaredMethod(FROMSTRING, String.class);
+                        .getDeclaredMethod(FROM_STRING, String.class);
             }
         } else {
             if (childSetterClass != null) {

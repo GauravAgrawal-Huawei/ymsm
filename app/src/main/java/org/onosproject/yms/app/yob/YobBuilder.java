@@ -23,7 +23,7 @@ import org.onosproject.yms.app.ysr.YangSchemaRegistry;
  * Abstraction of an entity which provides interfaces to YANG object
  * builder.
  */
-public interface YobBuilder {
+interface YobBuilder {
 
     /**
      * Returns the YANG object. This will be called by NBI broker.

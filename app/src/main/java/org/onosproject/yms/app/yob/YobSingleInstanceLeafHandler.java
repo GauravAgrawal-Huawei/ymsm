@@ -63,7 +63,7 @@ class YobSingleInstanceLeafHandler
         Class<?> parentBuilderClass = null;
         Field leafName;
         JavaQualifiedTypeInfoContainer javaQualifiedType;
-        Method parentSetterMethod = null;
+        Method parentSetterMethod;
         YdtExtendedContext parentYdtNode = (YdtExtendedContext)
                 leafNode.getParent();
         YobWorkBench parentYobWorkBench = (YobWorkBench)

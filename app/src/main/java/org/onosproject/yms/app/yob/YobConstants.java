@@ -23,14 +23,14 @@ final class YobConstants {
     private YobConstants() {
     }
 
-    static final String FROMSTRING = "fromString";
+    static final String FROM_STRING = "fromString";
     static final String BUILD = "build";
-    static final String OPPARAM = "OpParam";
+    static final String OP_PARAM = "OpParam";
     static final String DEFAULT = "Default";
-    static final String ADDTO = "addTo";
-    static final String VALUEOF = "valueOf";
-    static final String OPERATIONTYPE = "onosYangNodeOperationType";
-    static final String ONOSOPERATIONTYPE = "OnosYangNodeOperationType";
+    static final String ADD_TO = "addTo";
+    static final String VALUE_OF = "valueOf";
+    static final String OPERATION_TYPE = "onosYangNodeOperationType";
+    static final String OP_TYPE = "OnosYangNodeOperationType";
     static final String OF = "of";
     static final String PERIOD = ".";
     static final String NO_HANDLE_FOR_YDT = "No handler for YDT node";

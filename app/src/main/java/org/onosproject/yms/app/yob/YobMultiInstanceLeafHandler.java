@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 import static org.onosproject.yangutils.utils.io.impl.YangIoUtils
         .getCapitalCase;
 import static org.onosproject.yms.app.ydt.AppType.YOB;
-import static org.onosproject.yms.app.yob.YobConstants.ADDTO;
+import static org.onosproject.yms.app.yob.YobConstants.ADD_TO;
 import static org.onosproject.yms.app.yob.YobConstants.FAIL_TO_INVOKE_METHOD;
 
 /**
@@ -90,7 +90,7 @@ class YobMultiInstanceLeafHandler
                 Class<?> genericListClass =
                         (Class<?>) genericListType.getActualTypeArguments()[0];
                 parentSetterMethod = parentBuilderClass
-                        .getDeclaredMethod(ADDTO + setterInParent,
+                        .getDeclaredMethod(ADD_TO + setterInParent,
                                            genericListClass);
                 javaQualifiedType =
                         (JavaQualifiedTypeInfoContainer) leafListYdtNode
