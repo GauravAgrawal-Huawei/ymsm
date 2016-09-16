@@ -20,24 +20,24 @@ import org.onosproject.yms.app.yob.exception.YobExceptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.onosproject.yms.app.yob.YobConstants.BUILDER_IS_NOT_SET;
-import static org.onosproject.yms.app.yob.YobConstants.FAIL_TO_LOAD_CLASS;
-import static org.onosproject.yms.app.yob.YobConstants.BUILT_OBJ_IS_NOT_SET;
 import static org.onosproject.yms.app.yob.YobConstants
-        .OBJ_IS_ALREADY_BUILT_NOT_FETCH;
-import static org.onosproject.yms.app.yob.YobConstants.FAIL_TO_CREATE_OBJ;
-import static org.onosproject.yms.app.yob.YobConstants
-        .REFLECTION_FAIL_TO_CREATE_OBJ;
-import static org.onosproject.yms.app.yob.YobConstants
-        .OBJ_IS_ALREADY_BUILT_NOT_SET;
-import static org.onosproject.yms.app.yob.YobConstants
-        .BUILDER_IS_NOT_ALREADY_SET;
-import static org.onosproject.yms.app.yob.YobConstants
-        .OBJ_IS_NOT_SET_NOT_FETCH;
+        .OBJ_BUILDING_WITHOUT_BUILDER;
 import static org.onosproject.yms.app.yob.YobConstants
         .OBJ_IS_ALREADY_BUILT_NOT_BUILD;
 import static org.onosproject.yms.app.yob.YobConstants
-        .OBJ_BUILDING_WITHOUT_BUILDER;
+        .OBJ_IS_ALREADY_BUILT_NOT_FETCH;
+import static org.onosproject.yms.app.yob.YobConstants
+        .OBJ_IS_ALREADY_BUILT_NOT_SET;
+import static org.onosproject.yms.app.yob.YobConstants
+        .OBJ_IS_NOT_SET_NOT_FETCH;
+import static org.onosproject.yms.app.yob.YobConstants
+        .REFLECTION_FAIL_TO_CREATE_OBJ;
+import static org.onosproject.yms.app.yob.YobConstants
+        .BUILDER_IS_NOT_ALREADY_SET;
+import static org.onosproject.yms.app.yob.YobConstants.BUILT_OBJ_IS_NOT_SET;
+import static org.onosproject.yms.app.yob.YobConstants.FAIL_TO_CREATE_OBJ;
+import static org.onosproject.yms.app.yob.YobConstants.FAIL_TO_LOAD_CLASS;
+import static org.onosproject.yms.app.yob.YobConstants.BUILDER_IS_NOT_SET;
 
 /**
  * Represents the container of YANG object being built or the builder.
@@ -62,18 +62,16 @@ class YobBuilderOrBuiltObject {
     Class<?> yangBuilderClass;
 
     /**
-     * Interface implemented by the default Class.
+     * Default Class.
      */
-    Class<?>[] implementedInterfaces;
+    Class<?> yangDefaultClass;
 
     YobBuilderOrBuiltObject(String qualifiedClassName,
                             ClassLoader registeredAppClassLoader) {
-        Class<?> yangDefaultClass;
         try {
             yangDefaultClass =
                     registeredAppClassLoader.loadClass(qualifiedClassName);
             yangBuilderClass = yangDefaultClass.getDeclaredClasses()[0];
-            implementedInterfaces = yangDefaultClass.getInterfaces();
             setBuilderObject(yangBuilderClass.newInstance());
         } catch (ClassNotFoundException e) {
             log.error(FAIL_TO_LOAD_CLASS + qualifiedClassName);

@@ -16,11 +16,8 @@
 
 package org.onosproject.yms.app.yob;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import org.onosproject.yangutils.datamodel.YangLeaf;
+import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangType;
 import org.onosproject.yangutils.datamodel.javadatamodel
         .JavaQualifiedTypeInfoContainer;
@@ -28,6 +25,10 @@ import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import static org.onosproject.yms.app.ydt.AppType.YOB;
 import static org.onosproject.yms.app.yob.YobConstants.FAIL_TO_INVOKE_METHOD;
@@ -58,36 +59,30 @@ class YobSingleInstanceLeafHandler
     @Override
     public void setObjectInParent(YdtExtendedContext leafNode,
                                   YangSchemaRegistry schemaRegistry) {
-        String setterInParent;
-        Object parentBuilderObject;
-        Class<?> parentBuilderClass = null;
-        Field leafName;
-        JavaQualifiedTypeInfoContainer javaQualifiedType;
-        Method parentSetterMethod;
-        YdtExtendedContext parentYdtNode = (YdtExtendedContext)
-                leafNode.getParent();
-        YobWorkBench parentYobWorkBench = (YobWorkBench)
-                parentYdtNode.getAppInfo(YOB);
+        Class<?> parentBldrClass = null;
+        YangSchemaNode yangSchemaNode = leafNode.getYangSchemaNode();
+        YdtExtendedContext parentYdtNode =
+                (YdtExtendedContext) leafNode.getParent();
+        YobWorkBench parentYobWorkBench =
+                (YobWorkBench) parentYdtNode.getAppInfo(YOB);
         String value = leafNode.getValue();
 
         try {
-            setterInParent = leafNode.getYangSchemaNode()
-                    .getJavaAttributeName();
-            parentBuilderObject = parentYobWorkBench
+            String setterInParent = yangSchemaNode.getJavaAttributeName();
+            Object parentBuilderObject = parentYobWorkBench
                     .getParentBuilder(leafNode, schemaRegistry);
-            parentBuilderClass = parentBuilderObject.getClass();
-            leafName = parentBuilderClass.getDeclaredField(setterInParent);
-            parentSetterMethod = parentBuilderClass
+            parentBldrClass = parentBuilderObject.getClass();
+            Field leafName = parentBldrClass.getDeclaredField(setterInParent);
+            Method parentSetterMethod = parentBldrClass
                     .getDeclaredMethod(setterInParent, leafName.getType());
-            javaQualifiedType = (JavaQualifiedTypeInfoContainer) leafNode
-                    .getYangSchemaNode();
-            YangLeaf yangLeaf = (YangLeaf) javaQualifiedType;
-            YangType<?> yangType = yangLeaf.getDataType();
+            JavaQualifiedTypeInfoContainer javaQualifiedType =
+                    (JavaQualifiedTypeInfoContainer) yangSchemaNode;
+            YangType<?> yangType = ((YangLeaf) javaQualifiedType).getDataType();
             setDataFromStringValue(yangType, value, parentSetterMethod,
                                    parentBuilderObject, leafNode);
         } catch (NoSuchMethodException | InvocationTargetException |
                 IllegalAccessException | NoSuchFieldException e) {
-            log.error(FAIL_TO_INVOKE_METHOD + parentBuilderClass.getName());
+            log.error(FAIL_TO_INVOKE_METHOD + parentBldrClass.getName());
         }
     }
 }

@@ -45,10 +45,10 @@ class YobListener implements YdtExtendedListener {
      * @param ydtRootExtendedContext ydtExtendedContext is used to get
      *                               application related
      *                               information maintained in YDT
-     * @param schemaRegistry refers to YANG schema registry
+     * @param schemaRegistry         refers to YANG schema registry
      */
     YobListener(YdtExtendedContext ydtRootExtendedContext,
-                       YangSchemaRegistry schemaRegistry) {
+                YangSchemaRegistry schemaRegistry) {
         this.ydtRootNode = ydtRootExtendedContext;
         this.schemaRegistry = schemaRegistry;
     }
@@ -62,7 +62,7 @@ class YobListener implements YdtExtendedListener {
             throw new YobExceptions(NO_HANDLE_FOR_YDT);
         }
         nodeHandler.createYangBuilderObject(ydtExtendedContext,
-                ydtRootNode, schemaRegistry);
+                                            ydtRootNode, schemaRegistry);
 
     }
 
@@ -72,11 +72,11 @@ class YobListener implements YdtExtendedListener {
                 YobHandlerFactory.getYobHandlerForContext(ydtExtendedContext);
         if (nodeHandler != null) {
             nodeHandler.buildObjectFromBuilder(ydtExtendedContext,
-                    ydtRootNode, schemaRegistry);
+                                               ydtRootNode, schemaRegistry);
             // The current ydt context node and root node are same then return.
             if (!ydtExtendedContext.equals(ydtRootNode)) {
                 nodeHandler.setObjectInParent(ydtExtendedContext,
-                        schemaRegistry);
+                                              schemaRegistry);
             }
         }
     }

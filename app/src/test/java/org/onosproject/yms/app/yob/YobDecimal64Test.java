@@ -16,13 +16,14 @@
 
 package org.onosproject.yms.app.yob;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
 import org.junit.Test;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.ydt.YdtTestUtils;
 import org.onosproject.yms.ydt.YdtContext;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -33,16 +34,16 @@ public class YobDecimal64Test {
 
     Positive scenario
 
-    input at boundry for decimal64 with fraction 2
+    input at boundary for decimal64 with fraction 2
         i. min value
         ii. max value
 
-    input at boundry for decimal64 with minimum fraction
+    input at boundary for decimal64 with minimum fraction
         i. min value
         ii. mid value
         iii. max value
 
-    input at boundry for decimal64 with maximum fraction
+    input at boundary for decimal64 with maximum fraction
         i. min value
         ii. mid value
         iii. max value
@@ -86,35 +87,51 @@ public class YobDecimal64Test {
 
         DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
 
-        Object yangObject = defaultYobBuilder.getYangObject((YdtExtendedContext) ydtContext1,
-                YdtTestUtils.getSchemaRegistry());
+        Object yangObject = defaultYobBuilder.getYangObject(
+                (YdtExtendedContext) ydtContext1, YdtTestUtils
+                        .getSchemaRegistry());
         assertNotNull(yangObject);
         try {
             Field negInt = yangObject.getClass().getDeclaredField("negInt");
             negInt.setAccessible(true);
-            assertEquals("-92233720368547758.08", negInt.get(yangObject).toString());
-            Field negIntWithMaxFraction = yangObject.getClass().getDeclaredField("negIntWithMaxFraction");
+            assertEquals("-92233720368547758.08", negInt
+                    .get(yangObject).toString());
+            Field negIntWithMaxFraction = yangObject.getClass()
+                    .getDeclaredField("negIntWithMaxFraction");
             negIntWithMaxFraction.setAccessible(true);
-            assertEquals("-9.223372036854775808", negIntWithMaxFraction.get(yangObject).toString());
-            Field negIntWithMinFraction = yangObject.getClass().getDeclaredField("negIntWithMinFraction");
+            assertEquals("-9.223372036854775808", negIntWithMaxFraction
+                    .get(yangObject).toString());
+            Field negIntWithMinFraction = yangObject.getClass()
+                    .getDeclaredField("negIntWithMinFraction");
             negIntWithMinFraction.setAccessible(true);
-            assertEquals("-922337203685477580.8", negIntWithMinFraction.get(yangObject).toString());
-            Field posInt = yangObject.getClass().getDeclaredField("posInt");
+            assertEquals("-922337203685477580.8", negIntWithMinFraction
+                    .get(yangObject).toString());
+            Field posInt = yangObject.getClass()
+                    .getDeclaredField("posInt");
             posInt.setAccessible(true);
-            assertEquals("92233720368547758.07", posInt.get(yangObject).toString());
-            Field posIntWithMaxFraction = yangObject.getClass().getDeclaredField("posIntWithMaxFraction");
+            assertEquals("92233720368547758.07", posInt
+                    .get(yangObject).toString());
+            Field posIntWithMaxFraction = yangObject
+                    .getClass().getDeclaredField("posIntWithMaxFraction");
             posIntWithMaxFraction.setAccessible(true);
-            assertEquals("9.223372036854775807", posIntWithMaxFraction.get(yangObject).toString());
-            Field posIntWithMinFraction = yangObject.getClass().getDeclaredField("posIntWithMinFraction");
+            assertEquals("9.223372036854775807", posIntWithMaxFraction
+                    .get(yangObject).toString());
+            Field posIntWithMinFraction = yangObject.getClass()
+                    .getDeclaredField("posIntWithMinFraction");
             posIntWithMinFraction.setAccessible(true);
-            assertEquals("922337203685477580.7", posIntWithMinFraction.get(yangObject).toString());
-            Field minIntWithRange = yangObject.getClass().getDeclaredField("minIntWithRange");
+            assertEquals("922337203685477580.7", posIntWithMinFraction
+                    .get(yangObject).toString());
+            Field minIntWithRange = yangObject.getClass()
+                    .getDeclaredField("minIntWithRange");
             minIntWithRange.setAccessible(true);
-            assertEquals("10", minIntWithRange.get(yangObject).toString());
-            Field midIntWithRange = yangObject.getClass().getDeclaredField("midIntWithRange");
+            assertEquals("10", minIntWithRange
+                    .get(yangObject).toString());
+            Field midIntWithRange = yangObject
+                    .getClass().getDeclaredField("midIntWithRange");
             midIntWithRange.setAccessible(true);
             assertEquals("11", midIntWithRange.get(yangObject).toString());
-            Field maxIntWithRange = yangObject.getClass().getDeclaredField("maxIntWithRange");
+            Field maxIntWithRange = yangObject
+                    .getClass().getDeclaredField("maxIntWithRange");
             maxIntWithRange.setAccessible(true);
             assertEquals("100", maxIntWithRange.get(yangObject).toString());
         } catch (IllegalAccessException | NoSuchFieldException e) {

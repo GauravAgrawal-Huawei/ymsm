@@ -16,15 +16,15 @@
 
 package org.onosproject.yms.app.yob;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.List;
-
 import org.junit.Test;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.ydt.YdtTestUtils;
 import org.onosproject.yms.ydt.YdtContext;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -40,7 +40,8 @@ public class YobListTest {
         validateYangObjectList(defaultYdtBuilder);
     }
 
-    public void validateYangObjectList(YangRequestWorkBench defaultYdtBuilder) {
+    private void validateYangObjectList(
+            YangRequestWorkBench defaultYdtBuilder) {
 
         YdtContext ydtContext = defaultYdtBuilder.getRootNode();
 
@@ -48,9 +49,9 @@ public class YobListTest {
 
         DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
 
-        Object yangObject = defaultYobBuilder
-                .getYangObject((YdtExtendedContext) ydtContext1,
-                               YdtTestUtils.getSchemaRegistry());
+        Object yangObject = defaultYobBuilder.getYangObject(
+                (YdtExtendedContext) ydtContext1, YdtTestUtils.
+                        getSchemaRegistry());
         assertNotNull(yangObject);
         assertTrue(yangObject.getClass().getSimpleName()
                            .equals("RootlistOpParam"));
@@ -60,7 +61,7 @@ public class YobListTest {
                     yangObject.getClass().getDeclaredField("listwithcontainer");
             field.setAccessible(true);
             List listwithcontainer = (List) field.get(yangObject);
-            assertEquals(true, listwithcontainer == null);
+            assertEquals(true, listwithcontainer.isEmpty());
             Field field1 = yangObject.getClass()
                     .getDeclaredField("listwithoutcontainer");
             field1.setAccessible(true);
@@ -79,10 +80,10 @@ public class YobListTest {
     @Test
     public void listwithcontainerTest()
             throws IOException {
-//        YangRequestWorkBench defaultYdtBuilder =
-//                YdtTestUtils.listWithContainerYdt();
+        YangRequestWorkBench defaultYdtBuilder =
+                YdtTestUtils.listWithContainerYdt();
 
-        //validateYangObject(defaultYdtBuilder);
+        validateYangObject(defaultYdtBuilder);
     }
 
     public void validateYangObject(YangRequestWorkBench defaultYdtBuilder) {
@@ -93,9 +94,9 @@ public class YobListTest {
 
         DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
 
-        Object yangObject = defaultYobBuilder
-                .getYangObject((YdtExtendedContext) ydtContext1,
-                               YdtTestUtils.getSchemaRegistry());
+        Object yangObject = defaultYobBuilder.getYangObject(
+                (YdtExtendedContext) ydtContext1, YdtTestUtils
+                        .getSchemaRegistry());
         assertNotNull(yangObject);
         assertTrue(yangObject.getClass().getSimpleName()
                            .equals("RootlistOpParam"));

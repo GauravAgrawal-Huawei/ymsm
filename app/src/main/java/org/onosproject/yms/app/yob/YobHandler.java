@@ -68,7 +68,6 @@ public abstract class YobHandler {
     public void createYangBuilderObject(YdtExtendedContext curYdtNode,
                                         YdtExtendedContext rootYdtNode,
                                         YangSchemaRegistry registry) {
-        Object builderObject;
         String setterMethodName = null;
         YangSchemaNode yangSchemaNode = curYdtNode.getYangSchemaNode();
 
@@ -82,8 +81,8 @@ public abstract class YobHandler {
             setterMethodName = yangSchemaNode.getJavaAttributeName();
         }
 
-        builderObject = new YobWorkBench(yangSchemaNode, classLoader,
-                qualifiedClassName, setterMethodName);
+        Object builderObject = new YobWorkBench(yangSchemaNode, classLoader,
+                                         qualifiedClassName, setterMethodName);
 
         curYdtNode.setAppInfo(YOB, builderObject);
     }
@@ -102,10 +101,10 @@ public abstract class YobHandler {
     /**
      * To build the object from builder method.
      *
-     * @param ydtNode ydtExtendedContext is used to get
-     *                application related
-     *                information maintained in YDT
-     * @param ydtRootNode ydtRootNode
+     * @param ydtNode        ydtExtendedContext is used to get
+     *                       application related
+     *                       information maintained in YDT
+     * @param ydtRootNode    ydtRootNode
      * @param schemaRegistry YANG schema registry
      */
     public void buildObjectFromBuilder(YdtExtendedContext ydtNode,
@@ -133,15 +132,15 @@ public abstract class YobHandler {
      * @throws NoSuchMethodException     throws NoSuchMethodException
      */
     void setDataFromStringValue(YangType<?> type, String leafValue,
-                                       Method parentSetterMethod,
-                                       Object parentBuilderObject,
-                                       YdtExtendedContext ydtExtendedContext)
+                                Method parentSetterMethod,
+                                Object parentBuilderObject,
+                                YdtExtendedContext ydtExtendedContext)
             throws InvocationTargetException, IllegalAccessException,
             NoSuchMethodException {
         switch (type.getDataType()) {
             case INT8: {
-                parentSetterMethod
-                        .invoke(parentBuilderObject, Byte.parseByte(leafValue));
+                parentSetterMethod.invoke(parentBuilderObject,
+                                          Byte.parseByte(leafValue));
                 break;
             }
             case UINT8:
@@ -158,13 +157,13 @@ public abstract class YobHandler {
             }
             case UINT32:
             case INT64: {
-                parentSetterMethod
-                        .invoke(parentBuilderObject, Long.parseLong(leafValue));
+                parentSetterMethod.invoke(parentBuilderObject,
+                                          Long.parseLong(leafValue));
                 break;
             }
             case UINT64: {
-                parentSetterMethod
-                        .invoke(parentBuilderObject, new BigInteger(leafValue));
+                parentSetterMethod.invoke(parentBuilderObject,
+                                          new BigInteger(leafValue));
                 break;
             }
             case EMPTY:
@@ -178,8 +177,8 @@ public abstract class YobHandler {
                 break;
             }
             case BINARY: {
-                parentSetterMethod
-                        .invoke(parentBuilderObject, new YangBinary(leafValue));
+                parentSetterMethod.invoke(parentBuilderObject,
+                                          new YangBinary(leafValue));
                 break;
             }
             case BITS: {
@@ -187,8 +186,8 @@ public abstract class YobHandler {
                 break;
             }
             case DECIMAL64: {
-                parentSetterMethod
-                        .invoke(parentBuilderObject, new BigDecimal(leafValue));
+                parentSetterMethod.invoke(parentBuilderObject,
+                                          new BigDecimal(leafValue));
                 break;
             }
             case DERIVED: {
@@ -235,37 +234,34 @@ public abstract class YobHandler {
      * @throws NoSuchMethodException     throws NoSuchMethodException
      */
     private void parseDerivedTypeInfo(YdtExtendedContext ydtExtendedContext,
-                                     Method parentSetterMethod,
-                                     Object parentBuilderObject,
-                                     String leafValue, boolean isEnum)
+                                      Method parentSetterMethod,
+                                      Object parentBuilderObject,
+                                      String leafValue, boolean isEnum)
             throws InvocationTargetException, IllegalAccessException,
             NoSuchMethodException {
-        String packageName;
-        String className;
-        Class<?> childSetterClass = null;
+        Class<?> childSetClass = null;
         Constructor<?> childConstructor = null;
         Object childValue = null;
         Object childObject = null;
-        Method childFromStringMethod = null;
+        Method childMethod = null;
 
         YangSchemaNode yangJavaModule = ydtExtendedContext.getYangSchemaNode();
-        packageName = yangJavaModule.getJavaPackage();
-        className = yangJavaModule.getJavaClassNameOrBuiltInType();
-        className = getCapitalCase(className);
+        String packageName = yangJavaModule.getJavaPackage();
+        String className = getCapitalCase(
+                yangJavaModule.getJavaClassNameOrBuiltInType());
         String qualifiedClassName = packageName + PERIOD + className;
         ClassLoader classLoader = getClassLoader(registry,
                                                  qualifiedClassName,
                                                  ydtExtendedContext);
         try {
-            childSetterClass =
-                    classLoader.loadClass(qualifiedClassName);
+            childSetClass = classLoader.loadClass(qualifiedClassName);
         } catch (ClassNotFoundException e) {
             log.error(FAIL_TO_LOAD_CLASS + packageName + PERIOD + className);
         }
         if (!isEnum) {
 
-            if (childSetterClass != null) {
-                childConstructor = childSetterClass.getDeclaredConstructor();
+            if (childSetClass != null) {
+                childConstructor = childSetClass.getDeclaredConstructor();
             }
 
             if (childConstructor != null) {
@@ -278,20 +274,19 @@ public abstract class YobHandler {
             } catch (InstantiationException e) {
                 log.error(FAIL_TO_LOAD_CONSTRUCTOR + className);
             }
-            if (childSetterClass != null) {
-                childFromStringMethod = childSetterClass
+            if (childSetClass != null) {
+                childMethod = childSetClass
                         .getDeclaredMethod(FROM_STRING, String.class);
             }
         } else {
-            if (childSetterClass != null) {
-                childFromStringMethod =
-                        childSetterClass.getDeclaredMethod(OF, String.class);
+            if (childSetClass != null) {
+                childMethod = childSetClass.getDeclaredMethod(OF, String.class);
             }
             //leafValue = JavaIdentifierSyntax.getEnumJavaAttribute(leafValue);
             //leafValue = leafValue.toUpperCase();
         }
-        if (childFromStringMethod != null) {
-            childValue = childFromStringMethod.invoke(childObject, leafValue);
+        if (childMethod != null) {
+            childValue = childMethod.invoke(childObject, leafValue);
         }
 
         parentSetterMethod.invoke(parentBuilderObject, childValue);

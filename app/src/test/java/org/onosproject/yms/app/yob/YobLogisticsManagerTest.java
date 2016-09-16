@@ -32,7 +32,8 @@ public class YobLogisticsManagerTest {
 
     @Test
     public void logisticsManagerTest() throws IOException {
-        YangRequestWorkBench defaultYdtBuilder = YdtTestUtils.logisticsManagerYdt();
+        YangRequestWorkBench defaultYdtBuilder = YdtTestUtils
+                .logisticsManagerYdt();
 
         YdtContext ydtContext = defaultYdtBuilder.getRootNode();
 
@@ -41,18 +42,21 @@ public class YobLogisticsManagerTest {
         while (ydtContext1 != null) {
             DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
 
-            Object yangObject = defaultYobBuilder.getYangObject((YdtExtendedContext) ydtContext1,
-                    YdtTestUtils.getSchemaRegistry());
+            Object yangObject = defaultYobBuilder.getYangObject(
+                    (YdtExtendedContext) ydtContext1, YdtTestUtils
+                            .getSchemaRegistry());
             Class<?> aClass = yangObject.getClass();
             if (aClass.getSimpleName().equals("CustomssupervisorOpParam")) {
                 try {
                     Field field = aClass.getDeclaredField("supervisor");
-                    Field onosYangNodeOperationType = aClass.getDeclaredField("onosYangNodeOperationType");
+                    Field onosYangNodeOperationType = aClass
+                            .getDeclaredField("onosYangNodeOperationType");
                     field.setAccessible(true);
                     onosYangNodeOperationType.setAccessible(true);
                     try {
                         assertEquals("abc", field.get(yangObject).toString());
-                        assertEquals("MERGE", onosYangNodeOperationType.get(yangObject).toString());
+                        assertEquals("MERGE", onosYangNodeOperationType
+                                .get(yangObject).toString());
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
@@ -61,7 +65,8 @@ public class YobLogisticsManagerTest {
                 }
             }
 
-            if (aClass.getSimpleName().equals("MerchandisersupervisorOpParam")) {
+            if (aClass.getSimpleName().equals(
+                    "MerchandisersupervisorOpParam")) {
                 try {
                     Field field = aClass.getDeclaredField("supervisor");
                     field.setAccessible(true);
@@ -80,7 +85,8 @@ public class YobLogisticsManagerTest {
                     Field field = aClass.getDeclaredField("supervisor");
                     field.setAccessible(true);
                     try {
-                        ArrayList<String> arrayList = (ArrayList<String>) field.get(yangObject);
+                        ArrayList<String> arrayList =
+                                (ArrayList<String>) field.get(yangObject);
                         assertEquals("1", arrayList.get(0));
                         assertEquals("2", arrayList.get(1));
                         assertEquals("3", arrayList.get(2));

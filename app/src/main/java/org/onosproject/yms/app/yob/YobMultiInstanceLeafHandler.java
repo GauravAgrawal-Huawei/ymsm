@@ -17,23 +17,22 @@
 package org.onosproject.yms.app.yob;
 
 
+import org.onosproject.yangutils.datamodel.YangLeafList;
+import org.onosproject.yangutils.datamodel.YangSchemaNode;
+import org.onosproject.yangutils.datamodel.YangType;
+import org.onosproject.yangutils.datamodel.javadatamodel.JavaQualifiedTypeInfoContainer;
+import org.onosproject.yms.app.ydt.YdtExtendedContext;
+import org.onosproject.yms.app.ysr.YangSchemaRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.Set;
 
-import org.onosproject.yangutils.datamodel.YangLeafList;
-import org.onosproject.yangutils.datamodel.YangType;
-import org.onosproject.yangutils.datamodel.javadatamodel
-        .JavaQualifiedTypeInfoContainer;
-import org.onosproject.yms.app.ydt.YdtExtendedContext;
-import org.onosproject.yms.app.ysr.YangSchemaRegistry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import static org.onosproject.yangutils.utils.io.impl.YangIoUtils
-        .getCapitalCase;
+import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
 import static org.onosproject.yms.app.ydt.AppType.YOB;
 import static org.onosproject.yms.app.yob.YobConstants.ADD_TO;
 import static org.onosproject.yms.app.yob.YobConstants.FAIL_TO_INVOKE_METHOD;
@@ -69,6 +68,7 @@ class YobMultiInstanceLeafHandler
         Object parentBuilderObject;
         Field leafName;
         ParameterizedType genericListType;
+        YangSchemaNode yangSchemaNode = leafListYdtNode.getYangSchemaNode();
         JavaQualifiedTypeInfoContainer javaQualifiedType;
         Class<?> parentBuilderClass = null;
         YdtExtendedContext parentYdtNode = (YdtExtendedContext)
@@ -79,8 +79,7 @@ class YobMultiInstanceLeafHandler
 
         for (String value : valueSet) {
             try {
-                setterInParent = leafListYdtNode.getYangSchemaNode()
-                        .getJavaAttributeName();
+                setterInParent = yangSchemaNode.getJavaAttributeName();
                 parentBuilderObject = parentYobWorkBench
                         .getParentBuilder(leafListYdtNode, schemaRegistry);
                 parentBuilderClass = parentBuilderObject.getClass();
@@ -93,10 +92,9 @@ class YobMultiInstanceLeafHandler
                         .getDeclaredMethod(ADD_TO + setterInParent,
                                            genericListClass);
                 javaQualifiedType =
-                        (JavaQualifiedTypeInfoContainer) leafListYdtNode
-                                .getYangSchemaNode();
-                YangLeafList yangLeafList = (YangLeafList) javaQualifiedType;
-                YangType<?> yangType = yangLeafList.getDataType();
+                        (JavaQualifiedTypeInfoContainer) yangSchemaNode;
+                YangType<?> yangType = ((YangLeafList) javaQualifiedType)
+                        .getDataType();
                 setDataFromStringValue(yangType, value, parentSetterMethod,
                                        parentBuilderObject, leafListYdtNode);
             } catch (NoSuchMethodException | InvocationTargetException

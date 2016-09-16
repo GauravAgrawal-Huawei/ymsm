@@ -16,14 +16,15 @@
 
 package org.onosproject.yms.app.yob;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.List;
 import org.junit.Test;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.ydt.YdtTestUtils;
 import org.onosproject.yms.ydt.YdtContext;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -55,19 +56,24 @@ public class YobEnumTest {
 
         DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
 
-        Object yangObject = defaultYobBuilder.getYangObject((YdtExtendedContext) ydtContext1,
-                YdtTestUtils.getSchemaRegistry());
+        Object yangObject = defaultYobBuilder.getYangObject(
+                (YdtExtendedContext) ydtContext1, YdtTestUtils
+                        .getSchemaRegistry());
         assertNotNull(yangObject);
         try {
             Field field = yangObject.getClass().getDeclaredField("enumList");
             field.setAccessible(true);
             List enumList = (List) field.get(yangObject);
             assertEquals(false, enumList.isEmpty());
-            Field enumleaf = enumList.get(0).getClass().getDeclaredField("enumleaf");
+            Field enumleaf = enumList.get(0)
+                    .getClass().getDeclaredField("enumleaf");
             enumleaf.setAccessible(true);
-            assertEquals("ten", enumleaf.get(enumList.get(0)).toString().toLowerCase());
-            assertEquals("hundred", enumleaf.get(enumList.get(1)).toString().toLowerCase());
-            assertEquals("thousand", enumleaf.get(enumList.get(2)).toString().toLowerCase());
+            assertEquals("ten", enumleaf
+                    .get(enumList.get(0)).toString().toLowerCase());
+            assertEquals("hundred", enumleaf
+                    .get(enumList.get(1)).toString().toLowerCase());
+            assertEquals("thousand", enumleaf
+                    .get(enumList.get(2)).toString().toLowerCase());
         } catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }

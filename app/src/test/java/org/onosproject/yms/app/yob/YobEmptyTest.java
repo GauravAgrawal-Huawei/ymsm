@@ -16,14 +16,15 @@
 
 package org.onosproject.yms.app.yob;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.List;
 import org.junit.Test;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.ydt.YdtTestUtils;
 import org.onosproject.yms.ydt.YdtContext;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -49,17 +50,19 @@ public class YobEmptyTest {
 
         DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
 
-        Object yangObject = defaultYobBuilder.getYangObject((YdtExtendedContext) ydtContext1,
-                YdtTestUtils.getSchemaRegistry());
+        Object yangObject = defaultYobBuilder.getYangObject(
+                (YdtExtendedContext) ydtContext1, YdtTestUtils
+                        .getSchemaRegistry());
         assertNotNull(yangObject);
         try {
 
             Field field = yangObject.getClass().getDeclaredField("emptyList");
             field.setAccessible(true);
             List booleanList = (List) field.get(yangObject);
-            Field invalidinterval = booleanList.get(0).getClass().getDeclaredField("empty");
-            invalidinterval.setAccessible(true);
-            assertEquals(false, invalidinterval.get(booleanList.get(0)));
+            Field invalidInterval = booleanList.get(0)
+                    .getClass().getDeclaredField("empty");
+            invalidInterval.setAccessible(true);
+            assertEquals(false, invalidInterval.get(booleanList.get(0)));
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
