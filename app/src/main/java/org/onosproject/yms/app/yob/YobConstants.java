@@ -40,6 +40,8 @@ final class YobConstants {
     static final String FAIL_TO_GET_FIELD = "Failed to get field for class ";
     static final String FAIL_TO_GET_METHOD = "Failed to get method for class ";
     static final String FAIL_TO_LOAD_CLASS = "Failed to load class for class ";
+    static final String YDT_TYPE_IS_NOT_SUPPORT =
+            "Given YDT type is not supported.";
     static final String FAIL_TO_CREATE_OBJ =
             "Failed to create an object for class ";
     static final String REFLECTION_FAIL_TO_CREATE_OBJ =

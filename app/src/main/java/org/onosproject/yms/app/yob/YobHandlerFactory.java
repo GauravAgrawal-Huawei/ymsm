@@ -20,6 +20,8 @@ import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.onosproject.yms.app.yob.YobConstants.YDT_TYPE_IS_NOT_SUPPORT;
+
 /**
  * Represents an YANG object builder factory to create different types
  * of YANG data tree node.
@@ -73,7 +75,7 @@ final class YobHandlerFactory {
             }
 
             default: {
-                log.error("YOB: Given YDT type is not supported.");
+                log.error(YDT_TYPE_IS_NOT_SUPPORT);
             }
         }
         return null;
