@@ -40,6 +40,11 @@ class YobListener implements YdtExtendedListener {
     private YangSchemaRegistry schemaRegistry;
 
     /**
+     * reference to YOB handler.
+     */
+    private YobHandlerFactory yobHandlerFactory;
+
+    /**
      * Creates an instance of YANG object builder listener.
      *
      * @param ydtRootExtendedContext ydtExtendedContext is used to get
@@ -51,12 +56,14 @@ class YobListener implements YdtExtendedListener {
                 YangSchemaRegistry schemaRegistry) {
         this.ydtRootNode = ydtRootExtendedContext;
         this.schemaRegistry = schemaRegistry;
+        this.yobHandlerFactory = new YobHandlerFactory();
     }
 
     @Override
     public void enterYdtNode(YdtExtendedContext ydtExtendedContext) {
+
         YobHandler nodeHandler =
-                YobHandlerFactory.getYobHandlerForContext(ydtExtendedContext);
+                yobHandlerFactory.getYobHandlerForContext(ydtExtendedContext);
 
         if (nodeHandler == null) {
             throw new YobExceptions(NO_HANDLE_FOR_YDT);
@@ -69,7 +76,7 @@ class YobListener implements YdtExtendedListener {
     @Override
     public void exitYdtNode(YdtExtendedContext ydtExtendedContext) {
         YobHandler nodeHandler =
-                YobHandlerFactory.getYobHandlerForContext(ydtExtendedContext);
+                yobHandlerFactory.getYobHandlerForContext(ydtExtendedContext);
         if (nodeHandler != null) {
             nodeHandler.buildObjectFromBuilder(ydtExtendedContext,
                                                ydtRootNode, schemaRegistry);

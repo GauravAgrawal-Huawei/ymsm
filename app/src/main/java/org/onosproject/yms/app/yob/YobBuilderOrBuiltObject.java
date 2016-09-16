@@ -20,24 +20,17 @@ import org.onosproject.yms.app.yob.exception.YobExceptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.onosproject.yms.app.yob.YobConstants
-        .OBJ_BUILDING_WITHOUT_BUILDER;
-import static org.onosproject.yms.app.yob.YobConstants
-        .OBJ_IS_ALREADY_BUILT_NOT_BUILD;
-import static org.onosproject.yms.app.yob.YobConstants
-        .OBJ_IS_ALREADY_BUILT_NOT_FETCH;
-import static org.onosproject.yms.app.yob.YobConstants
-        .OBJ_IS_ALREADY_BUILT_NOT_SET;
-import static org.onosproject.yms.app.yob.YobConstants
-        .OBJ_IS_NOT_SET_NOT_FETCH;
-import static org.onosproject.yms.app.yob.YobConstants
-        .REFLECTION_FAIL_TO_CREATE_OBJ;
-import static org.onosproject.yms.app.yob.YobConstants
-        .BUILDER_IS_NOT_ALREADY_SET;
+import static org.onosproject.yms.app.yob.YobConstants.BUILDER_IS_NOT_ALREADY_SET;
+import static org.onosproject.yms.app.yob.YobConstants.BUILDER_IS_NOT_SET;
 import static org.onosproject.yms.app.yob.YobConstants.BUILT_OBJ_IS_NOT_SET;
 import static org.onosproject.yms.app.yob.YobConstants.FAIL_TO_CREATE_OBJ;
 import static org.onosproject.yms.app.yob.YobConstants.FAIL_TO_LOAD_CLASS;
-import static org.onosproject.yms.app.yob.YobConstants.BUILDER_IS_NOT_SET;
+import static org.onosproject.yms.app.yob.YobConstants.OBJ_BUILDING_WITHOUT_BUILDER;
+import static org.onosproject.yms.app.yob.YobConstants.OBJ_IS_ALREADY_BUILT_NOT_BUILD;
+import static org.onosproject.yms.app.yob.YobConstants.OBJ_IS_ALREADY_BUILT_NOT_FETCH;
+import static org.onosproject.yms.app.yob.YobConstants.OBJ_IS_ALREADY_BUILT_NOT_SET;
+import static org.onosproject.yms.app.yob.YobConstants.OBJ_IS_NOT_SET_NOT_FETCH;
+import static org.onosproject.yms.app.yob.YobConstants.REFLECTION_FAIL_TO_CREATE_OBJ;
 
 /**
  * Represents the container of YANG object being built or the builder.

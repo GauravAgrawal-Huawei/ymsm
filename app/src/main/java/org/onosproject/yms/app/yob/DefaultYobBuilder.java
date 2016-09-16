@@ -28,8 +28,7 @@ import static org.onosproject.yms.app.ydt.AppType.YOB;
  * Represents implementation of interfaces to build and obtain YANG objects
  * from YDT.
  */
-public class DefaultYobBuilder
-        implements YobBuilder {
+public class DefaultYobBuilder implements YobBuilder {
 
     /**
      * Creates an instance of DefaultYobBuilder.

@@ -17,10 +17,18 @@
 package org.onosproject.yms.app.yob;
 
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
+import org.onosproject.yms.ydt.YdtType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.onosproject.yms.app.yob.YobConstants.YDT_TYPE_IS_NOT_SUPPORT;
+import static org.onosproject.yms.ydt.YdtType.MULTI_INSTANCE_LEAF_VALUE_NODE;
+import static org.onosproject.yms.ydt.YdtType.MULTI_INSTANCE_NODE;
+import static org.onosproject.yms.ydt.YdtType.SINGLE_INSTANCE_LEAF_VALUE_NODE;
+import static org.onosproject.yms.ydt.YdtType.SINGLE_INSTANCE_NODE;
 
 /**
  * Represents an YANG object builder factory to create different types
@@ -32,52 +40,63 @@ final class YobHandlerFactory {
             LoggerFactory.getLogger(YobSingleInstanceLeafHandler.class);
 
     /**
+     * Creates single instance node handler.
+     */
+    private static final YobSingleInstanceHandler singleInstanceNode =
+            new YobSingleInstanceHandler();
+
+    /**
+     * Creates multi instance node handler.
+     */
+    private static final YobMultiInstanceHandler multiInstanceNode =
+            new YobMultiInstanceHandler();
+
+    /**
+     * Creates single instance leaf node handler.
+     */
+    private static final YobSingleInstanceLeafHandler singleInstanceLeaf =
+            new YobSingleInstanceLeafHandler();
+
+    /**
+     * Creates multi instance leaf node handler.
+     */
+    private static final YobMultiInstanceLeafHandler multiInstanceLeaf =
+            new YobMultiInstanceLeafHandler();
+
+    /**
+     * Map of YANG object builder handler.
+     */
+    private static final Map<YdtType, YobHandler> yobHandlerHashMap =
+            new HashMap<>();
+
+    /**
      * Create instance of YobHandlerFactory.
      */
-    private YobHandlerFactory() {
+    YobHandlerFactory() {
+        yobHandlerHashMap.put(SINGLE_INSTANCE_NODE, singleInstanceNode);
+        yobHandlerHashMap.put(MULTI_INSTANCE_NODE, multiInstanceNode);
+        yobHandlerHashMap.put(SINGLE_INSTANCE_LEAF_VALUE_NODE,
+                              singleInstanceLeaf);
+        yobHandlerHashMap.put(MULTI_INSTANCE_LEAF_VALUE_NODE,
+                              multiInstanceLeaf);
     }
 
     /**
-     * This function is used to return the corresponding YOB handler for current context.
+     * This function is used to return the corresponding YOB handler for current
+     * context.
      *
      * @param ydtExtendedContext ydtExtendedContext is used to get application
      *                           related information maintained in YDT
      * @return YANG object builder node
      */
-    static YobHandler getYobHandlerForContext(YdtExtendedContext ydtExtendedContext) {
-        switch (ydtExtendedContext.getYdtType()) {
-            /**
-             * Single instance node.
-             */
-            case SINGLE_INSTANCE_NODE: {
-                return new YobSingleInstanceHandler();
-            }
-
-            /**
-             * Multi instance node.
-             */
-            case MULTI_INSTANCE_NODE: {
-                return new YobMultiInstanceHandler();
-            }
-
-            /**
-             * Single instance leaf node.
-             */
-            case SINGLE_INSTANCE_LEAF_VALUE_NODE: {
-                return new YobSingleInstanceLeafHandler();
-            }
-
-            /**
-             * Multi instance leaf node.
-             */
-            case MULTI_INSTANCE_LEAF_VALUE_NODE: {
-                return new YobMultiInstanceLeafHandler();
-            }
-
-            default: {
-                log.error(YDT_TYPE_IS_NOT_SUPPORT);
-            }
+    YobHandler getYobHandlerForContext(
+            YdtExtendedContext ydtExtendedContext) {
+        YobHandler yobHandler =
+                yobHandlerHashMap.get(ydtExtendedContext.getYdtType());
+        if (yobHandler == null) {
+            log.error(YDT_TYPE_IS_NOT_SUPPORT);
+            return null;
         }
-        return null;
+        return yobHandler;
     }
 }

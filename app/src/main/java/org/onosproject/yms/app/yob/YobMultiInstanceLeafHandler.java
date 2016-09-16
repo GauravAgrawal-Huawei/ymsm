@@ -63,14 +63,8 @@ class YobMultiInstanceLeafHandler
     @Override
     public void setObjectInParent(YdtExtendedContext leafListYdtNode,
                                   YangSchemaRegistry schemaRegistry) {
-        String setterInParent;
-        Method parentSetterMethod;
-        Object parentBuilderObject;
-        Field leafName;
-        ParameterizedType genericListType;
-        YangSchemaNode yangSchemaNode = leafListYdtNode.getYangSchemaNode();
-        JavaQualifiedTypeInfoContainer javaQualifiedType;
         Class<?> parentBuilderClass = null;
+        YangSchemaNode yangSchemaNode = leafListYdtNode.getYangSchemaNode();
         YdtExtendedContext parentYdtNode = (YdtExtendedContext)
                 leafListYdtNode.getParent();
         YobWorkBench parentYobWorkBench = (YobWorkBench)
@@ -79,22 +73,24 @@ class YobMultiInstanceLeafHandler
 
         for (String value : valueSet) {
             try {
-                setterInParent = yangSchemaNode.getJavaAttributeName();
-                parentBuilderObject = parentYobWorkBench
+                String setterInParent = yangSchemaNode.getJavaAttributeName();
+                Object parentBuilderObject = parentYobWorkBench
                         .getParentBuilder(leafListYdtNode, schemaRegistry);
                 parentBuilderClass = parentBuilderObject.getClass();
-                leafName = parentBuilderClass.getDeclaredField(setterInParent);
-                setterInParent = getCapitalCase(setterInParent);
-                genericListType = (ParameterizedType) leafName.getGenericType();
+                Field leafName = parentBuilderClass
+                        .getDeclaredField(setterInParent);
+                ParameterizedType genericListType =
+                        (ParameterizedType) leafName.getGenericType();
                 Class<?> genericListClass =
                         (Class<?>) genericListType.getActualTypeArguments()[0];
-                parentSetterMethod = parentBuilderClass
-                        .getDeclaredMethod(ADD_TO + setterInParent,
-                                           genericListClass);
-                javaQualifiedType =
+                Method parentSetterMethod =
+                        parentBuilderClass.getDeclaredMethod(
+                                ADD_TO + getCapitalCase(setterInParent),
+                                genericListClass);
+                JavaQualifiedTypeInfoContainer javaQualifiedType =
                         (JavaQualifiedTypeInfoContainer) yangSchemaNode;
-                YangType<?> yangType = ((YangLeafList) javaQualifiedType)
-                        .getDataType();
+                YangType<?> yangType =
+                        ((YangLeafList) javaQualifiedType).getDataType();
                 setDataFromStringValue(yangType, value, parentSetterMethod,
                                        parentBuilderObject, leafListYdtNode);
             } catch (NoSuchMethodException | InvocationTargetException

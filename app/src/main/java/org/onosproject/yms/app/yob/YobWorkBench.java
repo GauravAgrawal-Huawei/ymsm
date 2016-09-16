@@ -35,12 +35,9 @@ import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.onosproject.yangutils.datamodel.YangSchemaNodeType
-        .YANG_AUGMENT_NODE;
-import static org.onosproject.yangutils.datamodel.YangSchemaNodeType
-        .YANG_CHOICE_NODE;
-import static org.onosproject.yangutils.utils.io.impl.YangIoUtils
-        .getCapitalCase;
+import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_AUGMENT_NODE;
+import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_CHOICE_NODE;
+import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
 import static org.onosproject.yms.app.ydt.AppType.YOB;
 import static org.onosproject.yms.app.yob.YobConstants.ADD_TO;
 import static org.onosproject.yms.app.yob.YobConstants.BUILD;
@@ -274,8 +271,6 @@ class YobWorkBench {
      */
     void buildObject(YdtExtendedContext ydtNode,
                      YdtExtendedContext ydtRootNode) {
-
-
         Object builderObject = builderOrBuiltObject.getBuilderObject();
         Class<?> defaultBuilderClass = builderOrBuiltObject.yangBuilderClass;
         Class<?> interfaceClass = builderOrBuiltObject.yangDefaultClass;
@@ -342,9 +337,6 @@ class YobWorkBench {
     private void invokeSetObjectInParent(YdtExtendedContext ydtNode) {
         Class<?> classType = null;
         Method method;
-        Field fieldName;
-        Class<?> parentBuilderClass;
-        ParameterizedType genericListType;
 
         Object objectToSetInParent = builderOrBuiltObject.getBuiltObject();
 
@@ -356,18 +348,19 @@ class YobWorkBench {
             Object parentBuilderObject = parentYobWorkBench
                     .builderOrBuiltObject.getBuilderObject();
 
-            parentBuilderClass = parentBuilderObject.getClass();
+            Class<?> parentBuilderClass = parentBuilderObject.getClass();
             String parentBuilderClassName = parentBuilderClass.getName();
 
             try {
-                fieldName = parentBuilderClass.getDeclaredField(setterInParent);
+                Field fieldName = parentBuilderClass
+                        .getDeclaredField(setterInParent);
                 if (fieldName != null) {
                     classType = fieldName.getType();
                 }
 
                 if (ydtNode.getYdtType() == MULTI_INSTANCE_NODE) {
                     if (fieldName != null) {
-                        genericListType =
+                        ParameterizedType genericListType =
                                 (ParameterizedType) fieldName.getGenericType();
                         classType = (Class<?>) genericListType
                                 .getActualTypeArguments()[0];
