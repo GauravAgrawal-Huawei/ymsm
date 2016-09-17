@@ -16,9 +16,10 @@
 
 package org.onosproject.yms.app.ydt;
 
-import java.io.IOException;
 import org.junit.Test;
 import org.onosproject.yms.ydt.YdtContext;
+
+import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -70,122 +71,150 @@ public class YdtDecimal64Test {
     */
     @Test
     public void positiveTest() throws IOException {
-        YangRequestWorkBench defaultYdtBuilder = YdtTestUtils.decimal64Ydt();
-        validateTree(defaultYdtBuilder);
+        YangRequestWorkBench ydtBuilder = YdtTestUtils.decimal64Ydt();
+        validateTree(ydtBuilder);
     }
 
-    private void validateTree(YangRequestWorkBench defaultYdtBuilder) {
+    private void validateTree(YangRequestWorkBench ydtBuilder) {
 
         // assign root node to ydtContext for validating purpose.
-        YdtContext ydtContext = defaultYdtBuilder.getRootNode();
+        YdtContext ydtContext = ydtBuilder.getRootNode();
         assertThat(true, is(ydtContext.getName().contentEquals("builtInType")));
 
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("decimal64")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("negInt")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("-92233720368547758.08")));
+        assertThat(true, is(ydtContext.getValue().contentEquals(
+                "-92233720368547758.08")));
         ydtContext = ydtContext.getNextSibling();
         assertThat(true, is(ydtContext.getName().contentEquals("posInt")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("92233720368547758.07")));
+        assertThat(true, is(ydtContext.getValue().contentEquals(
+                "92233720368547758.07")));
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("negIntWithMinFraction")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("-922337203685477580.8")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "negIntWithMinFraction")));
+        assertThat(true, is(ydtContext.getValue().contentEquals(
+                "-922337203685477580.8")));
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("posIntWithMinFraction")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("922337203685477580.7")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "posIntWithMinFraction")));
+        assertThat(true, is(ydtContext.getValue().contentEquals(
+                "922337203685477580.7")));
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("negIntWithMaxFraction")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("-9.223372036854775808")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "negIntWithMaxFraction")));
+        assertThat(true, is(ydtContext.getValue().contentEquals(
+                "-9.223372036854775808")));
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("posIntWithMaxFraction")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("9.223372036854775807")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "posIntWithMaxFraction")));
+        assertThat(true, is(ydtContext.getValue().contentEquals(
+                "9.223372036854775807")));
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("midIntWithRange")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "midIntWithRange")));
         assertThat(true, is(ydtContext.getValue().contentEquals("11")));
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("minIntWithRange")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "minIntWithRange")));
         assertThat(true, is(ydtContext.getValue().contentEquals("10")));
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("maxIntWithRange")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "maxIntWithRange")));
         assertThat(true, is(ydtContext.getValue().contentEquals("100")));
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("multiRangeValidation")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "multiRangeValidation")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("decimal")));
         assertThat(true, is(ydtContext.getValue().contentEquals("11")));
         ydtContext = ydtContext.getParent();
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("multiRangeValidation")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "multiRangeValidation")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("decimal")));
         assertThat(true, is(ydtContext.getValue().contentEquals("10")));
         ydtContext = ydtContext.getParent();
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("multiRangeValidation")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "multiRangeValidation")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("decimal")));
         assertThat(true, is(ydtContext.getValue().contentEquals("40")));
         ydtContext = ydtContext.getParent();
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("multiRangeValidation")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "multiRangeValidation")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("decimal")));
         assertThat(true, is(ydtContext.getValue().contentEquals("50")));
         ydtContext = ydtContext.getParent();
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("multiRangeValidation")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "multiRangeValidation")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("decimal")));
         assertThat(true, is(ydtContext.getValue().contentEquals("55")));
         ydtContext = ydtContext.getParent();
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("multiRangeValidation")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "multiRangeValidation")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("decimal")));
         assertThat(true, is(ydtContext.getValue().contentEquals("100")));
         ydtContext = ydtContext.getParent();
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("multiRangeValidation")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "multiRangeValidation")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("revDecimal")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("-92233720368547758.08")));
+        assertThat(true, is(ydtContext.getValue().contentEquals(
+                "-92233720368547758.08")));
         ydtContext = ydtContext.getParent();
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("multiRangeValidation")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "multiRangeValidation")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("revDecimal")));
         assertThat(true, is(ydtContext.getValue().contentEquals("2.505")));
         ydtContext = ydtContext.getParent();
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("multiRangeValidation")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "multiRangeValidation")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("revDecimal")));
         assertThat(true, is(ydtContext.getValue().contentEquals("3.14")));
         ydtContext = ydtContext.getParent();
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("multiRangeValidation")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "multiRangeValidation")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("revDecimal")));
         assertThat(true, is(ydtContext.getValue().contentEquals("10")));
         ydtContext = ydtContext.getParent();
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("multiRangeValidation")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "multiRangeValidation")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("revDecimal")));
         assertThat(true, is(ydtContext.getValue().contentEquals("20")));
         ydtContext = ydtContext.getParent();
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("multiRangeValidation")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "multiRangeValidation")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("revDecimal")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("92233720368547757")));
+        assertThat(true, is(ydtContext.getValue().contentEquals(
+                "92233720368547757")));
         ydtContext = ydtContext.getParent();
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("multiRangeValidation")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "multiRangeValidation")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("revDecimal")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("92233720368547758.07")));
+        assertThat(true, is(ydtContext.getValue().contentEquals(
+                "92233720368547758.07")));
     }
-
 }

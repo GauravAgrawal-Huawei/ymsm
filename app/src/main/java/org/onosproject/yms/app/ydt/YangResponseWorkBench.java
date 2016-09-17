@@ -23,39 +23,40 @@ import org.onosproject.yms.ydt.YmsOperationType;
 
 public class YangResponseWorkBench implements YdtResponse {
 
-    /**
+    /*
      * YDT root node context.
      */
     private YdtContext rootNode;
 
-    /**
+    /*
      * YMS operation execution status.
      */
-    private YmsOperationExecutionStatus ymsOperationExecutionStatus;
+    private YmsOperationExecutionStatus status;
 
-    /**
+    /*
      * YMS operation type.
      */
     private YmsOperationType ymsOperationType;
 
     /**
-     * Creates an instance of YangResponseWorkBench which is use to initialize rootNode and childNode.
+     * Creates an instance of YangResponseWorkBench which is use to
+     * initialize rootNode and childNode.
      *
-     * @param ydtContext                  root node context
-     * @param ymsOperationExecutionStatus YMS operation execution status
-     * @param ymsOperationType            YMS operation type
+     * @param ydtContext root node context
+     * @param exeStatus  YMS operation execution status
+     * @param opType     YMS operation type
      */
     public YangResponseWorkBench(YdtContext ydtContext,
-                                 YmsOperationExecutionStatus ymsOperationExecutionStatus,
-                                 YmsOperationType ymsOperationType) {
-        this.rootNode = ydtContext;
-        this.ymsOperationExecutionStatus = ymsOperationExecutionStatus;
-        this.ymsOperationType = ymsOperationType;
+                                 YmsOperationExecutionStatus exeStatus,
+                                 YmsOperationType opType) {
+        rootNode = ydtContext;
+        status = exeStatus;
+        ymsOperationType = opType;
     }
 
     @Override
     public YmsOperationExecutionStatus getYmsOperationResult() {
-        return ymsOperationExecutionStatus;
+        return status;
     }
 
     @Override
@@ -80,10 +81,10 @@ public class YangResponseWorkBench implements YdtResponse {
     /**
      * Sets YMS operation execution status.
      *
-     * @param ymsOperationExecutionStatus YMS operation execution status
+     * @param status YMS operation execution status
      */
-    public void setYmsOperationExecutionStatus(YmsOperationExecutionStatus ymsOperationExecutionStatus) {
-        this.ymsOperationExecutionStatus = ymsOperationExecutionStatus;
+    public void setStatus(YmsOperationExecutionStatus status) {
+        this.status = status;
     }
 
     /**

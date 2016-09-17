@@ -22,14 +22,13 @@ package org.onosproject.yms.app.ydt;
  */
 public enum AppType {
 
-    /**
+    /*
      * YANG tree builder application.
      */
     YTB,
 
-    /**
+    /*
      * YANG object builder application.
      */
     YOB
-
 }

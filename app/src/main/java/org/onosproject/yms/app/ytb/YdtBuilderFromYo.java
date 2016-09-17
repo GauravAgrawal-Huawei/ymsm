@@ -351,7 +351,7 @@ public class YdtBuilderFromYo {
                 }
 
                 curTraversal = SIBLING;
-                getYdtExtendedBuilder().traverseToParentExtended();
+                getYdtExtendedBuilder().traverseToParentWithoutValidation();
                 curSchemaNode = curSchemaNode.getNextSibling();
             } else {
                 if (curSchemaNode.getYangSchemaNodeType() ==
@@ -361,7 +361,7 @@ public class YdtBuilderFromYo {
                     continue;
                 }
                 curTraversal = PARENT;
-                getYdtExtendedBuilder().traverseToParentExtended();
+                getYdtExtendedBuilder().traverseToParentWithoutValidation();
                 curSchemaNode = curSchemaNode.getParent();
             }
         }
@@ -387,7 +387,7 @@ public class YdtBuilderFromYo {
         YtbNodeInfo nodeInfo = new YtbNodeInfo();
         nodeInfo.setYangObject(getRootObject());
         nodeInfo.setSchemaNodeType(YANG_SINGLE_INSTANCE_NODE);
-        currentYdtNode.setAppInfo(AppType.YTB, nodeInfo);
+        currentYdtNode.addAppInfo(AppType.YTB, nodeInfo);
 
         // If root node has leaf or leaf-list those will be processed.
         processLeafEntry((YangNode) getSchemaRoot());
@@ -405,7 +405,7 @@ public class YdtBuilderFromYo {
                 = (YdtExtendedContext) ydtExtendedBuilder.getCurNode();
         YtbNodeInfo appInfo =
                 (YtbNodeInfo) ydtExtendedContext.getAppInfo(AppType.YTB);
-        getYdtExtendedBuilder().traverseToParentExtended();
+        getYdtExtendedBuilder().traverseToParentWithoutValidation();
         return appInfo;
     }
 
@@ -467,7 +467,7 @@ public class YdtBuilderFromYo {
                 // Corresponding app info with the child object is set to that child node.
                 nodeInfo.setSchemaNodeType(YANG_SINGLE_INSTANCE_NODE);
                 nodeInfo.setYangObject(childObject);
-                currentYdtNode.setAppInfo(AppType.YTB, nodeInfo);
+                currentYdtNode.addAppInfo(AppType.YTB, nodeInfo);
 
                 nodeObject = childObject;
             }
@@ -536,7 +536,7 @@ public class YdtBuilderFromYo {
                 // That node's YTB node info is filled with the object and is been set.
                 nodeInfo.setSchemaNodeType(YANG_MULTI_INSTANCE_NODE);
                 nodeInfo.setYangObject(childObject);
-                currentYdtNode.setAppInfo(AppType.YTB, nodeInfo);
+                currentYdtNode.addAppInfo(AppType.YTB, nodeInfo);
 
                 nodeObject = childObject;
             }
@@ -614,7 +614,7 @@ public class YdtBuilderFromYo {
                     }
                     // Only when child is added traverse back to parent.
                     if (leafTypeObject) {
-                        ydtExtendedBuilder.traverseToParentExtended();
+                        ydtExtendedBuilder.traverseToParentWithoutValidation();
                     }
                 }
             }
@@ -669,7 +669,7 @@ public class YdtBuilderFromYo {
                             }
                             ydtExtendedBuilder
                                     .addLeaf(leafListValue, yangLeafList);
-                            ydtExtendedBuilder.traverseToParentExtended();
+                            ydtExtendedBuilder.traverseToParentWithoutValidation();
                         }
                     } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException |
                             NoSuchFieldException e) {

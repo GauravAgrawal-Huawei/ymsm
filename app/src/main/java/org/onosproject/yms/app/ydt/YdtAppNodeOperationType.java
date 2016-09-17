@@ -40,7 +40,6 @@ public enum YdtAppNodeOperationType {
      * The application containing this attribute has edit operation
      * type of combination of any edit operation type in its complete ydtTree.
      */
-    BOTH,
-
+    BOTH
 }
 

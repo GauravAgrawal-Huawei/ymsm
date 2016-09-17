@@ -44,28 +44,29 @@ public interface YdtExtendedContext extends YdtContext {
      * @param appType application type
      * @param object  application information object
      */
-    void setAppInfo(AppType appType, Object object);
+    void addAppInfo(AppType appType, Object object);
 
     /**
-     * Returns child schema node context information. It is used by YMS to obtain the child
-     * schema corresponding to data node identifier.
+     * Returns child schema node context information. It is used by YMS to
+     * obtain the child schema corresponding to data node identifier.
      *
-     * @param nodeIdentifier represents a identifier of YANG data tree node.
-     * @return YANG data node context information.
+     * @param id represents a identifier of YANG data tree node
+     * @return YANG data node context information
      */
-    YangSchemaNodeContextInfo getSchemaNodeContextInfo(YangSchemaNodeIdentifier nodeIdentifier);
+    YangSchemaNodeContextInfo getSchemaNodeContextInfo(
+            YangSchemaNodeIdentifier id);
 
     /**
-     * Get schema node from data model for curNode.
+     * Returns schema node from data model for curNode.
      *
-     * @return yang schema node.
+     * @return yang schema node
      */
     YangSchemaNode getYangSchemaNode();
 
     /**
      * Returns YDT current extended context operation type.
      *
-     * @return operation type.
+     * @return operation type
      */
     YdtContextOperationType getYdtContextOperationType();
 }

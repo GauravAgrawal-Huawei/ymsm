@@ -17,16 +17,17 @@
 package org.onosproject.yms.app.ydt;
 
 import org.onosproject.yangutils.datamodel.YangSchemaNodeIdentifier;
-import org.onosproject.yms.app.ydt.exceptions.YdtExceptions;
-import org.onosproject.yms.ydt.YdtType;
+import org.onosproject.yms.app.ydt.exceptions.YdtException;
+
+import static org.onosproject.yms.ydt.YdtType.SINGLE_INSTANCE_LEAF_VALUE_NODE;
 
 /**
- * Represents YDT single instance leaf node which is an atomic element and doesn't
- * have any child.
+ * Represents YDT single instance leaf node which is an atomic element
+ * and doesn't have any child.
  */
 class YdtSingleInstanceLeafNode extends YdtNode {
 
-    /**
+    /*
      * Value of the leaf.
      */
     private String value;
@@ -34,10 +35,10 @@ class YdtSingleInstanceLeafNode extends YdtNode {
     /**
      * Creates a YANG single instance leaf node.
      *
-     * @param nodeIdentifier node identifier of YANG data tree single instance leaf node .
+     * @param id node identifier of YDT single instance leaf node
      */
-    public YdtSingleInstanceLeafNode(YangSchemaNodeIdentifier nodeIdentifier) {
-        super(YdtType.SINGLE_INSTANCE_LEAF_VALUE_NODE, nodeIdentifier);
+    protected YdtSingleInstanceLeafNode(YangSchemaNodeIdentifier id) {
+        super(SINGLE_INSTANCE_LEAF_VALUE_NODE, id);
     }
 
     @Override
@@ -49,11 +50,11 @@ class YdtSingleInstanceLeafNode extends YdtNode {
     public void addValue(String value) {
         // check the value against corresponding data-type.
         try {
-            this.getYangSchemaNode().isValueValid(value);
+            getYangSchemaNode().isValueValid(value);
         } catch (Exception e) {
             // Free resources
             freeRestResources();
-            throw new YdtExceptions(e.getMessage());
+            throw new YdtException(e.getLocalizedMessage());
         }
 
         // After validation is successful then add value to node.
@@ -70,7 +71,7 @@ class YdtSingleInstanceLeafNode extends YdtNode {
     public void isDuplicateEntriesValid() {
         // Free resources
         freeRestResources();
-        String errorInfo = "Duplicate entry with name " + this.getYdtNodeIdentifier().getName() + ".";
-        throw new YdtExceptions(errorInfo);
+        throw new YdtException("Duplicate entry with name " +
+                                        getYdtNodeIdentifier().getName() + ".");
     }
 }

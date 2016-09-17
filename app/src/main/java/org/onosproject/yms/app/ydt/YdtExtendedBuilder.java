@@ -16,10 +16,11 @@
 
 package org.onosproject.yms.app.ydt;
 
-import java.util.Set;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yms.ydt.YdtBuilder;
 import org.onosproject.yms.ydt.YdtContextOperationType;
+
+import java.util.Set;
 
 /**
  * Abstraction of an entity which represents extension of YDT builder
@@ -46,7 +47,8 @@ public interface YdtExtendedBuilder extends YdtBuilder {
      * @param yangSchemaNode schema node from YANG metadata
      * @return YDT context
      */
-    YdtExtendedContext addLeaf(Set<String> valueSet, YangSchemaNode yangSchemaNode);
+    YdtExtendedContext addLeaf(Set<String> valueSet,
+                               YangSchemaNode yangSchemaNode);
 
     /**
      * Adds a last leaf to YANG data tree, this method is to be used by
@@ -60,10 +62,10 @@ public interface YdtExtendedBuilder extends YdtBuilder {
 
     /**
      * Traverses up in YANG data tree to the parent node, it is to be used when
-     * protocol is using extended context type "current" and wanted to traverse up the
-     * tree.
+     * protocol is using extended context type and wanted to traverse
+     * up the tree without doing any validation.
      */
-    void traverseToParentExtended();
+    void traverseToParentWithoutValidation();
 
     @Override
     YdtExtendedContext getRootNode();

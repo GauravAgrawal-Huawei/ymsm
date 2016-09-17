@@ -27,20 +27,24 @@ import static org.hamcrest.core.Is.is;
 
 
 /**
- * Represent Yang schema registry. Yang schema registry provides interface to an application to register its YANG
+ * Represent Yang schema registry. Yang schema registry provides
+ * interface to an application to register its YANG
  * schema with YMS. It provides YANG schema nodes to YDT, YNB and YSB.
  */
 public class YangSchemaRegistryTest implements YangSchemaRegistry {
 
 
     @Override
-    public void registerApplication(Object managerObject, Class<?> serviceClass,
-                                    YangNotificationExtendedService notificationExtendedService) {
+    public void registerApplication(
+            Object managerObject,
+            Class<?> serviceClass,
+            YangNotificationExtendedService notificationExtendedService) {
 
     }
 
     @Override
-    public void unRegisterApplication(Object managerObject, Class<?> serviceClass) {
+    public void unRegisterApplication(Object managerObject,
+                                      Class<?> serviceClass) {
 
     }
 
@@ -58,38 +62,43 @@ public class YangSchemaRegistryTest implements YangSchemaRegistry {
     public YangSchemaNode getYangSchemaNodeUsingSchemaName(String appName) {
 
         final String target = "target/TestYangSchemaNodeProvider";
-        TestYangSchemaNodeProvider testYangSchemaNodeProvider = new TestYangSchemaNodeProvider();
+        TestYangSchemaNodeProvider testYangSchemaNodeProvider =
+                new TestYangSchemaNodeProvider();
 
         String searchDir = "src/test/resources/ydtTestYangFiles/";
 
         testYangSchemaNodeProvider.processSchemaRegistry(null);
 
-        DefaultYangSchemaRegistry registry = testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
-        YangSchemaNode yangNode = registry.getYangSchemaNodeUsingSchemaName(appName);
+        DefaultYangSchemaRegistry registry = testYangSchemaNodeProvider
+                .getDefaultYangSchemaRegistry();
+        YangSchemaNode yangNode = registry
+                .getYangSchemaNodeUsingSchemaName(appName);
         assertThat(true, is(appName.equals(yangNode.getName())));
-        testYangSchemaNodeProvider.unregisterAllService();
-
         return yangNode;
     }
 
     @Override
-    public YangSchemaNode getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName(String rootInterfaceFileName) {
+    public YangSchemaNode
+    getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName(
+            String rootInterfaceFileName) {
         return null;
     }
 
     @Override
-    public YangSchemaNode getYangSchemaNodeUsingGeneratedRootNodeOpPramFileName(String rootOpParamFileName) {
+    public YangSchemaNode getYangSchemaNodeUsingGeneratedRootNodeOpPramFileName(
+            String rootOpParamFileName) {
         return null;
     }
 
     @Override
-    public YangSchemaNode getRootYangSchemaNodeForNotification(String eventSubject) {
+    public YangSchemaNode getRootYangSchemaNodeForNotification(
+            String eventSubject) {
         return null;
     }
 
     @Override
-    public Class<?> getRegisteredClass(YangSchemaNode schemaNode, String appName) {
+    public Class<?> getRegisteredClass(YangSchemaNode schemaNode,
+                                       String appName) {
         return null;
     }
-
 }

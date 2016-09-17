@@ -84,7 +84,7 @@ public abstract class YobHandler {
         Object builderObject = new YobWorkBench(yangSchemaNode, classLoader,
                                          qualifiedClassName, setterMethodName);
 
-        curYdtNode.setAppInfo(YOB, builderObject);
+        curYdtNode.addAppInfo(YOB, builderObject);
     }
 
     /**

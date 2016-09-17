@@ -16,9 +16,10 @@
 
 package org.onosproject.yms.app.ydt;
 
-import java.io.IOException;
 import org.junit.Test;
 import org.onosproject.yms.ydt.YdtContext;
+
+import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -32,14 +33,14 @@ public class YdtEmptyTest {
     */
     @Test
     public void positiveTest() throws IOException {
-        YangRequestWorkBench defaultYdtBuilder = YdtTestUtils.emptyTypeYdt();
-        validateTree(defaultYdtBuilder);
+        YangRequestWorkBench ydtBuilder = YdtTestUtils.emptyTypeYdt();
+        validateTree(ydtBuilder);
     }
 
-    private void validateTree(YangRequestWorkBench defaultYdtBuilder) {
+    private void validateTree(YangRequestWorkBench ydtBuilder) {
 
         // assign root node to ydtContext for validating purpose.
-        YdtContext ydtContext = defaultYdtBuilder.getRootNode();
+        YdtContext ydtContext = ydtBuilder.getRootNode();
         assertThat(true, is(ydtContext.getName().contentEquals("builtInType")));
 
         ydtContext = ydtContext.getFirstChild();
@@ -49,7 +50,6 @@ public class YdtEmptyTest {
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("empty")));
         assertThat(true, is(ydtContext.getValue().contentEquals("")));
-
     }
 
     /*
@@ -61,38 +61,41 @@ public class YdtEmptyTest {
     */
     @Test
     public void negativeTest() throws IOException {
-        String appName = "org.onosproject.yang.gen.v1.ydt.emptydata.rev20160524.EmptydataService";
-        YangRequestWorkBench defaultYdtBuilder = YdtTestUtils.getDefaultYdtBuilder("builtInType", "emptydata",
-                "ydt.emptydata", appName);
-        defaultYdtBuilder.addChild("emptyList", null);
+        String appName = "org.onosproject.yang.gen.v1.ydt.emptydata" +
+                ".rev20160524.EmptydataService";
+        YangRequestWorkBench ydtBuilder = YdtTestUtils
+                .getydtBuilder("builtInType", "emptydata",
+                                      "ydt.emptydata", appName);
+        ydtBuilder.addChild("emptyList", null);
 
         try {
-            defaultYdtBuilder.addLeaf("empty", null, " ");
-        } catch (final Exception e) {
-            assertThat(true, is(e.getMessage().contains("YANG file error : Input value \"" + " " + "\" is not " +
-                    "allowed for a data type EMPTY")));
+            ydtBuilder.addLeaf("empty", null, " ");
+        } catch (Exception e) {
+            assertThat(true, is(e.getMessage().contains(
+                    "YANG file error : Input value \"" + " " + "\" is not " +
+                            "allowed for a data type EMPTY")));
         }
 
-        defaultYdtBuilder = YdtTestUtils.getDefaultYdtBuilder("builtInType", "emptydata",
-                "ydt.emptydata", appName);
-        defaultYdtBuilder.addChild("emptyList", null);
+        ydtBuilder = YdtTestUtils.getydtBuilder(
+                "builtInType", "emptydata", "ydt.emptydata", appName);
+        ydtBuilder.addChild("emptyList", null);
         try {
-            defaultYdtBuilder.addLeaf("empty", null, "    ");
-        } catch (final Exception e) {
-            assertThat(true, is(e.getMessage().contains("YANG file error : Input value \"" + "    " + "\" is not " +
-                    "allowed for a data type EMPTY")));
+            ydtBuilder.addLeaf("empty", null, "    ");
+        } catch (Exception e) {
+            assertThat(true, is(e.getMessage().contains(
+                    "YANG file error : Input value \"" + "    " + "\" is not " +
+                            "allowed for a data type EMPTY")));
         }
 
-        defaultYdtBuilder = YdtTestUtils.getDefaultYdtBuilder("builtInType", "emptydata",
-                "ydt.emptydata", appName);
-        defaultYdtBuilder.addChild("emptyList", null);
+        ydtBuilder = YdtTestUtils.getydtBuilder(
+                "builtInType", "emptydata", "ydt.emptydata", appName);
+        ydtBuilder.addChild("emptyList", null);
         try {
-            defaultYdtBuilder.addLeaf("empty", null, "" + "" + " ");
-        } catch (final Exception e) {
-            assertThat(true, is(e.getMessage().contains("YANG file error : Input value \"" + " " + "\" is not " +
-                    "allowed for a data type EMPTY")));
+            ydtBuilder.addLeaf("empty", null, "" + "" + " ");
+        } catch (Exception e) {
+            assertThat(true, is(e.getMessage().contains(
+                    "YANG file error : Input value \"" + " " + "\" is not " +
+                            "allowed for a data type EMPTY")));
         }
-
     }
-
 }

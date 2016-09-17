@@ -16,13 +16,14 @@
 
 package org.onosproject.yms.app.ydt;
 
+import org.junit.Test;
+import org.onosproject.yms.ydt.YdtContext;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.junit.Test;
-import org.onosproject.yms.ydt.YdtContext;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -38,13 +39,14 @@ public class LogisticsManagerTest {
 
     @Test
     public void logisticsManagerTest() throws IOException {
-        YangRequestWorkBench defaultYdtBuilder = YdtTestUtils.logisticsManagerYdt();
-        validateTree(defaultYdtBuilder);
+        YangRequestWorkBench ydtBuilder = YdtTestUtils
+                .logisticsManagerYdt();
+        validateTree(ydtBuilder);
         // walker test
-        walkINTree(defaultYdtBuilder);
+        walkINTree(ydtBuilder);
     }
 
-    private void walkINTree(YangRequestWorkBench defaultYdtBuilder) {
+    private void walkINTree(YangRequestWorkBench ydtBuilder) {
         DefaultYdtWalker ydtWalker = new DefaultYdtWalker();
         YdtTestUtils ydtListenerService = new YdtTestUtils();
 
@@ -52,59 +54,102 @@ public class LogisticsManagerTest {
         YdtTestUtils.resetLogger();
 
         // Assign root node to YdtContext to walk the tree.
-        ydtWalker.walk(ydtListenerService, defaultYdtBuilder.getRootNode());
+        ydtWalker.walk(ydtListenerService, ydtBuilder.getRootNode());
         // Logger list is used for walker testing.
         List<String> logger = YdtTestUtils.getLogger();
 
-        assertThat(true, is(logger.get(0).contentEquals("Entry Node is logisticsmanager.")));
-        assertThat(true, is(logger.get(1).contentEquals("Entry Node is customssupervisor.")));
-        assertThat(true, is(logger.get(2).contentEquals("Entry Node is supervisor.")));
-        assertThat(true, is(logger.get(3).contentEquals("Exit Node is supervisor.")));
-        assertThat(true, is(logger.get(4).contentEquals("Exit Node is customssupervisor.")));
-        assertThat(true, is(logger.get(5).contentEquals("Entry Node is merchandisersupervisor.")));
-        assertThat(true, is(logger.get(6).contentEquals("Entry Node is supervisor.")));
-        assertThat(true, is(logger.get(7).contentEquals("Exit Node is supervisor.")));
-        assertThat(true, is(logger.get(8).contentEquals("Exit Node is merchandisersupervisor.")));
-        assertThat(true, is(logger.get(9).contentEquals("Entry Node is materialsupervisor.")));
-        assertThat(true, is(logger.get(10).contentEquals("Entry Node is supervisor.")));
-        assertThat(true, is(logger.get(11).contentEquals("Entry Node is name.")));
-        assertThat(true, is(logger.get(12).contentEquals("Exit Node is name.")));
-        assertThat(true, is(logger.get(13).contentEquals("Entry Node is departmentId.")));
-        assertThat(true, is(logger.get(14).contentEquals("Exit Node is departmentId.")));
-        assertThat(true, is(logger.get(15).contentEquals("Exit Node is supervisor.")));
-        assertThat(true, is(logger.get(16).contentEquals("Entry Node is supervisor.")));
-        assertThat(true, is(logger.get(17).contentEquals("Entry Node is name.")));
-        assertThat(true, is(logger.get(18).contentEquals("Exit Node is name.")));
-        assertThat(true, is(logger.get(19).contentEquals("Entry Node is departmentId.")));
-        assertThat(true, is(logger.get(20).contentEquals("Exit Node is departmentId.")));
-        assertThat(true, is(logger.get(21).contentEquals("Exit Node is supervisor.")));
-        assertThat(true, is(logger.get(22).contentEquals("Exit Node is materialsupervisor.")));
-        assertThat(true, is(logger.get(23).contentEquals("Entry Node is purchasingsupervisor.")));
-        assertThat(true, is(logger.get(24).contentEquals("Entry Node is supervisor.")));
-        assertThat(true, is(logger.get(25).contentEquals("Entry Node is purchasing-specialist.")));
-        assertThat(true, is(logger.get(26).contentEquals("Exit Node is purchasing-specialist.")));
-        assertThat(true, is(logger.get(27).contentEquals("Entry Node is support.")));
-        assertThat(true, is(logger.get(28).contentEquals("Exit Node is support.")));
-        assertThat(true, is(logger.get(29).contentEquals("Exit Node is supervisor.")));
-        assertThat(true, is(logger.get(30).contentEquals("Exit Node is purchasingsupervisor.")));
-        assertThat(true, is(logger.get(31).contentEquals("Entry Node is warehousesupervisor.")));
-        assertThat(true, is(logger.get(32).contentEquals("Entry Node is supervisor.")));
-        assertThat(true, is(logger.get(33).contentEquals("Exit Node is supervisor.")));
-        assertThat(true, is(logger.get(34).contentEquals("Exit Node is warehousesupervisor.")));
-        assertThat(true, is(logger.get(35).contentEquals("Entry Node is tradingsupervisor.")));
-        assertThat(true, is(logger.get(36).contentEquals("Entry Node is supervisor.")));
-        assertThat(true, is(logger.get(37).contentEquals("Exit Node is supervisor.")));
-        assertThat(true, is(logger.get(38).contentEquals("Exit Node is tradingsupervisor.")));
-        assertThat(true, is(logger.get(39).contentEquals("Entry Node is employeeid.")));
-        assertThat(true, is(logger.get(40).contentEquals("Entry Node is employeeid.")));
-        assertThat(true, is(logger.get(41).contentEquals("Exit Node is employeeid.")));
-        assertThat(true, is(logger.get(42).contentEquals("Exit Node is employeeid.")));
-        assertThat(true, is(logger.get(43).contentEquals("Exit Node is logisticsmanager.")));
-
+        assertThat(true, is(logger.get(0).contentEquals(
+                "Entry Node is logisticsmanager.")));
+        assertThat(true, is(logger.get(1).contentEquals(
+                "Entry Node is customssupervisor.")));
+        assertThat(true, is(logger.get(2).contentEquals(
+                "Entry Node is supervisor.")));
+        assertThat(true, is(logger.get(3).contentEquals(
+                "Exit Node is supervisor.")));
+        assertThat(true, is(logger.get(4).contentEquals(
+                "Exit Node is customssupervisor.")));
+        assertThat(true, is(logger.get(5).contentEquals(
+                "Entry Node is merchandisersupervisor.")));
+        assertThat(true, is(logger.get(6).contentEquals(
+                "Entry Node is supervisor.")));
+        assertThat(true, is(logger.get(7).contentEquals(
+                "Exit Node is supervisor.")));
+        assertThat(true, is(logger.get(8).contentEquals(
+                "Exit Node is merchandisersupervisor.")));
+        assertThat(true, is(logger.get(9).contentEquals(
+                "Entry Node is materialsupervisor.")));
+        assertThat(true, is(logger.get(10).contentEquals(
+                "Entry Node is supervisor.")));
+        assertThat(true, is(logger.get(11).contentEquals(
+                "Entry Node is name.")));
+        assertThat(true, is(logger.get(12).contentEquals(
+                "Exit Node is name.")));
+        assertThat(true, is(logger.get(13).contentEquals(
+                "Entry Node is departmentId.")));
+        assertThat(true, is(logger.get(14).contentEquals(
+                "Exit Node is departmentId.")));
+        assertThat(true, is(logger.get(15).contentEquals(
+                "Exit Node is supervisor.")));
+        assertThat(true, is(logger.get(16).contentEquals(
+                "Entry Node is supervisor.")));
+        assertThat(true, is(logger.get(17).contentEquals(
+                "Entry Node is name.")));
+        assertThat(true, is(logger.get(18).contentEquals(
+                "Exit Node is name.")));
+        assertThat(true, is(logger.get(19).contentEquals(
+                "Entry Node is departmentId.")));
+        assertThat(true, is(logger.get(20).contentEquals(
+                "Exit Node is departmentId.")));
+        assertThat(true, is(logger.get(21).contentEquals(
+                "Exit Node is supervisor.")));
+        assertThat(true, is(logger.get(22).contentEquals(
+                "Exit Node is materialsupervisor.")));
+        assertThat(true, is(logger.get(23).contentEquals(
+                "Entry Node is purchasingsupervisor.")));
+        assertThat(true, is(logger.get(24).contentEquals(
+                "Entry Node is supervisor.")));
+        assertThat(true, is(logger.get(25).contentEquals(
+                "Entry Node is purchasing-specialist.")));
+        assertThat(true, is(logger.get(26).contentEquals(
+                "Exit Node is purchasing-specialist.")));
+        assertThat(true, is(logger.get(27).contentEquals(
+                "Entry Node is support.")));
+        assertThat(true, is(logger.get(28).contentEquals(
+                "Exit Node is support.")));
+        assertThat(true, is(logger.get(29).contentEquals(
+                "Exit Node is supervisor.")));
+        assertThat(true, is(logger.get(30).contentEquals(
+                "Exit Node is purchasingsupervisor.")));
+        assertThat(true, is(logger.get(31).contentEquals(
+                "Entry Node is warehousesupervisor.")));
+        assertThat(true, is(logger.get(32).contentEquals(
+                "Entry Node is supervisor.")));
+        assertThat(true, is(logger.get(33).contentEquals(
+                "Exit Node is supervisor.")));
+        assertThat(true, is(logger.get(34).contentEquals(
+                "Exit Node is warehousesupervisor.")));
+        assertThat(true, is(logger.get(35).contentEquals(
+                "Entry Node is tradingsupervisor.")));
+        assertThat(true, is(logger.get(36).contentEquals(
+                "Entry Node is supervisor.")));
+        assertThat(true, is(logger.get(37).contentEquals(
+                "Exit Node is supervisor.")));
+        assertThat(true, is(logger.get(38).contentEquals(
+                "Exit Node is tradingsupervisor.")));
+        assertThat(true, is(logger.get(39).contentEquals(
+                "Entry Node is employeeid.")));
+        assertThat(true, is(logger.get(40).contentEquals(
+                "Entry Node is employeeid.")));
+        assertThat(true, is(logger.get(41).contentEquals(
+                "Exit Node is employeeid.")));
+        assertThat(true, is(logger.get(42).contentEquals(
+                "Exit Node is employeeid.")));
+        assertThat(true, is(logger.get(43).contentEquals(
+                "Exit Node is logisticsmanager.")));
     }
 
 
-    private void validateTree(YangRequestWorkBench defaultYdtBuilder) {
+    private void validateTree(YangRequestWorkBench ydtBuilder) {
 
         valueSet.add("1");
         valueSet.add("2");
@@ -112,19 +157,13 @@ public class LogisticsManagerTest {
         valueSet.add("4");
         valueSet.add("5");
         // assign root node to ydtContext for validating purpose.
-        YdtContext ydtContext = defaultYdtBuilder.getRootNode();
-        assertThat(true, is(ydtContext.getName().contentEquals("logisticsmanager")));
+        YdtContext ydtContext = ydtBuilder.getRootNode();
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "logisticsmanager")));
 
         ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("customssupervisor")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("supervisor")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("abc")));
-
-        ydtContext = ydtContext.getParent();
-
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("merchandisersupervisor")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "customssupervisor")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("supervisor")));
         assertThat(true, is(ydtContext.getValue().contentEquals("abc")));
@@ -132,7 +171,17 @@ public class LogisticsManagerTest {
         ydtContext = ydtContext.getParent();
 
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("materialsupervisor")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "merchandisersupervisor")));
+        ydtContext = ydtContext.getFirstChild();
+        assertThat(true, is(ydtContext.getName().contentEquals("supervisor")));
+        assertThat(true, is(ydtContext.getValue().contentEquals("abc")));
+
+        ydtContext = ydtContext.getParent();
+
+        ydtContext = ydtContext.getNextSibling();
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "materialsupervisor")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("supervisor")));
 
@@ -140,7 +189,8 @@ public class LogisticsManagerTest {
         assertThat(true, is(ydtContext.getName().contentEquals("name")));
         assertThat(true, is(ydtContext.getValue().contentEquals("abc")));
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("departmentId")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "departmentId")));
         assertThat(true, is(ydtContext.getValue().contentEquals("xyz")));
 
         ydtContext = ydtContext.getParent();
@@ -152,17 +202,20 @@ public class LogisticsManagerTest {
         assertThat(true, is(ydtContext.getName().contentEquals("name")));
         assertThat(true, is(ydtContext.getValue().contentEquals("ab")));
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("departmentId")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "departmentId")));
         assertThat(true, is(ydtContext.getValue().contentEquals("xy")));
 
         ydtContext = ydtContext.getParent().getParent();
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("purchasingsupervisor")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "purchasingsupervisor")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("supervisor")));
 
         ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("purchasing-specialist")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "purchasing-specialist")));
         assertThat(true, is(ydtContext.getValue().contentEquals("abc")));
         ydtContext = ydtContext.getNextSibling();
         assertThat(true, is(ydtContext.getName().contentEquals("support")));
@@ -171,7 +224,8 @@ public class LogisticsManagerTest {
         ydtContext = ydtContext.getParent().getParent();
 
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("warehousesupervisor")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "warehousesupervisor")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("supervisor")));
         compareValueSet(ydtContext.getValueSet(), valueSet);
@@ -179,7 +233,8 @@ public class LogisticsManagerTest {
         ydtContext = ydtContext.getParent();
 
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("tradingsupervisor")));
+        assertThat(true, is(ydtContext.getName().contentEquals(
+                "tradingsupervisor")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("supervisor")));
         assertThat(true, is(ydtContext.getValue().contentEquals("abc")));

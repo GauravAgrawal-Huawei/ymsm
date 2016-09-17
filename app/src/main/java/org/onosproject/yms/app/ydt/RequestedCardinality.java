@@ -21,27 +21,27 @@ package org.onosproject.yms.app.ydt;
  */
 public enum RequestedCardinality {
 
-    /**
+    /*
      * Single instance of requested node.
      */
     SINGLE_INSTANCE,
 
-    /**
+    /*
      * Multi instance of requested node.
      */
     MULTI_INSTANCE,
 
-    /**
+    /*
      * Instance of requested node/leaf is unknown.
      */
     UNKNOWN,
 
-    /**
+    /*
      * Single instance of requested leaf.
      */
     SINGLE_INSTANCE_LEAF,
 
-    /**
+    /*
      * Multi instance of requested leaf.
      */
     MULTI_INSTANCE_LEAF

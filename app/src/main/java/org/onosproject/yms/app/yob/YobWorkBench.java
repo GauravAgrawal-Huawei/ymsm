@@ -383,6 +383,6 @@ class YobWorkBench {
                 log.error(FAIL_TO_INVOKE_METHOD + parentBuilderClassName);
             }
         }
-        ydtNode.setAppInfo(YOB, this);
+        ydtNode.addAppInfo(YOB, this);
     }
 }

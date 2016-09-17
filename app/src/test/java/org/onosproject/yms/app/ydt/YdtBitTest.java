@@ -16,9 +16,10 @@
 
 package org.onosproject.yms.app.ydt;
 
-import java.io.IOException;
 import org.junit.Test;
 import org.onosproject.yms.ydt.YdtContext;
+
+import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -35,14 +36,14 @@ public class YdtBitTest {
     */
     @Test
     public void positiveTest() throws IOException {
-        YangRequestWorkBench defaultYdtBuilder = YdtTestUtils.bitYdt();
-        validateTree(defaultYdtBuilder);
+        YangRequestWorkBench ydtBuilder = YdtTestUtils.bitYdt();
+        validateTree(ydtBuilder);
     }
 
-    private void validateTree(YangRequestWorkBench defaultYdtBuilder) {
+    private void validateTree(YangRequestWorkBench ydtBuilder) {
 
         // assign root node to ydtContext for validating purpose.
-        YdtContext ydtContext = defaultYdtBuilder.getRootNode();
+        YdtContext ydtContext = ydtBuilder.getRootNode();
         assertThat(true, is(ydtContext.getName().contentEquals("builtInType")));
 
         ydtContext = ydtContext.getFirstChild();
@@ -51,25 +52,29 @@ public class YdtBitTest {
         assertThat(true, is(ydtContext.getName().contentEquals("bitList")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("bit")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("disable-nagle")));
+        assertThat(true, is(ydtContext.getValue().contentEquals(
+                "disable-nagle")));
         ydtContext = ydtContext.getParent();
         ydtContext = ydtContext.getNextSibling();
         assertThat(true, is(ydtContext.getName().contentEquals("bitList")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("bit")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("auto-sense-speed")));
+        assertThat(true, is(ydtContext.getValue().contentEquals(
+                "auto-sense-speed")));
         ydtContext = ydtContext.getParent();
         ydtContext = ydtContext.getNextSibling();
         assertThat(true, is(ydtContext.getName().contentEquals("bitList")));
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("bit")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("ten-Mb-only")));
+        assertThat(true, is(ydtContext.getValue().contentEquals(
+                "ten-Mb-only")));
 //        ydtContext = ydtContext.getParent();
 //        ydtContext = ydtContext.getNextSibling();
 //        assertThat(true, is(ydtContext.getName().contentEquals("bitList")));
 //        ydtContext = ydtContext.getFirstChild();
 //        assertThat(true, is(ydtContext.getName().contentEquals("bit")));
-//        assertThat(true, is(ydtContext.getValue().contentEquals("auto-sense-speed")));
+//        assertThat(true, is(ydtContext.getValue()
+// .contentEquals("auto-sense-speed")));
     }
 
     /*
@@ -81,48 +86,55 @@ public class YdtBitTest {
     */
     @Test
     public void negativeTest() throws IOException {
-        String appName = "org.onosproject.yang.gen.v1.ydt.binarytest.rev20160524.BinarytestService";
-        YangRequestWorkBench defaultYdtBuilder = YdtTestUtils.getDefaultYdtBuilder("builtInType", "bit",
-                "ydt.bit", appName);
-        defaultYdtBuilder.addChild("bitList", null);
+        String appName = "org.onosproject.yang.gen.v1.ydt.binarytest" +
+                ".rev20160524.BinarytestService";
+        YangRequestWorkBench ydtBuilder =
+                YdtTestUtils.getydtBuilder("builtInType", "bit",
+                                           "ydt.bit", appName);
+        ydtBuilder.addChild("bitList", null);
 
         try {
-            defaultYdtBuilder.addLeaf("bit", null, "0");
-        } catch (final Exception e) {
-            assertThat(true, is(e.getMessage().contains("YANG file error : Input value \"" + "0" + "\" is not a valid" +
-                    " BITS")));
+            ydtBuilder.addLeaf("bit", null, "0");
+        } catch (Exception e) {
+            assertThat(true, is(e.getMessage().contains(
+                    "YANG file error : Input value \"" + "0" + "\" is not " +
+                            "a valid BITS")));
         }
 
-        defaultYdtBuilder = YdtTestUtils.getDefaultYdtBuilder("builtInType", "bit",
-                "ydt.bit", appName);
-        defaultYdtBuilder.addChild("bitList", null);
+        ydtBuilder = YdtTestUtils.getydtBuilder(
+                "builtInType", "bit", "ydt.bit", appName);
+        ydtBuilder.addChild("bitList", null);
 
         try {
-            defaultYdtBuilder.addLeaf("bit", null, "default");
-        } catch (final Exception e) {
-            assertThat(true, is(e.getMessage().contains("YANG file error : Input value \"" + "default" + "\" " +
-                    "is not a " + "valid BITS")));
+            ydtBuilder.addLeaf("bit", null, "default");
+        } catch (Exception e) {
+            assertThat(true, is(e.getMessage().contains(
+                    "YANG file error : Input value \"" + "default" + "\" " +
+                            "is not a " + "valid BITS")));
         }
 
-        defaultYdtBuilder = YdtTestUtils.getDefaultYdtBuilder("builtInType", "bit", "ydt.bit", appName);
-        defaultYdtBuilder.addChild("bitList", null);
+        ydtBuilder = YdtTestUtils.getydtBuilder(
+                "builtInType", "bit", "ydt.bit", appName);
+        ydtBuilder.addChild("bitList", null);
 
         try {
-            defaultYdtBuilder.addLeaf("bit", null, "1");
-        } catch (final Exception e) {
-            assertThat(true, is(e.getMessage().contains("YANG file error : Input value \"" + "1" + "\" is not a " +
-                    "valid BITS")));
+            ydtBuilder.addLeaf("bit", null, "1");
+        } catch (Exception e) {
+            assertThat(true, is(e.getMessage().contains(
+                    "YANG file error : Input value \"" + "1" + "\" is not a " +
+                            "valid BITS")));
         }
 
-        defaultYdtBuilder = YdtTestUtils.getDefaultYdtBuilder("builtInType", "bit", "ydt.bit", appName);
-        defaultYdtBuilder.addChild("bitList", null);
+        ydtBuilder = YdtTestUtils.getydtBuilder(
+                "builtInType", "bit", "ydt.bit", appName);
+        ydtBuilder.addChild("bitList", null);
 
         try {
-            defaultYdtBuilder.addLeaf("bit", null, "");
-        } catch (final Exception e) {
-            assertThat(true, is(e.getMessage().contains("YANG file error : Input value \"" + "" + "\" is not a " +
-                    "valid BITS")));
+            ydtBuilder.addLeaf("bit", null, "");
+        } catch (Exception e) {
+            assertThat(true, is(e.getMessage().contains(
+                    "YANG file error : Input value \"" + "" + "\" is not a " +
+                            "valid BITS")));
         }
     }
-
 }

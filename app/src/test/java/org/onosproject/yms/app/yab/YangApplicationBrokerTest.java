@@ -331,7 +331,7 @@ public class YangApplicationBrokerTest {
                 buildYdtForEditOperationWithDelete();
         YdtAppContext appContext =
                 defaultYdtBuilder.getAppRootNode().getFirstChild();
-        YdtContext ydtContext = appContext.getModuleNode();
+        YdtContext ydtContext = appContext.getModuleContext();
         List<YdtContext> deleteNodes = appContext.getDeleteNodes();
 
         YdtContext cont1YdtContext;
@@ -409,7 +409,7 @@ public class YangApplicationBrokerTest {
         assertThat(cont4YdtContext.getNextSibling(), nullValue());
 
         // ydtTree after removing delete nodes
-        ydtContext = appContext.getModuleNode();
+        ydtContext = appContext.getModuleContext();
         assertThat(true, is(ydtContext.getName().contentEquals("test6")));
 
         cont1YdtContext = ydtContext.getFirstChild();
@@ -435,7 +435,7 @@ public class YangApplicationBrokerTest {
                 buildYdtForListEditOperationWithDelete();
         YdtAppContext appContext =
                 defaultYdtBuilder.getAppRootNode().getFirstChild();
-        YdtContext ydtContext = appContext.getModuleNode();
+        YdtContext ydtContext = appContext.getModuleContext();
         List<YdtContext> deleteNodes = appContext.getDeleteNodes();
 
         YdtContext cont1YdtContext;
@@ -515,7 +515,7 @@ public class YangApplicationBrokerTest {
         assertThat(ydtContext.getNextSibling(), nullValue());
 
         // verify whether ydt tree is correct
-        ydtContext = appContext.getModuleNode();
+        ydtContext = appContext.getModuleContext();
         assertThat(true, is(ydtContext.getName().contentEquals("test6")));
 
         cont1YdtContext = ydtContext.getFirstChild();
@@ -611,7 +611,7 @@ public class YangApplicationBrokerTest {
         YangRequestWorkBench defaultYdtBuilder = buildYdtWithOneDeleteNode();
         YdtAppContext appContext =
                 defaultYdtBuilder.getAppRootNode().getFirstChild();
-        YdtContext ydtContext = appContext.getModuleNode();
+        YdtContext ydtContext = appContext.getModuleContext();
         List<YdtContext> deleteNodes = appContext.getDeleteNodes();
 
         // verify whether ydt tree is correct
@@ -639,7 +639,7 @@ public class YangApplicationBrokerTest {
         assertThat(ydtContext.getNextSibling(), nullValue());
         assertThat(ydtContext.getPreviousSibling(), nullValue());
 
-        ydtContext = appContext.getModuleNode();
+        ydtContext = appContext.getModuleContext();
 
         // verify whether ydt tree is correct
         assertThat(true, is(ydtContext.getName().contentEquals("test6")));
@@ -665,7 +665,7 @@ public class YangApplicationBrokerTest {
                 buildYdtWithDeleteNodeAsLastChild();
         YdtAppContext appContext =
                 defaultYdtBuilder.getAppRootNode().getFirstChild();
-        YdtContext ydtContext = appContext.getModuleNode();
+        YdtContext ydtContext = appContext.getModuleContext();
         List<YdtContext> deleteNodes = appContext.getDeleteNodes();
         assertThat(YdtAppNodeOperationType.BOTH,
                    is(appContext.getOperationType()));
@@ -699,7 +699,7 @@ public class YangApplicationBrokerTest {
         assertThat(ydtContext.getNextSibling(), nullValue());
         assertThat(ydtContext.getPreviousSibling(), nullValue());
 
-        ydtContext = appContext.getModuleNode();
+        ydtContext = appContext.getModuleContext();
 
         assertThat(true, is(ydtContext.getLastChild().getName()
                                     .contentEquals("list2")));
@@ -726,7 +726,7 @@ public class YangApplicationBrokerTest {
         YangRequestWorkBench defaultYdtBuilder = buildYdtWithAllDeleteNode();
         YdtAppContext appContext =
                 defaultYdtBuilder.getAppRootNode().getFirstChild();
-        YdtContext ydtContext = appContext.getModuleNode();
+        YdtContext ydtContext = appContext.getModuleContext();
         List<YdtContext> deleteNodes = appContext.getDeleteNodes();
 
         assertThat(YdtAppNodeOperationType.DELETE_ONLY,
@@ -772,7 +772,7 @@ public class YangApplicationBrokerTest {
 
         YdtAppContext appContext =
                 defaultYdtBuilder.getAppRootNode().getFirstChild();
-        YdtContext ydtContext = appContext.getModuleNode();
+        YdtContext ydtContext = appContext.getModuleContext();
         List<YdtContext> deleteNodes = appContext.getDeleteNodes();
 
         assertThat(YdtAppNodeOperationType.BOTH, is(appContext.getOperationType()));
@@ -822,7 +822,7 @@ public class YangApplicationBrokerTest {
 
         assertThat(ydtContext.getNextSibling(), nullValue());
 
-        ydtContext = appContext.getModuleNode();
+        ydtContext = appContext.getModuleContext();
 
         // verify whether ydt tree is correct
         assertThat(true, is(ydtContext.getName().contentEquals("test6")));

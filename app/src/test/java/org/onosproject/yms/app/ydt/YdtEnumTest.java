@@ -16,9 +16,10 @@
 
 package org.onosproject.yms.app.ydt;
 
-import java.io.IOException;
 import org.junit.Test;
 import org.onosproject.yms.ydt.YdtContext;
+
+import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -38,14 +39,14 @@ public class YdtEnumTest {
 
     @Test
     public void positiveTest() throws IOException {
-        YangRequestWorkBench defaultYdtBuilder = YdtTestUtils.enumYdt();
-        validateTree(defaultYdtBuilder);
+        YangRequestWorkBench ydtBuilder = YdtTestUtils.enumYdt();
+        validateTree(ydtBuilder);
     }
 
-    private void validateTree(YangRequestWorkBench defaultYdtBuilder) {
+    private void validateTree(YangRequestWorkBench ydtBuilder) {
 
         // assign root node to ydtContext for validating purpose.
-        YdtContext ydtContext = defaultYdtBuilder.getRootNode();
+        YdtContext ydtContext = ydtBuilder.getRootNode();
         assertThat(true, is(ydtContext.getName().contentEquals("builtInType")));
 
         ydtContext = ydtContext.getFirstChild();
@@ -77,38 +78,41 @@ public class YdtEnumTest {
     */
     @Test
     public void negativeTest() throws IOException {
-        String appName = "org.onosproject.yang.gen.v1.ydt.enumtest.rev20160524.EnumtestService";
-        YangRequestWorkBench defaultYdtBuilder = YdtTestUtils.getDefaultYdtBuilder("builtInType", "enumtest",
-                "ydt.enumtest", appName);
-        defaultYdtBuilder.addChild("enumList", null);
+        String appName = "org.onosproject.yang.gen.v1.ydt.enumtest" +
+                ".rev20160524.EnumtestService";
+        YangRequestWorkBench ydtBuilder = YdtTestUtils
+                .getydtBuilder("builtInType", "enumtest",
+                                      "ydt.enumtest", appName);
+        ydtBuilder.addChild("enumList", null);
 
         try {
-            defaultYdtBuilder.addLeaf("enumleaf", null, "10");
-        } catch (final Exception e) {
-            assertThat(true, is(e.getMessage().contains("YANG file error : Input value \"" + "10" + "\" " +
-                    "is not a valid ENUMERATION")));
+            ydtBuilder.addLeaf("enumleaf", null, "10");
+        } catch (Exception e) {
+            assertThat(true, is(e.getMessage().contains(
+                    "YANG file error : Input value \"" + "10" + "\" " +
+                            "is not a valid ENUMERATION")));
         }
 
-        defaultYdtBuilder = YdtTestUtils.getDefaultYdtBuilder("builtInType", "enumtest",
-                "ydt.enumtest", appName);
-        defaultYdtBuilder.addChild("enumList", null);
+        ydtBuilder = YdtTestUtils.getydtBuilder(
+                "builtInType", "enumtest", "ydt.enumtest", appName);
+        ydtBuilder.addChild("enumList", null);
         try {
-            defaultYdtBuilder.addLeaf("enumleaf", null, "thousands");
-        } catch (final Exception e) {
-            assertThat(true, is(e.getMessage().contains("YANG file error : Input value \"" + "thousands" + "\" " +
-                    "is not a valid ENUMERATION")));
+            ydtBuilder.addLeaf("enumleaf", null, "thousands");
+        } catch (Exception e) {
+            assertThat(true, is(e.getMessage().contains(
+                    "YANG file error : Input value \"" + "thousands" + "\" " +
+                            "is not a valid ENUMERATION")));
         }
 
-        defaultYdtBuilder = YdtTestUtils.getDefaultYdtBuilder("builtInType", "enumtest",
-                "ydt.enumtest", appName);
-        defaultYdtBuilder.addChild("enumList", null);
+        ydtBuilder = YdtTestUtils.getydtBuilder(
+                "builtInType", "enumtest", "ydt.enumtest", appName);
+        ydtBuilder.addChild("enumList", null);
         try {
-            defaultYdtBuilder.addLeaf("enumleaf", null, "enumeration");
-        } catch (final Exception e) {
-            assertThat(true, is(e.getMessage().contains("YANG file error : Input value \"" + "enumeration" + "\" " +
-                    "is not a valid ENUMERATION")));
+            ydtBuilder.addLeaf("enumleaf", null, "enumeration");
+        } catch (Exception e) {
+            assertThat(true, is(e.getMessage().contains(
+                    "YANG file error : Input value \"" + "enumeration" + "\" " +
+                            "is not a valid ENUMERATION")));
         }
-
     }
-
 }

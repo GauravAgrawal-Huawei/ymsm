@@ -16,12 +16,12 @@
 
 package org.onosproject.yms.app.ydt;
 
+import org.junit.Test;
+import org.onosproject.yms.ydt.YdtContext;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
-import org.onosproject.yms.ydt.YdtContext;
-import org.onosproject.yms.ydt.YdtListener;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -33,45 +33,47 @@ public class FoodArenaTest {
 
     @Test
     public void foodArenaTest() throws IOException {
-        YangRequestWorkBench defaultYdtBuilder = YdtTestUtils.foodArenaYdt();
-        validateTree(defaultYdtBuilder);
+        YangRequestWorkBench ydtBuilder = YdtTestUtils.foodArenaYdt();
+        validateTree(ydtBuilder);
         // walker test
-        walkINTree(defaultYdtBuilder);
+        walkINTree(ydtBuilder);
     }
 
 
-    private void walkINTree(YangRequestWorkBench defaultYdtBuilder) {
+    private void walkINTree(YangRequestWorkBench ydtBuilder) {
         DefaultYdtWalker ydtWalker = new DefaultYdtWalker();
-        YdtListenerForTesting ydtListenerService = new YdtListenerForTesting();
+        YdtTestUtils ydtListenerService = new YdtTestUtils();
+
+        // Logger list is used for walker testing.
+        YdtTestUtils.resetLogger();
+
         // Assign root node to YdtContext to walk the tree.
-        ydtWalker.walk(ydtListenerService, defaultYdtBuilder.getRootNode());
-        assertThat(true, is(logger.get(0).contentEquals("Entry Node is foodarena.")));
-        assertThat(true, is(logger.get(1).contentEquals("Entry Node is food.")));
-        assertThat(true, is(logger.get(2).contentEquals("Entry Node is food.")));
-        assertThat(true, is(logger.get(3).contentEquals("Entry Node is chocolate.")));
-        assertThat(true, is(logger.get(4).contentEquals("Exit Node is chocolate.")));
-        assertThat(true, is(logger.get(5).contentEquals("Exit Node is food.")));
-        assertThat(true, is(logger.get(6).contentEquals("Exit Node is food.")));
-        assertThat(true, is(logger.get(7).contentEquals("Exit Node is foodarena.")));
+        ydtWalker.walk(ydtListenerService, ydtBuilder.getRootNode());
+        // Logger list is used for walker testing.
+        List<String> logger = YdtTestUtils.getLogger();
+        assertThat(true, is(logger.get(0).contentEquals(
+                "Entry Node is foodarena.")));
+        assertThat(true, is(logger.get(1).contentEquals(
+                "Entry Node is food.")));
+        assertThat(true, is(logger.get(2).contentEquals(
+                "Entry Node is food.")));
+        assertThat(true, is(logger.get(3).contentEquals(
+                "Entry Node is chocolate.")));
+        assertThat(true, is(logger.get(4).contentEquals(
+                "Exit Node is chocolate.")));
+        assertThat(true, is(logger.get(5).contentEquals(
+                "Exit Node is food.")));
+        assertThat(true, is(logger.get(6).contentEquals(
+                "Exit Node is food.")));
+        assertThat(true, is(logger.get(7).contentEquals(
+                "Exit Node is foodarena.")));
     }
 
-    // This implementation is totally for testing purpose it doesn't have any other usage.
-    public class YdtListenerForTesting implements YdtListener {
-        @Override
-        public void enterYdtNode(YdtContext ydtContext) {
-            logger.add("Entry Node is " + ydtContext.getName() + ".");
-        }
 
-        @Override
-        public void exitYdtNode(YdtContext ydtContext) {
-            logger.add("Exit Node is " + ydtContext.getName() + ".");
-        }
-    }
-
-    private void validateTree(YangRequestWorkBench defaultYdtBuilder) {
+    private void validateTree(YangRequestWorkBench ydtBuilder) {
 
         // assign root node to ydtContext for validating purpose.
-        YdtContext ydtContext = defaultYdtBuilder.getRootNode();
+        YdtContext ydtContext = ydtBuilder.getRootNode();
         assertThat(true, is(ydtContext.getName().contentEquals("foodarena")));
 
         ydtContext = ydtContext.getFirstChild();
@@ -81,7 +83,5 @@ public class FoodArenaTest {
         ydtContext = ydtContext.getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("chocolate")));
         assertThat(true, is(ydtContext.getValue().contentEquals("dark")));
-
     }
-
 }

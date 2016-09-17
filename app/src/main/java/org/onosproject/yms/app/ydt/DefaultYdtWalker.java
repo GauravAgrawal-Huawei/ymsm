@@ -20,6 +20,11 @@ package org.onosproject.yms.app.ydt;
 import org.onosproject.yms.ydt.YdtContext;
 import org.onosproject.yms.ydt.YdtListener;
 
+import static org.onosproject.yms.app.ydt.TraversalType.CHILD;
+import static org.onosproject.yms.app.ydt.TraversalType.PARENT;
+import static org.onosproject.yms.app.ydt.TraversalType.ROOT;
+import static org.onosproject.yms.app.ydt.TraversalType.SIBLING;
+
 /**
  * Represents implementation of YDT walker, which walks the YDT.
  */
@@ -31,69 +36,90 @@ public class DefaultYdtWalker implements YdtExtendedWalker {
     }
 
     /**
-     * Walks the YANG data tree. Protocols implements YDT listener and YDT Extended Listener
-     * and walks YDT tree with input as implemented object. YDT walker provides
-     * call backs to implemented methods.
+     * Walks the YANG data tree till the node provided by the user.
+     * Protocols implements YDT listener and YDT Extended Listener and
+     * walks YDT tree with input as implemented object.
+     * YDT walker provides call backs to implemented methods.
      *
      * @param ydtListener YDT listener implemented by the protocol
      * @param rootNode    root node of YDT
-     * @param isExtended  check for understanding the type of call whether extended or base listener call.
+     * @param isExtended  flag denotes the call type
      */
     @SuppressWarnings("RedundantCast")
-    private void walkTree(YdtListener ydtListener, YdtContext rootNode, boolean isExtended) {
-        YdtContext currentNode = rootNode;
+    private void walkTree(YdtListener ydtListener, YdtContext rootNode,
+                          boolean isExtended) {
+        YdtContext curNode = rootNode;
+        TraversalType curTraversal = ROOT;
 
-        while (currentNode != null) {
+        while (curNode != null) {
+            if (curTraversal != PARENT) {
 
-            // Visit (currentNode) for entry callback
-            if (isExtended) {
-                ((YdtExtendedListener) ydtListener).enterYdtNode((YdtExtendedContext) currentNode);
-            } else {
-                ydtListener.enterYdtNode(currentNode);
-            }
-
-            // Move down to first child
-            YdtContext nextNode = currentNode.getFirstChild();
-            if (nextNode != null) {
-                currentNode = nextNode;
-                continue;
-            }
-
-            // No child nodes, so walk tree
-            while (currentNode != null) {
-
-                // Revisit (currentNode) for exit callback
+                // Visit (curNode) for entry callback
                 if (isExtended) {
-                    ((YdtExtendedListener) ydtListener).exitYdtNode((YdtExtendedContext) currentNode);
+                    ((YdtExtendedListener) ydtListener)
+                            .enterYdtNode((YdtExtendedContext) curNode);
                 } else {
-                    ydtListener.exitYdtNode(currentNode);
+                    ydtListener.enterYdtNode(curNode);
                 }
+            }
+            if (curTraversal != PARENT &&
+                    curNode.getFirstChild() != null) {
+                curTraversal = CHILD;
+                curNode = curNode.getFirstChild();
+            } else if (curNode.getNextSibling() != null) {
+                // Revisit (curNode) for exit callback
+                exitCallBack(ydtListener, curNode, isExtended);
 
-                // Stop walking the tree once exit entry called for given rootNode.
-                if (currentNode.equals(rootNode)) {
+                /*
+                 *Stop traversing the tree , tree need to be traversed
+                 * till user requested node
+                 */
+                if (curNode.equals(rootNode)) {
+                    return;
+                }
+                curTraversal = SIBLING;
+                curNode = curNode.getNextSibling();
+            } else {
+                // Revisit (curNode) for exit callback
+                exitCallBack(ydtListener, curNode, isExtended);
+
+                /*
+                 *Stop traversing the tree , tree need to be traversed
+                 * till user requested node
+                 */
+                if (curNode.equals(rootNode)) {
                     return;
                 }
 
-                // Move to sibling if possible.
-                nextNode = currentNode.getNextSibling();
-                if (nextNode != null) {
-                    currentNode = nextNode;
-                    break;
-                }
-
-                // Move up
-                if (currentNode == rootNode) {
-                    currentNode = null;
-                } else {
-                    currentNode = currentNode.getParent();
-                }
+                curTraversal = PARENT;
+                curNode = curNode.getParent();
             }
         }
+    }
 
+    /**
+     * Provides exit call back per node on the basis of extended flag,
+     * If isExtended set then YdtExtendedListener exit node call back will
+     * be provided else YdtListener with respective type of context
+     * (YdtContext/YdtExtendedContext).
+     *
+     * @param ydtListener YDT listener implemented by the protocol
+     * @param curNode     current node of YDT
+     * @param isExtended  flag denotes the call type
+     */
+    private void exitCallBack(YdtListener ydtListener, YdtContext curNode,
+                              boolean isExtended) {
+        if (isExtended) {
+            ((YdtExtendedListener) ydtListener)
+                    .exitYdtNode((YdtExtendedContext) curNode);
+        } else {
+            ydtListener.exitYdtNode(curNode);
+        }
     }
 
     @Override
-    public void walk(YdtExtendedListener ydtExtendedListener, YdtExtendedContext rootNode) {
+    public void walk(YdtExtendedListener ydtExtendedListener,
+                     YdtExtendedContext rootNode) {
         walkTree(ydtExtendedListener, rootNode, true);
     }
 }

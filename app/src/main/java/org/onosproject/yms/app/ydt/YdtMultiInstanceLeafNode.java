@@ -16,12 +16,15 @@
 
 package org.onosproject.yms.app.ydt;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.google.common.collect.ImmutableSet;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeIdentifier;
 import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
-import org.onosproject.yms.app.ydt.exceptions.YdtExceptions;
-import org.onosproject.yms.ydt.YdtType;
+import org.onosproject.yms.app.ydt.exceptions.YdtException;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.onosproject.yms.ydt.YdtType.MULTI_INSTANCE_LEAF_VALUE_NODE;
 
 /**
  * Represents YDT multi instance leaf node which can hold multiple values, it
@@ -32,40 +35,42 @@ class YdtMultiInstanceLeafNode extends YdtNode {
     /**
      * Set of values.
      */
-    private Set<String> valueSet = new HashSet<>();
+    private Set<String> valueSet;
 
     /**
      * Creates a YANG multi instance leaf node.
      *
-     * @param nodeIdentifier node identifier of YANG data tree multi instance node .
+     * @param id node identifier of YDT multi instance node
      */
-    public YdtMultiInstanceLeafNode(YangSchemaNodeIdentifier nodeIdentifier) {
-        super(YdtType.MULTI_INSTANCE_LEAF_VALUE_NODE, nodeIdentifier);
+    protected YdtMultiInstanceLeafNode(YangSchemaNodeIdentifier id) {
+        super(MULTI_INSTANCE_LEAF_VALUE_NODE, id);
+        valueSet = new HashSet<>();
     }
 
     @Override
     public Set<String> getValueSet() {
-        return valueSet;
+        return ImmutableSet.copyOf(valueSet);
     }
 
     @Override
     public void addValue(String value) {
         // check the value against corresponding data-type.
         try {
-            this.getYangSchemaNode().isValueValid(value);
+            getYangSchemaNode().isValueValid(value);
         } catch (Exception e) {
             // Free resources
             freeRestResources();
-            throw new YdtExceptions(e.getMessage());
+            throw new YdtException(e.getLocalizedMessage());
         }
 
         // After validation is successful then add value to node.
-        if (!this.valueSet.add(value)) {
+        if (!valueSet.add(value)) {
             // Free resources
             freeRestResources();
-            String errorInfo = "Duplicate entry found under " + this.getYdtNodeIdentifier().getName()
-                    + " leaf-list node.";
-            throw new YdtExceptions(errorInfo);
+            throw new YdtException("Duplicate entry found under " +
+                                            getYdtNodeIdentifier()
+                                                    .getName() +
+                                            " leaf-list node.");
         }
     }
 
@@ -73,40 +78,36 @@ class YdtMultiInstanceLeafNode extends YdtNode {
     public void addValueSet(Set valueSet) {
 
         String value;
-
         // Check the value against corresponding data-type.
         for (Object aValueSet : valueSet) {
 
             try {
                 value = String.valueOf(aValueSet);
-                this.getYangSchemaNode().isValueValid(value);
+                getYangSchemaNode().isValueValid(value);
             } catch (DataModelException e) {
                 // Free resources
                 freeRestResources();
-                throw new YdtExceptions(e.getMessage());
+                throw new YdtException(e.getLocalizedMessage());
             }
             // After validation is successful then add value to node.
             if (!this.valueSet.add(value)) {
                 // Free resources
                 freeRestResources();
-                String errorInfo = "Duplicate entry found under " + this.getYdtNodeIdentifier().getName()
-                        + " leaf-list node.";
-                throw new YdtExceptions(errorInfo);
+                throw new YdtException("Duplicate entry found under " +
+                                                getYdtNodeIdentifier()
+                                                        .getName() +
+                                                " leaf-list node.");
             }
-
         }
-
     }
 
     @Override
     public void addValueWithoutValidation(String value) {
-        this.valueSet.add(value);
+        valueSet.add(value);
     }
 
     @Override
     public void addValueSetWithoutValidation(Set valueSet) {
-        //noinspection unchecked
         this.valueSet = valueSet;
     }
-
 }

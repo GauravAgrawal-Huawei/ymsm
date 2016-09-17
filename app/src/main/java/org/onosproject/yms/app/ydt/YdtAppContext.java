@@ -1,11 +1,28 @@
+/*
+ * Copyright 2016-present Open Networking Laboratory
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.onosproject.yms.app.ydt;
 
-import java.util.List;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeContextInfo;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeIdentifier;
 import org.onosproject.yms.ydt.YdtContext;
 import org.onosproject.yms.ydt.YdtContextOperationType;
+
+import java.util.List;
 
 public interface YdtAppContext {
 
@@ -28,14 +45,12 @@ public interface YdtAppContext {
      *
      * @return context of application parent node
      */
-    YdtAppContext getApplicationParent();
+    YdtAppContext getAppRoot();
 
     /**
      * Sets the context of application parent node.
-     *
-     * @param applicationParent application parent node.
      */
-    void setApplicationParent(YdtAppContext applicationParent);
+    void setAppRoot();
 
     /**
      * Returns the context of first child.
@@ -89,32 +104,32 @@ public interface YdtAppContext {
     /**
      * Sets the context of previous sibling.
      *
-     * @param previousSibling node
+     * @param preSibling node
      */
-    void setPreviousSibling(YdtAppContext previousSibling);
+    void setPreviousSibling(YdtAppContext preSibling);
 
     /**
      * Returns the app tree operation type.
      *
-     * @return app tree operation type.
+     * @return app tree operation type
      */
     YdtAppNodeOperationType getOperationType();
-
 
     /**
      * Returns the app tree operation type with the help of YdtOperation type.
      *
-     * @param ydtOpType ydt operation type.
-     * @return app tree operation type.
+     * @param opType ydt operation type
+     * @return app tree operation type
      */
-    YdtAppNodeOperationType getAppOpTypeFromYdtOpType(YdtContextOperationType ydtOpType);
+    YdtAppNodeOperationType getAppOpTypeFromYdtOpType(
+            YdtContextOperationType opType);
 
     /**
      * Set the app tree operation type.
      *
-     * @param operationType app tree operation type.
+     * @param opType app tree operation type
      */
-    void setOperationType(YdtAppNodeOperationType operationType);
+    void setOperationType(YdtAppNodeOperationType opType);
 
     /**
      * Returns the list of nodes with operation type delete.
@@ -126,37 +141,37 @@ public interface YdtAppContext {
     /**
      * Sets the list of nodes with operation type delete.
      *
-     * @param deleteNodes list of nodes with operation type delete.
+     * @param deleteNodes list of nodes with operation type delete
      */
     void setDeleteNodes(List<YdtContext> deleteNodes);
 
     /**
      * Returns application's root ydtContext.
      *
-     * @return YdtContext of application root node.
+     * @return YdtContext of application root node
      */
-    YdtContext getModuleNode();
+    YdtContext getModuleContext();
 
     /**
      * Sets the application's ydtContext.
      *
-     * @param moduleNode application's ydtContext.
+     * @param moduleNode application's ydtContext
      */
-    void setModuleNode(YdtContext moduleNode);
+    void setModuleContext(YdtContext moduleNode);
 
     /**
      * Returns the YangSchemaNode of augmenting application.
      *
-     * @return YangSchemaNode of augmenting application.
+     * @return YangSchemaNode of augmenting application
      */
     YangSchemaNode getAugmentingModuleSchemaNode();
 
     /**
      * Sets the YangSchemaNode of augmenting application root node.
      *
-     * @param yangSchemaNode YangSchemaNode of augmenting application module.
+     * @param schemaNode YangSchemaNode of augmenting application module
      */
-    void setAugmentingModuleSchemaNode(YangSchemaNode yangSchemaNode);
+    void setAugmentingModuleSchemaNode(YangSchemaNode schemaNode);
 
     /**
      * Adds a last child to ydt application data tree.
@@ -166,30 +181,25 @@ public interface YdtAppContext {
     void addChild(YdtAppContext newChild);
 
     /**
-     * Get augmenting node module yang schema node.
+     * Returns augmenting node module yang schema node.
      *
-     * @param yangSchemaNodeIdentifier schema node identifier.
-     * @param childSchemaNodeInfo      Yang Schema node context info which is having
-     *                                 YangSchemaNode + ContextSwitchedNode.
-     * @return augmenting node module yang schema node.
+     * @param id          schema node identifier
+     * @param contextInfo Yang Schema node context info
+     *                    which is having YangSchemaNode and
+     *                    ContextSwitchedNode
+     * @return augmenting node module yang schema node
      */
-    YangSchemaNode getAugmentingSchemaNode(YangSchemaNodeIdentifier yangSchemaNodeIdentifier,
-                                           YangSchemaNodeContextInfo childSchemaNodeInfo);
-
-    /**
-     * Add entry in ydt application tree set. this is to avoid the traversing in the tree.
-     *
-     * @param yangSchemaNode yang schema node which is to be added in Set.
-     * @return true in case of success else false.
-     */
-    boolean addYdtAppTreeSet(YangSchemaNode yangSchemaNode);
+    YangSchemaNode getAugmentingSchemaNode(
+            YangSchemaNodeIdentifier id,
+            YangSchemaNodeContextInfo contextInfo);
 
     /**
      * Update the app tree operation type.
-     * If earlier operation type was OTHER_EDIT and now operation type came as DELETE_ONLY or vice-versa,
-     * then update operation type to BOTH.
+     * <p>
+     * If earlier operation type was OTHER_EDIT and now operation type came as
+     * DELETE_ONLY or vice-versa, then update operation type to BOTH.
      *
-     * @param childOpType ydt current context operation type.
+     * @param opType ydt current context operation type
      */
-    void updateAppOperationType(YdtContextOperationType childOpType);
+    void updateAppOperationType(YdtContextOperationType opType);
 }

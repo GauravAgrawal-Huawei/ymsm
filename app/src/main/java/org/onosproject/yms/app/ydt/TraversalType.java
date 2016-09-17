@@ -17,23 +17,28 @@
 package org.onosproject.yms.app.ydt;
 
 /**
- * Represents type of YANG data tree creation method caller type.
+ * Represents traversal type of the YANG node tree.
  */
-public enum RequestedCallType {
+public enum TraversalType {
 
     /*
-     * Requested Node is of type single/multi instance leaf.
+     * Start of traversal at the tree root.
      */
-    LEAF,
+    ROOT,
 
     /*
-     * Requested Node is of type single/multi instance node.
+     * Child node traversal.
      */
-    OTHER,
+    CHILD,
 
     /*
-     * Requested Node is of type multi instance node/leaf.
+     * Sibling node traversal.
      */
-    UNKNOWN,
+    SIBLING,
+
+    /*
+     * Parent node traversal.
+     */
+    PARENT
 }
 

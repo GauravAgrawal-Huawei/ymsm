@@ -121,7 +121,7 @@ public class YmsManager
                                             false);
         } else {
             return new YangRequestWorkBench(logicalRootName, rootNamespace,
-                                            operationType, this.schemaRegistry,
+                                            operationType, schemaRegistry,
                                             true);
         }
     }

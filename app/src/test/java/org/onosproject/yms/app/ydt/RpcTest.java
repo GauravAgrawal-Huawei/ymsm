@@ -16,11 +16,12 @@
 
 package org.onosproject.yms.app.ydt;
 
+import org.junit.Test;
+import org.onosproject.yms.ydt.YdtContext;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
-import org.onosproject.yms.ydt.YdtContext;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -32,14 +33,13 @@ public class RpcTest {
 
     @Test
     public void rpc1Test() throws IOException {
-        YangRequestWorkBench defaultYdtBuilder = YdtTestUtils.helloOnos();
-        validateTree(defaultYdtBuilder);
+        YangRequestWorkBench ydtBuilder = YdtTestUtils.helloOnos();
+        validateTree(ydtBuilder);
         // walker test
-        walkINTree(defaultYdtBuilder);
+        walkINTree(ydtBuilder);
     }
 
-
-    private void walkINTree(YangRequestWorkBench defaultYdtBuilder) {
+    private void walkINTree(YangRequestWorkBench ydtBuilder) {
         DefaultYdtWalker ydtWalker = new DefaultYdtWalker();
         YdtTestUtils ydtListenerService = new YdtTestUtils();
 
@@ -47,33 +47,50 @@ public class RpcTest {
         YdtTestUtils.resetLogger();
 
         // Assign root node to YdtContext to walk the tree.
-        ydtWalker.walk(ydtListenerService, defaultYdtBuilder.getRootNode());
+        ydtWalker.walk(ydtListenerService, ydtBuilder.getRootNode());
         // Logger list is used for walker testing.
         List<String> logger = YdtTestUtils.getLogger();
-        assertThat(true, is(logger.get(0).contentEquals("Entry Node is Hello-ONOS.")));
-        assertThat(true, is(logger.get(1).contentEquals("Entry Node is Hello_ONOS.")));
-        assertThat(true, is(logger.get(2).contentEquals("Entry Node is hello-world.")));
-        assertThat(true, is(logger.get(3).contentEquals("Entry Node is input.")));
-        assertThat(true, is(logger.get(4).contentEquals("Entry Node is name.")));
+        assertThat(true, is(logger.get(0).contentEquals(
+                "Entry Node is Hello-ONOS.")));
+        assertThat(true, is(logger.get(1).contentEquals(
+                "Entry Node is Hello_ONOS.")));
+        assertThat(true, is(logger.get(2).contentEquals(
+                "Entry Node is hello-world.")));
+        assertThat(true, is(logger.get(3).contentEquals(
+                "Entry Node is input.")));
+        assertThat(true, is(logger.get(4).contentEquals(
+                "Entry Node is name.")));
         assertThat(true, is(logger.get(5).contentEquals("Exit Node is name.")));
-        assertThat(true, is(logger.get(6).contentEquals("Entry Node is surName.")));
-        assertThat(true, is(logger.get(7).contentEquals("Exit Node is surName.")));
-        assertThat(true, is(logger.get(8).contentEquals("Entry Node is stringList.")));
-        assertThat(true, is(logger.get(9).contentEquals("Entry Node is string1.")));
-        assertThat(true, is(logger.get(10).contentEquals("Exit Node is string1.")));
-        assertThat(true, is(logger.get(11).contentEquals("Entry Node is string2.")));
-        assertThat(true, is(logger.get(12).contentEquals("Exit Node is string2.")));
-        assertThat(true, is(logger.get(13).contentEquals("Exit Node is stringList.")));
-        assertThat(true, is(logger.get(14).contentEquals("Exit Node is input.")));
-        assertThat(true, is(logger.get(15).contentEquals("Exit Node is hello-world.")));
-        assertThat(true, is(logger.get(16).contentEquals("Exit Node is Hello_ONOS.")));
-        assertThat(true, is(logger.get(17).contentEquals("Exit Node is Hello-ONOS.")));
+        assertThat(true, is(logger.get(6).contentEquals(
+                "Entry Node is surName.")));
+        assertThat(true, is(logger.get(7).contentEquals(
+                "Exit Node is surName.")));
+        assertThat(true, is(logger.get(8).contentEquals(
+                "Entry Node is stringList.")));
+        assertThat(true, is(logger.get(9).contentEquals(
+                "Entry Node is string1.")));
+        assertThat(true, is(logger.get(10).contentEquals(
+                "Exit Node is string1.")));
+        assertThat(true, is(logger.get(11).contentEquals(
+                "Entry Node is string2.")));
+        assertThat(true, is(logger.get(12).contentEquals(
+                "Exit Node is string2.")));
+        assertThat(true, is(logger.get(13).contentEquals(
+                "Exit Node is stringList.")));
+        assertThat(true, is(logger.get(14).contentEquals(
+                "Exit Node is input.")));
+        assertThat(true, is(logger.get(15).contentEquals(
+                "Exit Node is hello-world.")));
+        assertThat(true, is(logger.get(16).contentEquals(
+                "Exit Node is Hello_ONOS.")));
+        assertThat(true, is(logger.get(17).contentEquals(
+                "Exit Node is Hello-ONOS.")));
     }
 
-    private void validateTree(YangRequestWorkBench defaultYdtBuilder) {
+    private void validateTree(YangRequestWorkBench ydtBuilder) {
 
         // assign root node to ydtContext for validating purpose.
-        YdtContext ydtContext = defaultYdtBuilder.getRootNode();
+        YdtContext ydtContext = ydtBuilder.getRootNode();
         assertThat(true, is(ydtContext.getName().contentEquals("Hello-ONOS")));
 
         ydtContext = ydtContext.getFirstChild();
@@ -96,8 +113,5 @@ public class RpcTest {
         ydtContext = ydtContext.getNextSibling();
         assertThat(true, is(ydtContext.getName().contentEquals("string2")));
         assertThat(true, is(ydtContext.getValue().contentEquals("LAB")));
-
-
     }
-
 }

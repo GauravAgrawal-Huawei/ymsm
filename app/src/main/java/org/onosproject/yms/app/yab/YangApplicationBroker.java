@@ -16,12 +16,6 @@
 
 package org.onosproject.yms.app.yab;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 import org.onosproject.yangutils.datamodel.TraversalType;
 import org.onosproject.yangutils.datamodel.YangAugment;
 import org.onosproject.yangutils.datamodel.YangAugmentableNode;
@@ -47,6 +41,12 @@ import org.onosproject.yms.ydt.YdtResponse;
 import org.onosproject.yms.ydt.YmsOperationExecutionStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.onosproject.yangutils.datamodel.TraversalType.CHILD;
 import static org.onosproject.yangutils.datamodel.TraversalType.PARENT;
@@ -106,11 +106,11 @@ public class YangApplicationBroker {
             responseObjects.add(responseObject);
         }
         YdtBuilder responseYdt = buildResponseYdtTree(responseObjects, rootYdtContext.getName(),
-                rootYdtContext.getNamespace());
+                                                      rootYdtContext.getNamespace());
 
         return new YangResponseWorkBench(responseYdt.getRootNode(),
-                YmsOperationExecutionStatus.EXECUTION_SUCCESS,
-                ydtWorkBench.getYmsOperationType());
+                                         YmsOperationExecutionStatus.EXECUTION_SUCCESS,
+                                         ydtWorkBench.getYmsOperationType());
     }
 
     /**
@@ -130,8 +130,8 @@ public class YangApplicationBroker {
             processEditOfApplication(appContext);
         }
         return new YangResponseWorkBench(null,
-                YmsOperationExecutionStatus.EXECUTION_SUCCESS,
-                workBench.getYmsOperationType());
+                                         YmsOperationExecutionStatus.EXECUTION_SUCCESS,
+                                         workBench.getYmsOperationType());
     }
 
     /**
@@ -153,13 +153,13 @@ public class YangApplicationBroker {
                 Object inputParamObject = getYangObject(inputNode);
                 Object appObject = getApplicationObject(ydtNode);
                 Object outputObject = invokeApplicationsMethod(appObject, inputParamObject,
-                        yangNode.getName());
+                                                               yangNode.getName());
                 responseObjects.add(outputObject);
                 YdtBuilder responseYdt = buildResponseYdtTree(responseObjects, rootYdtContext.getName(),
-                        rootYdtContext.getNamespace());
+                                                              rootYdtContext.getNamespace());
                 return new YangResponseWorkBench(responseYdt.getRootNode(),
-                        YmsOperationExecutionStatus.EXECUTION_SUCCESS,
-                        ydtWorkBench.getYmsOperationType());
+                                                 YmsOperationExecutionStatus.EXECUTION_SUCCESS,
+                                                 ydtWorkBench.getYmsOperationType());
             }
             ydtNode = ydtNode.getNextSibling();
         }
@@ -176,7 +176,7 @@ public class YangApplicationBroker {
             throws YabException {
 
         // get YdtContext from appContext
-        YdtContext ydtNode = appContext.getModuleNode();
+        YdtContext ydtNode = appContext.getModuleContext();
 
         // get YangObject of YdtContext from YOB
         Object outputObject = getYangObject(ydtNode);
@@ -234,8 +234,8 @@ public class YangApplicationBroker {
      */
     private Object getApplicationObject(YdtAppContext appContext) {
         YangSchemaNode yangSchemaNode;
-        if (appContext.getModuleNode() != null) {
-            yangSchemaNode = ((YdtNode) appContext.getModuleNode()).getYangSchemaNode();
+        if (appContext.getModuleContext() != null) {
+            yangSchemaNode = ((YdtNode) appContext.getModuleContext()).getYangSchemaNode();
         } else {
             yangSchemaNode = appContext.getAugmentingModuleSchemaNode();
         }
@@ -353,7 +353,7 @@ public class YangApplicationBroker {
     private YdtBuilder buildResponseYdtTree(List<Object> responseObjects, String name, String namespace) {
         DefaultYangTreeBuilder treeBuilder = new DefaultYangTreeBuilder();
         return treeBuilder.getYdtBuilderForYo(responseObjects,
-                name, namespace, null, schemaRegistry);
+                                              name, namespace, null, schemaRegistry);
     }
 
     /**
@@ -368,7 +368,7 @@ public class YangApplicationBroker {
         }
 
         if (appContext.getOperationType() != YdtAppNodeOperationType.DELETE_ONLY) {
-            YdtContext ydtNode = appContext.getModuleNode();
+            YdtContext ydtNode = appContext.getModuleContext();
 
             // get YO from YOB
             Object outputObject = getYangObject(ydtNode);
@@ -553,8 +553,8 @@ public class YangApplicationBroker {
      */
     private String getJavaNameOfApp(YdtAppContext appContext) {
         String javaName = null;
-        if (appContext.getModuleNode() != null) {
-            javaName = ((YdtNode) appContext.getModuleNode()).getYangSchemaNode().getJavaClassNameOrBuiltInType();
+        if (appContext.getModuleContext() != null) {
+            javaName = ((YdtNode) appContext.getModuleContext()).getYangSchemaNode().getJavaClassNameOrBuiltInType();
         } else if (appContext.getAugmentingModuleSchemaNode() != null) {
             javaName = appContext.getAugmentingModuleSchemaNode().getJavaClassNameOrBuiltInType();
         } else {
@@ -660,11 +660,11 @@ public class YangApplicationBroker {
         while (yangNode != augment) {
             if (curTraversal == CHILD) {
                 curYdtNode = ((YangRequestWorkBench) curYdtNode).addChild(YdtContextOperationType.DELETE,
-                        yangNode);
+                                                                          yangNode);
             } else if (curTraversal == SIBILING) {
                 curYdtNode = curYdtNode.getParent();
                 curYdtNode = ((YangRequestWorkBench) curYdtNode).addChild(YdtContextOperationType.DELETE,
-                        yangNode);
+                                                                          yangNode);
             } else {
                 curYdtNode = curYdtNode.getParent();
             }
@@ -686,7 +686,8 @@ public class YangApplicationBroker {
             throws CloneNotSupportedException {
         YdtNode keyLeaf;
         YdtNode keyClonedLeaf;
-        Set<YdtContext> keyList = ((YdtMultiInstanceNode) curNode).getKeyNodeList();
+        List<YdtContext> keyList = ((YdtMultiInstanceNode) curNode)
+                .getKeyNodeList();
         if (keyList != null && !keyList.isEmpty()) {
             Iterator<YdtContext> keyListIterator = keyList.iterator();
             while (keyListIterator.hasNext()) {

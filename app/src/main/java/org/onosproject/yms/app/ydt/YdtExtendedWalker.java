@@ -24,9 +24,10 @@ import org.onosproject.yms.ydt.YdtWalker;
 public interface YdtExtendedWalker extends YdtWalker {
 
     /**
-     * Walks the YANG data tree. Protocols implements YDT listener service
-     * and walks YDT tree with input as implemented object. YDT walker provides
-     * call backs to implemented methods.
+     * Walks the YANG data tree. Protocols implements YDT listener service and
+     * <p>
+     * walks YDT tree with input as implemented object.
+     * YDT walker provides call backs to implemented methods.
      *
      * @param ydtListener YDT listener implemented by the protocol
      * @param rootNode    root node of YDT
