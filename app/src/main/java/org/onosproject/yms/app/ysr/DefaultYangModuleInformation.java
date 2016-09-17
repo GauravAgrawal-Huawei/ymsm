@@ -16,6 +16,7 @@
 
 package org.onosproject.yms.app.ysr;
 
+import com.google.common.collect.ImmutableList;
 import org.onosproject.yms.ysr.YangModuleIdentifier;
 import org.onosproject.yms.ysr.YangModuleInformation;
 
@@ -26,68 +27,47 @@ import java.util.Objects;
 import static com.google.common.base.MoreObjects.toStringHelper;
 
 /**
- * Represents YANG module information.
+ * Representation of default YANG module information.
  */
-public class DefaultYangModuleInformation implements YangModuleInformation {
+class DefaultYangModuleInformation implements YangModuleInformation {
 
-    private YangModuleIdentifier moduleIdentifier;
-    private List<YangModuleIdentifier> subModuleIdentifiers;
-    private String nameSpace;
-    private List<String> features;
+    private final YangModuleIdentifier moduleIdentifier;
+    private final String nameSpace;
+    private final List<String> features;
+    private final List<YangModuleIdentifier> subModuleIdentifiers;
 
     /**
      * Creates an instance of YANG module information.
+     *
+     * @param moduleIdentifier module identifier
+     * @param nameSpace        name space of module
      */
-    public DefaultYangModuleInformation() {
-        setFeatures(new ArrayList<>());
-        setSubModuleIdentifiers(new ArrayList<>());
+    DefaultYangModuleInformation(YangModuleIdentifier moduleIdentifier,
+                                 String nameSpace) {
+        this.moduleIdentifier = moduleIdentifier;
+        this.nameSpace = nameSpace;
+        subModuleIdentifiers = new ArrayList<>();
+        features = new ArrayList<>();
     }
 
     @Override
-    public YangModuleIdentifier getModuleIdentifier() {
+    public YangModuleIdentifier moduleIdentifier() {
         return moduleIdentifier;
     }
 
     @Override
-    public String getNamespace() {
+    public String namespace() {
         return nameSpace;
     }
 
     @Override
-    public List<String> getFeatureList() {
-        return features;
+    public List<String> featureList() {
+        return ImmutableList.copyOf(features);
     }
 
     @Override
-    public List<YangModuleIdentifier> getSubModuleIdentifier() {
-        return subModuleIdentifiers;
-    }
-
-    /**
-     * Sets feature list.
-     *
-     * @param features YANG features
-     */
-    private void setFeatures(List<String> features) {
-        this.features = features;
-    }
-
-    /**
-     * Sets YANG module identifier.
-     *
-     * @param moduleIdentifier YANG module identifier
-     */
-    public void setModuleIdentifier(YangModuleIdentifier moduleIdentifier) {
-        this.moduleIdentifier = moduleIdentifier;
-    }
-
-    /**
-     * Sets YANG module identifier list.
-     *
-     * @param subModuleIdentifiers YANG module identifier list
-     */
-    private void setSubModuleIdentifiers(List<YangModuleIdentifier> subModuleIdentifiers) {
-        this.subModuleIdentifiers = subModuleIdentifiers;
+    public List<YangModuleIdentifier> subModuleIdentifiers() {
+        return ImmutableList.copyOf(subModuleIdentifiers);
     }
 
     /**
@@ -95,17 +75,8 @@ public class DefaultYangModuleInformation implements YangModuleInformation {
      *
      * @param subModuleIdentifier YANG sub module identifier
      */
-    public void addSubModuleIdentifiers(YangModuleIdentifier subModuleIdentifier) {
-        getSubModuleIdentifier().add(subModuleIdentifier);
-    }
-
-    /**
-     * Sets name space.
-     *
-     * @param nameSpace YANG name space
-     */
-    public void setNameSpace(String nameSpace) {
-        this.nameSpace = nameSpace;
+    void addSubModuleIdentifiers(YangModuleIdentifier subModuleIdentifier) {
+        subModuleIdentifiers.add(subModuleIdentifier);
     }
 
     @Override

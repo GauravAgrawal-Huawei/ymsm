@@ -18,17 +18,19 @@ package org.onosproject.yms.app.ysr;
 
 import org.onosproject.yms.ysr.YangModuleIdentifier;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
 /**
- * Represents YANG module identifier.
+ * Representation of default YANG module identifier.
  */
-public class DefaultYangModuleIdentifier implements YangModuleIdentifier {
+class DefaultYangModuleIdentifier implements YangModuleIdentifier,
+        Comparator<YangModuleIdentifier> {
 
-    private String moduleName;
-    private String revision;
+    private final String moduleName;
+    private final String revision;
 
     /**
      * Creates an instance of YANG module identifier.
@@ -36,24 +38,33 @@ public class DefaultYangModuleIdentifier implements YangModuleIdentifier {
      * @param moduleName module's name
      * @param revision   module's revision
      */
-    public DefaultYangModuleIdentifier(String moduleName, String revision) {
+    DefaultYangModuleIdentifier(String moduleName, String revision) {
         this.moduleName = moduleName;
         this.revision = revision;
     }
 
     @Override
-    public String getModuleName() {
+    public String moduleName() {
         return moduleName;
     }
 
     @Override
-    public String getRevision() {
+    public String revision() {
         return revision;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(moduleName, revision);
+    }
+
+    @Override
+    public int compare(YangModuleIdentifier id1, YangModuleIdentifier id2) {
+        int compare = id1.moduleName().compareTo(id2.moduleName());
+        if (compare != 0) {
+            return compare;
+        }
+        return id1.revision().compareTo(id2.revision());
     }
 
     @Override

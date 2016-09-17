@@ -28,12 +28,14 @@ public interface YangSchemaRegistry {
      * Registers applications to YMS.
      *
      * @param managerObject               application's object
-     * @param serviceClass                service class which needs to be registered
+     * @param serviceClass                service class which needs to be
+     *                                    registered
      * @param notificationExtendedService notification extended service to
      *                                    register application object with YNH
      */
     void registerApplication(Object managerObject, Class<?> serviceClass,
-                             YangNotificationExtendedService notificationExtendedService);
+                             YangNotificationExtendedService
+                                     notificationExtendedService);
 
     /**
      * Unregisters applications to YMS.
@@ -62,7 +64,7 @@ public interface YangSchemaRegistry {
     /**
      * Returns YANG schema nodes using application name.
      *
-     * @param appName application's service class name ex: org.onosproject.api.YmsService
+     * @param appName application's service name
      * @return YANG schema nodes using application name
      */
     YangSchemaNode getYangSchemaNodeUsingAppName(String appName);
@@ -70,10 +72,13 @@ public interface YangSchemaRegistry {
     /**
      * Returns YANG schema nodes using root interface file name.
      *
-     * @param rootInterfaceFileName name of generated interface file for root node
+     * @param rootInterfaceFileName name of generated interface file
+     *                              for root node
      * @return YANG schema nodes using root interface file name
      */
-    YangSchemaNode getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName(String rootInterfaceFileName);
+    YangSchemaNode
+    getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName(
+            String rootInterfaceFileName);
 
     /**
      * Returns YANG schema nodes using root op param file name.
@@ -81,7 +86,9 @@ public interface YangSchemaRegistry {
      * @param rootOpParamFileName name of generated op param file for root node
      * @return YANG schema nodes using root op param file name
      */
-    YangSchemaNode getYangSchemaNodeUsingGeneratedRootNodeOpPramFileName(String rootOpParamFileName);
+    YangSchemaNode
+    getYangSchemaNodeUsingGeneratedRootNodeOpPramFileName(
+            String rootOpParamFileName);
 
     /**
      * Returns YANG schema node of root for notifications.
@@ -94,7 +101,10 @@ public interface YangSchemaRegistry {
     /**
      * Returns registered service class.
      *
+     * @param schemaNode YANG schema node
+     * @param appName    application's name
      * @return registered service class
      */
     Class<?> getRegisteredClass(YangSchemaNode schemaNode, String appName);
+
 }

@@ -16,17 +16,14 @@
 
 package org.onosproject.yms.app.ysr;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.YmsIetfNetworkService;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network1.rev20151208.IetfNetwork1Service;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Set;
+
 import static org.onosproject.yangutils.utils.UtilConstants.PERIOD;
-import static org.onosproject.yangutils.utils.UtilConstants.SERVICE;
 import static org.onosproject.yangutils.utils.UtilConstants.TEMP;
 import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.deleteDirectory;
 import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
@@ -37,15 +34,14 @@ import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase
  */
 public class TestYangSchemaNodeProvider {
 
-    private static final String PATH = System.getProperty("user.dir")
-            + File.separator + "target/classes/";
-    private static final String SER_FILE_PATH =
-            "yang/resources/YangMetaData.ser";
+    private static final String FS = File.separator;
+    private static final String PATH = System.getProperty("user.dir") +
+            FS + "target" + FS + "classes" + FS;
+    private static final String SER_FILE_PATH = "yang" + FS + "resources" +
+            FS + "YangMetaData.ser";
     private static final String TEMP_FOLDER_PATH = PATH + TEMP;
-    private DefaultYangSchemaRegistry defaultYangSchemaRegistry =
-            new DefaultYangSchemaRegistry();
-
-    private List<String> services = new ArrayList<>();
+    private final DefaultYangSchemaRegistry defaultYangSchemaRegistry =
+            new DefaultYangSchemaRegistry("module-id");
 
     /**
      * Creates an instance of mock bundle context.
@@ -62,31 +58,34 @@ public class TestYangSchemaNodeProvider {
 
         Set<YangSchemaNode> appNode = defaultYangSchemaRegistry
                 .deSerializeDataModel(PATH + SER_FILE_PATH);
-        YsrRegisteredAppContext appContext = new YsrRegisteredAppContext();
-        defaultYangSchemaRegistry.ysrAppContextForSchemaStore(appContext);
+        YsrAppContext appContext = new YsrAppContext();
+        defaultYangSchemaRegistry.ysrContextForSchemaStore(appContext);
         defaultYangSchemaRegistry
                 .setClassLoader(this.getClass().getClassLoader());
         String appName;
         for (YangSchemaNode node : appNode) {
             defaultYangSchemaRegistry.processApplicationContext(node);
             defaultYangSchemaRegistry.ysrAppContext().appObject(appObject);
-            defaultYangSchemaRegistry.ysrAppContextForApplicationStore()
+            defaultYangSchemaRegistry.ysrContextForAppStore()
                     .appObject(appObject);
-            defaultYangSchemaRegistry.ysrAppContextForSchemaStore()
+            defaultYangSchemaRegistry.ysrContextForSchemaStore()
                     .appObject(appObject);
             appName = node.getJavaPackage() + PERIOD +
                     getCapitalCase(node.getJavaClassNameOrBuiltInType());
             storeClasses(appName);
-            services.add(appName + SERVICE);
         }
 
         try {
             deleteDirectory(TEMP_FOLDER_PATH);
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
+    /**
+     * Stores test generated class to YSR store.
+     *
+     * @param name name of class
+     */
     private void storeClasses(String name) {
         ClassLoader classLoader = this.getClass().getClassLoader();
         if (getDefaultYangSchemaRegistry().verifyClassExistence(name)) {
@@ -118,17 +117,6 @@ public class TestYangSchemaNodeProvider {
     }
 
     /**
-     * Unregisters all the service.
-     */
-    public void unregisterAllService() {
-        defaultYangSchemaRegistry.getAppObjectStore().clear();
-        defaultYangSchemaRegistry.getYangSchemaStore().clear();
-        defaultYangSchemaRegistry.getYangSchemaStoreForRootInterface().clear();
-        defaultYangSchemaRegistry.getYangSchemaStoreForRootOpParam().clear();
-        defaultYangSchemaRegistry.getYangSchemaNotificationStore().clear();
-    }
-
-    /**
      * Returns schema registry.
      *
      * @return schema registry
@@ -137,10 +125,14 @@ public class TestYangSchemaNodeProvider {
         return defaultYangSchemaRegistry;
     }
 
+    /**
+     * Process registration of a service.
+     */
     public void processRegistrationOfApp() {
         getDefaultYangSchemaRegistry()
-                .processRegistration(YmsIetfNetworkService.class,
-                                     new Ietf(), "target");
+                .processRegistration(IetfNetwork1Service.class,
+                                     new MockIetfManager(), "target");
 
     }
+
 }

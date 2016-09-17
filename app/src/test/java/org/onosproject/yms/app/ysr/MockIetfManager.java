@@ -16,12 +16,7 @@
 
 package org.onosproject.yms.app.ysr;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
 import org.onosproject.event.ListenerRegistry;
-import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.YmsIetfNetwork;
-import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.YmsIetfNetworkOpParam;
-import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.YmsIetfNetworkService;
 import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev20151208.IetfNetwork2;
 import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev20151208.IetfNetwork2OpParam;
 import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev20151208.IetfNetwork2Service;
@@ -29,27 +24,11 @@ import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev
 import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev20151208.ietfnetwork2.IetfNetwork2EventListener;
 
 /**
- * Represent mock implementation.
+ * Represent mock implementation for services.
  */
-@Component
-public class Ietf
+public class MockIetfManager
         extends ListenerRegistry<IetfNetwork2Event, IetfNetwork2EventListener>
-        implements YmsIetfNetworkService, IetfNetwork2Service {
-
-    @Activate
-    public void activate() {
-
-    }
-
-    @Override
-    public YmsIetfNetwork getYmsIetfNetwork(YmsIetfNetworkOpParam ietfNetwork) {
-        return null;
-    }
-
-    @Override
-    public void setYmsIetfNetwork(YmsIetfNetworkOpParam ietfNetwork) {
-
-    }
+        implements IetfNetwork2Service {
 
     @Override
     public IetfNetwork2 getIetfNetwork2(IetfNetwork2OpParam ietfNetwork2) {

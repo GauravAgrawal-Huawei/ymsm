@@ -16,6 +16,7 @@
 
 package org.onosproject.yms.app.ysr;
 
+import com.google.common.collect.ImmutableList;
 import org.onosproject.yms.ysr.YangModuleInformation;
 import org.onosproject.yms.ysr.YangModuleLibrary;
 
@@ -26,52 +27,45 @@ import java.util.Objects;
 import static com.google.common.base.MoreObjects.toStringHelper;
 
 /**
- * Represents YANG module library.
+ * Representation of default YANG module library.
  */
-public class DefaultYangModuleLibrary implements YangModuleLibrary {
+class DefaultYangModuleLibrary implements YangModuleLibrary {
 
-    private String moduleId;
-    private List<YangModuleInformation> moduleInformation;
+    private final String moduleSetId;
+    private final List<YangModuleInformation> moduleInformation;
 
     /**
      * Creates an instance of YANG module library.
+     *
+     * @param moduleSetId module id
      */
-    public DefaultYangModuleLibrary() {
+    DefaultYangModuleLibrary(String moduleSetId) {
+        this.moduleSetId = moduleSetId;
         moduleInformation = new ArrayList<>();
     }
 
     @Override
-    public String getModuleSetId() {
-        return moduleId;
+    public String moduleSetId() {
+        return moduleSetId;
     }
 
     @Override
-    public List<YangModuleInformation> getYangModuleList() {
-        return moduleInformation;
+    public List<YangModuleInformation> yangModuleList() {
+        return ImmutableList.copyOf(moduleInformation);
     }
 
     /**
-     * Sets module id.
+     * Adds module information.
      *
-     * @param moduleId module id
+     * @param information module information
      */
-    public void setModuleId(String moduleId) {
-        this.moduleId = moduleId;
+    void addModuleInformation(YangModuleInformation information) {
+        moduleInformation.add(information);
     }
-
-    /**
-     * Sets module informations.
-     *
-     * @param moduleInformation module informations
-     */
-    public void setModuleInformation(List<YangModuleInformation> moduleInformation) {
-        this.moduleInformation = moduleInformation;
-    }
-
 
     @Override
     public int hashCode() {
-        return Objects.hash(moduleInformation, moduleId);
+        return Objects.hash(moduleInformation, moduleSetId);
     }
 
     @Override
@@ -82,7 +76,7 @@ public class DefaultYangModuleLibrary implements YangModuleLibrary {
         if (obj instanceof DefaultYangModuleLibrary) {
             DefaultYangModuleLibrary that = (DefaultYangModuleLibrary) obj;
             return Objects.equals(moduleInformation, that.moduleInformation) &&
-                    Objects.equals(moduleId, that.moduleId);
+                    Objects.equals(moduleSetId, that.moduleSetId);
         }
         return false;
     }
@@ -91,7 +85,7 @@ public class DefaultYangModuleLibrary implements YangModuleLibrary {
     public String toString() {
         return toStringHelper(this)
                 .add("moduleInformation", moduleInformation)
-                .add("moduleId", moduleId)
+                .add("moduleId", moduleSetId)
                 .toString();
     }
 }

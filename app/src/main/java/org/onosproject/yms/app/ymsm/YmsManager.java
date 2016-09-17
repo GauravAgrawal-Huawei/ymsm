@@ -66,11 +66,15 @@ public class YmsManager
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    private static final String APP_ID = "org.onosproject.app.yms";
+    private static final String MODULE_ID = "module-id";
     private ApplicationId appId;
     private YangSchemaRegistry schemaRegistry;
+    //module id generator should be used to generate a new module id for
+    //each YSR instance. So YCH also should generate it.
+    private IdGenerator moduleIdGenerator;
     private ExecutorService schemaRegistryExecutor;
-    private static final String APP_ID = "org.onosproject.app.yms";
-    private YangNotificationExtendedService yangNotificationExtendedService;
+    private YangNotificationExtendedService ynhExtendedService;
     private Map<YangProtocolEncodingFormat, YangDataTreeCodec> defaultCodecs = new HashMap<>();
     @Reference(cardinality = ReferenceCardinality.MANDATORY_UNARY)
     protected CoreService coreService;
@@ -78,24 +82,23 @@ public class YmsManager
     @Activate
     public void activate() {
         appId = coreService.registerApplication(APP_ID);
-        schemaRegistry = new DefaultYangSchemaRegistry();
+        moduleIdGenerator = coreService.getIdGenerator(MODULE_ID);
+        schemaRegistry = new DefaultYangSchemaRegistry(String.valueOf(
+                moduleIdGenerator.getNewId()));
         YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
         defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING, yangDataTreeCodec);
         schemaRegistryExecutor = Executors.newSingleThreadExecutor(
                 groupedThreads(
                         "onos/apps/yang-management-system/schema-registry",
                         "schema-registry-handler", log));
-        yangNotificationExtendedService =
+        ynhExtendedService =
                 new YangNotificationManager(schemaRegistry);
         log.info("Started");
     }
 
     @Deactivate
     public void deactivate() {
-        // TODO implementation.
-        DefaultYangSchemaRegistry registry =
-                (DefaultYangSchemaRegistry) schemaRegistry;
-        registry.flushYsrData();
+        ((DefaultYangSchemaRegistry) schemaRegistry).flushYsrData();
         schemaRegistryExecutor.shutdown();
         log.info("Stopped");
     }
@@ -156,7 +159,7 @@ public class YmsManager
 
     @Override
     public YangNotificationService getYangNotificationService() {
-        return yangNotificationExtendedService;
+        return ynhExtendedService;
     }
 
     /**
@@ -164,18 +167,19 @@ public class YmsManager
      *
      * @return YANG notification extended service
      */
-    public YangNotificationExtendedService getYangNotificationExtendedService() {
-        return yangNotificationExtendedService;
+    private YangNotificationExtendedService getYnhExtendedService() {
+        return ynhExtendedService;
     }
 
     @Override
     public YangModuleLibrary getYangModuleLibrary() {
-        return null;
+        return ((DefaultYangSchemaRegistry) schemaRegistry).getLibrary();
     }
 
     @Override
     public String getYangFile(YangModuleIdentifier moduleIdentifier) {
-        return null;
+        return ((DefaultYangSchemaRegistry) schemaRegistry)
+                .getYangFile(moduleIdentifier);
     }
 
     @Override
@@ -186,9 +190,11 @@ public class YmsManager
     @Override
     public void registerService(Object yangManager, Class<?> yangService,
                                 List<String> supportedFeatureList) {
+
+        //perform registration of service
         schemaRegistryExecutor.execute(() -> schemaRegistry
                 .registerApplication(yangManager, yangService,
-                                     getYangNotificationExtendedService()));
+                                     getYnhExtendedService()));
     }
 
     @Override
