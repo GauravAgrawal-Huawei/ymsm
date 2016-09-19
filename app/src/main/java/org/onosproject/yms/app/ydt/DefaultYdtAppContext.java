@@ -17,7 +17,6 @@
 package org.onosproject.yms.app.ydt;
 
 import org.onosproject.yangutils.datamodel.YangAugment;
-import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeContextInfo;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeIdentifier;
@@ -200,12 +199,12 @@ public class DefaultYdtAppContext implements YdtAppContext {
     }
 
     @Override
-    public YangSchemaNode getAugmentingModuleSchemaNode() {
+    public YangSchemaNode getAugmentingSchemaNode() {
         return augModSchema;
     }
 
     @Override
-    public void setAugmentingModuleSchemaNode(
+    public void setAugmentingSchemaNode(
             YangSchemaNode schemaNode) {
         augModSchema = schemaNode;
     }
@@ -214,13 +213,13 @@ public class DefaultYdtAppContext implements YdtAppContext {
     public YangSchemaNode getAugmentingSchemaNode(
             YangSchemaNodeIdentifier id,
             YangSchemaNodeContextInfo contextInfo) {
-        YangSchemaNode lastAugMod = null;
+        YangSchemaNode lastAugment = null;
         YangSchemaNode switchedNode =
                 contextInfo.getContextSwitchedNode();
 
         while (switchedNode != null) {
             if (switchedNode instanceof YangAugment) {
-                lastAugMod = switchedNode;
+                lastAugment = switchedNode;
             }
             try {
                 switchedNode = switchedNode.getChildSchema(id)
@@ -229,8 +228,8 @@ public class DefaultYdtAppContext implements YdtAppContext {
                 throw new YdtException(e.getMessage());
             }
         }
-        if (lastAugMod != null) {
-            return ((YangNode) lastAugMod).getParent();
+        if (lastAugment != null) {
+            return lastAugment;
         }
         return null;
     }

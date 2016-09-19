@@ -13,42 +13,64 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.onosproject.yms.app.ytb;
 
-import java.util.List;
+import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ydt.YdtExtendedBuilder;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.onosproject.yms.ydt.YdtContext;
 import org.onosproject.yms.ydt.YmsOperationType;
 
+import java.util.List;
+
 /**
- * Abstraction of an entity which provides interfaces to build YANG data tree from the object
- * received from YNH, YAB or YSB.
+ * Abstraction of an entity which provides interfaces to build YANG data tree
+ * from the object received from YNH, YAB or YCH.
  */
 public interface YangTreeBuilder {
 
     /**
-     * Returns the YDT builder after building the tree corresponding to the response YANG object.
-     * Input is received from YAB, YSB.
+     * Returns the YDT builder after building the tree corresponding to the
+     * response YANG object received from any of the protocol such as YAB or
+     * YCH.
      *
-     * @param moduleObject        response class object received from the application
-     * @param logicalRootNodeName name of the logical root node
-     * @param rootNamespace       namespace of the logical root node
-     * @param operationType       operation type of the logical root node
-     * @param appSchemaRegistry   YANG schema registry of the application
+     * @param moduleObject      class object from application
+     * @param rootNodeName      name of the logical root node
+     * @param rootNodeNameSpace namespace of the logical root node
+     * @param operationType     operation type of the logical root node
+     * @param appSchemaRegistry YANG schema registry of the application
      * @return YDT builder from the tree
      */
-    YdtExtendedBuilder getYdtBuilderForYo(List<Object> moduleObject, String logicalRootNodeName, String rootNamespace,
-                                          YmsOperationType operationType, YangSchemaRegistry appSchemaRegistry);
+    YdtExtendedBuilder getYdtBuilderForYo(List<Object> moduleObject,
+                                          String rootNodeName,
+                                          String rootNodeNameSpace,
+                                          YmsOperationType operationType,
+                                          YangSchemaRegistry appSchemaRegistry);
 
     /**
-     * Returns the YDT context after building the tree. Input from YNH is received and processed.
+     * Returns the YDT context after building the tree received from the
+     * protocol YNH.
      *
      * @param notificationObject  object of the notification from application
-     * @param logicalRootNodeName name of the logical root node
+     * @param rootNodeName name of the logical root node
      * @param appSchemaRegistry   YANG schema registry of the application
      * @return YDT context from the tree
      */
-    YdtContext getYdtForNotification(Object notificationObject, String logicalRootNodeName,
+    YdtContext getYdtForNotification(Object notificationObject,
+                                     String rootNodeName,
                                      YangSchemaRegistry appSchemaRegistry);
+
+    /**
+     * Returns the YDT context after building the RPC response tree. The input
+     * for building the tree is RPC request workbench, RPC output java object
+     * and its logical root node operation type. These are received from the
+     * YSB protocol.
+     *
+     * @param rpcOutputObject     RPC response class object from the application
+     * @param rpcRequestWorkBench RPC request workbench from YDT
+     * @return YDT builder where RPC response tree is created.
+     */
+    YdtExtendedBuilder getYdtForRpcResponse(
+            Object rpcOutputObject, YangRequestWorkBench rpcRequestWorkBench);
 }

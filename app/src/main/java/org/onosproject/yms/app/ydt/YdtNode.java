@@ -680,7 +680,7 @@ public abstract class YdtNode<T> implements YdtExtendedContext, Cloneable {
      * @throws CloneNotSupportedException clone is not supported
      *                                    by the referred node
      */
-    public Object clone() throws CloneNotSupportedException {
+    public YdtNode clone() throws CloneNotSupportedException {
         YdtNode clonedNode = (YdtNode) super.clone();
         clonedNode.setPreviousSibling(null);
         clonedNode.setNextSibling(null);

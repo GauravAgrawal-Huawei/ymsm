@@ -22,6 +22,7 @@ import org.onosproject.yang.gen.v1.ydt.test6.rev20160524.Test6Service;
 import org.onosproject.yang.gen.v1.ydt.test6.rev20160524.test6.Cont1;
 import org.onosproject.yang.gen.v1.ydt.test6.rev20160524.test6.DefaultCont1;
 import org.onosproject.yang.gen.v1.ydt.test6.rev20160524.test6.rockthehouse.RockTheHouseInput;
+import org.onosproject.yang.gen.v1.ydt.test6.rev20160524.test6.rockthehouse.RockTheHouseOutput;
 
 /**
  * Implementation of the application management service.
@@ -44,16 +45,19 @@ public class Test6Manager implements Test6Service {
 
     @Override
     public Test6 getAugmentedTest6Cont4(Test6OpParam test6) {
-        return null;
+        Cont1 cont = new DefaultCont1.Cont1Builder().leaf4("4").build();
+        Test6 response = new Test6OpParam.Test6Builder().cont1(cont).build();
+        return response;
     }
 
     @Override
     public void setAugmentedTest6Cont4(Test6OpParam augmentedTest6Cont4) {
-
+        response = augmentedTest6Cont4;
     }
 
     @Override
-    public void rockTheHouse(RockTheHouseInput inputVar) {
+    public RockTheHouseOutput rockTheHouse(RockTheHouseInput inputVar) {
         // TODO: to be implemented
+        return null;
     }
 }

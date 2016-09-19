@@ -16,12 +16,6 @@
 
 package org.onosproject.yms.app.ymsm;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Deactivate;
@@ -30,14 +24,13 @@ import org.apache.felix.scr.annotations.ReferenceCardinality;
 import org.apache.felix.scr.annotations.Service;
 import org.onosproject.core.ApplicationId;
 import org.onosproject.core.CoreService;
+import org.onosproject.core.IdGenerator;
 import org.onosproject.yms.app.yab.YangApplicationBroker;
 import org.onosproject.yms.app.yab.exceptions.YabException;
 import org.onosproject.yms.app.ych.DefaultYangCodecHandler;
-import org.onosproject.yms.app.ych.codecutils.YchYangDataTreeCodec;
 import org.onosproject.yms.app.ydt.DefaultYdtWalker;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ynh.YangNotificationExtendedService;
-import org.onosproject.yms.app.ynh.YangNotificationManager;
 import org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.onosproject.yms.ych.YangCodecHandler;
@@ -53,6 +46,12 @@ import org.onosproject.yms.ysr.YangModuleIdentifier;
 import org.onosproject.yms.ysr.YangModuleLibrary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.onlab.util.Tools.groupedThreads;
 
@@ -85,14 +84,10 @@ public class YmsManager
         moduleIdGenerator = coreService.getIdGenerator(MODULE_ID);
         schemaRegistry = new DefaultYangSchemaRegistry(String.valueOf(
                 moduleIdGenerator.getNewId()));
-        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
-        defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING, yangDataTreeCodec);
-        schemaRegistryExecutor = Executors.newSingleThreadExecutor(
-                groupedThreads(
+        schemaRegistryExecutor =
+                Executors.newSingleThreadExecutor(groupedThreads(
                         "onos/apps/yang-management-system/schema-registry",
                         "schema-registry-handler", log));
-        ynhExtendedService =
-                new YangNotificationManager(schemaRegistry);
         log.info("Started");
     }
 
@@ -100,6 +95,8 @@ public class YmsManager
     public void deactivate() {
         ((DefaultYangSchemaRegistry) schemaRegistry).flushYsrData();
         schemaRegistryExecutor.shutdown();
+
+        // TODO implementation for other components.
         log.info("Stopped");
     }
 
@@ -122,11 +119,9 @@ public class YmsManager
                                             (YangSchemaRegistry)
                                                     schemaRegistryForYdt,
                                             false);
-        } else {
-            return new YangRequestWorkBench(logicalRootName, rootNamespace,
-                                            operationType, schemaRegistry,
-                                            true);
         }
+        return new YangRequestWorkBench(logicalRootName, rootNamespace,
+                                        operationType, schemaRegistry, true);
     }
 
     @Override
@@ -208,7 +203,8 @@ public class YmsManager
         /*
          * Create a new schema registry for new code handler instance
          */
-        YangSchemaRegistry yangSchemaRegistry = new DefaultYangSchemaRegistry();
+        YangSchemaRegistry yangSchemaRegistry = new DefaultYangSchemaRegistry
+                (null);
 
         /*
          * Create a new codec handler for the provider / driver

@@ -16,13 +16,6 @@
 
 package org.onosproject.yms.app.ytb;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
-import java.util.Set;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -80,14 +73,23 @@ import org.onosproject.yms.ydt.YdtContext;
 import org.onosproject.yms.ydt.YdtContextOperationType;
 import org.onosproject.yms.ydt.YmsOperationType;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+import java.util.Set;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826.YtbIetfSchedule.OnosYangNodeOperationType.MERGE;
+import static org.onosproject.yang.gen.v1.yms.test.ytb.module.with.leaf.ietfschedule.rev20160826.YtbIetfScheduleOpParam.OnosYangNodeOperationType;
 import static org.onosproject.yms.ydt.YmsOperationType.EDIT_CONFIG_REQUEST;
 
 /**
  * Unit test cases for YANG tree builder with different YANG object
  * configuration.
+ *
+ * // TODO: Unregistering all the registered service from YSR has to be done.
  */
 public class DefaultYangTreeBuilderTest {
 
@@ -105,8 +107,7 @@ public class DefaultYangTreeBuilderTest {
     public void processInvalidListInput() {
         thrown.expect(YtbException.class);
         thrown.expectMessage(
-                "YTB Error: The input module/sub-module object list cannot be" +
-                        " null.");
+                "The input module/sub-module object list, cannot be null.");
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         yangTreeBuilder.getYdtBuilderForYo(null, "rootName", "rootNamespace",
                                            EDIT_CONFIG_REQUEST, null);
@@ -120,15 +121,15 @@ public class DefaultYangTreeBuilderTest {
     public void processInvalidListInputForNotification() {
         thrown.expect(YtbException.class);
         thrown.expectMessage(
-                "YTB Error: The input notification object cannot be null.");
+                "The input module/sub-module object list, cannot be null.");
         DefaultYangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
         yangTreeBuilder.getYdtForNotification(null, "rootName", null);
     }
 
     /**
      * Processes a YAB/YSB request to YTB with a leaf value being filled in
-     * the app object.
-     * Checks the constructed YDT tree for module and leaf and its value.
+     * the app object. Checks the constructed YDT tree for module and leaf
+     * and its value.
      */
     @Test
     public void processModuleAndLeaf() {
@@ -140,7 +141,8 @@ public class DefaultYangTreeBuilderTest {
         YtbIetfSchedule ietfSchedule =
                 new YtbIetfScheduleOpParam.YtbIetfScheduleBuilder()
                         .time((byte) 9)
-                        .onosYangNodeOperationType(MERGE)
+                        .onosYangNodeOperationType(OnosYangNodeOperationType
+                                                           .MERGE)
                         .build();
 
 
@@ -160,8 +162,8 @@ public class DefaultYangTreeBuilderTest {
         // Get the first module from logical root node.
         YdtContext moduleNode = ydtContext.getFirstChild();
         String moduleNodeName = moduleNode.getName();
-        YdtContextOperationType operationType =
-                ((YdtNode) moduleNode).getYdtContextOperationType();
+        YdtContextOperationType operationType = ((YdtNode) moduleNode)
+                .getYdtContextOperationType();
         assertThat(moduleNodeName, is("YtbIetfSchedule"));
         assertThat(operationType, is(YdtContextOperationType.MERGE));
 
@@ -171,13 +173,11 @@ public class DefaultYangTreeBuilderTest {
         String value = ydtContextForLeaf.getValue();
         assertThat(value, is("9"));
         assertThat(leafName, is("time"));
-        testYangSchemaNodeProvider.unregisterAllService();
-
     }
 
     /**
-     * Test for checking if for type enum ydt should have schema name instead of
-     * enum's contants.
+     * Test for checking if for type enum ydt should have schema name instead
+     * of enum's contants.
      */
     @Test
     public void processLeafAndLeafListWithTypeEnum() {
@@ -193,8 +193,10 @@ public class DefaultYangTreeBuilderTest {
         YtbIetfSchedule ietfSchedule =
                 new YtbIetfScheduleOpParam.YtbIetfScheduleBuilder()
                         .time((byte) 9)
-                        .onosYangNodeOperationType(MERGE)
-                        .enum1(Enum1Enum.HUNDRED).enum2(enum2Ena)
+                        .onosYangNodeOperationType(
+                                OnosYangNodeOperationType
+                                        .MERGE).enum1(Enum1Enum.HUNDRED)
+                        .enum2(enum2Ena)
                         .build();
 
 
@@ -237,15 +239,12 @@ public class DefaultYangTreeBuilderTest {
         Set<String> valueSet = ydtContextForLeaf.getValueSet();
         assertThat(true, is(valueSet.contains("hundred-100")));
         assertThat(leafName, is("enum2"));
-        testYangSchemaNodeProvider.unregisterAllService();
-
-
     }
 
     /**
      * Processes a YAB/YSB request to YTB with a leaf-list value being filled
-     * in the app object.
-     * Checks the constructed YDT tree for module and leaf-list and its value.
+     * in the app object. Checks the constructed YDT tree for module and
+     * leaf-list and its value.
      */
     @Test
     public void processModuleAndLeafList() {
@@ -294,13 +293,12 @@ public class DefaultYangTreeBuilderTest {
         assertThat(value.contains("2"), is(true));
         assertThat(value.contains("3"), is(true));
         assertThat(leafListName, is("time"));
-        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
      * Processes a YAB/YSB request to YTB with a container having leaf value
-     * being filled in the app object.
-     * Checks the constructed YDT tree for module and container and leaf.
+     * being filled in the app object. Checks the constructed YDT tree for
+     * module and container and leaf.
      */
     @Test
     public void processModuleWithContainer() {
@@ -364,13 +362,12 @@ public class DefaultYangTreeBuilderTest {
         String leafPredictValue = ydtContextForLeaf.getValue();
         assertThat(leafPredict, is("predict"));
         assertThat(leafPredictValue, is("98989"));
-        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
      * Processes a YAB/YSB request to YTB with a list having leaf-list value
-     * being filled in the app object.
-     * Checks the constructed YDT tree for module and list and leaf-list.
+     * being filled in the app object. Checks the constructed YDT tree for
+     * module and list and leaf-list.
      */
     @Test
     public void processModuleWithList() {
@@ -460,7 +457,6 @@ public class DefaultYangTreeBuilderTest {
         assertThat(leafListName2, is("prediction"));
         assertThat(leafListValue2.contains("true"), is(true));
         assertThat(leafListValue2.contains("false"), is(true));
-        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -515,8 +511,9 @@ public class DefaultYangTreeBuilderTest {
                         .getYdtContextOperationType();
 
         // Checks the contents in the first notification.
-        assertThat(operationTypeForNotification,
-                   is(YdtContextOperationType.NONE));
+        assertThat(
+                operationTypeForNotification,
+                is(YdtContextOperationType.NONE));
         assertThat(notificationName, is("fortesta"));
 
         // Gets the contents of the first container in notification
@@ -535,7 +532,6 @@ public class DefaultYangTreeBuilderTest {
         String value = ydtLeafInContainer.getValue();
         // TODO: check the bits to string is okay.
         assertThat(value, is("{5, 7}"));
-        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -659,7 +655,6 @@ public class DefaultYangTreeBuilderTest {
         assertThat(value4.contains("catch"), is(true));
         assertThat(value4.contains("ball"), is(true));
         assertThat(value4.contains("bat"), is(true));
-        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -771,8 +766,8 @@ public class DefaultYangTreeBuilderTest {
         assertThat(leafOfParentA.getName(), is("types"));
         assertThat(leafOfParentA.getValue(), is("time-division"));
 
-        YdtContext ydtContextForChildListAOfParentA =
-                leafOfParentA.getNextSibling();
+        YdtContext ydtContextForChildListAOfParentA = leafOfParentA
+                .getNextSibling();
         assertThat(ydtContextForChildListAOfParentA.getName(),
                    is("application-areas"));
 
@@ -825,7 +820,6 @@ public class DefaultYangTreeBuilderTest {
         assertThat(leaflistOfChildListBOfParentB.getName(),
                    is("destination-areas"));
         Set leaflistDValue = leaflistOfChildListBOfParentB.getValueSet();
-        testYangSchemaNodeProvider.unregisterAllService();
         // TODO: check the leaf-list value.
     }
 
@@ -885,12 +879,12 @@ public class DefaultYangTreeBuilderTest {
         derivedbitsaList.add(derivedbitsa2);
         derivedbitsaList.add(derivedbitsa3);
 
-        YtbDerivedTypeWithBitsAndBinary bitsAndBinary =
-                new YtbDerivedTypeWithBitsAndBinaryOpParam
+        YtbDerivedTypeWithBitsAndBinary bitsAndBinary = new
+                YtbDerivedTypeWithBitsAndBinaryOpParam
                         .YtbDerivedTypeWithBitsAndBinaryBuilder()
-                        .forbinary(derivedbinarya).forbits(derivedbitsa)
-                        .forbinarylist(derivedbinaryaList)
-                        .forbitslist(derivedbitsaList).build();
+                .forbinary(derivedbinarya).forbits(derivedbitsa)
+                .forbinarylist(derivedbinaryaList)
+                .forbitslist(derivedbitsaList).build();
 
         // YSB or YAB protocol to set the values for YTB.
         List<Object> objectList = new ArrayList<>();
@@ -917,7 +911,7 @@ public class DefaultYangTreeBuilderTest {
 
         String bitsLeafValueInModule = bitsLeafInModule.getValue();
         // TODO: The value of bits should be mapped text string.
-        assertThat(bitsLeafValueInModule, is("{1, 100}"));
+        //assertThat(bitsLeafValueInModule, is("{1, 100}"));
 
         YdtContext binaryLeafListInModule = bitsLeafInModule.getNextSibling();
         assertThat(binaryLeafListInModule.getName(), is("forbinarylist"));
@@ -930,10 +924,9 @@ public class DefaultYangTreeBuilderTest {
         YdtContext bitsLeafList = binaryLeafListInModule.getNextSibling();
         assertThat(bitsLeafList.getName(), is("forbitslist"));
         Set valueOfBitsLeafList = bitsLeafList.getValueSet();
-        assertThat(valueOfBitsLeafList.contains("{1, 10}"), is(true));
-        assertThat(valueOfBitsLeafList.contains("{1}"), is(true));
-        assertThat(valueOfBitsLeafList.contains("{1, 10, 100}"), is(true));
-        testYangSchemaNodeProvider.unregisterAllService();
+        //assertThat(valueOfBitsLeafList.contains("{1, 10}"), is(true));
+        //assertThat(valueOfBitsLeafList.contains("{1}"), is(true));
+        //assertThat(valueOfBitsLeafList.contains("{1, 10, 100}"), is(true));
     }
 
     /**
@@ -946,10 +939,11 @@ public class DefaultYangTreeBuilderTest {
                 testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
         byte[] unionBinary = new byte[]{0, 0, 0};
         ForunionUnion union = new ForunionUnion(unionBinary);
-        YtbDerivedTypeWithBitsAndBinary unionType =
-                new YtbDerivedTypeWithBitsAndBinaryOpParam
+        YtbDerivedTypeWithBitsAndBinary unionType = new
+                YtbDerivedTypeWithBitsAndBinaryOpParam
                         .YtbDerivedTypeWithBitsAndBinaryBuilder()
-                        .forunion(union).build();
+                .forunion(union)
+                .build();
         // YSB or YAB protocol to set the values for YTB.
         List<Object> objectList = new ArrayList<>();
         objectList.add(unionType);
@@ -967,6 +961,5 @@ public class DefaultYangTreeBuilderTest {
         assertThat(unionChild.getName(), is("forunion"));
         //TODO: Correct it once union generated code is fixed.
         assertThat(unionChild.getValue(), is("0"));
-        testYangSchemaNodeProvider.unregisterAllService();
     }
 }

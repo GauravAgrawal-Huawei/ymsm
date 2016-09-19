@@ -25,7 +25,6 @@ public class YtbException extends RuntimeException {
      * Creates a new YTB exception.
      */
     public YtbException() {
-        super();
     }
 
     /**

@@ -164,14 +164,14 @@ public interface YdtAppContext {
      *
      * @return YangSchemaNode of augmenting application
      */
-    YangSchemaNode getAugmentingModuleSchemaNode();
+    YangSchemaNode getAugmentingSchemaNode();
 
     /**
      * Sets the YangSchemaNode of augmenting application root node.
      *
      * @param schemaNode YangSchemaNode of augmenting application module
      */
-    void setAugmentingModuleSchemaNode(YangSchemaNode schemaNode);
+    void setAugmentingSchemaNode(YangSchemaNode schemaNode);
 
     /**
      * Adds a last child to ydt application data tree.

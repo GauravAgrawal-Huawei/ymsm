@@ -1,0 +1,15 @@
+module YtbSimpleRpcResponse {
+    yang-version 1;
+    namespace "yms:test:ytb:simple:rpc:response";
+    prefix "sch";
+    revision "2016-08-26";
+    rpc rpc {
+        input {
+        }
+        output {
+            leaf output-leaf {
+                type uint32;
+            }
+        }
+    }
+}

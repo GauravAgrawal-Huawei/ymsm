@@ -16,8 +16,6 @@
 
 package org.onosproject.yms.app.yab;
 
-import java.util.List;
-
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
@@ -32,6 +30,8 @@ import org.onosproject.yms.ymsm.YmsService;
 import org.onosproject.yms.ynh.YangNotificationService;
 import org.onosproject.yms.ysr.YangModuleIdentifier;
 import org.onosproject.yms.ysr.YangModuleLibrary;
+
+import java.util.List;
 
 /**
  * Represents implementation of YANG application management system manager.
@@ -48,8 +48,7 @@ public class YmsManagerTest
                                     String rootNamespace,
                                     YmsOperationType operationType) {
         testYangSchemaNodeProvider.processSchemaRegistry(new Test6Manager());
-        this.schemaRegistry =
-                testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
+        schemaRegistry = testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
         return new YangRequestWorkBench(logicalRootName, rootNamespace,
                                         operationType, schemaRegistry, false);
     }
@@ -80,13 +79,11 @@ public class YmsManagerTest
                 }
                 break;
             case QUERY_CONFIG_REQUEST:
-                // TODO : to be implemented
             case QUERY_REQUEST:
                 return requestBroker.processQuery(operationRequest);
             case RPC_REQUEST:
                 return requestBroker.processOperation(operationRequest);
             default:
-                // TODO : throw exception
         }
         return null;
     }
@@ -99,7 +96,6 @@ public class YmsManagerTest
     @Override
     public void registerService(Object appManager, Class<?> yangService,
                                 List<String> supportedFeatureList) {
-
     }
 
     @Override
@@ -120,15 +116,10 @@ public class YmsManagerTest
     @Override
     public void registerDefaultCodec(YangDataTreeCodec defaultCodec,
                                      YangProtocolEncodingFormat dataFormat) {
-
     }
 
     @Override
     public YangCodecHandler getYangCodecHandler() {
         return null;
-    }
-
-    public void unregisterService(String appName) {
-        //testYangSchemaNodeProvider.unregisterService(appName);
     }
 }

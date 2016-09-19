@@ -16,25 +16,29 @@
 
 package org.onosproject.yms.app.yab;
 
+import org.junit.Test;
+import org.onosproject.yangutils.datamodel.YangAugment;
+import org.onosproject.yangutils.datamodel.YangNode;
+import org.onosproject.yms.app.ydt.YangRequestWorkBench;
+import org.onosproject.yms.app.ydt.YdtAppContext;
+import org.onosproject.yms.app.ydt.YdtAppNodeOperationType;
+import org.onosproject.yms.app.ydt.YdtNode;
+import org.onosproject.yms.ydt.YdtContext;
+
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.After;
-import org.junit.Test;
-import org.onosproject.yms.app.ydt.YangRequestWorkBench;
-import org.onosproject.yms.app.ydt.YdtAppContext;
-import org.onosproject.yms.app.ydt.YdtAppNodeOperationType;
-import org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider;
-import org.onosproject.yms.ydt.YdtContext;
-import org.onosproject.yms.ydt.YmsOperationType;
-
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.onosproject.yms.ydt.YdtContextOperationType.DELETE;
 import static org.onosproject.yms.ydt.YdtContextOperationType.MERGE;
+import static org.onosproject.yms.ydt.YmsOperationType.EDIT_CONFIG_REQUEST;
+import static org.onosproject.yms.ydt.YmsOperationType.QUERY_CONFIG_REQUEST;
+import static org.onosproject.yms.ydt.YmsOperationType.RPC_REQUEST;
 
 /**
  * Unit test case for YANG application broker.
@@ -42,27 +46,17 @@ import static org.onosproject.yms.ydt.YdtContextOperationType.MERGE;
 public class YangApplicationBrokerTest {
 
     YmsManagerTest ymsManager = new YmsManagerTest();
-    TestYangSchemaNodeProvider testYangSchemaNodeProvider = new
-            TestYangSchemaNodeProvider();
-
-    @After
-    public void unregisterService() {
-        ymsManager.unregisterService(
-                "org.onosproject.yang.gen.v1.ydt.test6.rev20160524.Test6");
-    }
 
     /**
      * Returns YANG data tree to check edit operation of container.
      *
      * @return YANG data tree
      */
-    public YangRequestWorkBench buildYdtForEditOperationWithoutDelete()
-            throws IOException {
-        YangRequestWorkBench defaultYdtBuilder;
+    private YangRequestWorkBench buildYdtForEditOperationWithoutDelete() {
         String rootName = "root";
-        defaultYdtBuilder =
+        YangRequestWorkBench defaultYdtBuilder =
                 (YangRequestWorkBench) ymsManager.getYdtBuilder(rootName, null,
-                                                                YmsOperationType.EDIT_CONFIG_REQUEST);
+                                                                EDIT_CONFIG_REQUEST);
         defaultYdtBuilder.addChild("test6", "ydt.test6", MERGE);
         defaultYdtBuilder.addChild("cont1", null, MERGE);
         defaultYdtBuilder.addChild("cont2", null, MERGE);
@@ -85,11 +79,10 @@ public class YangApplicationBrokerTest {
     }
 
     private YangRequestWorkBench buildYdtForKeyLeavesInDeleteTree() {
-        YangRequestWorkBench defaultYdtBuilder;
         String rootName = "root";
-        defaultYdtBuilder =
+        YangRequestWorkBench defaultYdtBuilder =
                 (YangRequestWorkBench) ymsManager.getYdtBuilder(rootName, null,
-                                                                YmsOperationType.EDIT_CONFIG_REQUEST);
+                                                                EDIT_CONFIG_REQUEST);
         defaultYdtBuilder.addChild("test6", "ydt.test6", MERGE);
         defaultYdtBuilder.addChild("list2", null, MERGE);
         defaultYdtBuilder.addLeaf("leaf5", null, "5");
@@ -109,13 +102,11 @@ public class YangApplicationBrokerTest {
      *
      * @return YANG data tree
      */
-    private YangRequestWorkBench buildYdtForEditOperationWithDelete()
-            throws IOException {
-        YangRequestWorkBench defaultYdtBuilder;
+    private YangRequestWorkBench buildYdtForEditOperationWithDelete() {
         String rootName = "rootNode";
-        defaultYdtBuilder =
+        YangRequestWorkBench defaultYdtBuilder =
                 (YangRequestWorkBench) ymsManager.getYdtBuilder(rootName, null,
-                                                                YmsOperationType.EDIT_CONFIG_REQUEST);
+                                                                EDIT_CONFIG_REQUEST);
         defaultYdtBuilder.addChild("test6", "ydt.test6", MERGE);
         defaultYdtBuilder.addChild("cont1", null, MERGE);
         defaultYdtBuilder.addChild("cont2", null, DELETE);
@@ -142,15 +133,13 @@ public class YangApplicationBrokerTest {
      *
      * @return YANG data tree
      */
-    private YangRequestWorkBench buildYdtForListEditOperationWithoutDelete()
-            throws IOException {
-        YangRequestWorkBench defaultYdtBuilder;
+    private YangRequestWorkBench buildYdtForListEditOperationWithoutDelete() {
         String rootName = "listWithoutDelete";
         Set<String> valueSet = new HashSet<>();
         valueSet.add("10");
-        defaultYdtBuilder =
+        YangRequestWorkBench defaultYdtBuilder =
                 (YangRequestWorkBench) ymsManager.getYdtBuilder(rootName, null,
-                                                                YmsOperationType.EDIT_CONFIG_REQUEST);
+                                                                EDIT_CONFIG_REQUEST);
         defaultYdtBuilder.addChild("test6", "ydt.test6", MERGE);
         defaultYdtBuilder.addChild("cont1", null, MERGE);
         defaultYdtBuilder.addChild("list1", null, MERGE);
@@ -181,14 +170,11 @@ public class YangApplicationBrokerTest {
      *
      * @return YANG data tree
      */
-    private YangRequestWorkBench buildYdtForListEditOperationWithDelete()
-            throws IOException {
-        YangRequestWorkBench defaultYdtBuilder;
+    private YangRequestWorkBench buildYdtForListEditOperationWithDelete() {
         String rootName = "listWithDelete";
-
-        defaultYdtBuilder =
+        YangRequestWorkBench defaultYdtBuilder =
                 (YangRequestWorkBench) ymsManager.getYdtBuilder(rootName, null,
-                                                                YmsOperationType.EDIT_CONFIG_REQUEST);
+                                                                EDIT_CONFIG_REQUEST);
         defaultYdtBuilder.addChild("test6", "ydt.test6", MERGE);
         defaultYdtBuilder.addChild("cont1", null, MERGE);
         defaultYdtBuilder.addChild("list1", null, DELETE);
@@ -215,14 +201,11 @@ public class YangApplicationBrokerTest {
      *
      * @return YANG data tree
      */
-    private YangRequestWorkBench buildYdtForQueryOperation()
-            throws IOException {
-        YangRequestWorkBench defaultYdtBuilder;
+    private YangRequestWorkBench buildYdtForQueryOperation() {
         String rootName = "root";
-
-        defaultYdtBuilder =
+        YangRequestWorkBench defaultYdtBuilder =
                 (YangRequestWorkBench) ymsManager.getYdtBuilder(rootName, null,
-                                                                YmsOperationType.QUERY_CONFIG_REQUEST);
+                                                                QUERY_CONFIG_REQUEST);
         defaultYdtBuilder.addChild("test6", "ydt.test6");
         defaultYdtBuilder.addChild("cont1", null);
         defaultYdtBuilder.addChild("cont2", null);
@@ -240,14 +223,11 @@ public class YangApplicationBrokerTest {
      *
      * @return YANG data tree
      */
-    private YangRequestWorkBench buildYdtForListQueryOperation()
-            throws IOException {
-        YangRequestWorkBench defaultYdtBuilder;
+    private YangRequestWorkBench buildYdtForListQueryOperation() {
         String rootName = "listQuery";
-
-        defaultYdtBuilder =
+        YangRequestWorkBench defaultYdtBuilder =
                 (YangRequestWorkBench) ymsManager.getYdtBuilder(rootName, null,
-                                                                YmsOperationType.QUERY_CONFIG_REQUEST);
+                                                                QUERY_CONFIG_REQUEST);
         defaultYdtBuilder.addChild("test6", "ydt.test6");
         defaultYdtBuilder.addChild("cont1", null);
         defaultYdtBuilder.addChild("list1", null);
@@ -262,14 +242,11 @@ public class YangApplicationBrokerTest {
         return defaultYdtBuilder;
     }
 
-    private YangRequestWorkBench buildYdtWithOneDeleteNode()
-            throws IOException {
-        YangRequestWorkBench defaultYdtBuilder;
+    private YangRequestWorkBench buildYdtWithOneDeleteNode() {
         String rootName = "root";
-
-        defaultYdtBuilder =
+        YangRequestWorkBench defaultYdtBuilder =
                 (YangRequestWorkBench) ymsManager.getYdtBuilder(rootName, null,
-                                                                YmsOperationType.EDIT_CONFIG_REQUEST);
+                                                                EDIT_CONFIG_REQUEST);
         defaultYdtBuilder.addChild("test6", "ydt.test6");
         defaultYdtBuilder.addChild("cont1", null, MERGE);
         defaultYdtBuilder.traverseToParent();
@@ -279,14 +256,11 @@ public class YangApplicationBrokerTest {
         return defaultYdtBuilder;
     }
 
-    private YangRequestWorkBench buildYdtWithDeleteNodeAsLastChild()
-            throws IOException {
-        YangRequestWorkBench defaultYdtBuilder;
+    private YangRequestWorkBench buildYdtWithDeleteNodeAsLastChild() {
         String rootName = "root";
-
-        defaultYdtBuilder =
+        YangRequestWorkBench defaultYdtBuilder =
                 (YangRequestWorkBench) ymsManager.getYdtBuilder(rootName, null,
-                                                                YmsOperationType.EDIT_CONFIG_REQUEST);
+                                                                EDIT_CONFIG_REQUEST);
         defaultYdtBuilder.addChild("test6", "ydt.test6", MERGE);
         defaultYdtBuilder.addChild("cont1", null, MERGE);
         defaultYdtBuilder.traverseToParent();
@@ -300,14 +274,11 @@ public class YangApplicationBrokerTest {
         return defaultYdtBuilder;
     }
 
-    private YangRequestWorkBench buildYdtWithAllDeleteNode()
-            throws IOException {
-        YangRequestWorkBench defaultYdtBuilder;
+    private YangRequestWorkBench buildYdtWithAllDeleteNode() {
         String rootName = "root";
-
-        defaultYdtBuilder =
+        YangRequestWorkBench defaultYdtBuilder =
                 (YangRequestWorkBench) ymsManager.getYdtBuilder(rootName, null,
-                                                                YmsOperationType.EDIT_CONFIG_REQUEST);
+                                                                EDIT_CONFIG_REQUEST);
         defaultYdtBuilder.addChild("test6", "ydt.test6", DELETE);
         defaultYdtBuilder.addChild("cont1", null, DELETE);
         defaultYdtBuilder.traverseToParent();
@@ -318,6 +289,124 @@ public class YangApplicationBrokerTest {
         defaultYdtBuilder.traverseToParent();
         defaultYdtBuilder.traverseToParent();
         defaultYdtBuilder.addChild("cont4", null, DELETE);
+        return defaultYdtBuilder;
+    }
+
+    /**
+     * Returns YANG data tree to check rpc operation with only input.
+     *
+     * @return YANG data tree
+     */
+    private YangRequestWorkBench buildYdtForRpcWithOnlyInput() {
+        String rootName = "root";
+        YangRequestWorkBench defaultYdtBuilder =
+                (YangRequestWorkBench) ymsManager.getYdtBuilder(rootName, null,
+                                                                RPC_REQUEST);
+        defaultYdtBuilder.addChild("test6", "ydt.test6");
+        defaultYdtBuilder.addChild("rock-the-house", null);
+        defaultYdtBuilder.addChild("input", null);
+        defaultYdtBuilder.addLeaf("zip-code", null, "5");
+        defaultYdtBuilder.traverseToParent();
+        defaultYdtBuilder.traverseToParent();
+        defaultYdtBuilder.traverseToParent();
+        defaultYdtBuilder.traverseToParent();
+        return defaultYdtBuilder;
+    }
+
+    /**
+     * Returns YANG data tree to check rpc operation with only output.
+     *
+     * @return YANG data tree
+     */
+    private YangRequestWorkBench buildYdtForRpcWithOnlyOutput() {
+        String rootName = "root";
+        YangRequestWorkBench defaultYdtBuilder =
+                (YangRequestWorkBench) ymsManager.getYdtBuilder(rootName, null,
+                                                                RPC_REQUEST);
+        defaultYdtBuilder.addChild("test6", "ydt.test6");
+        defaultYdtBuilder.addChild("rock-the-house", null);
+        defaultYdtBuilder.addChild("output", null);
+        defaultYdtBuilder.addLeaf("hello", null, "5");
+        defaultYdtBuilder.traverseToParent();
+        defaultYdtBuilder.traverseToParent();
+        defaultYdtBuilder.traverseToParent();
+        defaultYdtBuilder.traverseToParent();
+        return defaultYdtBuilder;
+    }
+
+    /**
+     * Returns YANG data tree to check rpc operation with both input and output.
+     *
+     * @return YANG data tree
+     */
+    private YangRequestWorkBench buildYdtForRpcWithBothInputOutput() {
+        String rootName = "root";
+        YangRequestWorkBench defaultYdtBuilder =
+                (YangRequestWorkBench) ymsManager.getYdtBuilder(rootName, null,
+                                                                RPC_REQUEST);
+        defaultYdtBuilder.addChild("test6", "ydt.test6");
+        defaultYdtBuilder.addChild("rock-the-house", null);
+        defaultYdtBuilder.addChild("input", null);
+        defaultYdtBuilder.addLeaf("zip-code", null, "5");
+        defaultYdtBuilder.traverseToParent();
+        defaultYdtBuilder.traverseToParent();
+        defaultYdtBuilder.addChild("output", null);
+        defaultYdtBuilder.addLeaf("hello", null, "5");
+        defaultYdtBuilder.traverseToParent();
+        defaultYdtBuilder.traverseToParent();
+        defaultYdtBuilder.traverseToParent();
+        defaultYdtBuilder.traverseToParent();
+        return defaultYdtBuilder;
+    }
+
+    /**
+     * Returns YANG data tree to check rpc operation.
+     *
+     * @return YANG data tree
+     */
+    private YangRequestWorkBench buildYdtForRpc() {
+        String rootName = "root";
+        YangRequestWorkBench defaultYdtBuilder =
+                (YangRequestWorkBench) ymsManager.getYdtBuilder(rootName, null,
+                                                                RPC_REQUEST);
+        defaultYdtBuilder.addChild("test6", "ydt.test6");
+        defaultYdtBuilder.addChild("rock-the-house", null);
+        defaultYdtBuilder.traverseToParent();
+        defaultYdtBuilder.traverseToParent();
+        return defaultYdtBuilder;
+    }
+
+    /**
+     * Returns YANG data tree to check query operation with multiple level of
+     * augment.
+     *
+     * @return YANG data tree
+     */
+    private YangRequestWorkBench buildYdtForQueryWithMultipleAugment() {
+        String rootName = "root";
+        YangRequestWorkBench defaultYdtBuilder =
+                (YangRequestWorkBench) ymsManager.getYdtBuilder(rootName, null,
+                                                                QUERY_CONFIG_REQUEST);
+        defaultYdtBuilder.addChild("test6", "ydt.test6");
+        defaultYdtBuilder.traverseToParent();
+        return defaultYdtBuilder;
+    }
+
+    /**
+     * Returns YANG data tree to check delete operation with multiple level of
+     * augment.
+     *
+     * @return YANG data tree
+     */
+    private YangRequestWorkBench buildYdtForDeleteWithMultipleAugment() {
+        String rootName = "root";
+        YangRequestWorkBench defaultYdtBuilder =
+                (YangRequestWorkBench) ymsManager.getYdtBuilder(rootName, null,
+                                                                EDIT_CONFIG_REQUEST);
+        defaultYdtBuilder.addChild("test6", "ydt.test6");
+        defaultYdtBuilder.addChild("cont4", null, DELETE);
+        defaultYdtBuilder.traverseToParent();
+        defaultYdtBuilder.traverseToParent();
         return defaultYdtBuilder;
     }
 
@@ -379,9 +468,9 @@ public class YangApplicationBrokerTest {
         deleteTree = yab.buildDeleteTree(deleteNodes);
 
         // verify whether ydt tree is correct
-        assertThat(true, is(deleteTree.getName().contentEquals("test6")));
+        assertThat(true, is(deleteTree.getFirstChild().getName().contentEquals("test6")));
 
-        cont1YdtContext = deleteTree.getFirstChild();
+        cont1YdtContext = deleteTree.getFirstChild().getFirstChild();
         assertThat(true, is(cont1YdtContext.getName().contentEquals("cont1")));
 
         cont2YdtContext = cont1YdtContext.getFirstChild();
@@ -422,7 +511,6 @@ public class YangApplicationBrokerTest {
         ydtContext = cont1YdtContext.getNextSibling();
         assertThat(true, is(ydtContext.getName().contentEquals("leaf10")));
         assertThat(true, is(ydtContext.getValue().contentEquals("10")));
-        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -483,9 +571,9 @@ public class YangApplicationBrokerTest {
         YangApplicationBroker yab = new YangApplicationBroker(null);
         deleteTree = yab.buildDeleteTree(deleteNodes);
 
-        assertThat(true, is(deleteTree.getName().contentEquals("test6")));
+        assertThat(true, is(deleteTree.getFirstChild().getName().contentEquals("test6")));
 
-        cont1YdtContext = deleteTree.getFirstChild();
+        cont1YdtContext = deleteTree.getFirstChild().getFirstChild();
         assertThat(true, is(cont1YdtContext.getName().contentEquals("cont1")));
 
         list1YdtContext = cont1YdtContext.getFirstChild();
@@ -528,7 +616,6 @@ public class YangApplicationBrokerTest {
         ydtContext = cont1YdtContext.getNextSibling();
         assertThat(true, is(ydtContext.getName().contentEquals("leaf10")));
         assertThat(true, is(ydtContext.getValue().contentEquals("10")));
-        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -540,7 +627,6 @@ public class YangApplicationBrokerTest {
         YangRequestWorkBench defaultYdtBuilder =
                 buildYdtForEditOperationWithoutDelete();
         ymsManager.executeOperation(defaultYdtBuilder);
-        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -552,7 +638,6 @@ public class YangApplicationBrokerTest {
         YangRequestWorkBench defaultYdtBuilder =
                 buildYdtForEditOperationWithDelete();
         ymsManager.executeOperation(defaultYdtBuilder);
-        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -564,7 +649,6 @@ public class YangApplicationBrokerTest {
         YangRequestWorkBench defaultYdtBuilder =
                 buildYdtForListEditOperationWithoutDelete();
         ymsManager.executeOperation(defaultYdtBuilder);
-        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -576,7 +660,6 @@ public class YangApplicationBrokerTest {
         YangRequestWorkBench defaultYdtBuilder =
                 buildYdtForListEditOperationWithDelete();
         ymsManager.executeOperation(defaultYdtBuilder);
-        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -587,7 +670,6 @@ public class YangApplicationBrokerTest {
             throws IOException, CloneNotSupportedException {
         YangRequestWorkBench defaultYdtBuilder = buildYdtForQueryOperation();
         ymsManager.executeOperation(defaultYdtBuilder);
-        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -599,7 +681,6 @@ public class YangApplicationBrokerTest {
         YangRequestWorkBench defaultYdtBuilder =
                 buildYdtForListQueryOperation();
         ymsManager.executeOperation(defaultYdtBuilder);
-        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -631,9 +712,9 @@ public class YangApplicationBrokerTest {
         YangApplicationBroker yab = new YangApplicationBroker(null);
         YdtContext deleteTree = yab.buildDeleteTree(deleteNodes);
 
-        assertThat(true, is(deleteTree.getName().contentEquals("test6")));
+        assertThat(true, is(deleteTree.getFirstChild().getName().contentEquals("test6")));
 
-        ydtContext = deleteTree.getFirstChild();
+        ydtContext = deleteTree.getFirstChild().getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("cont4")));
 
         assertThat(ydtContext.getNextSibling(), nullValue());
@@ -652,7 +733,6 @@ public class YangApplicationBrokerTest {
         assertThat(true, is(ydtContext.getValue().contentEquals("10")));
 
         assertThat(ydtContext.getNextSibling(), nullValue());
-        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -688,12 +768,12 @@ public class YangApplicationBrokerTest {
         YangApplicationBroker yab = new YangApplicationBroker(null);
         YdtContext deleteTree = yab.buildDeleteTree(deleteNodes);
 
-        assertThat(true, is(deleteTree.getName().contentEquals("test6")));
+        assertThat(true, is(deleteTree.getFirstChild().getName().contentEquals("test6")));
 
-        ydtContext = deleteTree.getFirstChild();
+        ydtContext = deleteTree.getFirstChild().getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("cont4")));
 
-        ydtContext = deleteTree.getLastChild();
+        ydtContext = deleteTree.getFirstChild().getLastChild();
         assertThat(true, is(ydtContext.getName().contentEquals("cont4")));
 
         assertThat(ydtContext.getNextSibling(), nullValue());
@@ -714,7 +794,6 @@ public class YangApplicationBrokerTest {
         assertThat(true, is(ydtContext.getName().contentEquals("list2")));
 
         assertThat(ydtContext.getNextSibling(), nullValue());
-        testYangSchemaNodeProvider.unregisterAllService();
     }
 
     /**
@@ -750,9 +829,9 @@ public class YangApplicationBrokerTest {
         YangApplicationBroker yab = new YangApplicationBroker(null);
         YdtContext deleteTree = yab.buildDeleteTree(deleteNodes);
 
-        assertThat(true, is(deleteTree.getName().contentEquals("test6")));
+        assertThat(true, is(deleteTree.getFirstChild().getName().contentEquals("test6")));
 
-        ydtContext = deleteTree.getFirstChild();
+        ydtContext = deleteTree.getFirstChild().getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("cont1")));
 
         ydtContext = ydtContext.getNextSibling();
@@ -762,7 +841,6 @@ public class YangApplicationBrokerTest {
         assertThat(true, is(ydtContext.getName().contentEquals("cont4")));
 
         assertThat(ydtContext.getNextSibling(), nullValue());
-        testYangSchemaNodeProvider.unregisterAllService();
     }
 
 
@@ -804,18 +882,16 @@ public class YangApplicationBrokerTest {
         YangApplicationBroker yab = new YangApplicationBroker(null);
         YdtContext deleteTree = yab.buildDeleteTree(deleteNodes);
 
-        assertThat(true, is(deleteTree.getName().contentEquals("test6")));
+        assertThat(true, is(deleteTree.getFirstChild().getName().contentEquals("test6")));
 
-        ydtContext = deleteTree.getFirstChild();
+        ydtContext = deleteTree.getFirstChild().getFirstChild();
         assertThat(true, is(ydtContext.getName().contentEquals("list2")));
 
         ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("leaf6")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("6")));
+        assertThat(ydtContext, notNullValue());
 
         ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("leaf5")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("5")));
+        assertThat(ydtContext, notNullValue());
 
         ydtContext = ydtContext.getNextSibling();
         assertThat(true, is(ydtContext.getName().contentEquals("cont7")));
@@ -843,6 +919,98 @@ public class YangApplicationBrokerTest {
         assertThat(true, is(ydtContext.getValue().contentEquals("7")));
 
         assertThat(ydtContext.getNextSibling(), nullValue());
-        testYangSchemaNodeProvider.unregisterAllService();
+    }
+
+    /**
+     * Checks YDT tree and application tree for query request with mutiple
+     * augments.
+     */
+    @Test
+    public void testApptreeForQueryWithMultipleAugment()
+            throws IOException, CloneNotSupportedException {
+        YangRequestWorkBench defaultYdtBuilder = buildYdtForQueryWithMultipleAugment();
+        YdtAppContext appContext = defaultYdtBuilder.getAppRootNode()
+                .getFirstChild();
+        YdtContext ydtNode = appContext.getModuleContext();
+        YangNode yangNode = (YangNode) ((YdtNode) ydtNode).getYangSchemaNode();
+
+        YangApplicationBroker yab = new YangApplicationBroker(null);
+        yab.processAugmentedNodesForQuery(appContext, yangNode);
+
+        assertThat(true, is(appContext.getModuleContext().getName()
+                                    .contentEquals("test6")));
+
+        appContext = appContext.getFirstChild();
+        assertThat(appContext.getModuleContext(), nullValue());
+
+        String augmentName = ((YangAugment) appContext
+                .getAugmentingSchemaNode()).getTargetNode().get(0)
+                .getResolvedNode().getJavaClassNameOrBuiltInType();
+
+        assertThat(true, is(augmentName.contentEquals("cont4")));
+
+        appContext = appContext.getFirstChild();
+        assertThat(appContext.getModuleContext(), nullValue());
+
+        augmentName = ((YangAugment) appContext
+                .getAugmentingSchemaNode()).getTargetNode().get(0)
+                .getResolvedNode().getJavaClassNameOrBuiltInType();
+
+        assertThat(true, is(augmentName.contentEquals("cont4")));
+        assertThat(appContext.getFirstChild(), nullValue());
+        assertThat(appContext.getLastChild(), nullValue());
+    }
+
+    /**
+     * Checks YDT tree and application tree for delete request with mutiple
+     * augments.
+     */
+    @Test
+    public void testYdtForDeleteWithMultipleAugment()
+            throws IOException, CloneNotSupportedException {
+        YangRequestWorkBench defaultYdtBuilder =
+                buildYdtForDeleteWithMultipleAugment();
+        YdtAppContext appContext = defaultYdtBuilder.getAppRootNode()
+                .getFirstChild();
+
+        YangApplicationBroker yab = new YangApplicationBroker(null);
+        YdtContext deleteTree = yab.buildDeleteTree(appContext.getDeleteNodes());
+        yab.processAugmentedNodesForDelete(deleteTree.getFirstChild(),
+                                           appContext);
+
+        assertThat(true, is(appContext.getModuleContext().getName()
+                                    .contentEquals("test6")));
+
+        appContext = appContext.getFirstChild();
+        assertThat(appContext.getModuleContext(), nullValue());
+
+        String augmentName = ((YangAugment) appContext
+                .getAugmentingSchemaNode()).getTargetNode().get(0)
+                .getResolvedNode().getJavaClassNameOrBuiltInType();
+
+        assertThat(true, is(augmentName.contentEquals("cont4")));
+
+        appContext = appContext.getFirstChild();
+        assertThat(appContext.getModuleContext(), nullValue());
+
+        augmentName = ((YangAugment) appContext
+                .getAugmentingSchemaNode()).getTargetNode().get(0)
+                .getResolvedNode().getJavaClassNameOrBuiltInType();
+
+        assertThat(true, is(augmentName.contentEquals("cont4")));
+        assertThat(appContext.getFirstChild(), nullValue());
+        assertThat(appContext.getLastChild(), nullValue());
+
+        YdtContext ydtContext = deleteTree.getFirstChild();
+        assertThat(true, is(ydtContext.getName().contentEquals("test6")));
+
+        ydtContext = ydtContext.getFirstChild();
+        assertThat(true, is(ydtContext.getName().contentEquals("cont4")));
+
+        ydtContext = ydtContext.getFirstChild();
+        assertThat(true, is(ydtContext.getName().contentEquals("cont6")));
+
+        ydtContext = ydtContext.getFirstChild();
+        assertThat(true, is(ydtContext.getName().contentEquals("cont7")));
     }
 }

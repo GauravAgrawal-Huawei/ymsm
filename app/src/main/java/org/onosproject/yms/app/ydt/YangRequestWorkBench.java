@@ -55,57 +55,49 @@ import static org.onosproject.yms.ydt.YdtType.SINGLE_INSTANCE_LEAF_VALUE_NODE;
 public class YangRequestWorkBench implements YdtExtendedBuilder {
 
     /*
+     * YMS operation type.
+     */
+    private final YmsOperationType ymsOperationType;
+    /*
+     * Flag to identify data validation need to be done by YDT or not.
+     */
+    private boolean validate = false;
+    /*
      * Current node in YANG data tree, kept to maintain the
      * current context in YDT.
      */
     private YdtNode curNode;
-
     /*
      * Root node in YANG data tree, kept to maintain the root context in
      * YDT.
      */
     private YdtNode rootNode;
-
     /*
      * Current node in YANG data tree, kept to maintain the current context
      * in ydt application tree.
      */
     private YdtAppContext appCurNode;
-
     /*
      * Root node in YANG data tree, kept to maintain the root context in ydt
      * application tree.
      */
     private YdtAppContext appRootNode;
-
     /**
      * Root Node Tag attribute in YANG data tree, kept to maintain the root
      * tag attributes in YDT.
-     * <p>
+     * <p/>
      * First key param of map represent tagName  name of tag attribute.
      * Second param of map represent tagValue value of tag attribute
      */
     private Map<String, String> rootTagAttributeMap;
-
     /*
      * YANG schema registry reference.
      */
-    private final YangSchemaRegistry registry;
-
-    /*
-     * YMS operation type.
-     */
-    private final YmsOperationType ymsOperationType;
-
+    private YangSchemaRegistry registry = null;
     /*
      * YDT default operation type.
      */
     private YdtContextOperationType ydtDefaultOpType;
-
-    /*
-     * Flag to identify data validation need to be done by YDT or not.
-     */
-    private final boolean validate;
     // TODO validate need to be handle later with interaction type basis in
     // future when it will be supported
 
@@ -143,14 +135,25 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
     }
 
     /**
-     * Sets the logical root context information available in YDT node.
+     * Creates an instance of YANG request work bench which is used to build YDT
+     * tree in YAB.
      *
-     * @param node logical root node
+     * @param curNode       current YDT node
+     * @param operationType YMS operation type
      */
-    private void setRootNode(YdtNode node) {
-        // Setting the root node
-        rootNode = node;
-        curNode = node;
+    public YangRequestWorkBench(YdtNode curNode,
+                                YmsOperationType operationType) {
+        this.curNode = curNode;
+        ymsOperationType = operationType;
+    }
+
+    /**
+     * Returns the app context tree root node for ydt application tree.
+     *
+     * @return YdtAppContext refers to root node of ydt application tree
+     */
+    public YdtAppContext getAppRootNode() {
+        return appRootNode;
     }
 
     /**
@@ -164,12 +167,12 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
     }
 
     /**
-     * Returns the app context tree root node for ydt application tree.
+     * Returns the YANG schema registry of the workbench.
      *
-     * @return YdtAppContext refers to root node of ydt application tree
+     * @return YANG schema registry
      */
-    public YdtAppContext getAppRootNode() {
-        return appRootNode;
+    public YangSchemaRegistry getYangSchemaRegistry() {
+        return registry;
     }
 
     /**
@@ -194,16 +197,16 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
     }
 
     @Override
-    public void setRootTagAttributeMap(Map<String, String> attributeTag) {
-        rootTagAttributeMap = attributeTag;
-    }
-
-    @Override
     public Map<String, String> getRootTagAttributeMap() {
         if (rootTagAttributeMap != null) {
             return ImmutableMap.copyOf(rootTagAttributeMap);
         }
         return null;
+    }
+
+    @Override
+    public void setRootTagAttributeMap(Map<String, String> attributeTag) {
+        rootTagAttributeMap = attributeTag;
     }
 
     @Override
@@ -262,7 +265,7 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
         boolean isContextSwitch = false;
         YangSchemaNode schemaNode;
         YangSchemaNodeContextInfo contextInfo;
-        YangSchemaNode lastAugmentingModule = null;
+        YangSchemaNode lastAugment = null;
         boolean isLeaf = true;
 
         YangSchemaNodeIdentifier id = new YangSchemaNodeIdentifier();
@@ -327,9 +330,9 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
                 contextInfo = curNode.getSchemaNodeContextInfo(id);
 
                 if (contextInfo.getContextSwitchedNode() != null) {
-                    lastAugmentingModule = appCurNode.getAugmentingSchemaNode(
+                    lastAugment = appCurNode.getAugmentingSchemaNode(
                             id, contextInfo);
-                    if (lastAugmentingModule != null) {
+                    if (lastAugment != null) {
                         /*
                          * As two tree(YDT and YDT Application Tree) are getting
                          * prepared in parallel, So  setting context switch
@@ -387,7 +390,7 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
          * node in the ydt application tree.
          */
         if (curNode.equals(rootNode) || isContextSwitch) {
-            addChildInAppTree(childNode, lastAugmentingModule, opType,
+            addChildInAppTree(childNode, lastAugment, opType,
                               isContextSwitch);
         }
 
@@ -446,7 +449,7 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
         opType = appCurNode.getAppOpTypeFromYdtOpType(childOpType);
 
         if (isContextSwitch) {
-            appCurNode.setAugmentingModuleSchemaNode(schemaNode);
+            appCurNode.setAugmentingSchemaNode(schemaNode);
         } else {
 
             // If it is application rootNode then set the ydt application
@@ -510,7 +513,7 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
     /**
      * Adds a last leaf with list of values/single value to YANG data tree.
      * This method is used by all protocols which knows the
-     * <p>
+     * <p/>
      * nature (single/multiple) or not.
      * Value of leaf can be null which indicates selection node in get
      * operation.
@@ -589,10 +592,20 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
         ydtDefaultOpType = ydtContextOperationType;
     }
 
-
     @Override
     public YdtExtendedContext getRootNode() {
         return rootNode;
+    }
+
+    /**
+     * Sets the logical root context information available in YDT node.
+     *
+     * @param node logical root node
+     */
+    private void setRootNode(YdtNode node) {
+        // Setting the root node
+        rootNode = node;
+        curNode = node;
     }
 
     @Override

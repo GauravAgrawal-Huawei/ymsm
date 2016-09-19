@@ -15,6 +15,6 @@
  */
 
 /**
- * YANG data tree exceptions.
+ * YANG application broker exception.
  */
 package org.onosproject.yms.app.yab.exceptions;

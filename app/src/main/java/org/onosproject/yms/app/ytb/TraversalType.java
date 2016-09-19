@@ -22,7 +22,7 @@ package org.onosproject.yms.app.ytb;
 public enum TraversalType {
 
     /**
-     * Start of traversal at the tree root.
+     * Start of the traversal at the tree root.
      */
     ROOT,
 

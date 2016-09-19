@@ -16,8 +16,10 @@
 
 package org.onosproject.yms.app.ytb;
 
+import org.onosproject.yangutils.datamodel.YangAugment;
+
 import java.util.Iterator;
-import org.onosproject.yangutils.datamodel.YangSchemaNodeType;
+import java.util.Map;
 
 /**
  * Represents YTB node info for all the nodes that are added to the YDT builder tree.
@@ -26,45 +28,51 @@ import org.onosproject.yangutils.datamodel.YangSchemaNodeType;
 public class YtbNodeInfo {
 
     /**
-     * Creates a default constructor for YTB node info.
-     */
-    public YtbNodeInfo() {
-    }
-
-    /**
-     * The YANG schema node type, such as multi instance or single instance, is bound to the YDT node.
-     * When ever multi instance walking happens this is taken to iterate through the node.
-     */
-    private YangSchemaNodeType schemaNodeType;
-
-    /**
-     * Object of the corresponding YANG construct. This object is bound to each and every YDT node.
-     * So, whenever walk of parent and sibling happens, object can be retrieved from its YDT node.
+     * Object of the corresponding YANG construct. This object is bound to
+     * each and every YDT node. So, whenever walk of parent and sibling
+     * happens, object can be retrieved from its YDT node.
      */
     private Object yangObject;
 
     /**
-     * The list iterator since first content of the multi instance node is faced. With this iterator the
-     * node can be walked multiple times till it becomes empty.
+     * The list iterator since first content of the multi instance node is
+     * faced. With this iterator the node can be walked multiple times till
+     * it becomes empty.
      */
     private Iterator<Object> currentListIterator;
 
     /**
-     * Returns schema node type of the YANG schema node.
-     *
-     * @return schema node type
+     * The current YTB node's, list of augments are iterated through this
+     * iterator. Every time an augment is built completely, this iterator
+     * gives the next augment node until it becomes empty.
      */
-    public YangSchemaNodeType getSchemaNodeType() {
-        return schemaNodeType;
-    }
+    private Iterator<YangAugment> augmentNodeIterator;
 
     /**
-     * Sets the schema node type of the YANG schema node.
-     *
-     * @param schemaNodeType schema node type
+     * The map with case object as value and choice node name as key is added
+     * for the current YTB info. Every time a case schema node comes, it takes
+     * this map and checks if it is present.
      */
-    public void setSchemaNodeType(YangSchemaNodeType schemaNodeType) {
-        this.schemaNodeType = schemaNodeType;
+    private Map<String, Object> choiceAndCaseMap;
+
+    /**
+     * When the case finds its object in map, it assigns it to case object of
+     * the YTB info, so when its child wants to take the parent object, they
+     * can take from the YTB info's case object.
+     */
+    private Object caseObject;
+
+    /**
+     * When the augment object is present, it assigns it to augment object of
+     * the YTB info, so when its child wants to take the parent object, they
+     * can take from the YTB info's augment object.
+     */
+    private Object augmentObject;
+
+    /**
+     * Creates a default constructor for YTB node info.
+     */
+    public YtbNodeInfo() {
     }
 
     /**
@@ -101,5 +109,77 @@ public class YtbNodeInfo {
      */
     public void setCurrentListIterator(Iterator<Object> currentListIterator) {
         this.currentListIterator = currentListIterator;
+    }
+
+    /**
+     * Returns the map of choice schema name and case object.
+     *
+     * @return choice name and case object map
+     */
+    public Map<String, Object> getChoiceAndCaseMap() {
+        return choiceAndCaseMap;
+    }
+
+    /**
+     * Sets the map of choice schema name and case object.
+     *
+     * @param choiceAndCaseMap choice name and case object map
+     */
+    public void setChoiceAndCaseMap(Map<String, Object> choiceAndCaseMap) {
+        this.choiceAndCaseMap = choiceAndCaseMap;
+    }
+
+    /**
+     * Returns the case object.
+     *
+     * @return case object
+     */
+    public Object getCaseObject() {
+        return caseObject;
+    }
+
+    /**
+     * Sets the case node object.
+     *
+     * @param caseObject case node object
+     */
+    public void setCaseObject(Object caseObject) {
+        this.caseObject = caseObject;
+    }
+
+    /**
+     * Returns the augment node object.
+     *
+     * @return augment node object
+     */
+    public Object getAugmentObject() {
+        return augmentObject;
+    }
+
+    /**
+     * Sets the augment node object.
+     *
+     * @param augmentObject augment node object
+     */
+    public void setAugmentObject(Object augmentObject) {
+        this.augmentObject = augmentObject;
+    }
+
+    /**
+     * Returns the current list iterator of the YANG augment node.
+     *
+     * @return augment node iterator
+     */
+    public Iterator getAugmentNodeIterator() {
+        return augmentNodeIterator;
+    }
+
+    /**
+     * Sets the current list iterator of the YANG augment node.
+     *
+     * @param augmentNodeIterator augment node iterator
+     */
+    public void setAugmentNodeIterator(Iterator augmentNodeIterator) {
+        this.augmentNodeIterator = augmentNodeIterator;
     }
 }

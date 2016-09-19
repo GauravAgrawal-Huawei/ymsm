@@ -27,7 +27,6 @@ public class YabException extends RuntimeException {
      * Creates a new YDT exception.
      */
     public YabException() {
-        super();
     }
 
     /**
