@@ -96,5 +96,4 @@ module integer8 {
              range "10 .. 100";
           }
     }
-
 }

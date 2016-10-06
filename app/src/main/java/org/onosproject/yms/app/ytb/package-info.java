@@ -15,7 +15,7 @@
  */
 
 /**
- * Provides implementation of YANG tree builder. YTB handles creation of YDT from
- * YANG modeled objects.
+ * Provides implementation of YANG tree builder. YTB handles creation of YDT
+ * from YANG modeled objects.
  */
 package org.onosproject.yms.app.ytb;

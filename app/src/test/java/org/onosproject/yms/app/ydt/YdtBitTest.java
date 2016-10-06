@@ -17,12 +17,14 @@
 package org.onosproject.yms.app.ydt;
 
 import org.junit.Test;
-import org.onosproject.yms.ydt.YdtContext;
 
-import java.io.IOException;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.BIT;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.BITNS;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.bitYdt;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateErrMsg;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateLeafContents;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateNodeContents;
+import static org.onosproject.yms.ydt.YdtContextOperationType.MERGE;
 
 public class YdtBitTest {
 
@@ -34,47 +36,41 @@ public class YdtBitTest {
         input with position 1
         input with position 2
     */
+
+    /**
+     * Creates and validates bit ydt covering different positive scenario.
+     */
     @Test
-    public void positiveTest() throws IOException {
-        YangRequestWorkBench ydtBuilder = YdtTestUtils.bitYdt();
+    public void positiveTest() {
+        YangRequestWorkBench ydtBuilder = bitYdt();
         validateTree(ydtBuilder);
     }
 
+    /**
+     * Validates the given built ydt.
+     */
     private void validateTree(YangRequestWorkBench ydtBuilder) {
 
-        // assign root node to ydtContext for validating purpose.
-        YdtContext ydtContext = ydtBuilder.getRootNode();
-        assertThat(true, is(ydtContext.getName().contentEquals("builtInType")));
-
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("bit")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("bitList")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("bit")));
-        assertThat(true, is(ydtContext.getValue().contentEquals(
-                "disable-nagle")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("bitList")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("bit")));
-        assertThat(true, is(ydtContext.getValue().contentEquals(
-                "auto-sense-speed")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("bitList")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("bit")));
-        assertThat(true, is(ydtContext.getValue().contentEquals(
-                "ten-Mb-only")));
-//        ydtContext = ydtContext.getParent();
-//        ydtContext = ydtContext.getNextSibling();
-//        assertThat(true, is(ydtContext.getName().contentEquals("bitList")));
-//        ydtContext = ydtContext.getFirstChild();
-//        assertThat(true, is(ydtContext.getName().contentEquals("bit")));
-//        assertThat(true, is(ydtContext.getValue()
-// .contentEquals("auto-sense-speed")));
+        // assign root node to ydtNode for validating purpose.
+        YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
+        // Logical root node does not have operation type
+        validateNodeContents(ydtNode, "builtInType", null);
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "bit", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "bitList", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "bit", "disable-nagle");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, "bitList", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "bit", "auto-sense-speed");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, "bitList", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "bit", "ten-Mb-only");
     }
 
     /*
@@ -84,57 +80,15 @@ public class YdtBitTest {
         input with position 1
         input with position 2
     */
+
+    /**
+     * Tests all the negative scenario's for bit data type.
+     */
     @Test
-    public void negativeTest() throws IOException {
-        String appName = "org.onosproject.yang.gen.v1.ydt.binarytest" +
-                ".rev20160524.BinarytestService";
-        YangRequestWorkBench ydtBuilder =
-                YdtTestUtils.getydtBuilder("builtInType", "bit",
-                                           "ydt.bit", appName);
-        ydtBuilder.addChild("bitList", null);
-
-        try {
-            ydtBuilder.addLeaf("bit", null, "0");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "0" + "\" is not " +
-                            "a valid BITS")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "bit", "ydt.bit", appName);
-        ydtBuilder.addChild("bitList", null);
-
-        try {
-            ydtBuilder.addLeaf("bit", null, "default");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "default" + "\" " +
-                            "is not a " + "valid BITS")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "bit", "ydt.bit", appName);
-        ydtBuilder.addChild("bitList", null);
-
-        try {
-            ydtBuilder.addLeaf("bit", null, "1");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "1" + "\" is not a " +
-                            "valid BITS")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "bit", "ydt.bit", appName);
-        ydtBuilder.addChild("bitList", null);
-
-        try {
-            ydtBuilder.addLeaf("bit", null, "");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "" + "\" is not a " +
-                            "valid BITS")));
-        }
+    public void negativeTest() {
+        validateErrMsg("bit", BITNS, "0", BIT, "bitList");
+        validateErrMsg("bit", BITNS, "default", BIT, "bitList");
+        validateErrMsg("bit", BITNS, "1", BIT, "bitList");
+        validateErrMsg("bit", BITNS, "", BIT, "bitList");
     }
 }

@@ -16,13 +16,7 @@
 
 package org.onosproject.yms.app.ych;
 
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.onosproject.yms.app.ych.codecutils.YchException;
+import org.onosproject.yms.app.ych.defaultcodecs.YangCodecRegistry;
 import org.onosproject.yms.app.ydt.YdtExtendedBuilder;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.yob.DefaultYobBuilder;
@@ -36,219 +30,159 @@ import org.onosproject.yms.ych.YangProtocolEncodingFormat;
 import org.onosproject.yms.ydt.YdtBuilder;
 import org.onosproject.yms.ydt.YdtContext;
 import org.onosproject.yms.ydt.YmsOperationType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
  * Represents implementation of YANG SBI broker interfaces.
- * YSB acts as a broker between YMS and driver/provider.
+ * YCH acts as a broker between YMS and driver/provider.
  */
-public class DefaultYangCodecHandler
-        implements YangCodecHandler {
+public class DefaultYangCodecHandler implements YangCodecHandler {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private static final String E_MODULE_LIST = "The input module or " +
+            "sub-module object list cannot be null.";
+    private static final String E_DATA_TREE_CODEC = "data tree codec handler" +
+            " is null.";
 
     /**
      * Schema registry for driver.
      */
-    private YangSchemaRegistry yangSchemaRegistry;
+    private final YangSchemaRegistry schemaRegistry;
 
     /**
      * Default codecs.
      */
-    private Map<YangProtocolEncodingFormat, YangDataTreeCodec> defaultCodecs;
+    private final Map<YangProtocolEncodingFormat, YangDataTreeCodec>
+            defaultCodecs = new HashMap<>();
 
     /**
      * Override codec handler.
      */
-    private Map<YangProtocolEncodingFormat, YangDataTreeCodec> overRideCodecs = new HashMap<>();
+    private final Map<YangProtocolEncodingFormat, YangDataTreeCodec>
+            overrideCodecs = new HashMap<>();
 
     /**
-     * Returns schema registry for the driver.
+     * Creates a new YANG codec handler.
      *
-     * @return schema registry for the driver
+     * @param registry YANG schema registry
      */
-    private YangSchemaRegistry getYangSchemaRegistry() {
-        return yangSchemaRegistry;
+    public DefaultYangCodecHandler(YangSchemaRegistry registry) {
+        schemaRegistry = registry;
+
+        // update the default codecs from codec registry
+        Map<YangProtocolEncodingFormat, YangDataTreeCodec> recvCodec =
+                YangCodecRegistry.getDefaultCodecs();
+        if (!recvCodec.isEmpty()) {
+            for (Map.Entry<YangProtocolEncodingFormat, YangDataTreeCodec>
+                    codecEntry : recvCodec.entrySet()) {
+                defaultCodecs.put(codecEntry.getKey(), codecEntry.getValue());
+            }
+        }
     }
 
-    /**
-     * Sets the schema registry for the driver.
-     *
-     * @param yangSchemaRegistry the schema registry for the driver
-     */
-    private void setYangSchemaRegistry(YangSchemaRegistry yangSchemaRegistry) {
-        this.yangSchemaRegistry = yangSchemaRegistry;
-    }
+    private YangDataTreeCodec getAppropriateCodec(
+            YangProtocolEncodingFormat dataFormat) {
+        YangDataTreeCodec codec = defaultCodecs.get(dataFormat);
 
-    /**
-     * Returns the default codec handler.
-     *
-     * @return the default codec handler
-     */
-    public Map<YangProtocolEncodingFormat, YangDataTreeCodec> getDefaultCodecs() {
-        return defaultCodecs;
-    }
-
-    /**
-     * Sets the default codec handler.
-     *
-     * @param defaultCodecs the default codec handler
-     */
-    public void setDefaultCodecs(
-            Map<YangProtocolEncodingFormat, YangDataTreeCodec> defaultCodecs) {
-        this.defaultCodecs = defaultCodecs;
-    }
-
-    /**
-     * Returns the override codec handler.
-     *
-     * @return the override codec handler
-     */
-    public Map<YangProtocolEncodingFormat, YangDataTreeCodec> getOverRideCodecs() {
-        return overRideCodecs;
-    }
-
-    /**
-     * Creates a new YANG application broker.
-     *
-     * @param schemaRegistry YANG schema registry
-     * @param defaultCodecs   default codec handler
-     */
-    public DefaultYangCodecHandler(YangSchemaRegistry schemaRegistry,
-                                   Map<YangProtocolEncodingFormat, YangDataTreeCodec> defaultCodecs) {
-        setYangSchemaRegistry(schemaRegistry);
-        setDefaultCodecs(defaultCodecs);
-    }
-
-    /**
-     * Sets the override codec handler.
-     *
-     * @param overRideCodecs the override codec handler
-     */
-    public void setOverRideCodecs(Map<YangProtocolEncodingFormat, YangDataTreeCodec> overRideCodecs) {
-        this.overRideCodecs = overRideCodecs;
-    }
-
-
-    @Override
-    public void addDeviceSchema(Class yangModule) {
-        getYangSchemaRegistry().registerApplication(null, yangModule, null);
+        // Check over ridden codec handler is exist or not.
+        if (overrideCodecs != null) {
+            YangDataTreeCodec overrideCodec = overrideCodecs.get(dataFormat);
+            if (overrideCodec != null) {
+                codec = overrideCodec;
+            }
+        }
+        return codec;
     }
 
     @Override
-    public String encodeOperation(String logicalRootName, String logicalRootNameSpace, Map<String,
-            String> tagAttributeLinkedMap, List<Object> yangModuleList, YangProtocolEncodingFormat dataFormat,
-            YmsOperationType protocolOperation) {
+    public void addDeviceSchema(Class<?> yangModule) {
+        schemaRegistry.registerApplication(null, yangModule, null);
+    }
 
-        if (yangModuleList == null || yangModuleList.isEmpty()) {
-            throw new YchException("YCH Error: The input module/sub-module object list cannot be null.");
+    @Override
+    public String encodeOperation(String rootName,
+                                  String rootNamespace,
+                                  Map<String, String> tagAttrMap,
+                                  List<Object> moduleList,
+                                  YangProtocolEncodingFormat dataFormat,
+                                  YmsOperationType opType) {
+
+        if (moduleList == null || moduleList.isEmpty()) {
+            throw new YchException(E_MODULE_LIST);
+        }
+
+        // Get the default codec handler.
+        YangDataTreeCodec codec = getAppropriateCodec(dataFormat);
+        if (codec == null) {
+            throw new YchException(E_DATA_TREE_CODEC);
         }
 
         // Get yang data tree from YTB for the received objects.
-        DefaultYangTreeBuilder defaultYangTreeBuilder = new DefaultYangTreeBuilder();
-        YdtExtendedBuilder ydtExtendedBuilder = defaultYangTreeBuilder.getYdtBuilderForYo(yangModuleList,
-                                                                       logicalRootName,
-                                                                       logicalRootNameSpace,
-                                                                       protocolOperation,
-                                                                       getYangSchemaRegistry());
+        DefaultYangTreeBuilder builder = new DefaultYangTreeBuilder();
+        YdtExtendedBuilder encodedYdt =
+                builder.getYdtBuilderForYo(moduleList, rootName,
+                                           rootNamespace, opType,
+                                           schemaRegistry);
 
-        // Get the default codec handler.
-        YangDataTreeCodec codec = null;
-        YangDataTreeCodec defaultCodec = getDefaultCodecs().get(dataFormat);
-        if (defaultCodec != null) {
-            codec = defaultCodec;
-        }
-
-        // Check over ridden codec handler is exist or not.
-        if (overRideCodecs != null) {
-            YangDataTreeCodec overRidingCodec = overRideCodecs.get(dataFormat);
-            if (overRidingCodec != null) {
-                codec = overRidingCodec;
-            }
-        }
+        encodedYdt.setRootTagAttributeMap(tagAttrMap);
 
         // Get the xml string form codec handler.
-        String encodedString = null;
-        ydtExtendedBuilder.setRootTagAttributeMap(tagAttributeLinkedMap);
-        if (codec != null) {
-            encodedString = codec.encodeYdtToProtocolFormat(ydtExtendedBuilder, protocolOperation);
-        }
-
-        return encodedString;
+        return codec.encodeYdtToProtocolFormat(encodedYdt);
     }
 
     @Override
-    public YangCompositeEncoding encodeCompositeOperation(String rootName, String rootNamespace,
-                                                          Object appModuleObject,
-                                                          YangProtocolEncodingFormat dataFormat,
-                                                          YmsOperationType protocolOperation) {
+    public YangCompositeEncoding encodeCompositeOperation(
+            String rootName,
+            String rootNamespace,
+            Object moduleObject,
+            YangProtocolEncodingFormat dataFormat,
+            YmsOperationType opType) {
 
-        if (appModuleObject == null) {
-            throw new YtbException("YCH Error: The input module/sub-module object cannot be null.");
+        if (moduleObject == null) {
+            throw new YtbException(E_MODULE_LIST);
+        }
+
+        // Get the default codec handler.
+        YangDataTreeCodec codec = getAppropriateCodec(dataFormat);
+        if (codec == null) {
+            throw new YchException(E_DATA_TREE_CODEC);
         }
 
         List<Object> yangModuleList = new ArrayList<>();
-        yangModuleList.add(appModuleObject);
+        yangModuleList.add(moduleObject);
 
         // Get yang data tree from YTB for the received objects.
-        DefaultYangTreeBuilder defaultYangTreeBuilder = new DefaultYangTreeBuilder();
-        YdtExtendedBuilder ydtExtendedBuilder = defaultYangTreeBuilder.getYdtBuilderForYo(yangModuleList,
-                                                                                          rootName,
-                                                                                          rootNamespace,
-                                                                                          protocolOperation,
-                                                                                          getYangSchemaRegistry());
+        DefaultYangTreeBuilder builder = new DefaultYangTreeBuilder();
+        YdtExtendedBuilder extBuilder =
+                builder.getYdtBuilderForYo(yangModuleList,
+                                           rootName,
+                                           rootNamespace,
+                                           opType,
+                                           schemaRegistry);
 
-        // Get the default codec handler.
-        YangDataTreeCodec codec = null;
-        YangDataTreeCodec defaultCodec = getDefaultCodecs().get(dataFormat);
-        if (defaultCodec != null) {
-            codec = defaultCodec;
-        }
-
-        // Check over ridden codec handler is exist or not.
-        if (overRideCodecs != null) {
-            YangDataTreeCodec overRidingCodec = overRideCodecs.get(dataFormat);
-            if (overRidingCodec != null) {
-                codec = overRidingCodec;
-            }
-        }
 
         // Get the composite response from codec handler.
-        YangCompositeEncoding yangCompositeEncoding = null;
-        if (codec != null) {
-            yangCompositeEncoding = codec.encodeYdtToCompositeProtocolFormat(ydtExtendedBuilder, protocolOperation);
-        }
-
-        return yangCompositeEncoding;
+        return codec.encodeYdtToCompositeProtocolFormat(extBuilder);
     }
 
     @Override
-    public List<Object> decode(String inputString, YangProtocolEncodingFormat dataFormat,
-                               YmsOperationType protocolOperation) {
+    public List<Object> decode(String inputString,
+                               YangProtocolEncodingFormat dataFormat,
+                               YmsOperationType opType) {
 
-        YdtBuilder ydtBuilder = null;
-        YangDataTreeCodec codec = null;
-
-        // Get the default codec handler.
-        YangDataTreeCodec defaultCodec = getDefaultCodecs().get(dataFormat);
-        if (defaultCodec != null) {
-            codec = defaultCodec;
-        }
-
-        // Check over ridden codec handler is exist or not.
-        if (overRideCodecs != null) {
-            YangDataTreeCodec overRidingCodec = overRideCodecs.get(dataFormat);
-            if (overRidingCodec != null) {
-                codec = overRidingCodec;
-            }
+        YangDataTreeCodec codec = getAppropriateCodec(dataFormat);
+        if (codec == null) {
+            throw new YchException(E_DATA_TREE_CODEC);
         }
 
         // Get the YANG data tree
-        if (codec != null) {
-            ydtBuilder = codec.decodeProtocolDataToYdt(inputString, getYangSchemaRegistry(), protocolOperation);
-        }
+        YdtBuilder ydtBuilder = codec.decodeProtocolDataToYdt(inputString,
+                                                              schemaRegistry,
+                                                              opType);
 
         if (ydtBuilder != null) {
             return getObjectList(ydtBuilder.getRootNode());
@@ -258,31 +192,19 @@ public class DefaultYangCodecHandler
     }
 
     @Override
-    public Object decode(YangCompositeEncoding protocolData,
+    public Object decode(YangCompositeEncoding protoData,
                          YangProtocolEncodingFormat dataFormat,
-                         YmsOperationType protocolOperation) {
+                         YmsOperationType opType) {
 
-        YdtBuilder ydtBuilder = null;
-        YangDataTreeCodec codec = null;
-
-        // Get the default codec handler.
-        YangDataTreeCodec defaultCodec = getDefaultCodecs().get(dataFormat);
-        if (defaultCodec != null) {
-            codec = defaultCodec;
+        YangDataTreeCodec codec = getAppropriateCodec(dataFormat);
+        if (codec == null) {
+            throw new YchException(E_DATA_TREE_CODEC);
         }
 
-        // Check over ridden codec handler is exist or not.
-        if (overRideCodecs != null) {
-            YangDataTreeCodec overRidingCodec = overRideCodecs.get(dataFormat);
-            if (overRidingCodec != null) {
-                codec = overRidingCodec;
-            }
-        }
-
-        // Get the YANG data tree
-        if (codec != null) {
-            ydtBuilder = codec.decodeCompositeProtocolDataToYdt(protocolData, dataFormat, protocolOperation);
-        }
+        YdtBuilder ydtBuilder =
+                codec.decodeCompositeProtocolDataToYdt(protoData,
+                                                       schemaRegistry,
+                                                       opType);
 
         // Get the module object by using YANG data tree
         if (ydtBuilder != null) {
@@ -293,8 +215,9 @@ public class DefaultYangCodecHandler
     }
 
     @Override
-    public void registerOverriddenCodec(YangDataTreeCodec overriddenCodec, YangProtocolEncodingFormat dataFormat) {
-        overRideCodecs.put(dataFormat, overriddenCodec);
+    public void registerOverriddenCodec(YangDataTreeCodec overrideCodec,
+                                        YangProtocolEncodingFormat dataFormat) {
+        overrideCodecs.put(dataFormat, overrideCodec);
     }
 
     /**
@@ -305,8 +228,6 @@ public class DefaultYangCodecHandler
      */
     private List<Object> getObjectList(YdtContext rootNode) {
 
-        List<Object> objectList = new ArrayList<>();
-        Object receivedObject = null;
         if (rootNode == null) {
             // TODO
             return null;
@@ -318,15 +239,18 @@ public class DefaultYangCodecHandler
         }
 
         YdtContext curNode = rootNode.getFirstChild();
-        DefaultYobBuilder yobBuilder = new DefaultYobBuilder();
-        receivedObject = yobBuilder.getYangObject((YdtExtendedContext) curNode, yangSchemaRegistry);
-        objectList.add(receivedObject);
+        DefaultYobBuilder builder = new DefaultYobBuilder();
+        Object object = builder.getYangObject((YdtExtendedContext) curNode,
+                                              schemaRegistry);
+        List<Object> objectList = new ArrayList<>();
+        objectList.add(object);
 
         // Check next module is exit or not. If exist get the object for that.
         while (curNode.getNextSibling() != null) {
             curNode = curNode.getNextSibling();
-            receivedObject = yobBuilder.getYangObject((YdtExtendedContext) curNode, yangSchemaRegistry);
-            objectList.add(receivedObject);
+            object = builder.getYangObject((YdtExtendedContext) curNode,
+                                           schemaRegistry);
+            objectList.add(object);
         }
 
         return objectList;

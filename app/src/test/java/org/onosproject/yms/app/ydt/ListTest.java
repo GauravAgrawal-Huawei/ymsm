@@ -16,359 +16,433 @@
 
 package org.onosproject.yms.app.ydt;
 
+import org.junit.Rule;
 import org.junit.Test;
-import org.onosproject.yms.ydt.YdtContext;
+import org.junit.rules.ExpectedException;
+import org.onosproject.yangutils.datamodel.utils.builtindatatype.DataTypeException;
+import org.onosproject.yms.app.ydt.exceptions.YdtException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.onosproject.yms.app.ydt.YdtTestUtils.compareValueSet;
+import static org.junit.Assert.assertEquals;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.E_LEAF;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.E_LIST;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.E_TOPARENT;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.INV;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.LISTNS;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.LWC;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.getTestYdtBuilder;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.getYdtBuilder;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.listWithContainer1Ydt;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.listWithContainer2Ydt;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.listWithContainerYdt;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.listWithoutContainerYdt;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateLeafContents;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateLeafListContents;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateNodeContents;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.walkINTree;
+import static org.onosproject.yms.ydt.YdtContextOperationType.MERGE;
 
 public class ListTest {
 
-    @SuppressWarnings("unchecked")
-    private
-    Set<String> valueSet = new HashSet();
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
+    private Set<String> valueSet = new HashSet();
+
+    private static final String[] ERROR = {
+            "rootlist is missing some of the keys of listwithcontainer.",
+            "Duplicate entry with name invalid.",
+            "Some of the key elements are not unique in listwithcontainer.",
+            "Too few key parameter in listwithcontainer. Expected count 2.",
+            "Too many key parameter in listwithcontainer. Expected count 2.",
+            "Application with name \"" + "invalid\" doesn't exist.",
+            "Too many instances of listwithcontainer. Expected maximum " +
+                    "instances 3.",
+            "Duplicate entry found under invalidinterval leaf-list node.",
+            "YANG file error : Input value \"string\" is not a valid uint16."
+    };
+
+    private static final String[] EXPECTED = {
+            "Entry Node is list.",
+            "Entry Node is rootlist.",
+            "Entry Node is listwithoutcontainer.",
+            "Entry Node is invalidinterval.",
+            "Exit Node is invalidinterval.",
+            "Exit Node is listwithoutcontainer.",
+            "Exit Node is rootlist.",
+            "Exit Node is list."
+    };
+
+    List<String> keysValueList = new ArrayList<>();
+
+    /**
+     * Creates and validates rootlist module with listwithoutcontainer node.
+     */
     @Test
-    public void listwithoutcontainerTest() throws IOException {
-        YangRequestWorkBench ydtBuilder = YdtTestUtils
-                .listWithoutContainerYdt();
+    public void listwithoutcontainerTest() throws YdtException {
+        YangRequestWorkBench ydtBuilder = listWithoutContainerYdt();
         validateTree(ydtBuilder);
         // walker test
-        walkINTree(ydtBuilder);
+        walkINTree(ydtBuilder, EXPECTED);
     }
 
+    /**
+     * Creates and validates rootlist module with listwithcontainer node
+     * using addMultiInstanceChild interface for adding multi instance node.
+     */
     @Test
-    public void listwithcontainerTest() throws IOException {
-        YangRequestWorkBench ydtBuilder = YdtTestUtils
-                .listWithContainerYdt();
+    public void listwithcontainerTest() throws YdtException {
+        YangRequestWorkBench ydtBuilder = listWithContainerYdt();
         validateListwithcontainerTree(ydtBuilder);
     }
 
+    /**
+     * Creates and validates rootlist module with listwithcontainer
+     * node using addChild interface for adding multi instance node.
+     */
     @Test
-    public void listwithcontainer1Test() throws IOException {
-        YangRequestWorkBench ydtBuilder = YdtTestUtils
-                .listWithContainer1Ydt();
+    public void listwithcontainer1Test() throws YdtException {
+        YangRequestWorkBench ydtBuilder = listWithContainer1Ydt();
         validateListwithcontainerTree(ydtBuilder);
     }
 
+    /**
+     * Creates and validates rootlist module with multiple instances of
+     * listwithcontainer node using addMultiInstanceChild interface for adding
+     * multi instance node.
+     */
     @Test
-    public void listwithcontainer2Test() throws IOException {
-        YangRequestWorkBench ydtBuilder = YdtTestUtils
-                .listWithContainer2Ydt();
+    public void listwithcontainer2Test() throws YdtException {
+        YangRequestWorkBench ydtBuilder = listWithContainer2Ydt();
     }
 
-    private void walkINTree(YangRequestWorkBench ydtBuilder) {
-        DefaultYdtWalker ydtWalker = new DefaultYdtWalker();
-        YdtTestUtils ydtListenerService = new YdtTestUtils();
-
-        // Logger list is used for walker testing.
-        YdtTestUtils.resetLogger();
-        // Assign root node to YdtContext to walk the tree.
-        ydtWalker.walk(ydtListenerService, ydtBuilder.getRootNode());
-
-        // Logger list is used for walker testing.
-        List<String> logger = YdtTestUtils.getLogger();
-        assertThat(true, is(logger.get(0).contentEquals(
-                "Entry Node is list.")));
-        assertThat(true, is(logger.get(1).contentEquals(
-                "Entry Node is rootlist.")));
-        assertThat(true, is(logger.get(2).contentEquals(
-                "Entry Node is listwithoutcontainer.")));
-        assertThat(true, is(logger.get(3).contentEquals(
-                "Entry Node is invalidinterval.")));
-        assertThat(true, is(logger.get(4).contentEquals(
-                "Exit Node is invalidinterval.")));
-        assertThat(true, is(logger.get(5).contentEquals(
-                "Exit Node is listwithoutcontainer.")));
-        assertThat(true, is(logger.get(6).contentEquals(
-                "Exit Node is rootlist.")));
-        assertThat(true, is(logger.get(7).contentEquals(
-                "Exit Node is list.")));
-    }
-
+    /**
+     * Validates the given built ydt.
+     */
     private void validateTree(YangRequestWorkBench ydtBuilder) {
 
         // assign root node to ydtNode for validating purpose.
-        YdtContext ydtContext = ydtBuilder.getRootNode();
-        assertThat(true, is(ydtContext.getName().contentEquals("list")));
+        YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
+        // Logical root node does not have operation type
+        validateNodeContents(ydtNode, "list", null);
 
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("rootlist")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "listwithoutcontainer")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "invalidinterval")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("12")));
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "rootlist", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "listwithoutcontainer", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, INV, "12");
     }
 
+    /**
+     * Validates the given list with container built ydt.
+     */
     private void validateListwithcontainerTree(
             YangRequestWorkBench ydtBuilder) {
 
         valueSet.add("1");
         valueSet.add("2");
         // assign root node to ydtNode for validating purpose.
-        YdtContext ydtContext = ydtBuilder.getRootNode();
-        assertThat(true, is(ydtContext.getName().contentEquals("list")));
+        YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
+        // Logical root node does not have operation type
+        validateNodeContents(ydtNode, "list", null);
 
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("rootlist")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "listwithcontainer")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("invalid")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("12")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("invalid1")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("12")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "invalidinterval")));
-        compareValueSet(valueSet, ydtContext.getValueSet());
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("interface")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "invalidinterval")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("12")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("invalid")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("121")));
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "rootlist", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, LWC, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "invalid", "12");
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, "invalid1", "12");
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafListContents(ydtNode, INV, valueSet);
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, "interface", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, INV, "12");
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, "invalid", "121");
     }
 
     /**
-     * This is to test all differnet negative scenario possible in case of
-     * multiInstance Node.
+     * Tests the negative error scenario when application name for ydt is
+     * invalid.
      */
     @Test
-    public void negativeTest() throws IOException {
-        String appName = "org.onosproject.yang.gen.v1.ydt.rootlist." +
-                "rev20160624.RootlistService";
-        YangRequestWorkBench ydtBuilder =
-                YdtTestUtils.getydtBuilder("list", "rootlist", "ydt" +
-                        ".rootlist", appName);
-        ydtBuilder.addChild("listwithcontainer", null);
-        ydtBuilder.addLeaf("invalid", null, "12");
-        ydtBuilder.traverseToParent();
-        try {
-            ydtBuilder.traverseToParent();
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "rootlist is missing some of the keys of" +
-                            " listwithcontainer.")));
-        }
-
-        ydtBuilder = YdtTestUtils
-                .getydtBuilder("list", "rootlist", "ydt.rootlist",
-                               appName);
-        ydtBuilder.addChild("listwithcontainer", null);
-        ydtBuilder.addLeaf("invalid", null, "12");
-        ydtBuilder.traverseToParent();
-        try {
-            ydtBuilder.addLeaf("invalid", null, "12");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "Duplicate entry with name invalid.")));
-        }
-
-        ydtBuilder = YdtTestUtils
-                .getydtBuilder("list", "rootlist", "ydt.rootlist",
-                               appName);
-        ydtBuilder.addChild("listwithcontainer", null);
-        ydtBuilder.addLeaf("invalid", null, "12");
-        ydtBuilder.traverseToParent();
-        ydtBuilder.addLeaf("invalid1", null, "12");
-        ydtBuilder.traverseToParent();
-        ydtBuilder.traverseToParent();
-
-        ydtBuilder.addChild("listwithcontainer", null);
-        ydtBuilder.addLeaf("invalid", null, "12");
-        ydtBuilder.traverseToParent();
-        ydtBuilder.addLeaf("invalid1", null, "12");
-        ydtBuilder.traverseToParent();
-        ydtBuilder.traverseToParent();
-
-        try {
-            ydtBuilder.traverseToParent();
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "Some of the key elements are not unique in " +
-                            "listwithcontainer.")));
-        }
-
-        List<String> keysValueList = new ArrayList<>();
-        keysValueList.add("1");
-        keysValueList.add("2");
-        keysValueList.add("2");
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "list", "rootlist", "ydt.rootlist", appName);
-        try {
-            ydtBuilder.addMultiInstanceChild(
-                    "listwithcontainer", null, keysValueList);
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "Too many key parameter in listwithcontainer." +
-                            " Expected fixed count 2.")));
-        }
-
-        keysValueList.clear();
-        keysValueList.add("1");
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "list", "rootlist", "ydt.rootlist", appName);
-        try {
-            ydtBuilder.addMultiInstanceChild(
-                    "listwithcontainer", null, keysValueList);
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "Too few key parameter in listwithcontainer." +
-                            " Expected fixed count 2.")));
-        }
-
-        try {
-            YdtTestUtils.getydtBuilder(
-                    "list", "invalid", "ydt.invalid", appName);
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "Application with name \"" + "invalid" + "\" doesn't " +
-                            "exist.")));
-        }
-
-        keysValueList.clear();
-        keysValueList.add("1");
-        keysValueList.add("1");
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "list", "rootlist", "ydt.rootlist", appName);
-        ydtBuilder.addMultiInstanceChild("listwithcontainer", null,
-                                         keysValueList);
-        ydtBuilder.traverseToParent();
-
-        ydtBuilder.addChild("listwithcontainer", null);
-        ydtBuilder.addLeaf("invalid", null, "12");
-        ydtBuilder.traverseToParent();
-        ydtBuilder.addLeaf("invalid1", null, "121");
-        ydtBuilder.traverseToParent();
-        ydtBuilder.traverseToParent();
-
-        ydtBuilder.addChild("listwithcontainer", null);
-        ydtBuilder.addLeaf("invalid", null, "12");
-        ydtBuilder.traverseToParent();
-        ydtBuilder.addLeaf("invalid1", null, "1211");
-        ydtBuilder.traverseToParent();
-        ydtBuilder.traverseToParent();
-
-        ydtBuilder.addChild("listwithcontainer", null);
-        ydtBuilder.addLeaf("invalid", null, "12");
-        ydtBuilder.traverseToParent();
-        ydtBuilder.addLeaf("invalid1", null, "21");
-        ydtBuilder.traverseToParent();
-        ydtBuilder.traverseToParent();
-
-        try {
-            ydtBuilder.traverseToParent();
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "Too many instances of listwithcontainer." +
-                            " Expected maximum instance 3.")));
-        }
-
-        ydtBuilder = YdtTestUtils
-                .getydtBuilder("list", "rootlist", "ydt.rootlist",
-                               appName);
-        ydtBuilder.addChild("listwithcontainer", null);
-        try {
-            ydtBuilder.traverseToParent();
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "rootlist is missing some of the " +
-                            "keys of listwithcontainer.")));
-        }
+    public void negative1Test() {
+        thrown.expect(YdtException.class);
+        thrown.expectMessage(ERROR[5]);
+        getYdtBuilder("list", "invalid", "ydt.invalid", MERGE);
     }
 
+    /**
+     * Tests the negative error scenario when list node is not having all
+     * key elements.
+     */
     @Test
-    public void negative1Test() throws IOException {
-        String appName = "org.onosproject.yang.gen.v1.ydt.rootlist." +
-                "rev20160624.RootlistService";
-        YangRequestWorkBench ydtBuilder = YdtTestUtils
-                .getydtBuilder("list", "rootlist", "ydt.rootlist",
-                               appName);
-        ydtBuilder.addChild("listwithcontainer", null);
-        ydtBuilder.addLeaf("invalid", null, "12");
-        ydtBuilder.traverseToParent();
-        ydtBuilder.addLeaf("invalid1", null, "12");
-        ydtBuilder.traverseToParent();
-        ydtBuilder.addLeaf("invalidinterval", null, "12");
-        ydtBuilder.traverseToParent();
-        try {
-            ydtBuilder.addLeaf("invalidinterval", null, "12");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "Duplicate entry found under invalidinterval " +
-                            "leaf-list node.")));
-        }
+    public void negative2Test() throws YdtException {
 
-        ydtBuilder = YdtTestUtils
-                .getydtBuilder("list", "rootlist", "ydt.rootlist",
-                               appName);
-        ydtBuilder.addChild("listwithcontainer", null);
-        ydtBuilder.addLeaf("invalid", null, "12");
+        YangRequestWorkBench ydtBuilder = getTestYdtBuilder(LISTNS);
+        ydtBuilder.addChild(LWC, LISTNS);
+        ydtBuilder.addLeaf("invalid", LISTNS, "12");
         ydtBuilder.traverseToParent();
-        ydtBuilder.addLeaf("invalid1", null, "12");
-        ydtBuilder.traverseToParent();
-        try {
-            ydtBuilder.addLeaf("invalidinterval", null, "string");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"string\" " +
-                            "is not a valid uint16.")));
-        }
 
+        traversToParentErrorMsgValidator(ydtBuilder, ERROR[0]);
+    }
+
+    /**
+     * Tests the negative error scenario when duplicate entry of list node
+     * is created.
+     */
+    @Test
+    public void negative3Test() throws YdtException {
+        YangRequestWorkBench ydtBuilder = getTestYdtBuilder(LISTNS);
+        ydtBuilder.addChild(LWC, LISTNS);
+        ydtBuilder.addLeaf("invalid", LISTNS, "12");
+        ydtBuilder.traverseToParent();
+        leafErrorMsgValidator(ydtBuilder, "invalid", "12", ERROR[1]);
+    }
+
+    /**
+     * Tests the negative error scenario when key elements of list node
+     * are not unique.
+     */
+    @Test
+    public void negative4Test() throws YdtException {
+        YangRequestWorkBench ydtBuilder = getTestYdtBuilder(LISTNS);
+        ydtBuilder.addChild(LWC, LISTNS);
+        ydtBuilder.addLeaf("invalid", LISTNS, "12");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.addLeaf("invalid1", LISTNS, "12");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.traverseToParent();
+
+        ydtBuilder.addChild(LWC, LISTNS);
+        ydtBuilder.addLeaf("invalid", LISTNS, "12");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.addLeaf("invalid1", LISTNS, "12");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.traverseToParent();
+
+        traversToParentErrorMsgValidator(ydtBuilder, ERROR[2]);
+    }
+
+    /**
+     * Tests the negative error scenario when all key elements of list node
+     * are not supplied.
+     */
+    @Test
+    public void negative5Test() throws YdtException {
+        keysValueList.clear();
+        keysValueList.add("1");
+        keysValueList.add("2");
+        keysValueList.add("2");
+        YangRequestWorkBench ydtBuilder = getTestYdtBuilder(LISTNS);
+        listNodeErrorMsgValidator(ydtBuilder, keysValueList, ERROR[4]);
+
+        keysValueList.clear();
+        keysValueList.add("1");
+        ydtBuilder = getTestYdtBuilder(LISTNS);
+        listNodeErrorMsgValidator(ydtBuilder, keysValueList, ERROR[3]);
+    }
+
+    /**
+     * Tests the negative error scenario when instances of a list node are
+     * created above the allowed limit.
+     */
+    @Test
+    public void negative6Test() throws YdtException {
+        keysValueList.clear();
+        keysValueList.add("1");
+        keysValueList.add("1");
+        YangRequestWorkBench ydtBuilder = getTestYdtBuilder(LISTNS);
+        ydtBuilder.addMultiInstanceChild(LWC, LISTNS, keysValueList, null);
+        ydtBuilder.traverseToParent();
+
+        ydtBuilder.addChild(LWC, LISTNS);
+        ydtBuilder.addLeaf("invalid", LISTNS, "12");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.addLeaf("invalid1", LISTNS, "121");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.traverseToParent();
+
+        ydtBuilder.addChild(LWC, LISTNS);
+        ydtBuilder.addLeaf("invalid", LISTNS, "12");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.addLeaf("invalid1", LISTNS, "1211");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.traverseToParent();
+
+        ydtBuilder.addChild(LWC, LISTNS);
+        ydtBuilder.addLeaf("invalid", LISTNS, "12");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.addLeaf("invalid1", LISTNS, "21");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.traverseToParent();
+        traversToParentErrorMsgValidator(ydtBuilder, ERROR[6]);
+    }
+
+    /**
+     * Tests the negative error scenario when list node is not having all
+     * key elements.
+     */
+    @Test
+    public void negative7Test() throws YdtException {
+        YangRequestWorkBench ydtBuilder = getTestYdtBuilder(LISTNS);
+        ydtBuilder.addChild(LWC, LISTNS);
+        traversToParentErrorMsgValidator(ydtBuilder, ERROR[0]);
+    }
+
+    /**
+     * Tests the negative error scenario when duplicate key entry is created
+     * inside leaf-list node.
+     */
+    @Test
+    public void negative8Test() throws YdtException {
+        YangRequestWorkBench ydtBuilder = getTestYdtBuilder(LISTNS);
+        ydtBuilder.addChild(LWC, LISTNS);
+        ydtBuilder.addLeaf("invalid", LISTNS, "12");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.addLeaf("invalid1", LISTNS, "12");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.addLeaf(INV, LISTNS, "12");
+        ydtBuilder.traverseToParent();
+        leafErrorMsgValidator(ydtBuilder, INV, "12", ERROR[7]);
+    }
+
+    /**
+     * Tests the negative error scenario when string is passed for uint16 type
+     * leaf node.
+     */
+    @Test
+    public void negative9Test() throws YdtException {
+        YangRequestWorkBench ydtBuilder = getTestYdtBuilder(LISTNS);
+        ydtBuilder.addChild(LWC, LISTNS);
+        ydtBuilder.addLeaf("invalid", LISTNS, "12");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.addLeaf("invalid1", LISTNS, "12");
+        ydtBuilder.traverseToParent();
+        leafErrorMsgValidator(ydtBuilder, INV, "string", ERROR[8]);
+    }
+
+    /**
+     * Tests the negative error scenario when duplicate key entry created
+     * inside a leaf-list node.
+     */
+    @Test
+    public void negative10Test() throws YdtException {
         valueSet.clear();
         valueSet.add("1");
         valueSet.add("2");
         valueSet.add("12");
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "list", "rootlist", "ydt.rootlist", appName);
-        ydtBuilder.addChild("listwithcontainer", null);
-        ydtBuilder.addLeaf("invalid", null, "12");
+        YangRequestWorkBench ydtBuilder = getTestYdtBuilder(LISTNS);
+        ydtBuilder.addChild(LWC, LISTNS);
+        ydtBuilder.addLeaf("invalid", LISTNS, "12");
         ydtBuilder.traverseToParent();
-        ydtBuilder.addLeaf("invalid1", null, "12");
+        ydtBuilder.addLeaf("invalid1", LISTNS, "12");
         ydtBuilder.traverseToParent();
-        ydtBuilder.addLeaf("invalidinterval", null, "12");
+        ydtBuilder.addLeaf(INV, LISTNS, "12");
         ydtBuilder.traverseToParent();
-        try {
-            ydtBuilder.addLeaf("invalidinterval", null, valueSet);
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "Duplicate entry found under invalidinterval " +
-                            "leaf-list node.")));
-        }
+        thrown.expect(YdtException.class);
+        thrown.expectMessage(ERROR[7]);
+        ydtBuilder.addLeaf(INV, LISTNS, valueSet);
+    }
 
+    /**
+     * Tests the negative error scenario when string is passed for uint16 type
+     * key entry inside a leaf-list node.
+     */
+    @Test
+    public void negative11Test() throws YdtException {
         valueSet.clear();
         valueSet.add("string");
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "list", "rootlist", "ydt.rootlist", appName);
-        ydtBuilder.addChild("listwithcontainer", null);
-        ydtBuilder.addLeaf("invalid", null, "12");
+        YangRequestWorkBench ydtBuilder = getTestYdtBuilder(LISTNS);
+        ydtBuilder.addChild(LWC, LISTNS);
+        ydtBuilder.addLeaf("invalid", LISTNS, "12");
         ydtBuilder.traverseToParent();
-        ydtBuilder.addLeaf("invalid1", null, "12");
+        ydtBuilder.addLeaf("invalid1", LISTNS, "12");
         ydtBuilder.traverseToParent();
-        ydtBuilder.addLeaf("invalidinterval", null, "12");
+        ydtBuilder.addLeaf(INV, LISTNS, "12");
         ydtBuilder.traverseToParent();
+        thrown.expect(DataTypeException.class);
+        thrown.expectMessage(ERROR[8]);
+        ydtBuilder.addLeaf(INV, LISTNS, valueSet);
+    }
+
+    /**
+     * Validate the error message obtained by adding multi instance node in
+     * current context against the given error string.
+     *
+     * @param bldr  ydt builder
+     * @param list  list of key values
+     * @param error error string
+     */
+    private void listNodeErrorMsgValidator(YangRequestWorkBench bldr,
+                                           List<String> list, String error) {
+        /*
+         * This try catch is explicitly written to use as utility in other
+         * test cases.
+         */
+        boolean isExpOccurred = false;
         try {
-            ydtBuilder.addLeaf("invalidinterval", null, valueSet);
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"string\" " +
-                            "is not a valid uint16.")));
+            bldr.addMultiInstanceChild(LWC, LISTNS, list, null);
+        } catch (YdtException e) {
+            isExpOccurred = true;
+            assertEquals(e.getMessage(), error);
         }
+        assertEquals(E_LIST + LWC, isExpOccurred, true);
+    }
+
+    /**
+     * Validate the error message obtained by traversing back to parent of
+     * current context against the given error string.
+     *
+     * @param ydtBuilder ydt builder
+     * @param error      error string
+     */
+    private void traversToParentErrorMsgValidator(
+            YangRequestWorkBench ydtBuilder, String error) {
+        /*
+         * This try catch is explicitly written to use as utility in other
+         * test cases.
+         */
+        boolean isExpOccurred = false;
+        try {
+            ydtBuilder.traverseToParent();
+        } catch (YdtException e) {
+            isExpOccurred = true;
+            assertEquals(e.getMessage(), error);
+        }
+        assertEquals(E_TOPARENT, isExpOccurred, true);
+    }
+
+    /**
+     * Validate the error message obtained by adding leaf node in
+     * current context against the given error string.
+     *
+     * @param bldr  ydt builder
+     * @param name  name of the leaf
+     * @param val   leaf value
+     * @param error error string
+     */
+    private void leafErrorMsgValidator(
+            YangRequestWorkBench bldr, String name, String val, String error) {
+        /*
+         * This try catch is explicitly written to use as utility in other
+         * test cases.
+         */
+        boolean isExpOccurred = false;
+        try {
+            bldr.addLeaf(name, LISTNS, val);
+        } catch (YdtException e) {
+            isExpOccurred = true;
+            assertEquals(e.getMessage(), error);
+        }
+        assertEquals(E_LEAF + name, isExpOccurred, true);
     }
 }

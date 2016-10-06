@@ -17,132 +17,72 @@
 package org.onosproject.yms.app.ydt;
 
 import org.junit.Test;
-import org.onosproject.yms.ydt.YdtContext;
 
-import java.io.IOException;
-import java.util.Objects;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.BOOL;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.BOOLNS;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.booleanYdt;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateErrMsg;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateLeafContents;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateNodeContents;
+import static org.onosproject.yms.ydt.YdtContextOperationType.MERGE;
 
 public class YdtBooleanTest {
 
     /*
         BOOLEAN
         Positive scenario
-        input with in true and false
+        input with in "booleanList" and false
     */
+
+    /**
+     * Creates and validates boolean ydt covering different positive scenario.
+     */
     @Test
-    public void positiveTest() throws IOException {
-        YangRequestWorkBench ydtBuilder = YdtTestUtils.booleanYdt();
+    public void positiveTest() {
+        YangRequestWorkBench ydtBuilder = booleanYdt();
         validateTree(ydtBuilder);
     }
 
+    /**
+     * Validates the given built ydt.
+     */
     private void validateTree(YangRequestWorkBench ydtBuilder) {
 
-        // assign root node to ydtContext for validating purpose.
-        YdtContext ydtContext = ydtBuilder.getRootNode();
-        assertThat(true, is(ydtContext.getName().contentEquals("builtInType")));
-
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(Objects.equals(ydtContext.getName(), "bool")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(Objects.equals(ydtContext.getName(),
-                                           "booleanList")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("boolean")));
-        assertThat(true, is(Objects.equals(ydtContext.getValue(), "true")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(Objects.equals(ydtContext.getName(),
-                                           "booleanList")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("boolean")));
-        assertThat(true, is(Objects.equals(ydtContext.getValue(), "false")));
+        // assign root node to ydtNode for validating purpose.
+        YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
+        // Logical root node does not have operation type
+        validateNodeContents(ydtNode, "builtInType", null);
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "bool", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "booleanList", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "boolean", "true");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, "booleanList", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "boolean", "false");
     }
 
     /*
         Negative scenario
 
-        input with in non zero value in case of true
+        input with in non zero value in case of "booleanList"
         input with zero value in case of false
         input with empty value in case of false
     */
+
+    /**
+     * Tests all the negative scenario's for boolean data type.
+     */
     @Test
-    public void negativeTest() throws IOException {
-        String appName = "org.onosproject.yang.gen.v1.ydt" +
-                ".yangautoprefixboolean.rev20160524.BoolService";
-        YangRequestWorkBench ydtBuilder = YdtTestUtils
-                .getydtBuilder("builtInType", "bool",
-                                      "ydt.boolean", appName);
-        ydtBuilder.addChild("booleanList", null);
-
-        try {
-            ydtBuilder.addLeaf("boolean", null, "10");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "10" + "\" is not a " +
-                            "valid BOOLEAN")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "bool", "ydt.boolean", appName);
-        ydtBuilder.addChild("booleanList", null);
-
-        try {
-            ydtBuilder.addLeaf("boolean", null, "0");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "0" + "\" is not a " +
-                            "valid BOOLEAN")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "bool", "ydt.boolean", appName);
-        ydtBuilder.addChild("booleanList", null);
-
-        try {
-            ydtBuilder.addLeaf("boolean", null, "");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "" + "\" is not a " +
-                            "valid BOOLEAN")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "bool", "ydt.boolean", appName);
-        ydtBuilder.addChild("booleanList", null);
-
-        try {
-            ydtBuilder.addLeaf("boolean", null, "-1");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "-1" + "\" is not a " +
-                            "valid BOOLEAN")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "bool", "ydt.boolean", appName);
-        ydtBuilder.addChild("booleanList", null);
-
-        try {
-            ydtBuilder.addLeaf("boolean", null, "tru");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "tru" + "\" is " +
-                            "not a valid BOOLEAN")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "bool", "ydt.boolean", appName);
-        ydtBuilder.addChild("booleanList", null);
-
-        try {
-            ydtBuilder.addLeaf("boolean", null, "boolean");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "boolean" + "\" " +
-                            "is not a " + "valid BOOLEAN")));
-        }
+    public void negativeTest() {
+        validateErrMsg("boolean", BOOLNS, "10", BOOL, "booleanList");
+        validateErrMsg("boolean", BOOLNS, "0", BOOL, "booleanList");
+        validateErrMsg("boolean", BOOLNS, "", BOOL, "booleanList");
+        validateErrMsg("boolean", BOOLNS, "-1", BOOL, "booleanList");
+        validateErrMsg("boolean", BOOLNS, "tru", BOOL, "booleanList");
+        validateErrMsg("boolean", BOOLNS, "boolean", BOOL, "booleanList");
     }
 }

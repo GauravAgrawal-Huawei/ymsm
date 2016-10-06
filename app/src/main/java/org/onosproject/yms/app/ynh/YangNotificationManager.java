@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-present Open Networking Laboratory
+ * Copyright 2016-present Open Networking Laboratory
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 
 package org.onosproject.yms.app.ynh;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.onosproject.event.Event;
 import org.onosproject.event.EventListener;
 import org.onosproject.event.ListenerRegistry;
@@ -32,95 +30,85 @@ import org.onosproject.yms.ynh.YangNotificationListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import static org.onlab.util.Tools.groupedThreads;
 
 /**
- * Provides implementation of YANG notification manager.
+ * Representation of YANG notification manager.
  */
-public class YangNotificationManager extends ListenerRegistry<YangNotificationEvent, YangNotificationListener>
+public class YangNotificationManager
+        extends ListenerRegistry<YangNotificationEvent, YangNotificationListener>
         implements YangNotificationExtendedService {
 
-    private ExecutorService eventHandlingExecutor;
+    private static final String YANG_NOTIFICATION = "yangnotification";
 
     private final Logger log = LoggerFactory.getLogger(getClass());
+
+    private ExecutorService executor;
 
     /**
      * YANG notification abstract listener. This listener will listens
      * abstractly to all the notification from the application to which it
      * has subscribed.
      */
-    YnhAbstractListener ynhAbstractListener;
+    private YnhAbstractListener listener;
 
     /**
      * Maintains schema registry.
      */
-    YangSchemaRegistry schemaRegistry;
+    private YangSchemaRegistry schemaRegistry;
 
     /**
      * Creates an instance of YANG notification manager.
      *
-     * @param schemaRegistry YANG schema registry
+     * @param registry YANG schema registry
      */
-    public YangNotificationManager(YangSchemaRegistry schemaRegistry) {
-        ynhAbstractListener = new YnhAbstractListener();
-        this.schemaRegistry = schemaRegistry;
-        eventHandlingExecutor = Executors.newSingleThreadExecutor(
-                groupedThreads("onos/apps/yang-management-system/yang-notification-handler", "event-handler", log));
-    }
-
-    /**
-     * Returns YANG schema registry.
-     *
-     * @return YANG schema registry
-     */
-    public YangSchemaRegistry getSchemaRegistry() {
-        return schemaRegistry;
-    }
-
-    /**
-     * Returns YANG notification handler abstract listener.
-     *
-     * @return YANG notification handler abstract listener
-     */
-    public YnhAbstractListener getYnhAbstractListener() {
-        return ynhAbstractListener;
+    public YangNotificationManager(YangSchemaRegistry registry) {
+        listener = new YnhAbstractListener();
+        executor = Executors.newSingleThreadExecutor(groupedThreads(
+                "onos/yms", "event-handler-%d", log));
+        schemaRegistry = registry;
     }
 
     @Override
-    public void registerAsListener(ListenerService appObject) {
-        appObject.addListener(getYnhAbstractListener());
+    public void registerAsListener(ListenerService manager) {
+        manager.addListener(listener);
     }
 
     @Override
-    public YangNotification getFilteredSubject(YangNotification notificationSubject,
-                                               YangNotification notificationFilter) {
+    public YangNotification getFilteredSubject(YangNotification subject,
+                                               YangNotification filter) {
         return null;
         // TODO
     }
 
     /**
-     * YANG notification handler's abstract listener, listening for events
-     * from application(s).
+     * Representation of YANG notification handler's abstract listener. It
+     * listens for events from application(s).
      */
     private class YnhAbstractListener implements EventListener {
 
         @Override
         public void event(Event event) {
-            eventHandlingExecutor.execute(() -> {
+            executor.execute(() -> {
                 try {
-                    // Create an instance of YANG tree builder.
-                    YangTreeBuilder yangTreeBuilder = new DefaultYangTreeBuilder();
                     /*
                      * Obtain YANG data tree corresponding to notification with
-                     * logical root node as yangnotification, followed by module/
-                     * sub-module, followed by notification.
+                     * logical root node as yangnotification, followed by
+                     * module/sub-module, followed by notification.
                      */
-                    YdtContext notificationSchemaNode = yangTreeBuilder.getYdtForNotification(event,
-                            "yangnotification", getSchemaRegistry());
-                    // Create YANG notification
-                    YangNotification yangNotification = new YangNotification(notificationSchemaNode);
-                    // Send notification to registered protocols.
-                    process(new YangNotificationEvent(yangNotification));
+                    YangTreeBuilder builder = new DefaultYangTreeBuilder();
+                    YdtContext context = builder.getYdtForNotification(
+                                    event, YANG_NOTIFICATION, schemaRegistry);
+                    /*
+                     * Create YANG notification from obtained data tree and
+                     * send it to registered protocols.
+                     */
+                    YangNotification notification =
+                            new YangNotification(context);
+                    process(new YangNotificationEvent(notification));
                 } catch (Exception e) {
                     log.warn("Failed to process {}", event, e);
                 }

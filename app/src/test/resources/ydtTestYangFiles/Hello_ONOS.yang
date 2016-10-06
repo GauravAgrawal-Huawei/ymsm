@@ -7,9 +7,7 @@ module Hello_ONOS {
         description "Initial revision of hello model";
     }
 
-
     grouping greeting {
-
         leaf name {
             type string;
         }
@@ -37,18 +35,18 @@ module Hello_ONOS {
             }
 
             list stringList {
-		        key "string1 string2";
-		        unique "string3";
-		        leaf string1 {
-		              type string;
-		        }
-		        leaf string2 {
-		              type string;
-		        }
-		        leaf string3 {
-		              type string;
-		        }
-		    }
+                key "string1 string2";
+                unique "string3";
+                leaf string1 {
+                      type string;
+                }
+                leaf string2 {
+                      type string;
+                }
+                leaf string3 {
+                      type string;
+                }
+            }
         }
         output {
             leaf greetingOut {

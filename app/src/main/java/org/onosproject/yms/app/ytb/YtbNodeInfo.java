@@ -22,8 +22,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Represents YTB node info for all the nodes that are added to the YDT builder tree.
- * Contains the information which can be attached and retrieved back from YDT while walking.
+ * Represents YTB node info for all the nodes that are added to the YDT
+ * builder tree.Contains the information which can be attached and retrieved
+ * back from YDT while walking.
  */
 public class YtbNodeInfo {
 
@@ -39,21 +40,21 @@ public class YtbNodeInfo {
      * faced. With this iterator the node can be walked multiple times till
      * it becomes empty.
      */
-    private Iterator<Object> currentListIterator;
+    private Iterator<Object> listIterator;
 
     /**
      * The current YTB node's, list of augments are iterated through this
      * iterator. Every time an augment is built completely, this iterator
      * gives the next augment node until it becomes empty.
      */
-    private Iterator<YangAugment> augmentNodeIterator;
+    private Iterator<YangAugment> augmentNodeItr;
 
     /**
      * The map with case object as value and choice node name as key is added
      * for the current YTB info. Every time a case schema node comes, it takes
      * this map and checks if it is present.
      */
-    private Map<String, Object> choiceAndCaseMap;
+    private Map<String, Object> choiceCaseMap;
 
     /**
      * When the case finds its object in map, it assigns it to case object of
@@ -70,7 +71,7 @@ public class YtbNodeInfo {
     private Object augmentObject;
 
     /**
-     * Creates a default constructor for YTB node info.
+     * Constructs a default YTB node info.
      */
     public YtbNodeInfo() {
     }
@@ -98,17 +99,17 @@ public class YtbNodeInfo {
      *
      * @return current list iterator for the schema node
      */
-    public Iterator<Object> getCurrentListIterator() {
-        return currentListIterator;
+    public Iterator<Object> getListIterator() {
+        return listIterator;
     }
 
     /**
      * Sets the current list iterator of the YANG schema node.
      *
-     * @param currentListIterator current list iterator for the schema node
+     * @param listIterator current list iterator for the schema node
      */
-    public void setCurrentListIterator(Iterator<Object> currentListIterator) {
-        this.currentListIterator = currentListIterator;
+    public void setListIterator(Iterator<Object> listIterator) {
+        this.listIterator = listIterator;
     }
 
     /**
@@ -116,17 +117,17 @@ public class YtbNodeInfo {
      *
      * @return choice name and case object map
      */
-    public Map<String, Object> getChoiceAndCaseMap() {
-        return choiceAndCaseMap;
+    public Map<String, Object> getChoiceCaseMap() {
+        return choiceCaseMap;
     }
 
     /**
      * Sets the map of choice schema name and case object.
      *
-     * @param choiceAndCaseMap choice name and case object map
+     * @param choiceCaseMap choice name and case object map
      */
-    public void setChoiceAndCaseMap(Map<String, Object> choiceAndCaseMap) {
-        this.choiceAndCaseMap = choiceAndCaseMap;
+    public void setChoiceCaseMap(Map<String, Object> choiceCaseMap) {
+        this.choiceCaseMap = choiceCaseMap;
     }
 
     /**
@@ -170,16 +171,16 @@ public class YtbNodeInfo {
      *
      * @return augment node iterator
      */
-    public Iterator getAugmentNodeIterator() {
-        return augmentNodeIterator;
+    public Iterator<YangAugment> getAugmentIterator() {
+        return augmentNodeItr;
     }
 
     /**
      * Sets the current list iterator of the YANG augment node.
      *
-     * @param augmentNodeIterator augment node iterator
+     * @param augmentNodeItr augment node iterator
      */
-    public void setAugmentNodeIterator(Iterator augmentNodeIterator) {
-        this.augmentNodeIterator = augmentNodeIterator;
+    public void setAugmentIterator(Iterator<YangAugment> augmentNodeItr) {
+        this.augmentNodeItr = augmentNodeItr;
     }
 }

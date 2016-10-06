@@ -19,21 +19,21 @@ package org.onosproject.yms.app.ydt;
 /**
  * Represents type of YANG data tree creation method caller type.
  */
-public enum RequestedCallType {
+enum RequestedCallType {
 
-    /*
+    /**
      * Requested Node is of type single/multi instance leaf.
      */
     LEAF,
 
-    /*
+    /**
      * Requested Node is of type single/multi instance node.
      */
     OTHER,
 
-    /*
-     * Requested Node is of type multi instance node/leaf.
+    /**
+     * Requested Node is of type multi instance leaf/node.
      */
-    UNKNOWN,
+    MULTI_INSTANCE,
 }
 

@@ -26,11 +26,12 @@ import org.onosproject.core.ApplicationId;
 import org.onosproject.core.CoreService;
 import org.onosproject.core.IdGenerator;
 import org.onosproject.yms.app.yab.YangApplicationBroker;
-import org.onosproject.yms.app.yab.exceptions.YabException;
 import org.onosproject.yms.app.ych.DefaultYangCodecHandler;
+import org.onosproject.yms.app.ych.defaultcodecs.YangCodecRegistry;
 import org.onosproject.yms.app.ydt.DefaultYdtWalker;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ynh.YangNotificationExtendedService;
+import org.onosproject.yms.app.ynh.YangNotificationManager;
 import org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.onosproject.yms.ych.YangCodecHandler;
@@ -47,16 +48,14 @@ import org.onosproject.yms.ysr.YangModuleLibrary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static org.onlab.util.Tools.groupedThreads;
 
 /**
- * Represents implementation of YANG application management system manager.
+ * Represents implementation of YANG management system manager.
  */
 @Service
 @Component(immediate = true)
@@ -74,7 +73,7 @@ public class YmsManager
     private IdGenerator moduleIdGenerator;
     private ExecutorService schemaRegistryExecutor;
     private YangNotificationExtendedService ynhExtendedService;
-    private Map<YangProtocolEncodingFormat, YangDataTreeCodec> defaultCodecs = new HashMap<>();
+
     @Reference(cardinality = ReferenceCardinality.MANDATORY_UNARY)
     protected CoreService coreService;
 
@@ -88,6 +87,10 @@ public class YmsManager
                 Executors.newSingleThreadExecutor(groupedThreads(
                         "onos/apps/yang-management-system/schema-registry",
                         "schema-registry-handler", log));
+        ynhExtendedService = new YangNotificationManager(schemaRegistry);
+        //Initilize the default codecs
+        YangCodecRegistry.initializeDefaultCodec();
+
         log.info("Started");
     }
 
@@ -130,7 +133,7 @@ public class YmsManager
     }
 
     @Override
-    public YdtResponse executeOperation(YdtBuilder operationRequest) throws YabException {
+    public YdtResponse executeOperation(YdtBuilder operationRequest) {
         YangApplicationBroker requestBroker =
                 new YangApplicationBroker(schemaRegistry);
         switch (operationRequest.getYmsOperationType()) {
@@ -157,15 +160,6 @@ public class YmsManager
         return ynhExtendedService;
     }
 
-    /**
-     * Returns YANG notification extended service.
-     *
-     * @return YANG notification extended service
-     */
-    private YangNotificationExtendedService getYnhExtendedService() {
-        return ynhExtendedService;
-    }
-
     @Override
     public YangModuleLibrary getYangModuleLibrary() {
         return ((DefaultYangSchemaRegistry) schemaRegistry).getLibrary();
@@ -179,7 +173,7 @@ public class YmsManager
 
     @Override
     public void registerDefaultCodec(YangDataTreeCodec defaultCodec, YangProtocolEncodingFormat dataFormat) {
-        defaultCodecs.put(dataFormat, defaultCodec);
+        YangCodecRegistry.registerDefaultCodec(defaultCodec, dataFormat);
     }
 
     @Override
@@ -189,7 +183,7 @@ public class YmsManager
         //perform registration of service
         schemaRegistryExecutor.execute(() -> schemaRegistry
                 .registerApplication(yangManager, yangService,
-                                     getYnhExtendedService()));
+                                     ynhExtendedService));
     }
 
     @Override
@@ -200,19 +194,10 @@ public class YmsManager
     @Override
     public YangCodecHandler getYangCodecHandler() {
 
-        /*
-         * Create a new schema registry for new code handler instance
-         */
-        YangSchemaRegistry yangSchemaRegistry = new DefaultYangSchemaRegistry
-                (null);
-
-        /*
-         * Create a new codec handler for the provider / driver
-         */
-        DefaultYangCodecHandler defaultYangCodecHandler = new DefaultYangCodecHandler(yangSchemaRegistry,
-                                                                                      defaultCodecs);
-
-        return defaultYangCodecHandler;
+        YangSchemaRegistry yangSchemaRegistry =
+                new DefaultYangSchemaRegistry(
+                        String.valueOf(moduleIdGenerator.getNewId()));
+        return new DefaultYangCodecHandler(yangSchemaRegistry);
     }
 
     /**
@@ -223,5 +208,4 @@ public class YmsManager
     public YangSchemaRegistry getSchemaRegistry() {
         return schemaRegistry;
     }
-
 }

@@ -5,7 +5,7 @@ module customssupervisor {
     namespace "ydt.customs-supervisor";
 
     prefix "customs";
-    
+
     organization "ON-LAB";
 
     description "This module defines for customs-supervisor.";

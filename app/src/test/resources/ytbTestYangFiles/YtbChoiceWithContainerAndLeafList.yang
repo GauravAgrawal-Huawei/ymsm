@@ -6,6 +6,18 @@ module YtbChoiceWithContainerAndLeafList {
     leaf refer {
         type binary;
     }
+    rpc invalid1 {
+        input {
+            leaf value {
+                type string;
+            }
+        }
+        output {
+            leaf value {
+                type string;
+            }
+        }
+    }
     choice content-test {
         leaf-list list-items {
             type leafref {
@@ -33,6 +45,19 @@ module YtbChoiceWithContainerAndLeafList {
         case invalid {
             leaf create-invalid {
                 type uint16;
+            }
+        }
+    }
+    notification invalid {
+        leaf value {
+            type string;
+        }
+    }
+    notification invalid2 {
+        list node {
+            config false;
+            leaf value {
+                type string;
             }
         }
     }

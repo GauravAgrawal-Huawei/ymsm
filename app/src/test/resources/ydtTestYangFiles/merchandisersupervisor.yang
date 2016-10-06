@@ -5,7 +5,7 @@ module merchandisersupervisor {
     namespace "ydt.Merchandiser-supervisor";
 
     prefix "merchandiser";
-    
+
     organization "ON-LAB";
 
     description "This module defines for Merchandiser-supervisor.";

@@ -19,7 +19,6 @@ module purchasingsupervisor {
             type string;
             description "name of the purchasing-specialist person";
         }
-
         leaf support {
             type string;
             description "name of the support person";

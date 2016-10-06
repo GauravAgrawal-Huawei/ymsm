@@ -24,6 +24,13 @@ import org.onosproject.yms.ydt.YdtContextOperationType;
 
 import java.util.List;
 
+/**
+ * Abstraction of an entity which represents YANG application data tree context
+ * information. This context information will be used by protocol to obtain
+ * the information associated with YDT application node. This is used when
+ * protocol is walking the application data tree in both visitor and listener
+ * mechanism.
+ */
 public interface YdtAppContext {
 
     /**
@@ -39,18 +46,6 @@ public interface YdtAppContext {
      * @param parent node
      */
     void setParent(YdtAppContext parent);
-
-    /**
-     * Returns the context of application parent node.
-     *
-     * @return context of application parent node
-     */
-    YdtAppContext getAppRoot();
-
-    /**
-     * Sets the context of application parent node.
-     */
-    void setAppRoot();
 
     /**
      * Returns the context of first child.
@@ -116,15 +111,6 @@ public interface YdtAppContext {
     YdtAppNodeOperationType getOperationType();
 
     /**
-     * Returns the app tree operation type with the help of YdtOperation type.
-     *
-     * @param opType ydt operation type
-     * @return app tree operation type
-     */
-    YdtAppNodeOperationType getAppOpTypeFromYdtOpType(
-            YdtContextOperationType opType);
-
-    /**
      * Set the app tree operation type.
      *
      * @param opType app tree operation type
@@ -139,11 +125,11 @@ public interface YdtAppContext {
     List<YdtContext> getDeleteNodes();
 
     /**
-     * Sets the list of nodes with operation type delete.
+     * Adds the ydt node with operation type delete in module delete node list.
      *
-     * @param deleteNodes list of nodes with operation type delete
+     * @param node ydt node with operation type delete/remove
      */
-    void setDeleteNodes(List<YdtContext> deleteNodes);
+    void addDeleteNode(YdtNode node);
 
     /**
      * Returns application's root ydtContext.
@@ -194,7 +180,7 @@ public interface YdtAppContext {
             YangSchemaNodeContextInfo contextInfo);
 
     /**
-     * Update the app tree operation type.
+     * Updates the app tree operation type.
      * <p>
      * If earlier operation type was OTHER_EDIT and now operation type came as
      * DELETE_ONLY or vice-versa, then update operation type to BOTH.
@@ -202,4 +188,35 @@ public interface YdtAppContext {
      * @param opType ydt current context operation type
      */
     void updateAppOperationType(YdtContextOperationType opType);
+
+    /**
+     * Sets the application data for given request with appropriate
+     * information.
+     *
+     * @param moduleNode module node of requested app
+     * @param schemaNode augmented schema node of requested context
+     */
+    void setAppData(YdtNode moduleNode, YangSchemaNode schemaNode);
+
+    /**
+     * Returns the app data for current context.
+     *
+     * @return app data
+     */
+    AppData getAppData();
+
+    /**
+     * Returns the yang schema for requested node.
+     *
+     * @return schema node
+     */
+    YangSchemaNode getYangSchemaNode();
+
+    /**
+     * Adds the given schema node in to application set.
+     *
+     * @param schemaNode schema node to be added
+     * @return true for success else false
+     */
+    boolean addSchemaToAppSet(YangSchemaNode schemaNode);
 }

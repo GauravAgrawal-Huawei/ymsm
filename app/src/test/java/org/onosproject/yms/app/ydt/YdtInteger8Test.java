@@ -17,17 +17,33 @@
 package org.onosproject.yms.app.ydt;
 
 import org.junit.Test;
-import org.onosproject.yms.ydt.YdtContext;
+import org.onosproject.yms.app.ydt.exceptions.YdtException;
 
-import java.io.IOException;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.CAPSINT8;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.CAPSUINT8;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.INT8NS;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.MAXIWR;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.MAXUINT8;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.MAXUIWR;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.MIDIWR;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.MIDUIWR;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.MINIWR;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.MINUIWR;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.MINVALUE;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.MRV;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.RUI;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.SMALLINT8;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.SMALLUINT8;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.TYPE;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.integer8Ydt;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateErrMsg;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateLeafContents;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateNodeContents;
+import static org.onosproject.yms.ydt.YdtContextOperationType.MERGE;
 
 public class YdtInteger8Test {
 
     /*
-
     Positive scenario
 
     input at boundry for integer
@@ -84,251 +100,186 @@ public class YdtInteger8Test {
             i.6. input 100
             i.7. input 255
     */
+
+    /**
+     * Creates and validates integer8 ydt covering different positive scenario.
+     */
     @Test
-    public void positiveTest() throws IOException {
-        YangRequestWorkBench ydtBuilder = YdtTestUtils.integer8Ydt();
+    public void positiveTest() throws YdtException {
+        YangRequestWorkBench ydtBuilder = integer8Ydt();
         validateTree(ydtBuilder);
     }
 
+    /**
+     * Validates the given built ydt.
+     */
     private void validateTree(YangRequestWorkBench ydtBuilder) {
 
-        // assign root node to ydtContext for validating purpose.
-        YdtContext ydtContext = ydtBuilder.getRootNode();
-        assertThat(true, is(ydtContext.getName().contentEquals("builtInType")));
+        // assign root node to ydtNode for validating purpose.
+        YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
+        // Logical root node does not have operation type
+        validateNodeContents(ydtNode, TYPE, null);
 
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("integer8")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("negInt")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("-128")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("posInt")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("127")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("minUInt")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("0")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("maxUInt")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("255")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "midIntWithRange")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("11")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "minIntWithRange")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("10")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "maxIntWithRange")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("100")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "midUIntWithRange")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("11")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "minUIntWithRange")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("10")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "maxUIntWithRange")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("100")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("integer")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("11")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("integer")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("10")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("integer")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("40")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("integer")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("50")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("integer")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("55")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("integer")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("100")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("UnInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("11")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("UnInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("10")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("UnInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("40")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("UnInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("50")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("UnInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("55")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("UnInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("100")));
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "integer8", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "negInt", "-128");
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, "posInt", "127");
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, "minUInt", MINVALUE);
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, "maxUInt", MAXUINT8);
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, MIDIWR, "11");
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, MINIWR, "10");
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, MAXIWR, "100");
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, MIDUIWR, "11");
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, MINUIWR, "10");
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, MAXUIWR, "100");
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "integer", "11");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "integer", "10");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "integer", "40");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "integer", "50");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "integer", "55");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "integer", "100");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "UnInteger", "11");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "UnInteger", "10");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "UnInteger", "40");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "UnInteger", "50");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "UnInteger", "55");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "UnInteger", "100");
 
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("revInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("-128")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("revInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("1")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("revInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("2")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("revInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("10")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        validate1Tree(ydtContext);
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "revInteger", "-128");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "revInteger", "1");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "revInteger", "2");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "revInteger", "10");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        validate1Tree(ydtNode);
     }
 
-    private void validate1Tree(YdtContext ydtContext) {
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("revInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("20")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "revInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("100")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("revInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("127")));
+    /**
+     * Validates the given built ydt.
+     */
+    private void validate1Tree(YdtNode ydtNode) {
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "revInteger", "20");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "revInteger", "100");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "revInteger", "127");
 
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "revUnInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("0")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "revUnInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("1")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "revUnInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("2")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "revUnInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("10")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "revUnInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("20")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName()
-                                    .contentEquals("revUnInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("100")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "revUnInteger")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("255")));
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, RUI, MINVALUE);
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, RUI, "1");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, RUI, "2");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, RUI, "10");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, RUI, "20");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, RUI, "100");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, RUI, MAXUINT8);
     }
 
     /*
@@ -387,452 +338,52 @@ public class YdtInteger8Test {
             i.6. input 256
 
     */
+
+    /**
+     * Tests all the negative scenario's for integer8 data type.
+     */
     @Test
-    public void negative1Test() throws IOException {
-        String appName = "org.onosproject.yang.gen.v1.ydt.integer8" +
-                ".rev20160524.Integer8Service";
-        YangRequestWorkBench ydtBuilder =
-                YdtTestUtils.getydtBuilder(
-                        "builtInType", "integer8", "ydt.integer8", appName);
+    public void negativeTest() throws YdtException {
+        validateErrMsg("posInt", INT8NS, "integer", SMALLINT8, null);
+        validateErrMsg("posInt", INT8NS, "127.0", SMALLINT8, null);
+        validateErrMsg("maxUInt", INT8NS, "integer", SMALLUINT8, null);
+        validateErrMsg("maxUInt", INT8NS, "127.0", SMALLUINT8, null);
+        validateErrMsg("negInt", INT8NS, "-129", SMALLINT8, null);
+        validateErrMsg("posInt", INT8NS, "128", SMALLINT8, null);
+        validateErrMsg("minUInt", INT8NS, "-128", MINVALUE, null);
+        validateErrMsg("maxUInt", INT8NS, "256", MAXUINT8, null);
+        validateErrMsg(MINIWR, INT8NS, "9", CAPSINT8, null);
+        validateErrMsg(MAXIWR, INT8NS, "101", CAPSINT8, null);
+        validateErrMsg(MINUIWR, INT8NS, "9", CAPSUINT8, null);
+        validateErrMsg(MAXUIWR, INT8NS, "101", CAPSUINT8, null);
 
-        try {
-            ydtBuilder.addLeaf("posInt", null, "integer");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "integer" + "\" " +
-                            "is not a valid int8.")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        try {
-            ydtBuilder.addLeaf("posInt", null, "127.0");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "127.0" + "\" " +
-                            "is not a valid int8.")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        try {
-            ydtBuilder.addLeaf("maxUInt", null, "integer");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "integer" + "\" " +
-                            "is not a valid uint8.")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        try {
-            ydtBuilder.addLeaf("maxUInt", null, "127.0");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "127.0" + "\" " +
-                            "is not a valid uint8.")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        try {
-            ydtBuilder.addLeaf("negInt", null, "-129");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "-129" + "\" " +
-                            "is not a valid int8.")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        try {
-            ydtBuilder.addLeaf("posInt", null, "128");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "128" + "\" " +
-                            "is not a valid int8.")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        try {
-            ydtBuilder.addLeaf("minUInt", null, "-128");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : -128 is lesser than minimum value 0.")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        try {
-            ydtBuilder.addLeaf("maxUInt", null, "256");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : 256 is greater than " +
-                            "maximum value 255.")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        try {
-            ydtBuilder.addLeaf("minIntWithRange", null, "9");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "9" + "\" " +
-                            "is not a valid INT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        try {
-            ydtBuilder.addLeaf("maxIntWithRange", null, "101");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "101" + "\" " +
-                            "is not a valid INT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        try {
-            ydtBuilder.addLeaf("minUIntWithRange", null, "9");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "9" + "\" " +
-                            "is not a valid UINT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        try {
-            ydtBuilder.addLeaf("maxUIntWithRange", null, "101");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "101" + "\" " +
-                            "is not a valid UINT8")));
-        }
-    }
-
-
-    @Test
-    public void negative2Test() throws IOException {
-        String appName = "org.onosproject.yang.gen.v1.ydt.integer8" +
-                ".rev20160524.Integer8Service";
-        YangRequestWorkBench ydtBuilder = YdtTestUtils
-                .getydtBuilder("builtInType", "integer8",
-                               "ydt.integer8", appName);
-
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("integer", null, "9");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "9" + "\" " +
-                            "is not a valid INT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("integer", null, "41");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "41" + "\" " +
-                            "is not a valid INT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("integer", null, "49");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "49" + "\" " +
-                            "is not a valid INT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("integer", null, "101");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "101" + "\" " +
-                            "is not a valid INT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("UnInteger", null, "9");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "9" + "\" " +
-                            "is not a valid UINT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("UnInteger", null, "41");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "41" + "\" " +
-                            "is not a valid UINT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("UnInteger", null, "49");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "49" + "\" " +
-                            "is not a valid UINT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("UnInteger", null, "101");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "101" + "\" " +
-                            "is not a valid UINT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("UnInteger", null, "9");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "9" + "\" " +
-                            "is not a valid UINT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("UnInteger", null, "41");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "41" + "\" " +
-                            "is not a valid UINT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("UnInteger", null, "49");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "49" + "\" " +
-                            "is not a valid UINT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("UnInteger", null, "101");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "101" + "\" " +
-                            "is not a valid UINT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("UnInteger", null, "9");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "9" + "\" " +
-                            "is not a valid UINT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("UnInteger", null, "41");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "41" + "\" " +
-                            "is not a valid UINT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("UnInteger", null, "49");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "49" + "\" " +
-                            "is not a valid UINT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("UnInteger", null, "101");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "101" + "\" " +
-                            "is not a valid UINT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("revInteger", null, "-129");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "-129" + "\" " +
-                            "is not a valid int8.")));
-        }
-    }
-
-
-    @Test
-    public void negative3Test() throws IOException {
-
-        String appName = "org.onosproject.yang.gen.v1.ydt.integer8" +
-                ".rev20160524.Integer8Service";
-        YangRequestWorkBench ydtBuilder = YdtTestUtils
-                .getydtBuilder("builtInType", "integer8",
-                               "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("revInteger", null, "128");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "128" + "\" " +
-                            "is not a valid int8.")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("revInteger", null, "4");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "4" + "\" " +
-                            "is not a valid INT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("revInteger", null, "11");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "11" + "\" " +
-                            "is not a valid INT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("revInteger", null, "9");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "9" + "\" " +
-                            "is not a valid INT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("revInteger", null, "19");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "19" + "\" " +
-                            "is not a valid INT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("revUnInteger", null, "-129");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : -129 is lesser than minimum value 0.")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("revUnInteger", null, "4");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "4" + "\" " +
-                            "is not a valid UINT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("revUnInteger", null, "9");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "9" + "\" " +
-                            "is not a valid UINT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("revUnInteger", null, "11");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "11" + "\" " +
-                            "is not a valid UINT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("revUnInteger", null, "19");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "19" + "\" " +
-                            "is not a valid UINT8")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "integer8", "ydt.integer8", appName);
-        ydtBuilder.addChild("multiRangeValidation", null);
-        try {
-            ydtBuilder.addLeaf("revUnInteger", null, "256");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : 256 is greater than maximum " +
-                            "value 255.")));
-        }
+        validateErrMsg("integer", INT8NS, "9", CAPSINT8, MRV);
+        validateErrMsg("integer", INT8NS, "41", CAPSINT8, MRV);
+        validateErrMsg("integer", INT8NS, "49", CAPSINT8, MRV);
+        validateErrMsg("integer", INT8NS, "101", CAPSINT8, MRV);
+        validateErrMsg("UnInteger", INT8NS, "9", CAPSUINT8, MRV);
+        validateErrMsg("UnInteger", INT8NS, "41", CAPSUINT8, MRV);
+        validateErrMsg("UnInteger", INT8NS, "49", CAPSUINT8, MRV);
+        validateErrMsg("UnInteger", INT8NS, "101", CAPSUINT8, MRV);
+        validateErrMsg("UnInteger", INT8NS, "9", CAPSUINT8, MRV);
+        validateErrMsg("UnInteger", INT8NS, "41", CAPSUINT8, MRV);
+        validateErrMsg("UnInteger", INT8NS, "49", CAPSUINT8, MRV);
+        validateErrMsg("UnInteger", INT8NS, "101", CAPSUINT8, MRV);
+        validateErrMsg("UnInteger", INT8NS, "9", CAPSUINT8, MRV);
+        validateErrMsg("UnInteger", INT8NS, "41", CAPSUINT8, MRV);
+        validateErrMsg("UnInteger", INT8NS, "49", CAPSUINT8, MRV);
+        validateErrMsg("UnInteger", INT8NS, "101", CAPSUINT8, MRV);
+        validateErrMsg("revInteger", INT8NS, "-129", SMALLINT8, MRV);
+        validateErrMsg("revInteger", INT8NS, "128", SMALLINT8, MRV);
+        validateErrMsg("revInteger", INT8NS, "4", CAPSINT8, MRV);
+        validateErrMsg("revInteger", INT8NS, "11", CAPSINT8, MRV);
+        validateErrMsg("revInteger", INT8NS, "9", CAPSINT8, MRV);
+        validateErrMsg("revInteger", INT8NS, "19", CAPSINT8, MRV);
+        validateErrMsg(RUI, INT8NS, "-129", MINVALUE, MRV);
+        validateErrMsg(RUI, INT8NS, "4", CAPSUINT8, MRV);
+        validateErrMsg(RUI, INT8NS, "9", CAPSUINT8, MRV);
+        validateErrMsg(RUI, INT8NS, "11", CAPSUINT8, MRV);
+        validateErrMsg(RUI, INT8NS, "19", CAPSUINT8, MRV);
+        validateErrMsg(RUI, INT8NS, "256", MAXUINT8, MRV);
     }
 }

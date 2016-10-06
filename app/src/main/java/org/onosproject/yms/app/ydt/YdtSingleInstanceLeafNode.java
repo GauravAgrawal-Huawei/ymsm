@@ -17,8 +17,9 @@
 package org.onosproject.yms.app.ydt;
 
 import org.onosproject.yangutils.datamodel.YangSchemaNodeIdentifier;
-import org.onosproject.yms.app.ydt.exceptions.YdtException;
 
+import static org.onosproject.yms.app.ydt.YdtConstants.DUP_NAME;
+import static org.onosproject.yms.app.ydt.YdtConstants.getErrorString;
 import static org.onosproject.yms.ydt.YdtType.SINGLE_INSTANCE_LEAF_VALUE_NODE;
 
 /**
@@ -48,13 +49,11 @@ class YdtSingleInstanceLeafNode extends YdtNode {
 
     @Override
     public void addValue(String value) {
-        // check the value against corresponding data-type.
+        // Check the value against corresponding data-type.
         try {
             getYangSchemaNode().isValueValid(value);
         } catch (Exception e) {
-            // Free resources
-            freeRestResources();
-            throw new YdtException(e.getLocalizedMessage());
+            errorHandler(e.getLocalizedMessage(), this);
         }
 
         // After validation is successful then add value to node.
@@ -68,10 +67,8 @@ class YdtSingleInstanceLeafNode extends YdtNode {
     }
 
     @Override
-    public void isDuplicateEntriesValid() {
-        // Free resources
-        freeRestResources();
-        throw new YdtException("Duplicate entry with name " +
-                                        getYdtNodeIdentifier().getName() + ".");
+    public void validDuplicateEntryProcessing() {
+        errorHandler(getErrorString(DUP_NAME, getYdtNodeIdentifier().getName()),
+                     this);
     }
 }

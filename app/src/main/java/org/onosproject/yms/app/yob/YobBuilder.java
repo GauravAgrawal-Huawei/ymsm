@@ -30,6 +30,7 @@ interface YobBuilder {
      *
      * @param ydtExtendedContext ydtExtendedContext is used to get application
      *                           related information maintained in YDT
+     * @param schemaRegistry     schema registry
      * @return YANG builder object
      */
     Object getYangObject(YdtExtendedContext ydtExtendedContext,

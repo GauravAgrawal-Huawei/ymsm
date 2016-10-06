@@ -35,42 +35,40 @@ public interface YangTreeBuilder {
      * response YANG object received from any of the protocol such as YAB or
      * YCH.
      *
-     * @param moduleObject      class object from application
-     * @param rootNodeName      name of the logical root node
-     * @param rootNodeNameSpace namespace of the logical root node
-     * @param operationType     operation type of the logical root node
-     * @param appSchemaRegistry YANG schema registry of the application
+     * @param moduleObj     application module object
+     * @param rootName      root node name
+     * @param rootNameSpace root node namespace
+     * @param opType        root node operation type
+     * @param registry      application schema registry
      * @return YDT builder from the tree
      */
-    YdtExtendedBuilder getYdtBuilderForYo(List<Object> moduleObject,
-                                          String rootNodeName,
-                                          String rootNodeNameSpace,
-                                          YmsOperationType operationType,
-                                          YangSchemaRegistry appSchemaRegistry);
+    YdtExtendedBuilder getYdtBuilderForYo(List<Object> moduleObj,
+                                          String rootName,
+                                          String rootNameSpace,
+                                          YmsOperationType opType,
+                                          YangSchemaRegistry registry);
 
     /**
      * Returns the YDT context after building the tree received from the
      * protocol YNH.
      *
-     * @param notificationObject  object of the notification from application
-     * @param rootNodeName name of the logical root node
-     * @param appSchemaRegistry   YANG schema registry of the application
+     * @param object   application notification object
+     * @param rootName root node name
+     * @param registry application schema registry
      * @return YDT context from the tree
      */
-    YdtContext getYdtForNotification(Object notificationObject,
-                                     String rootNodeName,
-                                     YangSchemaRegistry appSchemaRegistry);
+    YdtContext getYdtForNotification(Object object, String rootName,
+                                     YangSchemaRegistry registry);
 
     /**
      * Returns the YDT context after building the RPC response tree. The input
-     * for building the tree is RPC request workbench, RPC output java object
-     * and its logical root node operation type. These are received from the
-     * YSB protocol.
+     * for building the tree is RPC request workbench, RPC output java object.
+     * These are received from the YSB protocol.
      *
-     * @param rpcOutputObject     RPC response class object from the application
-     * @param rpcRequestWorkBench RPC request workbench from YDT
-     * @return YDT builder where RPC response tree is created.
+     * @param outputObj application output object
+     * @param workBench RPC request workbench from YDT
+     * @return YDT builder where RPC response tree is created
      */
-    YdtExtendedBuilder getYdtForRpcResponse(
-            Object rpcOutputObject, YangRequestWorkBench rpcRequestWorkBench);
+    YdtExtendedBuilder getYdtForRpcResponse(Object outputObj,
+                                            YangRequestWorkBench workBench);
 }

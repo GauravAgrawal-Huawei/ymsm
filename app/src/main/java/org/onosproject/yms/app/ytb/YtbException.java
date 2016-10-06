@@ -22,12 +22,6 @@ package org.onosproject.yms.app.ytb;
 public class YtbException extends RuntimeException {
 
     /**
-     * Creates a new YTB exception.
-     */
-    public YtbException() {
-    }
-
-    /**
      * Creates YTB exception with an exception message.
      *
      * @param exceptionMessage message with which exception must be thrown
@@ -37,21 +31,11 @@ public class YtbException extends RuntimeException {
     }
 
     /**
-     * Creates YTB exception with an exception message and cause for it.
-     *
-     * @param exceptionMessage message with which exception must be thrown
-     * @param cause            cause of the exception
-     */
-    public YtbException(final String exceptionMessage, final Throwable cause) {
-        super(exceptionMessage, cause);
-    }
-
-    /**
      * Creates YTB exception with the cause for it.
      *
      * @param cause cause of the exception
      */
-    public YtbException(final Throwable cause) {
+    public YtbException(Throwable cause) {
         super(cause);
     }
 }

@@ -95,5 +95,4 @@ module integer16 {
              range "10 .. 100";
          }
     }
-
 }

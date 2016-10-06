@@ -16,34 +16,52 @@
 
 package org.onosproject.yms.app.ymsm;
 
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.onosproject.yang.gen.v1.ydt.customs.supervisor.rev20160524.CustomssupervisorOpParam;
+import org.onosproject.yms.app.ych.defaultcodecs.YangCodecRegistry;
+import org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider;
+import org.onosproject.yms.ych.YangCodecHandler;
+import org.onosproject.yms.ych.YangCompositeEncoding;
+import org.onosproject.yms.ych.YangDataTreeCodec;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-import org.onosproject.yang.gen.v1.ydt.customs.supervisor.rev20160524.CustomssupervisorOpParam;
-import org.onosproject.yms.app.ych.codecutils.YchYangDataTreeCodec;
-import org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider;
-import org.onosproject.yms.ych.YangCodecHandler;
-import org.onosproject.yms.ych.YangCompositeEncoding;
-import org.onosproject.yms.ych.YangDataTreeCodec;
-import org.onosproject.yms.ych.YangProtocolEncodingFormat;
-
-import static org.junit.Assert.assertTrue;
-import static org.onosproject.yms.ych.YangProtocolEncodingFormat.XML_ENCODING;
+import static junit.framework.TestCase.assertNotNull;
+import static org.onosproject.yms.ych.YangProtocolEncodingFormat.XML;
 
 /**
  * Unit test case for YCH composite codec handler.
  */
 public class YchCompositeHandlerTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
-    private static final String TARGET = "target/TestYangSchemaNodeProvider";
-    private TestYangSchemaNodeProvider testYangSchemaNodeProvider =
+    private static final String REG_PREFIX = "RegisteredDataTreeCodec ";
+    private static final String REG_ENCODE = REG_PREFIX +
+            "encodeYdtToProtocolFormat Called.";
+    private static final String REG_DECODE = REG_PREFIX +
+            "decodeProtocolDataToYdt Called.";
+    private static final String REG_COMPO_ENCODE = REG_PREFIX +
+            "encodeYdtToCompositeProtocolFormat Called.";
+    private static final String REG_COMPO_DECODE = REG_PREFIX +
+            "decodeCompositeProtocolDataToYdt Called.";
+    private static final String OVERRIDE_PREFIX = "OverriddenDataTreeCodec ";
+    private static final String OVERRIDE_ENCODE = OVERRIDE_PREFIX +
+            "encodeYdtToProtocolFormat Called.";
+    private static final String OVERRIDE_DECODE = OVERRIDE_PREFIX +
+            "decodeProtocolDataToYdt Called.";
+    private static final String OVERRIDE_COMPO_ENCODE = OVERRIDE_PREFIX +
+            "encodeYdtToCompositeProtocolFormat Called.";
+    private static final String OVERRIDE_COMPO_DECODE = OVERRIDE_PREFIX +
+            "decodeCompositeProtocolDataToYdt Called.";
+
+    private TestYangSchemaNodeProvider provider =
             new TestYangSchemaNodeProvider();
-
-    private Map<YangProtocolEncodingFormat, YangDataTreeCodec> defaultCodecs =
-            new HashMap<>();
 
     /**
      * Unit test case in which verifying codec handler is null or not.
@@ -51,159 +69,29 @@ public class YchCompositeHandlerTest {
     @Test
     public void checkForCodecHandler() {
         YmsManager ymsManager = new YmsManager();
-        YangCodecHandler yangCodecHandler = ymsManager.getYangCodecHandler();
-        assertTrue(yangCodecHandler != null);
-    }
-
-    /**
-     * Unit test case in which verifying codec handler is null or not.
-     */
-    @Test
-    public void checkForRegisterDefaultCodec() {
-
-        YangDataTreeCodec yangDataTreeCodec = new RegisterDataTreeCodec();
-        YmsManager ymsManager = new YmsManager();
-        ymsManager.registerDefaultCodec(yangDataTreeCodec, XML_ENCODING);
-        YangCodecHandler yangCodecHandler = ymsManager.getYangCodecHandler();
-        assertTrue(yangCodecHandler != null);
-
-        testYangSchemaNodeProvider.processSchemaRegistry(null);
-        List<Object> yangModuleList = new ArrayList<>();
-
-        // Creating the object
-        Object object = CustomssupervisorOpParam.builder()
-                .supervisor("Customssupervisor").build();
-        yangModuleList.add(object);
-
-        // Get the xml string and compare
-        Map<String, String> tagAttr = new HashMap<String, String>();
-        tagAttr.put("type", "subtree");
-
-        try {
-            yangCodecHandler
-                    .encodeOperation("filter", "ydt.filter-type", tagAttr,
-                                     yangModuleList,
-                                     YangProtocolEncodingFormat.XML_ENCODING,
-                                     null);
-        } catch (Exception e) {
-            if (!e.getMessage()
-                    .equals("RegisterDataTreeCodec encodeYdtToProtocolFormat Called.")) {
-                assertTrue(false);
-            }
-        }
-
-        // Verify the received object list
-        try {
-            yangCodecHandler.decode("XML String",
-                                    YangProtocolEncodingFormat.XML_ENCODING,
-                                    null);
-        } catch (Exception e) {
-            if (!e.getMessage()
-                    .equals("RegisterDataTreeCodec decodeProtocolDataToYdt Called.")) {
-                assertTrue(false);
-            }
-        }
-
-        // Verify the received object list
-        try {
-            yangCodecHandler
-                    .encodeCompositeOperation("filter", "ydt.filter-type",
-                                              object,
-                                              YangProtocolEncodingFormat.XML_ENCODING,
-                                              null);
-        } catch (Exception e) {
-            if (!e.getMessage()
-                    .equals("RegisterDataTreeCodec encodeYdtToCompositeProtocolFormat Called.")) {
-                assertTrue(false);
-            }
-        }
-
-        // Verify the received object list
-        try {
-            YangCompositeEncoding yangCompositeEncoding =
-                    new YangCompositeTest();
-            yangCodecHandler.decode(yangCompositeEncoding, XML_ENCODING, null);
-        } catch (Exception e) {
-            if (!e.getMessage()
-                    .equals("RegisterDataTreeCodec decodeCompositeProtocolDataToYdt Called.")) {
-                assertTrue(false);
-            }
-        }
-        testYangSchemaNodeProvider.unregisterAllService();
-
-
-    }
-
-    /**
-     * Unit test case in which verifying codec handler is null or not.
-     */
-    @Test
-    public void checkForDefaultCodec() {
-        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
-        defaultCodecs.put(XML_ENCODING, yangDataTreeCodec);
-        YmsManager ymsManager = new YmsManager();
-        ymsManager.coreService = new CoreServiceTest();
+        ymsManager.coreService = new MockCoreService();
         ymsManager.activate();
         YangCodecHandler yangCodecHandler = ymsManager.getYangCodecHandler();
-        assertTrue(yangCodecHandler != null);
-
-        testYangSchemaNodeProvider.processSchemaRegistry(null);
-        List<Object> yangModuleList = new ArrayList<>();
-
-        // Creating the object
-        Object object = CustomssupervisorOpParam.builder()
-                .supervisor("Customssupervisor").build();
-        yangModuleList.add(object);
-
-        // Get the xml string and compare
-        Map<String, String> tagAttr = new HashMap<String, String>();
-        tagAttr.put("type", "subtree");
-
-        // Verify the received object list
-        try {
-            yangCodecHandler
-                    .encodeCompositeOperation("filter", "ydt.filter-type",
-                                              object,
-                                              YangProtocolEncodingFormat.XML_ENCODING,
-                                              null);
-        } catch (Exception e) {
-            if (!e.getMessage()
-                    .equals("Encode for composite protocol request not supported.")) {
-                assertTrue(false);
-            }
-        }
-
-        // Verify the received object list
-        try {
-            YangCompositeEncoding yangCompositeEncoding =
-                    new YangCompositeTest();
-            yangCodecHandler.decode(yangCompositeEncoding, XML_ENCODING, null);
-        } catch (Exception e) {
-            if (!e.getMessage()
-                    .equals("Decode for composite protocol request not supported.")) {
-                assertTrue(false);
-            }
-        }
-
-        testYangSchemaNodeProvider.unregisterAllService();
+        assertNotNull("Codec handler is null", yangCodecHandler);
     }
 
     /**
-     * Unit test case in which verifying overriden codec handler is null or not.
+     * Unit test case in which verifying registered codec handler for encode is
+     * null or not.
      */
     @Test
-    public void checkForOverridenDataTreeCodec() {
-
-        YangDataTreeCodec yangDataTreeCodec = new RegisterDataTreeCodec();
+    public void checkForRegisterDefaultCodecEncode() {
+        thrown.expectMessage(REG_ENCODE);
+        YangDataTreeCodec yangDataTreeCodec = new MockRegisteredDataTreeCodec();
         YmsManager ymsManager = new YmsManager();
-        ymsManager.registerDefaultCodec(yangDataTreeCodec, XML_ENCODING);
+        YangCodecRegistry.initializeDefaultCodec();
+        ymsManager.coreService = new MockCoreService();
+        ymsManager.activate();
+        ymsManager.registerDefaultCodec(yangDataTreeCodec, XML);
         YangCodecHandler yangCodecHandler = ymsManager.getYangCodecHandler();
-        assertTrue(yangCodecHandler != null);
+        assertNotNull("Codec handler is null", yangCodecHandler);
 
-        YangDataTreeCodec overriddenCodec = new OverridenDataTreeCodec();
-        yangCodecHandler.registerOverriddenCodec(overriddenCodec, XML_ENCODING);
-
-        testYangSchemaNodeProvider.processSchemaRegistry(null);
+        provider.processSchemaRegistry(null);
         List<Object> yangModuleList = new ArrayList<>();
 
         // Creating the object
@@ -215,57 +103,186 @@ public class YchCompositeHandlerTest {
         Map<String, String> tagAttr = new HashMap<String, String>();
         tagAttr.put("type", "subtree");
 
-        try {
-            yangCodecHandler
-                    .encodeOperation("filter", "ydt.filter-type", tagAttr,
-                                     yangModuleList,
-                                     YangProtocolEncodingFormat.XML_ENCODING,
-                                     null);
-        } catch (Exception e) {
-            if (!e.getMessage()
-                    .equals("OverridenDataTreeCodec encodeYdtToProtocolFormat Called.")) {
-                assertTrue(false);
-            }
-        }
+        yangCodecHandler.encodeOperation("filter", "ydt.filter-type",
+                                         tagAttr, yangModuleList,
+                                         XML, null);
+    }
 
+    /**
+     * Unit test case in which verifying registered codec handler for decode is
+     * null or not.
+     */
+    @Test
+    public void checkForRegisterDefaultCodecDecode() {
+        thrown.expectMessage(REG_DECODE);
+        YangDataTreeCodec yangDataTreeCodec = new MockRegisteredDataTreeCodec();
+        YmsManager ymsManager = new YmsManager();
+        YangCodecRegistry.initializeDefaultCodec();
+        ymsManager.coreService = new MockCoreService();
+        ymsManager.activate();
+        ymsManager.registerDefaultCodec(yangDataTreeCodec, XML);
+        YangCodecHandler yangCodecHandler = ymsManager.getYangCodecHandler();
+        assertNotNull("Codec handler is null", yangCodecHandler);
+
+        provider.processSchemaRegistry(null);
+        yangCodecHandler.decode("XML String", XML, null);
+    }
+
+    /**
+     * Unit test case in which verifying registered codec handler for
+     * composite encode is null or not.
+     */
+    @Test
+    public void checkForRegisterDefaultCodecCompEncode() {
+        thrown.expectMessage(REG_COMPO_ENCODE);
+        YangDataTreeCodec yangDataTreeCodec = new MockRegisteredDataTreeCodec();
+        YmsManager ymsManager = new YmsManager();
+        YangCodecRegistry.initializeDefaultCodec();
+        ymsManager.coreService = new MockCoreService();
+        ymsManager.activate();
+        ymsManager.registerDefaultCodec(yangDataTreeCodec, XML);
+        YangCodecHandler yangCodecHandler = ymsManager.getYangCodecHandler();
+        assertNotNull("Codec handler is null", yangCodecHandler);
+
+        provider.processSchemaRegistry(null);
+        // Creating the object
+        Object object = CustomssupervisorOpParam.builder()
+                .supervisor("Customssupervisor").build();
+
+        yangCodecHandler.encodeCompositeOperation("filter",
+                                                  "ydt.filter-type", object,
+                                                  XML, null);
+    }
+
+    /**
+     * Unit test case in which verifying registered codec handler for
+     * composite decode is null or not.
+     */
+    @Test
+    public void checkForRegisterDefaultCodecCompDecode() {
+        thrown.expectMessage(REG_COMPO_DECODE);
+        YangDataTreeCodec yangDataTreeCodec = new MockRegisteredDataTreeCodec();
+        YmsManager ymsManager = new YmsManager();
+        YangCodecRegistry.initializeDefaultCodec();
+        ymsManager.coreService = new MockCoreService();
+        ymsManager.activate();
+        ymsManager.registerDefaultCodec(yangDataTreeCodec, XML);
+        YangCodecHandler yangCodecHandler = ymsManager.getYangCodecHandler();
+        assertNotNull("Codec handler is null", yangCodecHandler);
+
+        provider.processSchemaRegistry(null);
+        // Creating the object
+        YangCompositeEncoding yangCompositeEncoding =
+                new MockYangCompositeEncoding();
+        yangCodecHandler.decode(yangCompositeEncoding, XML, null);
+    }
+
+    /**
+     * Unit test case in which verifying overridden codec handler for encode is
+     * null or not.
+     */
+    @Test
+    public void checkForOverriddenDataTreeCodecEncode() {
+        thrown.expectMessage(OVERRIDE_ENCODE);
+        YangDataTreeCodec yangDataTreeCodec = new MockRegisteredDataTreeCodec();
+        YmsManager ymsManager = new YmsManager();
+        ymsManager.coreService = new MockCoreService();
+        ymsManager.activate();
+        ymsManager.registerDefaultCodec(yangDataTreeCodec, XML);
+        YangCodecHandler yangCodecHandler = ymsManager.getYangCodecHandler();
+        assertNotNull("Codec handler is null", yangCodecHandler);
+
+        YangDataTreeCodec overriddenCodec = new MockOverriddenDataTreeCodec();
+        yangCodecHandler.registerOverriddenCodec(overriddenCodec, XML);
+
+        provider.processSchemaRegistry(null);
+        List<Object> yangModuleList = new ArrayList<>();
+
+        // Creating the object
+        Object object = CustomssupervisorOpParam.builder()
+                .supervisor("Customssupervisor").build();
+        yangModuleList.add(object);
+
+        // Get the xml string and compare
+        Map<String, String> tagAttr = new HashMap<String, String>();
+        tagAttr.put("type", "subtree");
+        yangCodecHandler.encodeOperation("filter", "ydt.filter-type",
+                                         tagAttr, yangModuleList,
+                                         XML, null);
+    }
+
+    /**
+     * Unit test case in which verifying overridden codec handler for decode is
+     * null or not.
+     */
+    @Test
+    public void checkForOverriddenDataTreeCodecDecode() {
+        thrown.expectMessage(OVERRIDE_DECODE);
+        YangDataTreeCodec yangDataTreeCodec = new MockRegisteredDataTreeCodec();
+        YmsManager ymsManager = new YmsManager();
+        ymsManager.coreService = new MockCoreService();
+        ymsManager.activate();
+        ymsManager.registerDefaultCodec(yangDataTreeCodec, XML);
+        YangCodecHandler yangCodecHandler = ymsManager.getYangCodecHandler();
+        assertNotNull("Codec handler is null", yangCodecHandler);
+
+        YangDataTreeCodec overriddenCodec = new MockOverriddenDataTreeCodec();
+        yangCodecHandler.registerOverriddenCodec(overriddenCodec, XML);
+
+        provider.processSchemaRegistry(null);
+        yangCodecHandler.decode("XML String", XML, null);
+    }
+
+    /**
+     * Unit test case in which verifying overridden codec handler for
+     * composite encode is null or not.
+     */
+    @Test
+    public void checkForOverriddenDataTreeCodecCompoEncode() {
+        thrown.expectMessage(OVERRIDE_COMPO_ENCODE);
+        YangDataTreeCodec yangDataTreeCodec = new MockRegisteredDataTreeCodec();
+        YmsManager ymsManager = new YmsManager();
+        ymsManager.coreService = new MockCoreService();
+        ymsManager.activate();
+        ymsManager.registerDefaultCodec(yangDataTreeCodec, XML);
+        YangCodecHandler yangCodecHandler = ymsManager.getYangCodecHandler();
+        assertNotNull("Codec handler is null", yangCodecHandler);
+
+        YangDataTreeCodec overriddenCodec = new MockOverriddenDataTreeCodec();
+        yangCodecHandler.registerOverriddenCodec(overriddenCodec, XML);
+
+        provider.processSchemaRegistry(null);
+        // Creating the object
+        Object object = CustomssupervisorOpParam.builder()
+                .supervisor("Customssupervisor").build();
+        yangCodecHandler.encodeCompositeOperation("filter",
+                                                  "ydt.filter-type",
+                                                  object,
+                                                  XML, null);
+    }
+
+    /**
+     * Unit test case in which verifying overridden codec handler for
+     * composite decode is null or not.
+     */
+    @Test
+    public void checkForOverriddenDataTreeCodecCompoDecode() {
+        thrown.expectMessage(OVERRIDE_COMPO_DECODE);
+        YangDataTreeCodec yangDataTreeCodec = new MockRegisteredDataTreeCodec();
+        YmsManager ymsManager = new YmsManager();
+        ymsManager.coreService = new MockCoreService();
+        ymsManager.activate();
+        ymsManager.registerDefaultCodec(yangDataTreeCodec, XML);
+        YangCodecHandler yangCodecHandler = ymsManager.getYangCodecHandler();
+        assertNotNull("Codec handler is null", yangCodecHandler);
+
+        YangDataTreeCodec overriddenCodec = new MockOverriddenDataTreeCodec();
+        yangCodecHandler.registerOverriddenCodec(overriddenCodec, XML);
+
+        provider.processSchemaRegistry(null);
         // Verify the received object list
-        try {
-            yangCodecHandler.decode("XML String",
-                                    YangProtocolEncodingFormat.XML_ENCODING,
-                                    null);
-        } catch (Exception e) {
-            if (!e.getMessage()
-                    .equals("OverridenDataTreeCodec decodeProtocolDataToYdt Called.")) {
-                assertTrue(false);
-            }
-        }
-
-        // Verify the received object list
-        try {
-            yangCodecHandler
-                    .encodeCompositeOperation("filter", "ydt.filter-type",
-                                              object,
-                                              YangProtocolEncodingFormat.XML_ENCODING,
-                                              null);
-        } catch (Exception e) {
-            if (!e.getMessage()
-                    .equals("OverridenDataTreeCodec encodeYdtToCompositeProtocolFormat Called.")) {
-                assertTrue(false);
-            }
-        }
-
-        // Verify the received object list
-        try {
-            YangCompositeEncoding yangCompositeEncoding =
-                    new YangCompositeTest();
-            yangCodecHandler.decode(yangCompositeEncoding, XML_ENCODING, null);
-        } catch (Exception e) {
-            if (!e.getMessage()
-                    .equals("OverridenDataTreeCodec decodeCompositeProtocolDataToYdt Called.")) {
-                assertTrue(false);
-            }
-        }
-        testYangSchemaNodeProvider.unregisterAllService();
-
+        YangCompositeEncoding yangCompositeEncoding =
+                new MockYangCompositeEncoding();
+        yangCodecHandler.decode(yangCompositeEncoding, XML, null);
     }
 }

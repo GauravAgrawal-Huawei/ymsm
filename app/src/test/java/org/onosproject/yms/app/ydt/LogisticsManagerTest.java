@@ -17,234 +17,163 @@
 package org.onosproject.yms.app.ydt;
 
 import org.junit.Test;
-import org.onosproject.yms.ydt.YdtContext;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.onosproject.yms.app.ydt.YdtTestUtils.compareValueSet;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.logisticsManagerYdt;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateLeafContents;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateLeafListContents;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateNodeContents;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.walkINTree;
+import static org.onosproject.yms.ydt.YdtContextOperationType.MERGE;
 
 public class LogisticsManagerTest {
 
     // Logger list is used for walker testing.
     private final List<String> logger = new ArrayList<>();
 
-    @SuppressWarnings("unchecked")
     private Set<String> valueSet = new HashSet();
 
+    private static final String[] EXPECTED = {
+            "Entry Node is logisticsmanager.",
+            "Entry Node is customssupervisor.",
+            "Entry Node is supervisor.",
+            "Exit Node is supervisor.",
+            "Exit Node is customssupervisor.",
+            "Entry Node is merchandisersupervisor.",
+            "Entry Node is supervisor.",
+            "Exit Node is supervisor.",
+            "Exit Node is merchandisersupervisor.",
+            "Entry Node is materialsupervisor.",
+            "Entry Node is supervisor.",
+            "Entry Node is name.",
+            "Exit Node is name.",
+            "Entry Node is departmentId.",
+            "Exit Node is departmentId.",
+            "Exit Node is supervisor.",
+            "Entry Node is supervisor.",
+            "Entry Node is name.",
+            "Exit Node is name.",
+            "Entry Node is departmentId.",
+            "Exit Node is departmentId.",
+            "Exit Node is supervisor.",
+            "Exit Node is materialsupervisor.",
+            "Entry Node is purchasingsupervisor.",
+            "Entry Node is supervisor.",
+            "Entry Node is purchasing-specialist.",
+            "Exit Node is purchasing-specialist.",
+            "Entry Node is support.",
+            "Exit Node is support.",
+            "Exit Node is supervisor.",
+            "Exit Node is purchasingsupervisor.",
+            "Entry Node is warehousesupervisor.",
+            "Entry Node is supervisor.",
+            "Exit Node is supervisor.",
+            "Exit Node is warehousesupervisor.",
+            "Entry Node is tradingsupervisor.",
+            "Entry Node is supervisor.",
+            "Exit Node is supervisor.",
+            "Exit Node is tradingsupervisor.",
+            "Entry Node is employeeid.",
+            "Entry Node is employeeid.",
+            "Exit Node is employeeid.",
+            "Exit Node is employeeid.",
+            "Exit Node is logisticsmanager."
+    };
+
+    /**
+     * Creates and validates logistics manager ydt.
+     */
     @Test
-    public void logisticsManagerTest() throws IOException {
-        YangRequestWorkBench ydtBuilder = YdtTestUtils
-                .logisticsManagerYdt();
+    public void logisticsManagerTest() {
+        YangRequestWorkBench ydtBuilder = logisticsManagerYdt();
         validateTree(ydtBuilder);
         // walker test
-        walkINTree(ydtBuilder);
+        walkINTree(ydtBuilder, EXPECTED);
     }
 
-    private void walkINTree(YangRequestWorkBench ydtBuilder) {
-        DefaultYdtWalker ydtWalker = new DefaultYdtWalker();
-        YdtTestUtils ydtListenerService = new YdtTestUtils();
-
-        // Logger list is used for walker testing.
-        YdtTestUtils.resetLogger();
-
-        // Assign root node to YdtContext to walk the tree.
-        ydtWalker.walk(ydtListenerService, ydtBuilder.getRootNode());
-        // Logger list is used for walker testing.
-        List<String> logger = YdtTestUtils.getLogger();
-
-        assertThat(true, is(logger.get(0).contentEquals(
-                "Entry Node is logisticsmanager.")));
-        assertThat(true, is(logger.get(1).contentEquals(
-                "Entry Node is customssupervisor.")));
-        assertThat(true, is(logger.get(2).contentEquals(
-                "Entry Node is supervisor.")));
-        assertThat(true, is(logger.get(3).contentEquals(
-                "Exit Node is supervisor.")));
-        assertThat(true, is(logger.get(4).contentEquals(
-                "Exit Node is customssupervisor.")));
-        assertThat(true, is(logger.get(5).contentEquals(
-                "Entry Node is merchandisersupervisor.")));
-        assertThat(true, is(logger.get(6).contentEquals(
-                "Entry Node is supervisor.")));
-        assertThat(true, is(logger.get(7).contentEquals(
-                "Exit Node is supervisor.")));
-        assertThat(true, is(logger.get(8).contentEquals(
-                "Exit Node is merchandisersupervisor.")));
-        assertThat(true, is(logger.get(9).contentEquals(
-                "Entry Node is materialsupervisor.")));
-        assertThat(true, is(logger.get(10).contentEquals(
-                "Entry Node is supervisor.")));
-        assertThat(true, is(logger.get(11).contentEquals(
-                "Entry Node is name.")));
-        assertThat(true, is(logger.get(12).contentEquals(
-                "Exit Node is name.")));
-        assertThat(true, is(logger.get(13).contentEquals(
-                "Entry Node is departmentId.")));
-        assertThat(true, is(logger.get(14).contentEquals(
-                "Exit Node is departmentId.")));
-        assertThat(true, is(logger.get(15).contentEquals(
-                "Exit Node is supervisor.")));
-        assertThat(true, is(logger.get(16).contentEquals(
-                "Entry Node is supervisor.")));
-        assertThat(true, is(logger.get(17).contentEquals(
-                "Entry Node is name.")));
-        assertThat(true, is(logger.get(18).contentEquals(
-                "Exit Node is name.")));
-        assertThat(true, is(logger.get(19).contentEquals(
-                "Entry Node is departmentId.")));
-        assertThat(true, is(logger.get(20).contentEquals(
-                "Exit Node is departmentId.")));
-        assertThat(true, is(logger.get(21).contentEquals(
-                "Exit Node is supervisor.")));
-        assertThat(true, is(logger.get(22).contentEquals(
-                "Exit Node is materialsupervisor.")));
-        assertThat(true, is(logger.get(23).contentEquals(
-                "Entry Node is purchasingsupervisor.")));
-        assertThat(true, is(logger.get(24).contentEquals(
-                "Entry Node is supervisor.")));
-        assertThat(true, is(logger.get(25).contentEquals(
-                "Entry Node is purchasing-specialist.")));
-        assertThat(true, is(logger.get(26).contentEquals(
-                "Exit Node is purchasing-specialist.")));
-        assertThat(true, is(logger.get(27).contentEquals(
-                "Entry Node is support.")));
-        assertThat(true, is(logger.get(28).contentEquals(
-                "Exit Node is support.")));
-        assertThat(true, is(logger.get(29).contentEquals(
-                "Exit Node is supervisor.")));
-        assertThat(true, is(logger.get(30).contentEquals(
-                "Exit Node is purchasingsupervisor.")));
-        assertThat(true, is(logger.get(31).contentEquals(
-                "Entry Node is warehousesupervisor.")));
-        assertThat(true, is(logger.get(32).contentEquals(
-                "Entry Node is supervisor.")));
-        assertThat(true, is(logger.get(33).contentEquals(
-                "Exit Node is supervisor.")));
-        assertThat(true, is(logger.get(34).contentEquals(
-                "Exit Node is warehousesupervisor.")));
-        assertThat(true, is(logger.get(35).contentEquals(
-                "Entry Node is tradingsupervisor.")));
-        assertThat(true, is(logger.get(36).contentEquals(
-                "Entry Node is supervisor.")));
-        assertThat(true, is(logger.get(37).contentEquals(
-                "Exit Node is supervisor.")));
-        assertThat(true, is(logger.get(38).contentEquals(
-                "Exit Node is tradingsupervisor.")));
-        assertThat(true, is(logger.get(39).contentEquals(
-                "Entry Node is employeeid.")));
-        assertThat(true, is(logger.get(40).contentEquals(
-                "Entry Node is employeeid.")));
-        assertThat(true, is(logger.get(41).contentEquals(
-                "Exit Node is employeeid.")));
-        assertThat(true, is(logger.get(42).contentEquals(
-                "Exit Node is employeeid.")));
-        assertThat(true, is(logger.get(43).contentEquals(
-                "Exit Node is logisticsmanager.")));
-    }
-
-
+    /**
+     * Validates the given built ydt.
+     */
     private void validateTree(YangRequestWorkBench ydtBuilder) {
-
         valueSet.add("1");
         valueSet.add("2");
         valueSet.add("3");
         valueSet.add("4");
         valueSet.add("5");
-        // assign root node to ydtContext for validating purpose.
-        YdtContext ydtContext = ydtBuilder.getRootNode();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "logisticsmanager")));
+        // assign root node to ydtNode for validating purpose.
+        YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
+        // Logical root node does not have operation type
+        validateNodeContents(ydtNode, "logisticsmanager", null);
 
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "customssupervisor")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("supervisor")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("abc")));
+        ydtNode = ydtNode.getFirstChild();
+        // Logical root node does not have operation type
+        validateNodeContents(ydtNode, "customssupervisor", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "supervisor", "abc");
 
-        ydtContext = ydtContext.getParent();
+        ydtNode = ydtNode.getParent();
 
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "merchandisersupervisor")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("supervisor")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("abc")));
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, "merchandisersupervisor", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "supervisor", "abc");
 
-        ydtContext = ydtContext.getParent();
+        ydtNode = ydtNode.getParent();
 
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "materialsupervisor")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("supervisor")));
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, "materialsupervisor", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "supervisor", MERGE);
 
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("name")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("abc")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "departmentId")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("xyz")));
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "name", "abc");
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, "departmentId", "xyz");
 
-        ydtContext = ydtContext.getParent();
+        ydtNode = ydtNode.getParent();
 
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("supervisor")));
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, "supervisor", MERGE);
 
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("name")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("ab")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "departmentId")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("xy")));
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "name", "ab");
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, "departmentId", "xy");
 
-        ydtContext = ydtContext.getParent().getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "purchasingsupervisor")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("supervisor")));
+        ydtNode = ydtNode.getParent().getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, "purchasingsupervisor", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "supervisor", MERGE);
 
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "purchasing-specialist")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("abc")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("support")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("xyz")));
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "purchasing-specialist", "abc");
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, "support", "xyz");
 
-        ydtContext = ydtContext.getParent().getParent();
+        ydtNode = ydtNode.getParent().getParent();
 
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "warehousesupervisor")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("supervisor")));
-        compareValueSet(ydtContext.getValueSet(), valueSet);
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, "warehousesupervisor", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafListContents(ydtNode, "supervisor", valueSet);
 
-        ydtContext = ydtContext.getParent();
+        ydtNode = ydtNode.getParent();
 
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "tradingsupervisor")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("supervisor")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("abc")));
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, "tradingsupervisor", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "supervisor", "abc");
 
-        ydtContext = ydtContext.getParent();
+        ydtNode = ydtNode.getParent();
 
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("employeeid")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("employeeid")));
-        compareValueSet(valueSet, ydtContext.getValueSet());
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, "employeeid", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafListContents(ydtNode, "employeeid", valueSet);
     }
 }

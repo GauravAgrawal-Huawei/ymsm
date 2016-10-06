@@ -29,7 +29,7 @@ import java.util.Set;
 public interface YdtExtendedBuilder extends YdtBuilder {
 
     /**
-     * Adds a last child to YANG data tree, this method is to be used by
+     * Adds a last child to YANG data tree; this method is to be used by
      * YANG object builder.
      *
      * @param yangSchemaNode schema node from YANG metadata
@@ -40,18 +40,18 @@ public interface YdtExtendedBuilder extends YdtBuilder {
                                 YangSchemaNode yangSchemaNode);
 
     /**
-     * Adds a last leaf list to YANG data tree, this method is to be used by
+     * Adds a last leaf list to YANG data tree; this method is to be used by
      * YANG object builder.
      *
      * @param valueSet       list of value of the child
      * @param yangSchemaNode schema node from YANG metadata
      * @return YDT context
      */
-    YdtExtendedContext addLeaf(Set<String> valueSet,
-                               YangSchemaNode yangSchemaNode);
+    YdtExtendedContext addLeafList(Set<String> valueSet,
+                                   YangSchemaNode yangSchemaNode);
 
     /**
-     * Adds a last leaf to YANG data tree, this method is to be used by
+     * Adds a last leaf to YANG data tree; this method is to be used by
      * YANG object builder.
      *
      * @param value          value of the child

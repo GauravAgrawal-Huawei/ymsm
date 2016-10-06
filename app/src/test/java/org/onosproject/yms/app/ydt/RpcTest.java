@@ -17,101 +17,77 @@
 package org.onosproject.yms.app.ydt;
 
 import org.junit.Test;
-import org.onosproject.yms.ydt.YdtContext;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.helloOnos;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateLeafContents;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateNodeContents;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.walkINTree;
+import static org.onosproject.yms.ydt.YdtContextOperationType.MERGE;
 
 public class RpcTest {
 
     // Logger list is used for walker testing.
     private final List<String> logger = new ArrayList<>();
 
+    private static final String[] EXPECTED = {
+            "Entry Node is Hello-ONOS.",
+            "Entry Node is Hello_ONOS.",
+            "Entry Node is hello-world.",
+            "Entry Node is input.",
+            "Entry Node is name.",
+            "Exit Node is name.",
+            "Entry Node is surName.",
+            "Exit Node is surName.",
+            "Entry Node is stringList.",
+            "Entry Node is string1.",
+            "Exit Node is string1.",
+            "Entry Node is string2.",
+            "Exit Node is string2.",
+            "Exit Node is stringList.",
+            "Exit Node is input.",
+            "Exit Node is hello-world.",
+            "Exit Node is Hello_ONOS.",
+            "Exit Node is Hello-ONOS."
+    };
+
+    /**
+     * Creates and validates hello onos ydt.
+     */
     @Test
-    public void rpc1Test() throws IOException {
-        YangRequestWorkBench ydtBuilder = YdtTestUtils.helloOnos();
+    public void rpc1Test() {
+        YangRequestWorkBench ydtBuilder = helloOnos();
         validateTree(ydtBuilder);
         // walker test
-        walkINTree(ydtBuilder);
+        walkINTree(ydtBuilder, EXPECTED);
     }
 
-    private void walkINTree(YangRequestWorkBench ydtBuilder) {
-        DefaultYdtWalker ydtWalker = new DefaultYdtWalker();
-        YdtTestUtils ydtListenerService = new YdtTestUtils();
-
-        // Logger list is used for walker testing.
-        YdtTestUtils.resetLogger();
-
-        // Assign root node to YdtContext to walk the tree.
-        ydtWalker.walk(ydtListenerService, ydtBuilder.getRootNode());
-        // Logger list is used for walker testing.
-        List<String> logger = YdtTestUtils.getLogger();
-        assertThat(true, is(logger.get(0).contentEquals(
-                "Entry Node is Hello-ONOS.")));
-        assertThat(true, is(logger.get(1).contentEquals(
-                "Entry Node is Hello_ONOS.")));
-        assertThat(true, is(logger.get(2).contentEquals(
-                "Entry Node is hello-world.")));
-        assertThat(true, is(logger.get(3).contentEquals(
-                "Entry Node is input.")));
-        assertThat(true, is(logger.get(4).contentEquals(
-                "Entry Node is name.")));
-        assertThat(true, is(logger.get(5).contentEquals("Exit Node is name.")));
-        assertThat(true, is(logger.get(6).contentEquals(
-                "Entry Node is surName.")));
-        assertThat(true, is(logger.get(7).contentEquals(
-                "Exit Node is surName.")));
-        assertThat(true, is(logger.get(8).contentEquals(
-                "Entry Node is stringList.")));
-        assertThat(true, is(logger.get(9).contentEquals(
-                "Entry Node is string1.")));
-        assertThat(true, is(logger.get(10).contentEquals(
-                "Exit Node is string1.")));
-        assertThat(true, is(logger.get(11).contentEquals(
-                "Entry Node is string2.")));
-        assertThat(true, is(logger.get(12).contentEquals(
-                "Exit Node is string2.")));
-        assertThat(true, is(logger.get(13).contentEquals(
-                "Exit Node is stringList.")));
-        assertThat(true, is(logger.get(14).contentEquals(
-                "Exit Node is input.")));
-        assertThat(true, is(logger.get(15).contentEquals(
-                "Exit Node is hello-world.")));
-        assertThat(true, is(logger.get(16).contentEquals(
-                "Exit Node is Hello_ONOS.")));
-        assertThat(true, is(logger.get(17).contentEquals(
-                "Exit Node is Hello-ONOS.")));
-    }
-
+    /**
+     * Validates the given built ydt.
+     */
     private void validateTree(YangRequestWorkBench ydtBuilder) {
 
-        // assign root node to ydtContext for validating purpose.
-        YdtContext ydtContext = ydtBuilder.getRootNode();
-        assertThat(true, is(ydtContext.getName().contentEquals("Hello-ONOS")));
-
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("Hello_ONOS")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("hello-world")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("input")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("name")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("onos")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("surName")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("yang")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("stringList")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("string1")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("ON")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("string2")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("LAB")));
+        // assign root node to ydtNode for validating purpose.
+        YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
+        // Logical root node does not have operation type
+        validateNodeContents(ydtNode, "Hello-ONOS", null);
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "Hello_ONOS", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "hello-world", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "input", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "name", "onos");
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, "surName", "yang");
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, "stringList", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "string1", "ON");
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, "string2", "LAB");
     }
 }

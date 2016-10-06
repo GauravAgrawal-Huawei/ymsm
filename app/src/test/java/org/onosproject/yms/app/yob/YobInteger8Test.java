@@ -16,13 +16,13 @@
 
 package org.onosproject.yms.app.yob;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.ydt.YdtTestUtils;
 import org.onosproject.yms.ydt.YdtContext;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 
 import static org.junit.Assert.assertEquals;
@@ -89,21 +89,21 @@ public class YobInteger8Test {
             i.7. input 255
     */
     @Test
-    public void positiveTest() throws IOException {
+    public void positiveTest() {
         YangRequestWorkBench defaultYdtBuilder = YdtTestUtils.integer8Ydt();
         validateYangObject(defaultYdtBuilder);
     }
 
-    public void validateYangObject(YangRequestWorkBench defaultYdtBuilder) {
+    private void validateYangObject(YangRequestWorkBench defaultYdtBuilder) {
 
-        YdtContext ydtContext = defaultYdtBuilder.getRootNode();
+        YdtContext rootCtx = defaultYdtBuilder.getRootNode();
 
-        YdtContext ydtContext1 = ydtContext.getFirstChild();
+        YdtContext childCtx = rootCtx.getFirstChild();
 
-        DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
+        DefaultYobBuilder builder = new DefaultYobBuilder();
 
-        Object yangObject = defaultYobBuilder.getYangObject(
-                (YdtExtendedContext) ydtContext1, YdtTestUtils
+        Object yangObject = builder.getYangObject(
+                (YdtExtendedContext) childCtx, YdtTestUtils
                         .getSchemaRegistry());
         assertNotNull(yangObject);
         try {
@@ -146,7 +146,7 @@ public class YobInteger8Test {
             maxUintWithRange.setAccessible(true);
             assertEquals("100", maxUintWithRange.get(yangObject).toString());
         } catch (IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
+            Assert.fail();
         }
     }
 }

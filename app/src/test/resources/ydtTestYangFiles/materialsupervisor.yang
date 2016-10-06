@@ -5,7 +5,7 @@ module materialsupervisor {
     namespace "ydt.material-supervisor";
 
     prefix "material";
-    
+
     organization "ON-LAB";
 
     description "This module defines for material-supervisor.";

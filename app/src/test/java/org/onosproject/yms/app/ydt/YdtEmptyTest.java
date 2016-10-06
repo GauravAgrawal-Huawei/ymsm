@@ -17,12 +17,16 @@
 package org.onosproject.yms.app.ydt;
 
 import org.junit.Test;
-import org.onosproject.yms.ydt.YdtContext;
+import org.onosproject.yms.app.ydt.exceptions.YdtException;
 
-import java.io.IOException;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.EMPTY;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.EMPTYNS;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.TYPE;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.emptyTypeYdt;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateErrMsg;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateLeafContents;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateNodeContents;
+import static org.onosproject.yms.ydt.YdtContextOperationType.MERGE;
 
 public class YdtEmptyTest {
 
@@ -31,25 +35,32 @@ public class YdtEmptyTest {
         Positive scenario
         input with in empty.
     */
+
+    /**
+     * Creates and validates empty ydt covering different positive scenario.
+     */
     @Test
-    public void positiveTest() throws IOException {
-        YangRequestWorkBench ydtBuilder = YdtTestUtils.emptyTypeYdt();
+    public void positiveTest() throws YdtException {
+        YangRequestWorkBench ydtBuilder = emptyTypeYdt();
         validateTree(ydtBuilder);
     }
 
+    /**
+     * Validates the given built ydt.
+     */
     private void validateTree(YangRequestWorkBench ydtBuilder) {
 
-        // assign root node to ydtContext for validating purpose.
-        YdtContext ydtContext = ydtBuilder.getRootNode();
-        assertThat(true, is(ydtContext.getName().contentEquals("builtInType")));
+        // assign root node to ydtNode for validating purpose.
+        YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
+        // Logical root node does not have operation type
+        validateNodeContents(ydtNode, TYPE, null);
 
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("emptydata")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("emptyList")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("empty")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("")));
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "emptydata", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "emptyList", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "empty", "");
     }
 
     /*
@@ -59,43 +70,14 @@ public class YdtEmptyTest {
         input with "tab"
         input with """"
     */
+
+    /**
+     * Tests all the negative scenario's for empty data type.
+     */
     @Test
-    public void negativeTest() throws IOException {
-        String appName = "org.onosproject.yang.gen.v1.ydt.emptydata" +
-                ".rev20160524.EmptydataService";
-        YangRequestWorkBench ydtBuilder = YdtTestUtils
-                .getydtBuilder("builtInType", "emptydata",
-                                      "ydt.emptydata", appName);
-        ydtBuilder.addChild("emptyList", null);
-
-        try {
-            ydtBuilder.addLeaf("empty", null, " ");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + " " + "\" is not " +
-                            "allowed for a data type EMPTY")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "emptydata", "ydt.emptydata", appName);
-        ydtBuilder.addChild("emptyList", null);
-        try {
-            ydtBuilder.addLeaf("empty", null, "    ");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "    " + "\" is not " +
-                            "allowed for a data type EMPTY")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "emptydata", "ydt.emptydata", appName);
-        ydtBuilder.addChild("emptyList", null);
-        try {
-            ydtBuilder.addLeaf("empty", null, "" + "" + " ");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + " " + "\" is not " +
-                            "allowed for a data type EMPTY")));
-        }
+    public void negativeTest() throws YdtException {
+        validateErrMsg("empty", EMPTYNS, " ", EMPTY, "emptyList");
+        validateErrMsg("empty", EMPTYNS, "    ", EMPTY, "emptyList");
+        validateErrMsg("empty", EMPTYNS, " ", EMPTY, "emptyList");
     }
 }

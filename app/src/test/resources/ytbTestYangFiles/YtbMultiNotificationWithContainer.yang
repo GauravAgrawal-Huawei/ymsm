@@ -17,6 +17,12 @@ module YtbMultiNotificationWithContainer {
             }
         }
     }
+    list cumulative {
+        key "sum";
+        leaf sum {
+            type int8;
+        }
+    }
     notification fortestb {
         leaf-list notileaflist {
             type empty;

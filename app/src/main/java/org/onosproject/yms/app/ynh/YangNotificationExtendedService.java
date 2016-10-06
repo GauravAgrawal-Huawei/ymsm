@@ -21,7 +21,7 @@ import org.onosproject.yms.ynh.YangNotificationService;
 
 /**
  * Abstraction of an entity which provides interfaces to YANG extended notification
- * service. It provides extended interfaces requried by YMS internal modules.
+ * service. It provides extended interfaces required by YMS internal modules.
  * Application registers their schema with YMSM, YMSM delegates the registration
  * request to YSR. YSR then looks for the presence of notification in application
  * schema, presence of notification will trigger YSR to ask YANG extended notification

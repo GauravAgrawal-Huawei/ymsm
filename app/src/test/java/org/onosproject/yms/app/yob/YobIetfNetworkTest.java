@@ -22,28 +22,26 @@ import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.ydt.YdtTestUtils;
 import org.onosproject.yms.ydt.YdtContext;
 
-import java.io.IOException;
-
 import static org.junit.Assert.assertNotNull;
 
 public class YobIetfNetworkTest {
 
     @Test
-    public void ietfNetwork1Test() throws IOException {
+    public void ietfNetwork1Test() {
         YangRequestWorkBench defaultYdtBuilder = YdtTestUtils.ietfNetwork1Ydt();
         validateYangObject(defaultYdtBuilder);
     }
 
-    public void validateYangObject(YangRequestWorkBench defaultYdtBuilder) {
+    private void validateYangObject(YangRequestWorkBench defaultYdtBuilder) {
 
-        YdtContext ydtContext = defaultYdtBuilder.getRootNode();
+        YdtContext rootCtx = defaultYdtBuilder.getRootNode();
 
-        YdtContext ydtContext1 = ydtContext.getFirstChild();
+        YdtContext childCtx = rootCtx.getFirstChild();
 
-        DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
+        DefaultYobBuilder builder = new DefaultYobBuilder();
 
-        Object yangObject = defaultYobBuilder.getYangObject(
-                (YdtExtendedContext) ydtContext1, YdtTestUtils
+        Object yangObject = builder.getYangObject(
+                (YdtExtendedContext) childCtx, YdtTestUtils
                         .getSchemaRegistry());
         assertNotNull(yangObject);
         //TODO yangObject need to verify

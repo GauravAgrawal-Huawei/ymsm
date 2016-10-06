@@ -17,27 +17,28 @@
 package org.onosproject.yms.app.utils;
 
 /**
- * Represents tree traversal types.
+ * Represents traversal type of the YANG node tree.
  */
 public enum TraversalType {
 
-    /**
+    /*
      * Start of traversal at the tree root.
      */
     ROOT,
 
-    /**
+    /*
      * Child node traversal.
      */
     CHILD,
 
-    /**
+    /*
      * Sibling node traversal.
      */
-    SIBILING,
+    SIBLING,
 
-    /**
+    /*
      * Parent node traversal.
      */
     PARENT
 }
+

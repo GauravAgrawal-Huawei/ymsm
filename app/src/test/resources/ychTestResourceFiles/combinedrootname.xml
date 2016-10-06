@@ -8,7 +8,7 @@
             <Combined xmlns="ych:combined">
                 <attributes>
                     <origin>
-                        <value>PathId{uint32=123}</value>
+                        <value>123</value>
                     </origin>
                     <multi-exit-disc>
                         <med>456</med>
@@ -18,52 +18,52 @@
                     </local-pref>
                     <aigp>
                         <aigp-tlv>
-                            <metric>Metric{uint32=456}</metric>
+                            <metric>456</metric>
                         </aigp-tlv>
                     </aigp>
                     <unrecognized-attributes>
                         <partial>false</partial>
                         <transitive>false</transitive>
                         <type>1</type>
-                        <value>[B@7ca48474</value>
+                        <value>QUJD</value>
                     </unrecognized-attributes>
                     <unrecognized-attributes>
                         <partial>true</partial>
                         <transitive>true</transitive>
                         <type>2</type>
-                        <value>[B@337d0578</value>
+                        <value>QUJD</value>
                     </unrecognized-attributes>
                     <unrecognized-attributes>
                         <partial>true</partial>
                         <transitive>false</transitive>
                         <type>3</type>
-                        <value>[B@59e84876</value>
+                        <value>QUJD</value>
                     </unrecognized-attributes>
                     <unrecognized-attributes>
                         <partial>false</partial>
                         <transitive>true</transitive>
                         <type>4</type>
-                        <value>[B@61a485d2</value>
+                        <value>QUJD</value>
                     </unrecognized-attributes>
                     <bgp-parameters>
                         <optional-capabilities>
                             <c-parameters>
                                 <as4-bytes-capability>
-                                    <as-number>AsNum{uint32=11}</as-number>
+                                    <as-number>11</as-number>
                                 </as4-bytes-capability>
                             </c-parameters>
                         </optional-capabilities>
                         <optional-capabilities>
                             <c-parameters>
                                 <as4-bytes-capability>
-                                    <as-number>AsNum{uint32=22}</as-number>
+                                    <as-number>22</as-number>
                                 </as4-bytes-capability>
                             </c-parameters>
                         </optional-capabilities>
                         <optional-capabilities>
                             <c-parameters>
                                 <as4-bytes-capability>
-                                    <as-number>AsNum{uint32=33}</as-number>
+                                    <as-number>33</as-number>
                                 </as4-bytes-capability>
                             </c-parameters>
                         </optional-capabilities>
@@ -72,21 +72,21 @@
                         <optional-capabilities>
                             <c-parameters>
                                 <as4-bytes-capability>
-                                    <as-number>AsNum{uint32=11}</as-number>
+                                    <as-number>33</as-number>
                                 </as4-bytes-capability>
                             </c-parameters>
                         </optional-capabilities>
                         <optional-capabilities>
                             <c-parameters>
                                 <as4-bytes-capability>
-                                    <as-number>AsNum{uint32=22}</as-number>
+                                    <as-number>33</as-number>
                                 </as4-bytes-capability>
                             </c-parameters>
                         </optional-capabilities>
                         <optional-capabilities>
                             <c-parameters>
                                 <as4-bytes-capability>
-                                    <as-number>AsNum{uint32=33}</as-number>
+                                    <as-number>33</as-number>
                                 </as4-bytes-capability>
                             </c-parameters>
                         </optional-capabilities>

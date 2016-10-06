@@ -18,11 +18,12 @@ package org.onosproject.yms.app.yob;
 
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.ydt.YdtExtendedListener;
-import org.onosproject.yms.app.yob.exception.YobExceptions;
+import org.onosproject.yms.app.yob.exception.YobException;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.onosproject.yms.ydt.YdtContext;
 
-import static org.onosproject.yms.app.yob.YobConstants.NO_HANDLE_FOR_YDT;
+import static org.onosproject.yms.app.yob.YobConstants.E_MISSING_DATA_IN_NODE;
+import static org.onosproject.yms.app.yob.YobHandlerFactory.instance;
 
 /**
  * Represents implementation of YANG object builder listener.
@@ -30,69 +31,65 @@ import static org.onosproject.yms.app.yob.YobConstants.NO_HANDLE_FOR_YDT;
 class YobListener implements YdtExtendedListener {
 
     /**
-     * reference to the ydt root node.
+     * Reference to the ydt root node.
      */
-    private YdtExtendedContext ydtRootNode;
+    private YdtExtendedContext rootNode;
 
     /**
-     * reference to YANG schema registry.
+     * Reference to YANG schema registry.
      */
     private YangSchemaRegistry schemaRegistry;
 
     /**
-     * reference to YOB handler.
+     * Reference to YOB handler.
      */
-    private YobHandlerFactory yobHandlerFactory;
+    private YobHandlerFactory handlerFactory;
 
     /**
      * Creates an instance of YANG object builder listener.
      *
-     * @param ydtRootExtendedContext ydtExtendedContext is used to get
-     *                               application related
-     *                               information maintained in YDT
-     * @param schemaRegistry         refers to YANG schema registry
+     * @param rootNode       refers to YDT context
+     * @param schemaRegistry refers to YANG schema registry
      */
-    YobListener(YdtExtendedContext ydtRootExtendedContext,
+    YobListener(YdtExtendedContext rootNode,
                 YangSchemaRegistry schemaRegistry) {
-        this.ydtRootNode = ydtRootExtendedContext;
+        this.rootNode = rootNode;
         this.schemaRegistry = schemaRegistry;
-        this.yobHandlerFactory = new YobHandlerFactory();
+        this.handlerFactory = instance();
     }
 
     @Override
-    public void enterYdtNode(YdtExtendedContext ydtExtendedContext) {
+    public void enterYdtNode(YdtExtendedContext node) {
 
         YobHandler nodeHandler =
-                yobHandlerFactory.getYobHandlerForContext(ydtExtendedContext);
+                handlerFactory.getYobHandlerForContext(node);
 
-        if (nodeHandler == null) {
-            throw new YobExceptions(NO_HANDLE_FOR_YDT);
-        }
-        nodeHandler.createYangBuilderObject(ydtExtendedContext,
-                                            ydtRootNode, schemaRegistry);
+        nodeHandler.createBuilder(node, rootNode, schemaRegistry);
 
     }
 
     @Override
-    public void exitYdtNode(YdtExtendedContext ydtExtendedContext) {
+    public void exitYdtNode(YdtExtendedContext node) {
         YobHandler nodeHandler =
-                yobHandlerFactory.getYobHandlerForContext(ydtExtendedContext);
-        if (nodeHandler != null) {
-            nodeHandler.buildObjectFromBuilder(ydtExtendedContext,
-                                               ydtRootNode, schemaRegistry);
-            // The current ydt context node and root node are same then return.
-            if (!ydtExtendedContext.equals(ydtRootNode)) {
-                nodeHandler.setObjectInParent(ydtExtendedContext,
-                                              schemaRegistry);
-            }
+                handlerFactory.getYobHandlerForContext(node);
+
+        nodeHandler.buildObject(node, rootNode, schemaRegistry);
+
+        // The current ydt context node and root node are same then built
+        // object needs to be returned.
+        if (!node.equals(rootNode)) {
+            nodeHandler.setInParent(node, schemaRegistry);
         }
+
     }
 
     @Override
     public void enterYdtNode(YdtContext ydtContext) {
+        throw new YobException(E_MISSING_DATA_IN_NODE);
     }
 
     @Override
     public void exitYdtNode(YdtContext ydtContext) {
+        throw new YobException(E_MISSING_DATA_IN_NODE);
     }
 }

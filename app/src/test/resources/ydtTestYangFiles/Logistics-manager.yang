@@ -63,5 +63,4 @@ module Logistics-manager {
         type string;
         description "list of the employee id";
     }
-
 }

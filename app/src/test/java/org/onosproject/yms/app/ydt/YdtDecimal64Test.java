@@ -17,12 +17,28 @@
 package org.onosproject.yms.app.ydt;
 
 import org.junit.Test;
-import org.onosproject.yms.ydt.YdtContext;
+import org.onosproject.yms.app.ydt.exceptions.YdtException;
 
-import java.io.IOException;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.A;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.B;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.C;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.E;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.F;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.G;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.H;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.MAXIWR;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.MIDIWR;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.MINIWR;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.MRV;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.NIWMF;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.NWF;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.PIWMF;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.PWF;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.TYPE;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.decimal64Ydt;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateLeafContents;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateNodeContents;
+import static org.onosproject.yms.ydt.YdtContextOperationType.MERGE;
 
 public class YdtDecimal64Test {
 
@@ -69,152 +85,109 @@ public class YdtDecimal64Test {
             i.7. input 92233720368547758.07
 
     */
+
+    /**
+     * Creates and validates decimal64 ydt covering different positive scenario.
+     */
     @Test
-    public void positiveTest() throws IOException {
-        YangRequestWorkBench ydtBuilder = YdtTestUtils.decimal64Ydt();
+    public void positiveTest() throws YdtException {
+        YangRequestWorkBench ydtBuilder = decimal64Ydt();
         validateTree(ydtBuilder);
     }
 
+    /**
+     * Validates the given built ydt.
+     */
     private void validateTree(YangRequestWorkBench ydtBuilder) {
 
-        // assign root node to ydtContext for validating purpose.
-        YdtContext ydtContext = ydtBuilder.getRootNode();
-        assertThat(true, is(ydtContext.getName().contentEquals("builtInType")));
+        // assign root node to ydtNode for validating purpose.
+        YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
+        // Logical root node does not have operation type
+        validateNodeContents(ydtNode, TYPE, null);
 
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("decimal64")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("negInt")));
-        assertThat(true, is(ydtContext.getValue().contentEquals(
-                "-92233720368547758.08")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("posInt")));
-        assertThat(true, is(ydtContext.getValue().contentEquals(
-                "92233720368547758.07")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "negIntWithMinFraction")));
-        assertThat(true, is(ydtContext.getValue().contentEquals(
-                "-922337203685477580.8")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "posIntWithMinFraction")));
-        assertThat(true, is(ydtContext.getValue().contentEquals(
-                "922337203685477580.7")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "negIntWithMaxFraction")));
-        assertThat(true, is(ydtContext.getValue().contentEquals(
-                "-9.223372036854775808")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "posIntWithMaxFraction")));
-        assertThat(true, is(ydtContext.getValue().contentEquals(
-                "9.223372036854775807")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "midIntWithRange")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("11")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "minIntWithRange")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("10")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "maxIntWithRange")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("100")));
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("decimal")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("11")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("decimal")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("10")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("decimal")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("40")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("decimal")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("50")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("decimal")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("55")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("decimal")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("100")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("revDecimal")));
-        assertThat(true, is(ydtContext.getValue().contentEquals(
-                "-92233720368547758.08")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("revDecimal")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("2.505")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("revDecimal")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("3.14")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("revDecimal")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("10")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("revDecimal")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("20")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("revDecimal")));
-        assertThat(true, is(ydtContext.getValue().contentEquals(
-                "92233720368547757")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals(
-                "multiRangeValidation")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("revDecimal")));
-        assertThat(true, is(ydtContext.getValue().contentEquals(
-                "92233720368547758.07")));
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "decimal64", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "negInt", C);
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, "posInt", A);
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, NIWMF, F);
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, PIWMF, G);
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, NWF, H);
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, PWF, E);
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, MIDIWR, "11");
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, MINIWR, "10");
+        ydtNode = ydtNode.getNextSibling();
+        validateLeafContents(ydtNode, MAXIWR, "100");
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "decimal", "11");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "decimal", "10");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "decimal", "40");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "decimal", "50");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "decimal", "55");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "decimal", "100");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "revDecimal", C);
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "revDecimal", "2.505");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "revDecimal", "3.14");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "revDecimal", "10");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "revDecimal", "20");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "revDecimal", B);
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, MRV, MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "revDecimal", A);
     }
 }

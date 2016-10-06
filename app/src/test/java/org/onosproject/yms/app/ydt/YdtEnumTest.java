@@ -17,12 +17,16 @@
 package org.onosproject.yms.app.ydt;
 
 import org.junit.Test;
-import org.onosproject.yms.ydt.YdtContext;
+import org.onosproject.yms.app.ydt.exceptions.YdtException;
 
-import java.io.IOException;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.ENUM;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.ENUMNS;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.TYPE;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.enumYdt;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateErrMsg;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateLeafContents;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateNodeContents;
+import static org.onosproject.yms.ydt.YdtContextOperationType.MERGE;
 
 public class YdtEnumTest {
 
@@ -37,37 +41,41 @@ public class YdtEnumTest {
         input with "thousand"
 */
 
+    /**
+     * Creates and validates enum ydt covering different positive scenario.
+     */
     @Test
-    public void positiveTest() throws IOException {
-        YangRequestWorkBench ydtBuilder = YdtTestUtils.enumYdt();
+    public void positiveTest() throws YdtException {
+        YangRequestWorkBench ydtBuilder = enumYdt();
         validateTree(ydtBuilder);
     }
 
+    /**
+     * Validates the given built ydt.
+     */
     private void validateTree(YangRequestWorkBench ydtBuilder) {
 
-        // assign root node to ydtContext for validating purpose.
-        YdtContext ydtContext = ydtBuilder.getRootNode();
-        assertThat(true, is(ydtContext.getName().contentEquals("builtInType")));
+        // assign root node to ydtNode for validating purpose.
+        YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
+        // Logical root node does not have operation type
+        validateNodeContents(ydtNode, TYPE, null);
 
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("enumtest")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("enumList")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("enumleaf")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("ten")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("enumList")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("enumleaf")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("hundred")));
-        ydtContext = ydtContext.getParent();
-        ydtContext = ydtContext.getNextSibling();
-        assertThat(true, is(ydtContext.getName().contentEquals("enumList")));
-        ydtContext = ydtContext.getFirstChild();
-        assertThat(true, is(ydtContext.getName().contentEquals("enumleaf")));
-        assertThat(true, is(ydtContext.getValue().contentEquals("thousand")));
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "enumtest", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "enumList", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "enumleaf", "ten");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, "enumList", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "enumleaf", "hundred");
+        ydtNode = ydtNode.getParent();
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, "enumList", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "enumleaf", "thousand");
     }
 
     /*
@@ -76,43 +84,14 @@ public class YdtEnumTest {
         input with "10"
         input with "thousands"
     */
+
+    /**
+     * Tests all the negative scenario's for enum data type.
+     */
     @Test
-    public void negativeTest() throws IOException {
-        String appName = "org.onosproject.yang.gen.v1.ydt.enumtest" +
-                ".rev20160524.EnumtestService";
-        YangRequestWorkBench ydtBuilder = YdtTestUtils
-                .getydtBuilder("builtInType", "enumtest",
-                                      "ydt.enumtest", appName);
-        ydtBuilder.addChild("enumList", null);
-
-        try {
-            ydtBuilder.addLeaf("enumleaf", null, "10");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "10" + "\" " +
-                            "is not a valid ENUMERATION")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "enumtest", "ydt.enumtest", appName);
-        ydtBuilder.addChild("enumList", null);
-        try {
-            ydtBuilder.addLeaf("enumleaf", null, "thousands");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "thousands" + "\" " +
-                            "is not a valid ENUMERATION")));
-        }
-
-        ydtBuilder = YdtTestUtils.getydtBuilder(
-                "builtInType", "enumtest", "ydt.enumtest", appName);
-        ydtBuilder.addChild("enumList", null);
-        try {
-            ydtBuilder.addLeaf("enumleaf", null, "enumeration");
-        } catch (Exception e) {
-            assertThat(true, is(e.getMessage().contains(
-                    "YANG file error : Input value \"" + "enumeration" + "\" " +
-                            "is not a valid ENUMERATION")));
-        }
+    public void negativeTest() throws YdtException {
+        validateErrMsg("enumleaf", ENUMNS, "10", ENUM, "enumList");
+        validateErrMsg("enumleaf", ENUMNS, "thousands", ENUM, "enumList");
+        validateErrMsg("enumleaf", ENUMNS, "enumeration", ENUM, "enumList");
     }
 }

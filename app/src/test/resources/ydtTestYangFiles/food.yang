@@ -21,7 +21,6 @@ module food {
                leaf pretzel {
                    type empty;
                }
-
                leaf beer {
                    type empty;
                }
@@ -37,5 +36,4 @@ module food {
            }
        }
     }
-
 }

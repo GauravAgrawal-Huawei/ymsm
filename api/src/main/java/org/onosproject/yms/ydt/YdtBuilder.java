@@ -29,15 +29,14 @@ import java.util.Set;
  * to enable the protocol in building these abstract data tree, YANG
  * management system provides a utility called the YANG data tree builder.
  */
-public interface YdtBuilder
-        extends Ydt {
+public interface YdtBuilder extends Ydt {
 
     /**
      * Sets root node tag attributes. This is used by protocol
      * to specify tag attributes associated with root resource.
      *
      * @param attributeTag map of root tags attribute values indexed by root
-     *                     tag name.
+     *                     tag name
      */
     void setRootTagAttributeMap(Map<String, String> attributeTag);
 
@@ -49,14 +48,15 @@ public interface YdtBuilder
     Map<String, String> getRootTagAttributeMap();
 
     /**
-     * Adds a last child to YANG data tree, this method is to be used by
+     * Adds a last child to YANG data tree; this method is to be used by
      * protocols which are unaware of the nature (single/multiple) of node and
-     * also unaware of the operation type at every node(Example: RESTCONF).
+     * also unaware of the operation type at every node (Example: RESTCONF).
      * <p>
      * Add child is used to add module/sub-module nodes also. Request may
      * contain revision number corresponding to Module/sub-module in that
      * case YMS expect revision number to be appended to module/sub-module
      * name in the below mentioned format.
+     * <p>
      * module-or-submodule-name ['@' date-arg]
      * date-arg = 4DIGIT "-" 2DIGIT "-" 2DIGIT
      * Example: testModule@2016-10-27.
@@ -79,6 +79,7 @@ public interface YdtBuilder
      * contain revision number corresponding to Module/sub-module in that
      * case YMS expect revision number to be appended to module/sub-module
      * name in the below mentioned format.
+     * <p>
      * module-or-submodule-name ['@' date-arg]
      * date-arg = 4DIGIT "-" 2DIGIT "-" 2DIGIT
      * Example: testModule@2016-10-27.
@@ -95,17 +96,17 @@ public interface YdtBuilder
     void addChild(String name, String namespace, YdtType ydtType);
 
     /**
-     * Adds a last child to YANG data tree, this method is to be used by
+     * Adds a last child to YANG data tree; this method is to be used by
      * protocols which are unaware of the nature (single/multiple) of node.
      * This is an overloaded method with operation type. This method can
-     * optionally
-     * be used when protocol doesn't want to specify operation type by
-     * keeping it null.
+     * optionally be used when protocol doesn't want to specify operation type
+     * by keeping it null.
      * <p>
      * Add child is used to add module/sub-module nodes also. Request may
      * contain revision number corresponding to Module/sub-module in that
      * case YMS expect revision number to be appended to module/sub-module
      * name in the below mentioned format.
+     * <p>
      * module-or-submodule-name ['@' date-arg]
      * date-arg = 4DIGIT "-" 2DIGIT "-" 2DIGIT
      * Example: testModule@2016-10-27.
@@ -123,17 +124,17 @@ public interface YdtBuilder
                   YdtContextOperationType opType);
 
     /**
-     * Adds a last child to YANG data tree, this method is to be used by
+     * Adds a last child to YANG data tree; this method is to be used by
      * protocols which are aware of the nature (single/multiple) of node.
      * This is an overloaded method with operation type. This method can
-     * optionally
-     * be used when protocol doesn't want to specify operation type by
-     * keeping it null.
+     * optionally be used when protocol doesn't want to specify operation type
+     * by keeping it null.
      * <p>
      * Add child is used to add module/sub-module nodes also. Request may
      * contain revision number corresponding to Module/sub-module in that
      * case YMS expect revision number to be appended to module/sub-module
      * name in the below mentioned format.
+     * <p>
      * module-or-submodule-name ['@' date-arg]
      * date-arg = 4DIGIT "-" 2DIGIT "-" 2DIGIT
      * Example: testModule@2016-10-27.
@@ -154,10 +155,9 @@ public interface YdtBuilder
 
     /**
      * Adds a last leaf with value to YANG data tree. Protocols unaware of
-     * nature
-     * of leaf (single/multiple) will use it to add both single instance and
-     * multi instance node. Protocols aware of nature of node will use it for
-     * single instance value node addition.
+     * nature of leaf (single/multiple) will use it to add both single instance
+     * and multi instance node. Protocols aware of nature of node will use it
+     * for single instance value node addition.
      * Value of leaf can be null which indicates selection node in get
      * operation.
      *
@@ -200,9 +200,11 @@ public interface YdtBuilder
      *                  namespace will be applied to child
      * @param valueList values of the keys in URI in the same order
      *                  as defined in YANG file
+     * @param opType    type of requested operation over a node
      */
     void addMultiInstanceChild(String name, String namespace,
-                               List<String> valueList);
+                               List<String> valueList,
+                               YdtContextOperationType opType);
 
     /**
      * Traverses up in YANG data tree to the parent node, it is to be used when

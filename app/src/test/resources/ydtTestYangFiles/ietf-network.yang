@@ -3,7 +3,7 @@
      namespace "urn:ietf:params:xml:ns:yang:ietf-network";
      prefix nd;
 
-     import ietf-inet-types {
+     import yms-ietf-inet-types {
        prefix inet;
      }
 

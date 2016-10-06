@@ -16,15 +16,6 @@
 
 package org.onosproject.yms.app.ych;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.Test;
 import org.onosproject.yang.gen.v1.ych.combined.rev20160524.CombinedOpParam;
 import org.onosproject.yang.gen.v1.ych.combined.rev20160524.combined.AsNum;
@@ -67,26 +58,354 @@ import org.onosproject.yang.gen.v1.ydt.root.rev20160524.LogisticsManagerOpParam;
 import org.onosproject.yang.gen.v1.ydt.root.rev20160524.logisticsmanager.DefaultPurchasingSupervisor;
 import org.onosproject.yang.gen.v1.ydt.trading.supervisor.rev20160524.TradingsupervisorOpParam;
 import org.onosproject.yang.gen.v1.ydt.warehouse.supervisor.rev20160524.WarehousesupervisorOpParam;
-import org.onosproject.yms.app.ych.codecutils.YchYangDataTreeCodec;
+import org.onosproject.yms.app.ych.defaultcodecs.YangCodecRegistry;
 import org.onosproject.yms.app.ysr.DefaultYangSchemaRegistry;
 import org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider;
-import org.onosproject.yms.ych.YangDataTreeCodec;
-import org.onosproject.yms.ych.YangProtocolEncodingFormat;
+import org.onosproject.yms.ych.YangCompositeEncoding;
 
-import static org.junit.Assert.assertTrue;
-import static org.onosproject.yang.gen.v1.ydt.root.rev20160524.logisticsmanager.PurchasingSupervisor.OnosYangNodeOperationType.DELETE;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.onosproject.yang.gen.v1.ydt.root.rev20160524.logisticsmanager.DefaultPurchasingSupervisor.OnosYangNodeOperationType.DELETE;
+import static org.onosproject.yms.ych.YangProtocolEncodingFormat.XML;
+import static org.onosproject.yms.ydt.YmsOperationType.EDIT_CONFIG_REQUEST;
+import static org.onosproject.yms.ydt.YmsOperationType.QUERY_CONFIG_REQUEST;
+import static org.onosproject.yms.ydt.YmsOperationType.QUERY_REQUEST;
 
 /**
  * Unit test case for default codec handler.
  */
 public class DefaultYangCodecHandlerTest {
-
-    private static final String TARGET = "target/TestYangSchemaNodeProvider";
     private TestYangSchemaNodeProvider testYangSchemaNodeProvider =
             new TestYangSchemaNodeProvider();
+    private static final String AM_XML = "Incorrect XML generated: ";
+    private static final String AM_OBJ = "Incorrect object generated: ";
+    private static final String EMPTY_CONTAINER = "EmptyContainerOpParam";
+    private static final String LOGISTIC_MOD = "LogisticsManagerOpParam";
+    private static final String MERCHA_MOD = "MerchandisersupervisorOpParam";
 
-    private Map<YangProtocolEncodingFormat, YangDataTreeCodec> defaultCodecs =
-            new HashMap<>();
+    /**
+     * Returns the xml string for customssupervisor module.
+     *
+     * @return the xml string for customssupervisor module
+     */
+    private static String customsXml() {
+        return "<filter xmlns=\"ydt.filter-type\" type=\"subtree\">" +
+                "<customssupervisor xmlns=\"ydt.customs-supervisor\">" +
+                "<supervisor>Customssupervisor</supervisor>" +
+                "</customssupervisor>" +
+                "</filter>";
+    }
+
+    /**
+     * Returns the xml string for merchandisersupervisor module.
+     *
+     * @return the xml string for merchandisersupervisor module
+     */
+    private static String merchandXml() {
+        return "<config xmlns=\"ydt.root\">" +
+                "<merchandisersupervisor xmlns=\"ydt.Merchandiser-" +
+                "supervisor\">" +
+                "<supervisor>Merchandisersupervisor</supervisor>" +
+                "</merchandisersupervisor>" +
+                "</config>";
+    }
+
+    /**
+     * Returns the xml string for tradingsupervisor module.
+     *
+     * @return the xml string for tradingsupervisor module
+     */
+    private static String tradingXml() {
+        return "<config xmlns=\"ydt.root\">" +
+                "<tradingsupervisor xmlns=\"ydt.trading-supervisor\">" +
+                "<supervisor>Tradingsupervisor</supervisor>" +
+                "</tradingsupervisor>" +
+                "</config>";
+    }
+
+    /**
+     * Returns the xml string for customssupervisor module.
+     *
+     * @return the xml string for customssupervisor module
+     */
+    private static String customsCompositeXml() {
+        return "<filter xmlns=\"ydt.filter-type\"><customssupervisor " +
+                "xmlns=\"ydt.customs-supervisor\">" +
+                "<supervisor>Customssupervisor</supervisor>" +
+                "</customssupervisor></filter>";
+    }
+
+    /**
+     * Returns the xml string for customssupervisor module with filter-type.
+     *
+     * @return the xml string for customssupervisor module with filter-type
+     */
+    private static String customsEmptyXml() {
+        return "<filter xmlns=\"ydt.filter-type\" type=\"subtree\">" +
+                "<customssupervisor xmlns=\"ydt.customs-supervisor\"/>" +
+                "</filter>";
+    }
+
+    /**
+     * Returns the xml string for materialsupervisor module.
+     *
+     * @return the xml string for materialsupervisor module
+     */
+    private static String materialXml() {
+        return "<filter xmlns=\"ydt.filter-type\" type=\"subtree\">" +
+                "<materialsupervisor xmlns=\"ydt.material-supervisor\">" +
+                "<supervisor>" +
+                "<name>abc1</name><departmentId>xyz1</departmentId>" +
+                "</supervisor>" +
+                "<supervisor><name>abc2</name><departmentId>xyz2</departmentId>" +
+                "</supervisor>" +
+                "<supervisor><name>abc3</name><departmentId>xyz3</departmentId>" +
+                "</supervisor>" +
+                "<supervisor><name>abc4</name><departmentId>xyz4</departmentId>" +
+                "</supervisor>" +
+                "<supervisor><name>abc5</name><departmentId>xyz5</departmentId>" +
+                "</supervisor>" +
+                "</materialsupervisor>" +
+                "</filter>";
+    }
+
+    /**
+     * Returns the xml string for EmptyContainer module.
+     *
+     * @return the xml string for EmptyContainer module
+     */
+    private static String containerEmptyXml() {
+        return "<filter xmlns=\"ydt.filter-type\" type=\"subtree\">" +
+                "<EmptyContainer xmlns=\"ych.Empty.Container\"/>" +
+                "</filter>";
+    }
+
+    /**
+     * Returns the xml string for Combined module.
+     *
+     * @return the xml string for Combined module
+     */
+    private static String listTestXml() {
+        return "<filter xmlns=\"ydt.filter-type\" type=\"subtree\">" +
+                "<Combined xmlns=\"ych:combined\"><attributes>" +
+                "<origin><value>123</value></origin>" +
+                "<multi-exit-disc><med>456</med></multi-exit-disc>" +
+                "<local-pref><pref>23</pref></local-pref>" +
+                "<aigp><aigp-tlv><metric>456</metric></aigp-tlv></aigp>" +
+                "<unrecognized-attributes><partial>false</partial>" +
+                "<transitive>false</transitive><type>1</type>" +
+                "<value>QUJD</value></unrecognized-attributes>" +
+                "<unrecognized-attributes><partial>true</partial>" +
+                "<transitive>true</transitive><type>2</type>" +
+                "<value>QUJD</value></unrecognized-attributes>" +
+                "<unrecognized-attributes><partial>true</partial>" +
+                "<transitive>false</transitive><type>3</type>" +
+                "<value>QUJD</value></unrecognized-attributes>" +
+                "<unrecognized-attributes><partial>false</partial>" +
+                "<transitive>true</transitive><type>4</type>" +
+                "<value>QUJD</value></unrecognized-attributes>" +
+                "<bgp-parameters><optional-capabilities><c-parameters>" +
+                "<as4-bytes-capability><as-number>11</as-number>" +
+                "</as4-bytes-capability></c-parameters>" +
+                "</optional-capabilities><optional-capabilities>" +
+                "<c-parameters><as4-bytes-capability>" +
+                "<as-number>22</as-number></as4-bytes-capability>" +
+                "</c-parameters></optional-capabilities>" +
+                "<optional-capabilities><c-parameters><as4-bytes-capability>" +
+                "<as-number>33</as-number></as4-bytes-capability>" +
+                "</c-parameters></optional-capabilities></bgp-parameters>" +
+                "<bgp-parameters><optional-capabilities><c-parameters>" +
+                "<as4-bytes-capability><as-number>11</as-number>" +
+                "</as4-bytes-capability></c-parameters>" +
+                "</optional-capabilities><optional-capabilities>" +
+                "<c-parameters><as4-bytes-capability>" +
+                "<as-number>22</as-number></as4-bytes-capability>" +
+                "</c-parameters></optional-capabilities>" +
+                "<optional-capabilities><c-parameters><as4-bytes-capability>" +
+                "<as-number>33</as-number></as4-bytes-capability>" +
+                "</c-parameters></optional-capabilities>" +
+                "</bgp-parameters></attributes></Combined></filter>";
+    }
+
+    /**
+     * Returns the xml string for ych-purchasingsupervisor module.
+     *
+     * @return the xml string for ych-purchasingsupervisor module
+     */
+    private static String purchaseXml() {
+        return "<filter xmlns=\"ydt.filter-type\" type=\"subtree\">" +
+                "<ych-purchasingsupervisor xmlns=\"ych.purchasing-supervisor\">" +
+                "<ych-purchasing-supervisor operation=\"create\">" +
+                "<ych-purchasing-specialist>purchasingSpecialist" +
+                "</ych-purchasing-specialist>" +
+                "<ych-purchasing-support>support</ych-purchasing-support>" +
+                "</ych-purchasing-supervisor>" +
+                "</ych-purchasingsupervisor>" +
+                "</filter>";
+    }
+
+    /**
+     * Returns the xml string for employeeid module.
+     *
+     * @return the xml string for employeeid module
+     */
+    private static String emplyIdXml() {
+        return "<config xmlns=\"ydt.root\">" +
+                "<employeeid xmlns=\"ydt.employee-id\">" +
+                "<employeeid>Employ1</employeeid>" +
+                "<employeeid>Employ5</employeeid>" +
+                "<employeeid>Employ4</employeeid>" +
+                "<employeeid>Employ3</employeeid>" +
+                "<employeeid>Employ2</employeeid>" +
+                "</employeeid>" +
+                "</config>";
+    }
+
+    /**
+     * Returns the xml string for warehousesupervisor module.
+     *
+     * @return the xml string for warehousesupervisor module
+     */
+    private static String wareHseXml() {
+        return "<config xmlns=\"ydt.root\">" +
+                "<warehousesupervisor xmlns=\"ydt.warehouse-supervisor\">" +
+                "<supervisor>supervisor4</supervisor>" +
+                "<supervisor>supervisor5</supervisor>" +
+                "<supervisor>supervisor1</supervisor>" +
+                "<supervisor>supervisor2</supervisor>" +
+                "<supervisor>supervisor3</supervisor>" +
+                "</warehousesupervisor>" +
+                "</config>";
+    }
+
+    /**
+     * Returns the xml string for more than one module.
+     *
+     * @return the xml string for more than one module
+     */
+    private static String multiModuleXml() {
+        return "<config xmlns=\"ydt.root\">" +
+                "<customssupervisor xmlns=\"ydt.customs-supervisor\">" +
+                "<supervisor>Customssupervisor</supervisor>" +
+                "</customssupervisor>" +
+                "<merchandisersupervisor xmlns=\"ydt.Merchandiser-supervisor\">" +
+                "<supervisor>Merchandisersupervisor</supervisor>" +
+                "</merchandisersupervisor>" +
+                "<materialsupervisor xmlns=\"ydt.material-supervisor\">" +
+                "<supervisor>" +
+                "<name>abc1</name>" +
+                "<departmentId>xyz1</departmentId>" +
+                "</supervisor>" +
+                "<supervisor>" +
+                "<name>abc2</name>" +
+                "<departmentId>xyz2</departmentId>" +
+                "</supervisor>" +
+                "<supervisor>" +
+                "<name>abc3</name>" +
+                "<departmentId>xyz3</departmentId>" +
+                "</supervisor>" +
+                "<supervisor>" +
+                "<name>abc4</name>" +
+                "<departmentId>xyz4</departmentId>" +
+                "</supervisor>" +
+                "<supervisor>" +
+                "<name>abc5</name>" +
+                "<departmentId>xyz5</departmentId>" +
+                "</supervisor>" +
+                "</materialsupervisor>" +
+                "<ych-purchasingsupervisor xmlns=\"ych.purchasing-supervisor\">" +
+                "<ych-purchasing-supervisor>" +
+                "<ych-purchasing-specialist>purchasingSpecialist" +
+                "</ych-purchasing-specialist>" +
+                "<ych-purchasing-support>support</ych-purchasing-support>" +
+                "</ych-purchasing-supervisor>" +
+                "</ych-purchasingsupervisor>" +
+                "<warehousesupervisor xmlns=\"ydt.warehouse-supervisor\">" +
+                "<supervisor>supervisor4</supervisor>" +
+                "<supervisor>supervisor5</supervisor>" +
+                "<supervisor>supervisor1</supervisor>" +
+                "<supervisor>supervisor2</supervisor>" +
+                "<supervisor>supervisor3</supervisor>" +
+                "</warehousesupervisor>" +
+                "<tradingsupervisor xmlns=\"ydt.trading-supervisor\">" +
+                "<supervisor>Tradingsupervisor</supervisor>" +
+                "</tradingsupervisor>" +
+                "<employeeid xmlns=\"ydt.employee-id\">" +
+                "<employeeid>Employ1</employeeid>" +
+                "<employeeid>Employ5</employeeid>" +
+                "<employeeid>Employ4</employeeid>" +
+                "<employeeid>Employ3</employeeid>" +
+                "<employeeid>Employ2</employeeid>" +
+                "</employeeid>" +
+                "</config>";
+    }
+
+    /**
+     * Unit test case in which verifying xml string for module object with leaf
+     * for composite encode.
+     */
+    @Test
+    public void proceessCodecHandlerForCompositeEnc() {
+        testYangSchemaNodeProvider.processSchemaRegistry(null);
+        DefaultYangSchemaRegistry schemaRegistry = testYangSchemaNodeProvider
+                .getDefaultYangSchemaRegistry();
+
+        // Creating the object
+        Object object = CustomssupervisorOpParam.builder()
+                .supervisor("Customssupervisor").build();
+
+        // Get the xml string and compare
+        Map<String, String> tagAttr = new HashMap<String, String>();
+        tagAttr.put("type", "subtree");
+
+        YangCodecRegistry.initializeDefaultCodec();
+        DefaultYangCodecHandler defaultYangCodecHandler =
+                new DefaultYangCodecHandler(schemaRegistry);
+        YangCompositeEncoding xml =
+                defaultYangCodecHandler
+                        .encodeCompositeOperation("filter", "ydt.filter-type",
+                                                  object, XML, null);
+
+        assertNull("customs-super: resource id not null",
+                   xml.getResourceIdentifier());
+        assertEquals(AM_XML + "customs-super: comp res info",
+                     customsCompositeXml(), xml.getResourceInformation());
+
+        // Creating the object
+        object = MerchandisersupervisorOpParam.builder()
+                .supervisor("Merchandisersupervisor").build();
+
+        // Get the xml string and compare
+        xml = defaultYangCodecHandler.encodeCompositeOperation("config",
+                                                               "ydt.root",
+                                                               object, XML,
+                                                               null);
+        assertNull("merch-super: res id not null", xml.getResourceIdentifier());
+        assertEquals(AM_XML + "merch-super: comp res info",
+                     merchandXml(), xml.getResourceInformation());
+
+        // Creating the object
+        object = TradingsupervisorOpParam.builder()
+                .supervisor("Tradingsupervisor").build();
+
+        // Get the xml string and compare
+        xml = defaultYangCodecHandler
+                .encodeCompositeOperation("config", "ydt.root", object, XML,
+                                          null);
+        assertNull("trading-super: res id not null",
+                   xml.getResourceIdentifier());
+        assertEquals(AM_XML + "trading-super: comp res info",
+                     tradingXml(), xml.getResourceInformation());
+    }
 
     /**
      * Unit test case in which verifying xml string for module object with leaf.
@@ -94,11 +413,9 @@ public class DefaultYangCodecHandlerTest {
     @Test
     public void proceessCodecHandlerForLeaf() {
         testYangSchemaNodeProvider.processSchemaRegistry(null);
-        DefaultYangSchemaRegistry schemaRegistry =
-                testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
+        DefaultYangSchemaRegistry schemaRegistry = testYangSchemaNodeProvider
+                .getDefaultYangSchemaRegistry();
         List<Object> yangModuleList = new ArrayList<>();
-        boolean result;
-
 
         // Creating the object
         Object object = CustomssupervisorOpParam.builder()
@@ -109,24 +426,16 @@ public class DefaultYangCodecHandlerTest {
         Map<String, String> tagAttr = new HashMap<String, String>();
         tagAttr.put("type", "subtree");
 
-        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
-        defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING,
-                          yangDataTreeCodec);
+        YangCodecRegistry.initializeDefaultCodec();
         DefaultYangCodecHandler defaultYangCodecHandler =
-                new DefaultYangCodecHandler(schemaRegistry, defaultCodecs);
-        String xmlOutPut = defaultYangCodecHandler
-                .encodeOperation("filter", "ydt.filter-type", tagAttr,
-                                 yangModuleList,
-                                 YangProtocolEncodingFormat.XML_ENCODING,
-                                 null);
+                new DefaultYangCodecHandler(schemaRegistry);
+        String xml =
+                defaultYangCodecHandler.encodeOperation("filter",
+                                                        "ydt.filter-type",
+                                                        tagAttr, yangModuleList,
+                                                        XML, null);
 
-        result = xmlOutPut
-                .equals("<filter xmlns=\"ydt.filter-type\" type=\"subtree\">" +
-                                "<customssupervisor xmlns=\"ydt.customs-supervisor\">" +
-                                "<supervisor>Customssupervisor</supervisor>" +
-                                "</customssupervisor>" +
-                                "</filter>");
-        assertTrue(result);
+        assertEquals(AM_XML + "customs-super: leaf info", customsXml(), xml);
 
         // Creating the object
         object = MerchandisersupervisorOpParam.builder()
@@ -135,16 +444,11 @@ public class DefaultYangCodecHandlerTest {
         yangModuleList.add(object);
 
         // Get the xml string and compare
-        xmlOutPut = defaultYangCodecHandler
-                .encodeOperation("config", "ydt.root", null, yangModuleList,
-                                 YangProtocolEncodingFormat.XML_ENCODING, null);
-        result = xmlOutPut.equals("<config xmlns=\"ydt.root\">" +
-                                          "<merchandisersupervisor xmlns=\"ydt.Merchandiser-supervisor\">" +
-                                          "<supervisor>Merchandisersupervisor</supervisor>" +
-                                          "</merchandisersupervisor>" +
-                                          "</config>");
-
-        assertTrue(result);
+        xml = defaultYangCodecHandler.encodeOperation("config", "ydt.root",
+                                                      null, yangModuleList,
+                                                      XML, null);
+        assertEquals(AM_XML + "merchandiser-super: leaf info", merchandXml(),
+                     xml);
 
         // Creating the object
         object = TradingsupervisorOpParam.builder()
@@ -153,16 +457,41 @@ public class DefaultYangCodecHandlerTest {
         yangModuleList.add(object);
 
         // Get the xml string and compare
-        xmlOutPut = defaultYangCodecHandler
-                .encodeOperation("config", "ydt.root", null, yangModuleList,
-                                 YangProtocolEncodingFormat.XML_ENCODING, null);
-        result = xmlOutPut.equals("<config xmlns=\"ydt.root\">" +
-                                          "<tradingsupervisor xmlns=\"ydt.trading-supervisor\">" +
-                                          "<supervisor>Tradingsupervisor</supervisor>" +
-                                          "</tradingsupervisor>" +
-                                          "</config>");
-        assertTrue(result);
-        testYangSchemaNodeProvider.unregisterAllService();
+        xml = defaultYangCodecHandler.encodeOperation("config", "ydt.root",
+                                                      null, yangModuleList,
+                                                      XML, null);
+        assertEquals(AM_XML + "trading-super: leaf info", tradingXml(), xml);
+    }
+
+    /**
+     * Unit test case in which verifying xml string for module object with
+     * empty leaf.
+     */
+    @Test
+    public void proceessCodecHandlerForEmptyLeaf() {
+        testYangSchemaNodeProvider.processSchemaRegistry(null);
+        DefaultYangSchemaRegistry schemaRegistry = testYangSchemaNodeProvider
+                .getDefaultYangSchemaRegistry();
+        List<Object> yangModuleList = new ArrayList<>();
+
+        // Creating the object
+        Object object = CustomssupervisorOpParam.builder().supervisor("")
+                .build();
+        yangModuleList.add(object);
+
+        // Get the xml string and compare
+        Map<String, String> tagAttr = new HashMap<String, String>();
+        tagAttr.put("type", "subtree");
+
+        YangCodecRegistry.initializeDefaultCodec();
+        DefaultYangCodecHandler codecHandler =
+                new DefaultYangCodecHandler(schemaRegistry);
+        String xml = codecHandler.encodeOperation("filter", "ydt.filter-type",
+                                                  tagAttr, yangModuleList,
+                                                  XML, null);
+
+        assertEquals(AM_XML + "customs-super: leaf is not empty",
+                     customsEmptyXml(), xml);
     }
 
     /**
@@ -174,7 +503,6 @@ public class DefaultYangCodecHandlerTest {
         DefaultYangSchemaRegistry schemaRegistry =
                 testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
         List<Object> yangModuleList = new ArrayList<>();
-        boolean result;
 
         // Creating the object
         Supervisor supervisor1 = new DefaultSupervisor.SupervisorBuilder()
@@ -188,12 +516,12 @@ public class DefaultYangCodecHandlerTest {
         Supervisor supervisor5 = new DefaultSupervisor.SupervisorBuilder()
                 .name("abc5").departmentId("xyz5").build();
 
-        Object object =
-                MaterialsupervisorOpParam.builder().addToSupervisor(supervisor1)
-                        .addToSupervisor(supervisor2)
-                        .addToSupervisor(supervisor3)
-                        .addToSupervisor(supervisor4)
-                        .addToSupervisor(supervisor5).build();
+        Object object = MaterialsupervisorOpParam.builder()
+                .addToSupervisor(supervisor1)
+                .addToSupervisor(supervisor2)
+                .addToSupervisor(supervisor3)
+                .addToSupervisor(supervisor4)
+                .addToSupervisor(supervisor5).build();
 
         yangModuleList.add(object);
 
@@ -201,39 +529,18 @@ public class DefaultYangCodecHandlerTest {
         Map<String, String> tagAttr = new HashMap<String, String>();
         tagAttr.put("type", "subtree");
 
-        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
-        defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING,
-                          yangDataTreeCodec);
-        DefaultYangCodecHandler defaultYangCodecHandler =
-                new DefaultYangCodecHandler(schemaRegistry, defaultCodecs);
-        String xmlOutput = defaultYangCodecHandler
-                .encodeOperation("filter", "ydt.filter-type", tagAttr,
-                                 yangModuleList,
-                                 YangProtocolEncodingFormat.XML_ENCODING,
-                                 null);
-        result = xmlOutput
-                .equals("<filter xmlns=\"ydt.filter-type\" type=\"subtree\">" +
-                                "<materialsupervisor xmlns=\"ydt.material-supervisor\">" +
-                                "<supervisor>" +
-                                "<name>abc1</name><departmentId>xyz1</departmentId>" +
-                                "</supervisor>" +
-                                "<supervisor><name>abc2</name><departmentId>xyz2</departmentId>" +
-                                "</supervisor>" +
-                                "<supervisor><name>abc3</name><departmentId>xyz3</departmentId>" +
-                                "</supervisor>" +
-                                "<supervisor><name>abc4</name><departmentId>xyz4</departmentId>" +
-                                "</supervisor>" +
-                                "<supervisor><name>abc5</name><departmentId>xyz5</departmentId>" +
-                                "</supervisor>" +
-                                "</materialsupervisor>" +
-                                "</filter>");
-        assertTrue(result);
-        testYangSchemaNodeProvider.unregisterAllService();
+        YangCodecRegistry.initializeDefaultCodec();
+        DefaultYangCodecHandler codecHandler =
+                new DefaultYangCodecHandler(schemaRegistry);
+        String xml = codecHandler.encodeOperation("filter", "ydt.filter-type",
+                                                  tagAttr, yangModuleList,
+                                                  XML, null);
+        assertEquals(AM_XML + "material-super: list info", materialXml(), xml);
     }
 
     /**
-     * Unit test case in which verifying xml string for module object with empty
-     * container.
+     * Unit test case in which verifying xml string for module object with
+     * empty container.
      */
     @Test
     public void proceessCodecHandlerForEmptyContainer() {
@@ -241,14 +548,12 @@ public class DefaultYangCodecHandlerTest {
         DefaultYangSchemaRegistry schemaRegistry =
                 testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
         List<Object> yangModuleList = new ArrayList<>();
-        boolean result;
 
         // Creating the object
-        EmptyContainer emptyContainer =
-                EmptyContainerOpParam.builder().emptyContainer();
-        Object object =
-                EmptyContainerOpParam.builder().emptyContainer(emptyContainer)
-                        .build();
+        EmptyContainer emptyContainer = EmptyContainerOpParam.builder()
+                .emptyContainer();
+        Object object = EmptyContainerOpParam.builder()
+                .emptyContainer(emptyContainer).build();
 
         yangModuleList.add(object);
 
@@ -256,22 +561,14 @@ public class DefaultYangCodecHandlerTest {
         Map<String, String> tagAttr = new HashMap<String, String>();
         tagAttr.put("type", "subtree");
 
-        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
-        defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING,
-                          yangDataTreeCodec);
-        DefaultYangCodecHandler defaultYangCodecHandler =
-                new DefaultYangCodecHandler(schemaRegistry, defaultCodecs);
-        String xmlOutput = defaultYangCodecHandler
-                .encodeOperation("filter", "ydt.filter-type", tagAttr,
-                                 yangModuleList,
-                                 YangProtocolEncodingFormat.XML_ENCODING,
-                                 null);
-        result = xmlOutput
-                .equals("<filter xmlns=\"ydt.filter-type\" type=\"subtree\">" +
-                                "<EmptyContainer xmlns=\"ych.Empty.Container\"/>" +
-                                "</filter>");
-        assertTrue(result);
-        testYangSchemaNodeProvider.unregisterAllService();
+        YangCodecRegistry.initializeDefaultCodec();
+        DefaultYangCodecHandler codecHandler =
+                new DefaultYangCodecHandler(schemaRegistry);
+        String xml = codecHandler.encodeOperation("filter", "ydt.filter-type",
+                                                  tagAttr, yangModuleList,
+                                                  XML, null);
+        assertEquals(AM_XML + "empty-contain: container is not empty",
+                     containerEmptyXml(), xml);
     }
 
     /**
@@ -284,22 +581,19 @@ public class DefaultYangCodecHandlerTest {
         DefaultYangSchemaRegistry schemaRegistry =
                 testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
         List<Object> yangModuleList = new ArrayList<>();
-        boolean result;
 
         // Creating the object
         PathId pathId = new PathId(123);
-        Origin origin = new DefaultOrigin.OriginBuilder().value(pathId).build();
-        MultiExitDisc multiExitDisc =
-                new DefaultMultiExitDisc.MultiExitDiscBuilder().med(456)
-                        .build();
-        LocalPref localPref =
-                new DefaultLocalPref.LocalPrefBuilder().pref(23).build();
+        Origin origin = new DefaultOrigin.OriginBuilder().value(pathId)
+                .build();
+        MultiExitDisc multiExitDisc = new DefaultMultiExitDisc
+                .MultiExitDiscBuilder().med(456).build();
+        LocalPref localPref = new DefaultLocalPref.LocalPrefBuilder()
+                .pref(23).build();
         Metric metric = new Metric(456);
-        AigpTlv aigpTlv =
-                new DefaultAigpTlv.AigpTlvBuilder().metric(metric).build();
+        AigpTlv aigpTlv = new DefaultAigpTlv.AigpTlvBuilder().metric(metric)
+                .build();
         Aigp aigp = new DefaultAigp.AigpBuilder().aigpTlv(aigpTlv).build();
-
-        byte[] bytes = new byte[]{1, 2, 3};
 
         UnrecognizedAttributes unrecognizedAttributes1 =
                 new DefaultUnrecognizedAttributes
@@ -311,19 +605,21 @@ public class DefaultYangCodecHandlerTest {
                 new DefaultUnrecognizedAttributes
                         .UnrecognizedAttributesBuilder()
                         .partial(true).transitive(true).type((short) 2)
-                        .value(bytes).build();
+                        .value("ABC".getBytes())
+                        .build();
 
         UnrecognizedAttributes unrecognizedAttributes3 =
                 new DefaultUnrecognizedAttributes
                         .UnrecognizedAttributesBuilder()
                         .partial(true).transitive(false).type((short) 3)
-                        .value(bytes).build();
+                        .value("ABC".getBytes())
+                        .build();
 
         UnrecognizedAttributes unrecognizedAttributes4 =
                 new DefaultUnrecognizedAttributes
                         .UnrecognizedAttributesBuilder()
                         .partial(false).transitive(true).type((short) 4)
-                        .value(bytes).build();
+                        .value("ABC".getBytes()).build();
 
         AsNum asNum1 = new AsNum(11);
         As4BytesCapability as4BytesCapability1 =
@@ -366,9 +662,9 @@ public class DefaultYangCodecHandlerTest {
                         .build();
 
         AsNum asNum4 = new AsNum(11);
-        As4BytesCapability as4BytesCapability4 =
-                new DefaultAs4BytesCapability.As4BytesCapabilityBuilder()
-                        .asNumber(asNum4).build();
+        As4BytesCapability as4BytesCapability4 = new DefaultAs4BytesCapability
+                .As4BytesCapabilityBuilder()
+                .asNumber(asNum4).build();
         Cparameters cparameters4 = new DefaultCparameters.CparametersBuilder()
                 .as4BytesCapability(as4BytesCapability4)
                 .build();
@@ -380,9 +676,10 @@ public class DefaultYangCodecHandlerTest {
         As4BytesCapability as4BytesCapability5 =
                 new DefaultAs4BytesCapability.As4BytesCapabilityBuilder()
                         .asNumber(asNum5).build();
-        Cparameters cparameters5 = new DefaultCparameters.CparametersBuilder()
-                .as4BytesCapability(as4BytesCapability5)
-                .build();
+        Cparameters cparameters5 =
+                new DefaultCparameters.CparametersBuilder()
+                        .as4BytesCapability(as4BytesCapability5)
+                        .build();
         OptionalCapabilities optionalCapabilities5 =
                 new DefaultOptionalCapabilities.OptionalCapabilitiesBuilder()
                         .cParameters(cparameters5).build();
@@ -391,9 +688,10 @@ public class DefaultYangCodecHandlerTest {
         As4BytesCapability as4BytesCapability6 =
                 new DefaultAs4BytesCapability.As4BytesCapabilityBuilder()
                         .asNumber(asNum6).build();
-        Cparameters cparameters6 = new DefaultCparameters.CparametersBuilder()
-                .as4BytesCapability(as4BytesCapability6)
-                .build();
+        Cparameters cparameters6 =
+                new DefaultCparameters.CparametersBuilder()
+                        .as4BytesCapability(as4BytesCapability6)
+                        .build();
         OptionalCapabilities optionalCapabilities6 =
                 new DefaultOptionalCapabilities.OptionalCapabilitiesBuilder()
                         .cParameters(cparameters6).build();
@@ -416,8 +714,8 @@ public class DefaultYangCodecHandlerTest {
                 .addToUnrecognizedAttributes(unrecognizedAttributes4)
                 .addToBgpParameters(bgpParameters1)
                 .addToBgpParameters(bgpParameters2).build();
-        Object object =
-                CombinedOpParam.builder().attributes(attributes).build();
+        Object object = CombinedOpParam.builder().attributes(attributes)
+                .build();
 
         yangModuleList.add(object);
 
@@ -425,105 +723,13 @@ public class DefaultYangCodecHandlerTest {
         Map<String, String> tagAttr = new HashMap<String, String>();
         tagAttr.put("type", "subtree");
 
-        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
-        defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING,
-                          yangDataTreeCodec);
-        DefaultYangCodecHandler defaultYangCodecHandler =
-                new DefaultYangCodecHandler(schemaRegistry, defaultCodecs);
-        String xmlOutput = defaultYangCodecHandler
-                .encodeOperation("filter", "ydt.filter-type", tagAttr,
-                                 yangModuleList,
-                                 YangProtocolEncodingFormat.XML_ENCODING,
-                                 null);
-        result = xmlOutput
-                .equals(getString());
-        //assertTrue(result);
-        testYangSchemaNodeProvider.unregisterAllService();
-    }
-
-    private String getString() {
-        return "<filter xmlns=\"ydt.filter-type\" type=\"subtree\">" +
-                "<Combined xmlns=\"urn:opendaylight:params:xml:ns:ych:combined\">" +
-                "<attributes>" +
-                "<origin><value>123</value></origin>" +
-                "<multi-exit-disc><med>456</med></multi-exit-disc>" +
-                "<local-pref><pref>23</pref></local-pref>" +
-                "<aigp>" +
-                "<aigp-tlv><metric>456</metric></aigp-tlv>" +
-                "</aigp>" +
-                "<unrecognized-attributes>" +
-                "<partial>false</partial>" +
-                "<transitive>false</transitive>" +
-                "<type>1</type>" +
-                "<value>[B@2a17b7b6</value>" +
-                "</unrecognized-attributes>" +
-                "<unrecognized-attributes>" +
-                "<partial>true</partial>" +
-                "<transitive>true</transitive>" +
-                "<type>2</type>" +
-                "<value>[B@4f063c0a</value>" +
-                "</unrecognized-attributes>" +
-                "<unrecognized-attributes>" +
-                "<partial>true</partial>" +
-                "<transitive>false</transitive>" +
-                "<type>3</type>" +
-                "<value>[B@4f063c0a</value>" +
-                "</unrecognized-attributes>" +
-                "<unrecognized-attributes>" +
-                "<partial>false</partial>" +
-                "<transitive>true</transitive>" +
-                "<type>4</type>" +
-                "<value>[B@4f063c0a</value>" +
-                "</unrecognized-attributes>" +
-                "<bgp-parameters>" +
-                "<optional-capabilities>" +
-                "<c-parameters>" +
-                "<as4-bytes-capability>" +
-                "<as-number>11</as-number>" +
-                "</as4-bytes-capability>" +
-                "</c-parameters>" +
-                "</optional-capabilities>" +
-                "<optional-capabilities>" +
-                "<c-parameters>" +
-                "<as4-bytes-capability>" +
-                "<as-number>22</as-number>" +
-                "</as4-bytes-capability>" +
-                "</c-parameters>" +
-                "</optional-capabilities>" +
-                "<optional-capabilities>" +
-                "<c-parameters>" +
-                "<as4-bytes-capability>" +
-                "<as-number>33</as-number>" +
-                "</as4-bytes-capability>" +
-                "</c-parameters>" +
-                "</optional-capabilities>" +
-                "</bgp-parameters>" +
-                "<bgp-parameters>" +
-                "<optional-capabilities>" +
-                "<c-parameters>" +
-                "<as4-bytes-capability>" +
-                "<as-number>11</as-number>" +
-                "</as4-bytes-capability>" +
-                "</c-parameters>" +
-                "</optional-capabilities>" +
-                "<optional-capabilities>" +
-                "<c-parameters>" +
-                "<as4-bytes-capability>" +
-                "<as-number>22</as-number>" +
-                "</as4-bytes-capability>" +
-                "</c-parameters>" +
-                "</optional-capabilities>" +
-                "<optional-capabilities>" +
-                "<c-parameters>" +
-                "<as4-bytes-capability>" +
-                "<as-number>33</as-number>" +
-                "</as4-bytes-capability>" +
-                "</c-parameters>" +
-                "</optional-capabilities>" +
-                "</bgp-parameters>" +
-                "</attributes>" +
-                "</Combined>" +
-                "</filter>";
+        YangCodecRegistry.initializeDefaultCodec();
+        DefaultYangCodecHandler codecHandler =
+                new DefaultYangCodecHandler(schemaRegistry);
+        String xml = codecHandler.encodeOperation("filter", "ydt.filter-type",
+                                                  tagAttr, yangModuleList,
+                                                  XML, null);
+        assertEquals(AM_XML + "combined: list info", listTestXml(), xml);
     }
 
     /**
@@ -536,16 +742,17 @@ public class DefaultYangCodecHandlerTest {
         DefaultYangSchemaRegistry schemaRegistry =
                 testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
         List<Object> yangModuleList = new ArrayList<>();
-        boolean result;
 
         // Creating the object
         YchPurchasingSupervisor supervisor =
-                new DefaultYchPurchasingSupervisor.YchPurchasingSupervisorBuilder()
+                new DefaultYchPurchasingSupervisor
+                        .YchPurchasingSupervisorBuilder()
                         .ychPurchasingSpecialist("purchasingSpecialist")
                         .ychPurchasingSupport("support")
                         .onosYangNodeOperationType(
-                                DefaultYchPurchasingSupervisor.OnosYangNodeOperationType.CREATE)
-                        .build();
+                                DefaultYchPurchasingSupervisor
+                                        .OnosYangNodeOperationType
+                                        .CREATE).build();
         Object object = YchPurchasingsupervisorOpParam.builder()
                 .ychPurchasingSupervisor(supervisor).build();
         yangModuleList.add(object);
@@ -554,33 +761,20 @@ public class DefaultYangCodecHandlerTest {
         Map<String, String> tagAttr = new HashMap<String, String>();
         tagAttr.put("type", "subtree");
 
-        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
-        defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING,
-                          yangDataTreeCodec);
-        DefaultYangCodecHandler defaultYangCodecHandler =
-                new DefaultYangCodecHandler(schemaRegistry, defaultCodecs);
-        String xmlOutPut = defaultYangCodecHandler
-                .encodeOperation("filter", "ydt.filter-type", tagAttr,
-                                 yangModuleList,
-                                 YangProtocolEncodingFormat.XML_ENCODING,
-                                 null);
-        result = xmlOutPut
-                .equals("<filter xmlns=\"ydt.filter-type\" type=\"subtree\">" +
-                                "<ych-purchasingsupervisor xmlns=\"ych.purchasing-supervisor\">" +
-                                "<ych-purchasing-supervisor operation=\"create\">" +
-                                "<ych-purchasing-specialist>purchasingSpecialist" +
-                                "</ych-purchasing-specialist>" +
-                                "<ych-purchasing-support>support</ych-purchasing-support>" +
-                                "</ych-purchasing-supervisor>" +
-                                "</ych-purchasingsupervisor>" +
-                                "</filter>");
-        assertTrue(result);
-        testYangSchemaNodeProvider.unregisterAllService();
+        YangCodecRegistry.initializeDefaultCodec();
+        DefaultYangCodecHandler codecHandler =
+                new DefaultYangCodecHandler(schemaRegistry);
+        String xml = codecHandler.encodeOperation("filter", "ydt.filter-type",
+                                                  tagAttr, yangModuleList,
+                                                  XML, null);
+        assertEquals(AM_XML + "puchas-super: container info", purchaseXml(),
+                     xml);
     }
 
+
     /**
-     * Unit test case in which verifying xml string for module object with leaf
-     * list.
+     * Unit test case in which verifying xml string for module object with
+     * leaf list.
      */
     @Test
     public void proceessCodecHandlerForLeafList() {
@@ -588,76 +782,45 @@ public class DefaultYangCodecHandlerTest {
         DefaultYangSchemaRegistry schemaRegistry =
                 testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
         List<Object> yangModuleList = new ArrayList<>();
-        boolean result;
 
         // Creating the object
-        List<String> employeeid = EmployeeidOpParam.builder().employeeid();
-        if (employeeid == null) {
-            employeeid = new ArrayList<>();
-        }
-        employeeid.add("Employ1");
-        employeeid.add("Employ2");
-        employeeid.add("Employ3");
-        employeeid.add("Employ4");
-        employeeid.add("Employ5");
+        EmployeeidOpParam.EmployeeidBuilder employeeidBuilder =
+                EmployeeidOpParam.builder();
+        employeeidBuilder.addToEmployeeid("Employ1");
+        employeeidBuilder.addToEmployeeid("Employ2");
+        employeeidBuilder.addToEmployeeid("Employ3");
+        employeeidBuilder.addToEmployeeid("Employ4");
+        employeeidBuilder.addToEmployeeid("Employ5");
 
-        Object object =
-                EmployeeidOpParam.builder().employeeid(employeeid).build();
+        Object object = employeeidBuilder.build();
         yangModuleList.add(object);
 
         // Get the xml string and compare
-        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
-        defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING,
-                          yangDataTreeCodec);
-        DefaultYangCodecHandler defaultYangCodecHandler =
-                new DefaultYangCodecHandler(schemaRegistry, defaultCodecs);
-        String xmlOutPut = defaultYangCodecHandler
-                .encodeOperation("config", "ydt.root", null, yangModuleList,
-                                 YangProtocolEncodingFormat.XML_ENCODING, null);
+        YangCodecRegistry.initializeDefaultCodec();
+        DefaultYangCodecHandler codecHandler =
+                new DefaultYangCodecHandler(schemaRegistry);
+        String xml = codecHandler.encodeOperation("config", "ydt.root", null,
+                                                  yangModuleList, XML, null);
+        assertEquals(AM_XML + "employ-id: leaf-list info", emplyIdXml(), xml);
+        WarehousesupervisorOpParam.WarehousesupervisorBuilder warehsebldr =
+                WarehousesupervisorOpParam.builder();
+        warehsebldr.addToSupervisor("supervisor1");
+        warehsebldr.addToSupervisor("supervisor2");
+        warehsebldr.addToSupervisor("supervisor3");
+        warehsebldr.addToSupervisor("supervisor4");
+        warehsebldr.addToSupervisor("supervisor5");
 
-        result = xmlOutPut.equals("<config xmlns=\"ydt.root\">" +
-                                          "<employeeid xmlns=\"ydt.employee-id\">" +
-                                          "<employeeid>Employ1</employeeid>" +
-                                          "<employeeid>Employ5</employeeid>" +
-                                          "<employeeid>Employ4</employeeid>" +
-                                          "<employeeid>Employ3</employeeid>" +
-                                          "<employeeid>Employ2</employeeid>" +
-                                          "</employeeid>" +
-                                          "</config>");
-        assertTrue(result);
-
-        List<String> supervisor =
-                WarehousesupervisorOpParam.builder().supervisor();
-        if (supervisor == null) {
-            supervisor = new ArrayList<>();
-        }
-        supervisor.add("supervisor1");
-        supervisor.add("supervisor2");
-        supervisor.add("supervisor3");
-        supervisor.add("supervisor4");
-        supervisor.add("supervisor5");
-
-        object = WarehousesupervisorOpParam.builder().supervisor(supervisor)
-                .build();
+        object = warehsebldr.build();
         yangModuleList.clear();
         yangModuleList.add(object);
 
-        // Get the xml string and compare
-        xmlOutPut = defaultYangCodecHandler
-                .encodeOperation("config", "ydt.root", null, yangModuleList,
-                                 YangProtocolEncodingFormat.XML_ENCODING, null);
 
-        result = xmlOutPut.equals("<config xmlns=\"ydt.root\">" +
-                                          "<warehousesupervisor xmlns=\"ydt.warehouse-supervisor\">" +
-                                          "<supervisor>supervisor4</supervisor>" +
-                                          "<supervisor>supervisor5</supervisor>" +
-                                          "<supervisor>supervisor1</supervisor>" +
-                                          "<supervisor>supervisor2</supervisor>" +
-                                          "<supervisor>supervisor3</supervisor>" +
-                                          "</warehousesupervisor>" +
-                                          "</config>");
-        assertTrue(result);
-        testYangSchemaNodeProvider.unregisterAllService();
+        // Get the xml string and compare
+        xml = codecHandler.encodeOperation("config", "ydt.root", null,
+                                           yangModuleList, XML, null);
+
+        assertEquals(AM_XML + "warehouse-super: leaf-list info", wareHseXml(),
+                     xml);
     }
 
     /**
@@ -670,11 +833,9 @@ public class DefaultYangCodecHandlerTest {
                 testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
 
         List<Object> yangModuleList = new ArrayList<>();
-        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
-        defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING,
-                          yangDataTreeCodec);
-        DefaultYangCodecHandler defaultYangCodecHandler =
-                new DefaultYangCodecHandler(schemaRegistry, defaultCodecs);
+        YangCodecRegistry.initializeDefaultCodec();
+        DefaultYangCodecHandler codecHandler =
+                new DefaultYangCodecHandler(schemaRegistry);
 
         // Creating the object for customssupervisor module
         Object object = CustomssupervisorOpParam.builder()
@@ -698,18 +859,19 @@ public class DefaultYangCodecHandlerTest {
         Supervisor supervisor5 = new DefaultSupervisor.SupervisorBuilder()
                 .name("abc5").departmentId("xyz5").build();
 
-        object =
-                MaterialsupervisorOpParam.builder().addToSupervisor(supervisor1)
-                        .addToSupervisor(supervisor2)
-                        .addToSupervisor(supervisor3)
-                        .addToSupervisor(supervisor4)
-                        .addToSupervisor(supervisor5).build();
+        object = MaterialsupervisorOpParam.builder()
+                .addToSupervisor(supervisor1)
+                .addToSupervisor(supervisor2)
+                .addToSupervisor(supervisor3)
+                .addToSupervisor(supervisor4)
+                .addToSupervisor(supervisor5).build();
 
         yangModuleList.add(object);
 
         // Creating the object for YchPurchasingsupervisor module
         YchPurchasingSupervisor purSupervisor =
-                new DefaultYchPurchasingSupervisor.YchPurchasingSupervisorBuilder()
+                new DefaultYchPurchasingSupervisor
+                        .YchPurchasingSupervisorBuilder()
                         .ychPurchasingSpecialist("purchasingSpecialist")
                         .ychPurchasingSupport("support").build();
         object = YchPurchasingsupervisorOpParam.builder()
@@ -717,19 +879,15 @@ public class DefaultYangCodecHandlerTest {
         yangModuleList.add(object);
 
         // Creating the object for warehousesupervisor module
-        List<String> supervisor =
-                WarehousesupervisorOpParam.builder().supervisor();
-        if (supervisor == null) {
-            supervisor = new ArrayList<>();
-        }
-        supervisor.add("supervisor1");
-        supervisor.add("supervisor2");
-        supervisor.add("supervisor3");
-        supervisor.add("supervisor4");
-        supervisor.add("supervisor5");
+        WarehousesupervisorOpParam.WarehousesupervisorBuilder warehsebldr =
+                WarehousesupervisorOpParam.builder();
+        warehsebldr.addToSupervisor("supervisor1");
+        warehsebldr.addToSupervisor("supervisor2");
+        warehsebldr.addToSupervisor("supervisor3");
+        warehsebldr.addToSupervisor("supervisor4");
+        warehsebldr.addToSupervisor("supervisor5");
 
-        object = WarehousesupervisorOpParam.builder().supervisor(supervisor)
-                .build();
+        object = warehsebldr.build();
         yangModuleList.add(object);
 
         // Creating the object for tradingsupervisor module
@@ -752,131 +910,9 @@ public class DefaultYangCodecHandlerTest {
         yangModuleList.add(object);
 
         // Get the xml string and compare
-        String xmlOutPut = defaultYangCodecHandler
-                .encodeOperation("config", "ydt.root", null, yangModuleList,
-                                 YangProtocolEncodingFormat.XML_ENCODING, null);
-        boolean result;
-        result = xmlOutPut.equals("<config xmlns=\"ydt.root\">" +
-                                          "<customssupervisor xmlns=\"ydt.customs-supervisor\">" +
-                                          "<supervisor>Customssupervisor</supervisor>" +
-                                          "</customssupervisor>" +
-                                          "<merchandisersupervisor xmlns=\"ydt.Merchandiser-supervisor\">" +
-                                          "<supervisor>Merchandisersupervisor</supervisor>" +
-                                          "</merchandisersupervisor>" +
-                                          "<materialsupervisor xmlns=\"ydt.material-supervisor\">" +
-                                          "<supervisor>" +
-                                          "<name>abc1</name>" +
-                                          "<departmentId>xyz1</departmentId>" +
-                                          "</supervisor>" +
-                                          "<supervisor>" +
-                                          "<name>abc2</name>" +
-                                          "<departmentId>xyz2</departmentId>" +
-                                          "</supervisor>" +
-                                          "<supervisor>" +
-                                          "<name>abc3</name>" +
-                                          "<departmentId>xyz3</departmentId>" +
-                                          "</supervisor>" +
-                                          "<supervisor>" +
-                                          "<name>abc4</name>" +
-                                          "<departmentId>xyz4</departmentId>" +
-                                          "</supervisor>" +
-                                          "<supervisor>" +
-                                          "<name>abc5</name>" +
-                                          "<departmentId>xyz5</departmentId>" +
-                                          "</supervisor>" +
-                                          "</materialsupervisor>" +
-                                          "<ych-purchasingsupervisor xmlns=\"ych.purchasing-supervisor\">" +
-                                          "<ych-purchasing-supervisor>" +
-                                          "<ych-purchasing-specialist>purchasingSpecialist" +
-                                          "</ych-purchasing-specialist>" +
-                                          "<ych-purchasing-support>support</ych-purchasing-support>" +
-                                          "</ych-purchasing-supervisor>" +
-                                          "</ych-purchasingsupervisor>" +
-                                          "<warehousesupervisor xmlns=\"ydt.warehouse-supervisor\">" +
-                                          "<supervisor>supervisor4</supervisor>" +
-                                          "<supervisor>supervisor5</supervisor>" +
-                                          "<supervisor>supervisor1</supervisor>" +
-                                          "<supervisor>supervisor2</supervisor>" +
-                                          "<supervisor>supervisor3</supervisor>" +
-                                          "</warehousesupervisor>" +
-                                          "<tradingsupervisor xmlns=\"ydt.trading-supervisor\">" +
-                                          "<supervisor>Tradingsupervisor</supervisor>" +
-                                          "</tradingsupervisor>" +
-                                          "<employeeid xmlns=\"ydt.employee-id\">" +
-                                          "<employeeid>Employ1</employeeid>" +
-                                          "<employeeid>Employ5</employeeid>" +
-                                          "<employeeid>Employ4</employeeid>" +
-                                          "<employeeid>Employ3</employeeid>" +
-                                          "<employeeid>Employ2</employeeid>" +
-                                          "</employeeid>" +
-                                          "</config>");
-        assertTrue(result);
-        testYangSchemaNodeProvider.unregisterAllService();
-    }
-
-    /**
-     * Unit test case in which verifying object for xml string with config as
-     * root name and multiple module.
-     */
-    @Test
-    public void proceessCodecDecodeFunction() {
-
-        boolean result;
-        List<Object> objectList = null;
-        String path =
-                "src/test/resources/ychTestResourceFiles/configrootname.xml";
-        StringBuilder sb = new StringBuilder();
-        String sCurrentLine;
-        testYangSchemaNodeProvider.processSchemaRegistry(null);
-        DefaultYangSchemaRegistry schemaRegistry =
-                testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
-
-        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
-        defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING,
-                          yangDataTreeCodec);
-        DefaultYangCodecHandler defaultYangCodecHandler =
-                new DefaultYangCodecHandler(schemaRegistry, defaultCodecs);
-
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-
-            while ((sCurrentLine = br.readLine()) != null) {
-                sb.append(sCurrentLine);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Verify the received object list
-        objectList = defaultYangCodecHandler
-                .decode(sb.toString(), YangProtocolEncodingFormat.XML_ENCODING,
-                        null);
-        Iterator<Object> iterator = objectList.iterator();
-        while (iterator.hasNext()) {
-            Object object = iterator.next();
-            if (object.getClass().getSimpleName()
-                    .equals("LogisticsManagerOpParam")) {
-                LogisticsManagerOpParam logisticsManagerOpParam =
-                        (LogisticsManagerOpParam) object;
-                assertTrue(logisticsManagerOpParam.customsSupervisor()
-                                   .equals("abc"));
-                assertTrue(logisticsManagerOpParam.purchasingSupervisor()
-                                   .purchasingSpecialist().equals("bcd"));
-                assertTrue(
-                        logisticsManagerOpParam.purchasingSupervisor().support()
-                                .equals("cde"));
-            } else if (object.getClass().getSimpleName()
-                    .equals("MerchandisersupervisorOpParam")) {
-                MerchandisersupervisorOpParam merchandisersupervisorOpParam =
-                        (MerchandisersupervisorOpParam) object;
-                assertTrue(merchandisersupervisorOpParam.supervisor()
-                                   .equals("abc"));
-            } else {
-                assertTrue(false);
-            }
-        }
-        testYangSchemaNodeProvider.unregisterAllService();
-
+        String xml = codecHandler.encodeOperation("config", "ydt.root", null,
+                                                  yangModuleList, XML, null);
+        assertEquals(AM_XML + "multiple: module info", multiModuleXml(), xml);
     }
 
     /**
@@ -885,22 +921,16 @@ public class DefaultYangCodecHandlerTest {
      */
     @Test
     public void proceessCodecDecodeFunctionForEmptyContainer() {
-
-        boolean result;
-        List<Object> objectList = null;
-        String path =
-                "src/test/resources/ychTestResourceFiles/getconfigemptycontainer.xml";
+        String path = "src/test/resources/ychTestResourceFiles/getconfigemptycontainer.xml";
         StringBuilder sb = new StringBuilder();
         String sCurrentLine;
         testYangSchemaNodeProvider.processSchemaRegistry(null);
         DefaultYangSchemaRegistry schemaRegistry =
                 testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
 
-        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
-        defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING,
-                          yangDataTreeCodec);
+        YangCodecRegistry.initializeDefaultCodec();
         DefaultYangCodecHandler defaultYangCodecHandler =
-                new DefaultYangCodecHandler(schemaRegistry, defaultCodecs);
+                new DefaultYangCodecHandler(schemaRegistry);
 
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
 
@@ -913,24 +943,26 @@ public class DefaultYangCodecHandlerTest {
         }
 
         // Verify the received object list
-        objectList = defaultYangCodecHandler
-                .decode(sb.toString(), YangProtocolEncodingFormat.XML_ENCODING,
-                        null);
+        List<Object> objectList =
+                defaultYangCodecHandler.decode(sb.toString(),
+                                               XML, QUERY_CONFIG_REQUEST);
         Iterator<Object> iterator = objectList.iterator();
         while (iterator.hasNext()) {
             Object object = iterator.next();
             if (object.getClass().getSimpleName()
-                    .equals("EmptyContainerOpParam")) {
+                    .equals(EMPTY_CONTAINER)) {
                 EmptyContainerOpParam emptyContainerOpParam =
                         (EmptyContainerOpParam) object;
-                assertTrue(emptyContainerOpParam.emptyContainer() == null);
+                assertNull(AM_OBJ + "empty-container: container value is not" +
+                                      "null",
+                              emptyContainerOpParam.emptyContainer());
             } else {
-                assertTrue(false);
+                assertEquals(AM_OBJ, EMPTY_CONTAINER, object
+                        .getClass().getSimpleName());
             }
         }
-
-        testYangSchemaNodeProvider.unregisterAllService();
     }
+
 
     /**
      * Unit test case in which verifying object for xml string with config as
@@ -938,22 +970,16 @@ public class DefaultYangCodecHandlerTest {
      */
     @Test
     public void proceessCodecDecodeFunctionForListInsideList() {
-
-        boolean result;
-        List<Object> objectList = null;
-        String path =
-                "src/test/resources/ychTestResourceFiles/combinedrootname.xml";
+        String path = "src/test/resources/ychTestResourceFiles/combinedrootname.xml";
         StringBuilder sb = new StringBuilder();
         String sCurrentLine;
         testYangSchemaNodeProvider.processSchemaRegistry(null);
         DefaultYangSchemaRegistry schemaRegistry =
                 testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
 
-        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
-        defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING,
-                          yangDataTreeCodec);
+        YangCodecRegistry.initializeDefaultCodec();
         DefaultYangCodecHandler defaultYangCodecHandler =
-                new DefaultYangCodecHandler(schemaRegistry, defaultCodecs);
+                new DefaultYangCodecHandler(schemaRegistry);
 
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
 
@@ -965,157 +991,194 @@ public class DefaultYangCodecHandlerTest {
             e.printStackTrace();
         }
 
-        // TODO Need to verify test result once YTB support binary.
+        // TODO YOB and YTB need to do some changes for binary
         // Verify the received object list
-        /*objectList = defaultYangCodecHandler.decode(sb.toString(), YangProtocolEncodingFormat.XML_ENCODING);
+        /*objectList = defaultYangCodecHandler.decode(sb.toString(),
+                                                    XML_ENCODING,
+                                                    EDIT_CONFIG_REQUEST);
         Iterator<Object> iterator = objectList.iterator();
         while (iterator.hasNext()) {
             Object object = iterator.next();
             if (object.getClass().getSimpleName().equals("CombinedOpParam")) {
-                CombinedOpParam combinedOpParam = (CombinedOpParam)object;
+                CombinedOpParam combinedOpParam = (CombinedOpParam) object;
 
                 PathId pathId = new PathId(123);
-                Origin origin = new DefaultOrigin.OriginBuilder().value(pathId).build();
-                assertTrue(combinedOpParam.attributes().origin().equals(origin));
+                Origin origin = new DefaultOrigin.OriginBuilder()
+                        .value(pathId).build();
+                assertTrue(combinedOpParam.attributes().origin()
+                                   .equals(origin));
 
-                MultiExitDisc multiExitDisc = new DefaultMultiExitDisc.MultiExitDiscBuilder().med(456).build();
-                assertTrue(combinedOpParam.attributes().multiExitDisc().equals(multiExitDisc));
+                MultiExitDisc multiExitDisc = new DefaultMultiExitDisc
+                        .MultiExitDiscBuilder().med(456).build();
+                assertTrue(combinedOpParam.attributes().multiExitDisc()
+                                   .equals(multiExitDisc));
 
-                LocalPref localPref = new DefaultLocalPref.LocalPrefBuilder().pref(23).build();
-                assertTrue(combinedOpParam.attributes().localPref().equals(localPref));
+                LocalPref localPref = new DefaultLocalPref.LocalPrefBuilder()
+                        .pref(23).build();
+                assertTrue(combinedOpParam.attributes().localPref()
+                                   .equals(localPref));
 
                 Metric metric = new Metric(456);
-                AigpTlv aigpTlv = new DefaultAigpTlv.AigpTlvBuilder().metric(metric).build();
-                Aigp aigp = new DefaultAigp.AigpBuilder().aigpTlv(aigpTlv).build();
+                AigpTlv aigpTlv = new DefaultAigpTlv.AigpTlvBuilder()
+                        .metric(metric).build();
+                Aigp aigp = new DefaultAigp.AigpBuilder().aigpTlv(aigpTlv)
+                        .build();
                 assertTrue(combinedOpParam.attributes().aigp().equals(aigp));
 
-                UnrecognizedAttributes unrecognizedAttributes1 = new DefaultUnrecognizedAttributes
-                        .UnrecognizedAttributesBuilder()
-                        .partial(false).transitive(false).type((short) 1).value("ABC".getBytes()).build();
+                UnrecognizedAttributes unrecognizedAttributes1 =
+                        new DefaultUnrecognizedAttributes
+                                .UnrecognizedAttributesBuilder()
+                                .partial(false).transitive(false).type((short) 1)
+                                .value("ABC".getBytes()).build();
 
-                UnrecognizedAttributes unrecognizedAttributes2 = new DefaultUnrecognizedAttributes
-                        .UnrecognizedAttributesBuilder()
-                        .partial(true).transitive(true).type((short) 2).value("BCA".getBytes()).build();
+                UnrecognizedAttributes unrecognizedAttributes2 =
+                        new DefaultUnrecognizedAttributes
+                                .UnrecognizedAttributesBuilder()
+                                .partial(true).transitive(true).type((short) 2)
+                                .value("BCA".getBytes()).build();
 
-                UnrecognizedAttributes unrecognizedAttributes3 = new DefaultUnrecognizedAttributes
-                        .UnrecognizedAttributesBuilder()
-                        .partial(true).transitive(false).type((short) 3).value("CAB".getBytes()).build();
+                UnrecognizedAttributes unrecognizedAttributes3 =
+                        new DefaultUnrecognizedAttributes
+                                .UnrecognizedAttributesBuilder()
+                                .partial(true).transitive(false).type((short) 3)
+                                .value("CAB".getBytes()).build();
 
-                UnrecognizedAttributes unrecognizedAttributes4 = new DefaultUnrecognizedAttributes
-                        .UnrecognizedAttributesBuilder()
-                        .partial(false).transitive(true).type((short) 4).value("111".getBytes()).build();
+                UnrecognizedAttributes unrecognizedAttributes4 =
+                        new DefaultUnrecognizedAttributes
+                                .UnrecognizedAttributesBuilder()
+                                .partial(false).transitive(true).type((short) 4)
+                                .value("111".getBytes()).build();
 
                 AsNum asNum1 = new AsNum(11);
-                As4BytesCapability as4BytesCapability1 = new DefaultAs4BytesCapability.As4BytesCapabilityBuilder()
-                        .asNumber(asNum1).build();
-                Cparameters cparameters1 = new DefaultCparameters.CparametersBuilder()
-                .as4BytesCapability(as4BytesCapability1)
+                As4BytesCapability as4BytesCapability1 =
+                        new DefaultAs4BytesCapability
+                                .As4BytesCapabilityBuilder()
+                                .asNumber(asNum1).build();
+                Cparameters cparameters1 = new DefaultCparameters
+                        .CparametersBuilder()
+                        .as4BytesCapability(as4BytesCapability1)
                         .build();
-                OptionalCapabilities optionalCapabilities1 = new DefaultOptionalCapabilities
-                .OptionalCapabilitiesBuilder()
-                        .cParameters(cparameters1).build();
+                OptionalCapabilities optionalCapabilities1 =
+                        new DefaultOptionalCapabilities
+                                .OptionalCapabilitiesBuilder()
+                                .cParameters(cparameters1).build();
 
                 AsNum asNum2 = new AsNum(22);
-                As4BytesCapability as4BytesCapability2 = new DefaultAs4BytesCapability.As4BytesCapabilityBuilder()
-                        .asNumber(asNum2).build();
-                Cparameters cparameters2 = new DefaultCparameters.CparametersBuilder()
-                .as4BytesCapability(as4BytesCapability2)
+                As4BytesCapability as4BytesCapability2 =
+                        new DefaultAs4BytesCapability
+                                .As4BytesCapabilityBuilder()
+                                .asNumber(asNum2).build();
+                Cparameters cparameters2 = new DefaultCparameters
+                        .CparametersBuilder()
+                        .as4BytesCapability(as4BytesCapability2)
                         .build();
-                OptionalCapabilities optionalCapabilities2 = new DefaultOptionalCapabilities
-                .OptionalCapabilitiesBuilder()
-                        .cParameters(cparameters2).build();
+                OptionalCapabilities optionalCapabilities2 =
+                        new DefaultOptionalCapabilities
+                                .OptionalCapabilitiesBuilder()
+                                .cParameters(cparameters2).build();
 
                 AsNum asNum3 = new AsNum(33);
-                As4BytesCapability as4BytesCapability3 = new DefaultAs4BytesCapability.As4BytesCapabilityBuilder()
-                        .asNumber(asNum3).build();
-                Cparameters cparameters3 = new DefaultCparameters.CparametersBuilder()
-                .as4BytesCapability(as4BytesCapability3)
-                        .build();
-                OptionalCapabilities optionalCapabilities3 = new DefaultOptionalCapabilities
-                .OptionalCapabilitiesBuilder()
-                        .cParameters(cparameters3).build();
+                As4BytesCapability as4BytesCapability3 =
+                        new DefaultAs4BytesCapability
+                                .As4BytesCapabilityBuilder()
+                                .asNumber(asNum3).build();
+                Cparameters cparameters3 =
+                        new DefaultCparameters.CparametersBuilder()
+                                .as4BytesCapability(as4BytesCapability3)
+                                .build();
+                OptionalCapabilities optionalCapabilities3 =
+                        new DefaultOptionalCapabilities
+                                .OptionalCapabilitiesBuilder()
+                                .cParameters(cparameters3).build();
 
-                BgpParameters bgpParameters1 = new DefaultBgpParameters.BgpParametersBuilder()
-                        .addToOptionalCapabilities(optionalCapabilities1)
-                        .addToOptionalCapabilities(optionalCapabilities2)
-                        .addToOptionalCapabilities(optionalCapabilities3)
-                        .build();
+                BgpParameters bgpParameters1 =
+                        new DefaultBgpParameters.BgpParametersBuilder()
+                                .addToOptionalCapabilities(optionalCapabilities1)
+                                .addToOptionalCapabilities(optionalCapabilities2)
+                                .addToOptionalCapabilities(optionalCapabilities3)
+                                .build();
 
                 AsNum asNum4 = new AsNum(11);
-                As4BytesCapability as4BytesCapability4 = new DefaultAs4BytesCapability.As4BytesCapabilityBuilder()
-                        .asNumber(asNum4).build();
-                Cparameters cparameters4 = new DefaultCparameters.CparametersBuilder()
-                .as4BytesCapability(as4BytesCapability4)
-                        .build();
-                OptionalCapabilities optionalCapabilities4 = new DefaultOptionalCapabilities
-                .OptionalCapabilitiesBuilder()
-                        .cParameters(cparameters4).build();
+                As4BytesCapability as4BytesCapability4 =
+                        new DefaultAs4BytesCapability
+                                .As4BytesCapabilityBuilder()
+                                .asNumber(asNum4).build();
+                Cparameters cparameters4 =
+                        new DefaultCparameters.CparametersBuilder()
+                                .as4BytesCapability(as4BytesCapability4)
+                                .build();
+                OptionalCapabilities optionalCapabilities4 =
+                        new DefaultOptionalCapabilities
+                                .OptionalCapabilitiesBuilder()
+                                .cParameters(cparameters4).build();
 
                 AsNum asNum5 = new AsNum(22);
-                As4BytesCapability as4BytesCapability5 = new DefaultAs4BytesCapability.As4BytesCapabilityBuilder()
-                        .asNumber(asNum5).build();
-                Cparameters cparameters5 = new DefaultCparameters.CparametersBuilder()
-                .as4BytesCapability(as4BytesCapability5)
-                        .build();
-                OptionalCapabilities optionalCapabilities5 = new DefaultOptionalCapabilities
-                .OptionalCapabilitiesBuilder()
-                        .cParameters(cparameters5).build();
+                As4BytesCapability as4BytesCapability5 =
+                        new DefaultAs4BytesCapability
+                                .As4BytesCapabilityBuilder()
+                                .asNumber(asNum5).build();
+                Cparameters cparameters5 =
+                        new DefaultCparameters.CparametersBuilder()
+                                .as4BytesCapability(as4BytesCapability5)
+                                .build();
+                OptionalCapabilities optionalCapabilities5 =
+                        new DefaultOptionalCapabilities
+                                .OptionalCapabilitiesBuilder()
+                                .cParameters(cparameters5).build();
 
                 AsNum asNum6 = new AsNum(33);
-                As4BytesCapability as4BytesCapability6 = new DefaultAs4BytesCapability.As4BytesCapabilityBuilder()
-                        .asNumber(asNum6).build();
-                Cparameters cparameters6 = new DefaultCparameters.CparametersBuilder()
-                .as4BytesCapability(as4BytesCapability6)
-                        .build();
-                OptionalCapabilities optionalCapabilities6 = new DefaultOptionalCapabilities
-                .OptionalCapabilitiesBuilder()
-                        .cParameters(cparameters6).build();
+                As4BytesCapability as4BytesCapability6 =
+                        new DefaultAs4BytesCapability
+                                .As4BytesCapabilityBuilder()
+                                .asNumber(asNum6).build();
+                Cparameters cparameters6 =
+                        new DefaultCparameters.CparametersBuilder()
+                                .as4BytesCapability(as4BytesCapability6)
+                                .build();
+                OptionalCapabilities optionalCapabilities6 =
+                        new DefaultOptionalCapabilities
+                                .OptionalCapabilitiesBuilder()
+                                .cParameters(cparameters6).build();
 
-                BgpParameters bgpParameters2 = new DefaultBgpParameters.BgpParametersBuilder()
-                        .addToOptionalCapabilities(optionalCapabilities4)
-                        .addToOptionalCapabilities(optionalCapabilities5)
-                        .addToOptionalCapabilities(optionalCapabilities6)
-                        .build();
+                BgpParameters bgpParameters2 =
+                        new DefaultBgpParameters.BgpParametersBuilder()
+                                .addToOptionalCapabilities(optionalCapabilities4)
+                                .addToOptionalCapabilities(optionalCapabilities5)
+                                .addToOptionalCapabilities(optionalCapabilities6)
+                                .build();
 
-                Attributes attributes = new DefaultAttributes.AttributesBuilder()
-                        .origin(origin)
-                        .multiExitDisc(multiExitDisc)
-                        .localPref(localPref)
-                        .aigp(aigp)
-                        .addToUnrecognizedAttributes(unrecognizedAttributes1)
-                        .addToUnrecognizedAttributes(unrecognizedAttributes2)
-                        .addToUnrecognizedAttributes(unrecognizedAttributes3)
-                        .addToUnrecognizedAttributes(unrecognizedAttributes4)
-                        .addToBgpParameters(bgpParameters1)
-                        .addToBgpParameters(bgpParameters2).build();
+                Attributes attributes =
+                        new DefaultAttributes.AttributesBuilder()
+                                .origin(origin)
+                                .multiExitDisc(multiExitDisc)
+                                .localPref(localPref)
+                                .aigp(aigp)
+                                .addToUnrecognizedAttributes(unrecognizedAttributes1)
+                                .addToUnrecognizedAttributes(unrecognizedAttributes2)
+                                .addToUnrecognizedAttributes(unrecognizedAttributes3)
+                                .addToUnrecognizedAttributes(unrecognizedAttributes4)
+                                .addToBgpParameters(bgpParameters1)
+                                .addToBgpParameters(bgpParameters2).build();
             } else {
                 assertTrue(false);
             }
         }*/
-        testYangSchemaNodeProvider.unregisterAllService();
-
     }
 
     /**
-     * Unit test case in which verifying object for xml string with config as
-     * root name and operation type.
+     * Unit test case in which verifying object for xml string with config as root name and
+     * operation type.
      */
     @Test
     public void proceessCodecDecodeFunctionForOperTypeTest() {
-
-        boolean result;
-        List<Object> objectList = null;
-        String path =
-                "src/test/resources/ychTestResourceFiles/configrootnameOperationType.xml";
+        String path = "src/test/resources/ychTestResourceFiles/configrootnameOperationType.xml";
         testYangSchemaNodeProvider.processSchemaRegistry(null);
         DefaultYangSchemaRegistry schemaRegistry =
                 testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
 
-        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
-        defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING,
-                          yangDataTreeCodec);
+        YangCodecRegistry.initializeDefaultCodec();
         DefaultYangCodecHandler defaultYangCodecHandler =
-                new DefaultYangCodecHandler(schemaRegistry, defaultCodecs);
+                new DefaultYangCodecHandler(schemaRegistry);
 
         StringBuilder sb = new StringBuilder();
         String sCurrentLine;
@@ -1131,39 +1194,91 @@ public class DefaultYangCodecHandlerTest {
         }
 
         // Verify the received object list
-        objectList = defaultYangCodecHandler
-                .decode(sb.toString(), YangProtocolEncodingFormat.XML_ENCODING,
-                        null);
+        List<Object> objectList =
+                defaultYangCodecHandler.decode(sb.toString(),
+                                               XML, EDIT_CONFIG_REQUEST);
         Iterator<Object> iterator = objectList.iterator();
         while (iterator.hasNext()) {
             Object object = iterator.next();
             if (object.getClass().getSimpleName()
-                    .equals("LogisticsManagerOpParam")) {
+                    .equals(LOGISTIC_MOD)) {
                 LogisticsManagerOpParam logistics =
                         (LogisticsManagerOpParam) object;
                 DefaultPurchasingSupervisor purchasingSupervisor =
                         (DefaultPurchasingSupervisor) logistics
                                 .purchasingSupervisor();
-                assertTrue(purchasingSupervisor.onosYangNodeOperationType()
-                                   .equals(DELETE));
-                assertTrue(logistics.customsSupervisor().equals("abc"));
-                assertTrue(
-                        logistics.purchasingSupervisor().purchasingSpecialist()
-                                .equals("bcd"));
-                assertTrue(logistics.purchasingSupervisor().support()
-                                   .equals("cde"));
+
+                assertEquals(AM_OBJ + "purchase-super: operation type", DELETE,
+                             purchasingSupervisor.onosYangNodeOperationType());
+                assertEquals(AM_OBJ + "customs-super: leaf value", "abc",
+                             logistics.customsSupervisor());
+                assertEquals(AM_OBJ + "purchase-spec: leaf value", "bcd",
+                             logistics.purchasingSupervisor()
+                                     .purchasingSpecialist());
+                assertEquals(AM_OBJ + "purchase-support: leaf value",
+                             "cde", logistics.purchasingSupervisor()
+                                     .support());
+
             } else if (object.getClass().getSimpleName()
-                    .equals("MerchandisersupervisorOpParam")) {
+                    .equals(MERCHA_MOD)) {
                 MerchandisersupervisorOpParam merchandisersupervisorOpParam =
                         (MerchandisersupervisorOpParam) object;
-                assertTrue(merchandisersupervisorOpParam.supervisor()
-                                   .equals("abc"));
+                assertEquals(AM_OBJ + "merchandiser-super: leaf value",
+                             "abc", merchandisersupervisorOpParam.supervisor());
             } else {
-                assertTrue(false);
+                assertEquals(AM_OBJ, LOGISTIC_MOD, object
+                        .getClass().getSimpleName());
+                assertEquals(AM_OBJ, MERCHA_MOD, object
+                        .getClass().getSimpleName());
             }
         }
-        testYangSchemaNodeProvider.unregisterAllService();
+    }
 
+    /**
+     * Validate the leaf value for purchasing specialist.
+     *
+     * @param objectList object list
+     */
+    private void processPurchasingSpecObj(List<Object> objectList) {
+        Iterator<Object> iterator = objectList.iterator();
+        while (iterator.hasNext()) {
+            Object object = iterator.next();
+            if (object.getClass().getSimpleName()
+                    .equals("LogisticsManagerOpParam")) {
+                LogisticsManagerOpParam logisticsManagerOpParam =
+                        (LogisticsManagerOpParam) object;
+                assertEquals(AM_OBJ + "purchasing-spec: leaf value", "bcd",
+                             logisticsManagerOpParam.purchasingSupervisor()
+                                     .purchasingSpecialist());
+            } else {
+                assertEquals(AM_OBJ, "LogisticsManagerOpParam", object
+                        .getClass().getSimpleName());
+            }
+        }
+
+    }
+
+    /**
+     * Validate the leaf value for merchandiser supervisor.
+     *
+     * @param objectList object list
+     */
+    private void processMerchandiserObj(List<Object> objectList) {
+        Iterator<Object> iterator = objectList.iterator();
+        while (iterator.hasNext()) {
+            Object object = iterator.next();
+            if (object.getClass().getSimpleName()
+                    .equals(MERCHA_MOD)) {
+                MerchandisersupervisorOpParam merchandisersupervisorOpParam =
+                        (MerchandisersupervisorOpParam) object;
+                assertEquals(AM_OBJ + "merchandiser-super: leaf value", "abc",
+                             merchandisersupervisorOpParam.supervisor());
+
+            } else {
+                assertEquals(AM_OBJ, MERCHA_MOD, object
+                        .getClass().getSimpleName());
+            }
+        }
     }
 
     /**
@@ -1172,19 +1287,14 @@ public class DefaultYangCodecHandlerTest {
      */
     @Test
     public void proceessCodecDecodeFunctionForGet() {
-
-        boolean result;
-        List<Object> objectList = null;
         String path = "src/test/resources/ychTestResourceFiles/getrootname.xml";
         testYangSchemaNodeProvider.processSchemaRegistry(null);
         DefaultYangSchemaRegistry schemaRegistry =
                 testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
 
-        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
-        defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING,
-                          yangDataTreeCodec);
+        YangCodecRegistry.initializeDefaultCodec();
         DefaultYangCodecHandler defaultYangCodecHandler =
-                new DefaultYangCodecHandler(schemaRegistry, defaultCodecs);
+                new DefaultYangCodecHandler(schemaRegistry);
 
         StringBuilder sb = new StringBuilder();
         String sCurrentLine;
@@ -1200,24 +1310,10 @@ public class DefaultYangCodecHandlerTest {
         }
 
         // Verify the received object list
-        objectList = defaultYangCodecHandler
-                .decode(sb.toString(), YangProtocolEncodingFormat.XML_ENCODING,
-                        null);
-        Iterator<Object> iterator = objectList.iterator();
-        while (iterator.hasNext()) {
-            Object object = iterator.next();
-            if (object.getClass().getSimpleName()
-                    .equals("LogisticsManagerOpParam")) {
-                LogisticsManagerOpParam logisticsManagerOpParam =
-                        (LogisticsManagerOpParam) object;
-                assertTrue(logisticsManagerOpParam.purchasingSupervisor()
-                                   .purchasingSpecialist().equals("bcd"));
-            } else {
-                assertTrue(false);
-            }
-        }
-        testYangSchemaNodeProvider.unregisterAllService();
-
+        List<Object> objectList =
+                defaultYangCodecHandler.decode(sb.toString(),
+                                               XML, QUERY_REQUEST);
+        processPurchasingSpecObj(objectList);
     }
 
     /**
@@ -1226,20 +1322,14 @@ public class DefaultYangCodecHandlerTest {
      */
     @Test
     public void proceessCodecDecodeFunctionForGetConfig() {
-
-        boolean result;
-        List<Object> objectList = null;
-        String path =
-                "src/test/resources/ychTestResourceFiles/getconfigrootname.xml";
+        String path = "src/test/resources/ychTestResourceFiles/getconfigrootname.xml";
         testYangSchemaNodeProvider.processSchemaRegistry(null);
         DefaultYangSchemaRegistry schemaRegistry =
                 testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
 
-        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
-        defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING,
-                          yangDataTreeCodec);
+        YangCodecRegistry.initializeDefaultCodec();
         DefaultYangCodecHandler defaultYangCodecHandler =
-                new DefaultYangCodecHandler(schemaRegistry, defaultCodecs);
+                new DefaultYangCodecHandler(schemaRegistry);
 
         StringBuilder sb = new StringBuilder();
         String sCurrentLine;
@@ -1255,45 +1345,26 @@ public class DefaultYangCodecHandlerTest {
         }
 
         // Verify the received object list
-        objectList = defaultYangCodecHandler
-                .decode(sb.toString(), YangProtocolEncodingFormat.XML_ENCODING,
-                        null);
-        Iterator<Object> iterator = objectList.iterator();
-        while (iterator.hasNext()) {
-            Object object = iterator.next();
-            if (object.getClass().getSimpleName()
-                    .equals("MerchandisersupervisorOpParam")) {
-                MerchandisersupervisorOpParam merchandisersupervisorOpParam =
-                        (MerchandisersupervisorOpParam) object;
-                assertTrue(merchandisersupervisorOpParam.supervisor()
-                                   .equals("abc"));
-            } else {
-                assertTrue(false);
-            }
-        }
-        testYangSchemaNodeProvider.unregisterAllService();
-
+        List<Object> objectList = defaultYangCodecHandler.decode(
+                sb.toString(),
+                XML, QUERY_CONFIG_REQUEST);
+        processMerchandiserObj(objectList);
     }
 
     /**
-     * Unit test case in which verifying object for xml string with data as root
-     * name.
+     * Unit test case in which verifying object for xml string with data as
+     * root name.
      */
     @Test
     public void proceessCodecDecodeFunctionForGetData() {
-
-        boolean result;
-        List<Object> objectList = null;
         String path = "src/test/resources/ychTestResourceFiles/getReply.xml";
         testYangSchemaNodeProvider.processSchemaRegistry(null);
         DefaultYangSchemaRegistry schemaRegistry =
                 testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
 
-        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
-        defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING,
-                          yangDataTreeCodec);
+        YangCodecRegistry.initializeDefaultCodec();
         DefaultYangCodecHandler defaultYangCodecHandler =
-                new DefaultYangCodecHandler(schemaRegistry, defaultCodecs);
+                new DefaultYangCodecHandler(schemaRegistry);
 
         StringBuilder sb = new StringBuilder();
         String sCurrentLine;
@@ -1309,24 +1380,10 @@ public class DefaultYangCodecHandlerTest {
         }
 
         // Verify the received object list
-        objectList = defaultYangCodecHandler
-                .decode(sb.toString(), YangProtocolEncodingFormat.XML_ENCODING,
-                        null);
-        Iterator<Object> iterator = objectList.iterator();
-        while (iterator.hasNext()) {
-            Object object = iterator.next();
-            if (object.getClass().getSimpleName()
-                    .equals("LogisticsManagerOpParam")) {
-                LogisticsManagerOpParam logisticsManagerOpParam =
-                        (LogisticsManagerOpParam) object;
-                assertTrue(logisticsManagerOpParam.purchasingSupervisor()
-                                   .purchasingSpecialist().equals("bcd"));
-            } else {
-                assertTrue(false);
-            }
-        }
-        testYangSchemaNodeProvider.unregisterAllService();
-
+        List<Object> objectList = defaultYangCodecHandler.decode(
+                sb.toString(),
+                XML, QUERY_CONFIG_REQUEST);
+        processPurchasingSpecObj(objectList);
     }
 
     /**
@@ -1335,20 +1392,14 @@ public class DefaultYangCodecHandlerTest {
      */
     @Test
     public void proceessCodecDecodeFunctionForGetConfigData() {
-
-        boolean result;
-        List<Object> objectList = null;
-        String path =
-                "src/test/resources/ychTestResourceFiles/getconfigReply.xml";
+        String path = "src/test/resources/ychTestResourceFiles/getconfigReply.xml";
         testYangSchemaNodeProvider.processSchemaRegistry(null);
         DefaultYangSchemaRegistry schemaRegistry =
                 testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
 
-        YangDataTreeCodec yangDataTreeCodec = new YchYangDataTreeCodec();
-        defaultCodecs.put(YangProtocolEncodingFormat.XML_ENCODING,
-                          yangDataTreeCodec);
+        YangCodecRegistry.initializeDefaultCodec();
         DefaultYangCodecHandler defaultYangCodecHandler =
-                new DefaultYangCodecHandler(schemaRegistry, defaultCodecs);
+                new DefaultYangCodecHandler(schemaRegistry);
 
         StringBuilder sb = new StringBuilder();
         String sCurrentLine;
@@ -1364,23 +1415,8 @@ public class DefaultYangCodecHandlerTest {
         }
 
         // Verify the received object list
-        objectList = defaultYangCodecHandler
-                .decode(sb.toString(), YangProtocolEncodingFormat.XML_ENCODING,
-                        null);
-        Iterator<Object> iterator = objectList.iterator();
-        while (iterator.hasNext()) {
-            Object object = iterator.next();
-            if (object.getClass().getSimpleName()
-                    .equals("MerchandisersupervisorOpParam")) {
-                MerchandisersupervisorOpParam merchandisersupervisorOpParam =
-                        (MerchandisersupervisorOpParam) object;
-                assertTrue(merchandisersupervisorOpParam.supervisor()
-                                   .equals("abc"));
-            } else {
-                assertTrue(false);
-            }
-        }
-        testYangSchemaNodeProvider.unregisterAllService();
-
+        List<Object> objectList = defaultYangCodecHandler.decode(sb.toString(),
+                                                                 XML, null);
+        processMerchandiserObj(objectList);
     }
 }

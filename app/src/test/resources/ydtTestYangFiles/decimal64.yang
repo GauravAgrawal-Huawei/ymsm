@@ -17,21 +17,18 @@ module decimal64 {
           type decimal64 {
                 fraction-digits 2;
           }
-
     }
 
     leaf negIntWithMaxFraction {
           type decimal64 {
                 fraction-digits 18;
           }
-
     }
 
     leaf negIntWithMinFraction {
           type decimal64 {
                 fraction-digits 1;
           }
-
     }
 
     leaf posInt {
@@ -83,14 +80,11 @@ module decimal64 {
                  range "10..40 | 50..100";
               }
         }
-
         leaf revDecimal {
               type decimal64 {
                  fraction-digits 2;
                  range "min .. 3.14 | 10 | 20..max";
               }
         }
-
     }
-
 }

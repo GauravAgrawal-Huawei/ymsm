@@ -16,6 +16,7 @@
 
 package org.onosproject.yms.app.yob;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
@@ -35,15 +36,16 @@ public class YobLogisticsManagerTest {
         YangRequestWorkBench defaultYdtBuilder = YdtTestUtils
                 .logisticsManagerYdt();
 
-        YdtContext ydtContext = defaultYdtBuilder.getRootNode();
+        YdtContext rootCtx = defaultYdtBuilder.getRootNode();
 
-        YdtContext ydtContext1 = ydtContext.getFirstChild();
+        YdtContext childCtx = rootCtx.getFirstChild();
 
-        while (ydtContext1 != null) {
-            DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
+        DefaultYobBuilder builder = new DefaultYobBuilder();
 
-            Object yangObject = defaultYobBuilder.getYangObject(
-                    (YdtExtendedContext) ydtContext1, YdtTestUtils
+        while (childCtx != null) {
+
+            Object yangObject = builder.getYangObject(
+                    (YdtExtendedContext) childCtx, YdtTestUtils
                             .getSchemaRegistry());
             Class<?> aClass = yangObject.getClass();
             if (aClass.getSimpleName().equals("CustomssupervisorOpParam")) {
@@ -58,10 +60,10 @@ public class YobLogisticsManagerTest {
                         assertEquals("MERGE", onosYangNodeOperationType
                                 .get(yangObject).toString());
                     } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                        Assert.fail();
                     }
                 } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
+                    Assert.fail();
                 }
             }
 
@@ -73,10 +75,10 @@ public class YobLogisticsManagerTest {
                     try {
                         assertEquals("abc", field.get(yangObject).toString());
                     } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                        Assert.fail();
                     }
                 } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
+                    Assert.fail();
                 }
             }
 
@@ -93,14 +95,13 @@ public class YobLogisticsManagerTest {
                         assertEquals("4", arrayList.get(3));
                         assertEquals("5", arrayList.get(4));
                     } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                        Assert.fail();
                     }
                 } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
+                    Assert.fail();
                 }
             }
-
-            ydtContext1 = ydtContext1.getNextSibling();
+            childCtx = childCtx.getNextSibling();
         }
     }
 }

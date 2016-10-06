@@ -512,8 +512,9 @@ public class DefaultYangSchemaRegistry
      * @param jarPath jar file path
      */
     private void updateYangFileStore(YangNode node, String jarPath) {
-        yangFileStore.put(getModuleIdentifier(node),
-                          getYangFilePath(jarPath, node.getFileName()));
+        //FIXME: fix when yang tools support for file name.
+        //yangFileStore.put(getModuleIdentifier(node),
+        //                 getYangFilePath(jarPath, node.getFileName()));
     }
 
     /**

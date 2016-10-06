@@ -18,5 +18,4 @@ module tradingsupervisor {
         type string;
         description "name of the trading-supervisor";
     }
-
 }

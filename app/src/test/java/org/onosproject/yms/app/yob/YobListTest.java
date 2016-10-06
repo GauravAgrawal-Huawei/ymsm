@@ -16,6 +16,7 @@
 
 package org.onosproject.yms.app.yob;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
@@ -33,8 +34,7 @@ import static org.junit.Assert.assertTrue;
 public class YobListTest {
 
     @Test
-    public void listwithoutcontainerTest()
-            throws IOException {
+    public void listwithoutcontainerTest() {
         YangRequestWorkBench defaultYdtBuilder =
                 YdtTestUtils.listWithoutContainerYdt();
         validateYangObjectList(defaultYdtBuilder);
@@ -43,14 +43,14 @@ public class YobListTest {
     private void validateYangObjectList(
             YangRequestWorkBench defaultYdtBuilder) {
 
-        YdtContext ydtContext = defaultYdtBuilder.getRootNode();
+        YdtContext rootCtx = defaultYdtBuilder.getRootNode();
 
-        YdtContext ydtContext1 = ydtContext.getFirstChild();
+        YdtContext childCtx = rootCtx.getFirstChild();
 
-        DefaultYobBuilder defaultYobBuilder = new DefaultYobBuilder();
+        DefaultYobBuilder builder = new DefaultYobBuilder();
 
-        Object yangObject = defaultYobBuilder.getYangObject(
-                (YdtExtendedContext) ydtContext1, YdtTestUtils.
+        Object yangObject = builder.getYangObject(
+                (YdtExtendedContext) childCtx, YdtTestUtils.
                         getSchemaRegistry());
         assertNotNull(yangObject);
         assertTrue(yangObject.getClass().getSimpleName()
@@ -73,7 +73,7 @@ public class YobListTest {
             assertEquals("12", invalidinterval.get(listwithoutcontainer.get(0))
                     .toString());
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+            Assert.fail();
         }
     }
 
@@ -125,7 +125,7 @@ public class YobListTest {
             assertEquals("1", invalidintervalList.get(0).toString());
             assertEquals("2", invalidintervalList.get(1).toString());
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+            Assert.fail();
         }
     }
 }

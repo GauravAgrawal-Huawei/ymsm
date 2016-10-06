@@ -19,6 +19,7 @@ package org.onosproject.yms.app.yab;
 import org.onosproject.yangutils.datamodel.YangAugment;
 import org.onosproject.yangutils.datamodel.YangAugmentableNode;
 import org.onosproject.yangutils.datamodel.YangInput;
+import org.onosproject.yangutils.datamodel.YangModule;
 import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangRpc;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
@@ -28,7 +29,6 @@ import org.onosproject.yms.app.ydt.DefaultYdtAppContext;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ydt.YangResponseWorkBench;
 import org.onosproject.yms.app.ydt.YdtAppContext;
-import org.onosproject.yms.app.ydt.YdtExtendedBuilder;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.ydt.YdtMultiInstanceNode;
 import org.onosproject.yms.app.ydt.YdtNode;
@@ -49,12 +49,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.onosproject.yms.app.utils.TraversalType.CHILD;
 import static org.onosproject.yms.app.utils.TraversalType.PARENT;
 import static org.onosproject.yms.app.utils.TraversalType.ROOT;
-import static org.onosproject.yms.app.utils.TraversalType.SIBILING;
+import static org.onosproject.yms.app.utils.TraversalType.SIBLING;
+import static org.onosproject.yms.app.ydt.AppNodeFactory.getAppContext;
 import static org.onosproject.yms.app.ydt.YdtAppNodeOperationType.DELETE_ONLY;
 import static org.onosproject.yms.app.ydt.YdtAppNodeOperationType.OTHER_EDIT;
 import static org.onosproject.yms.ydt.YdtContextOperationType.DELETE;
 import static org.onosproject.yms.ydt.YmsOperationExecutionStatus.EXECUTION_SUCCESS;
-import static org.onosproject.yms.ydt.YmsOperationType.EDIT_CONFIG_REQUEST;
 
 /**
  * Represents YANG application broker. It acts as a broker between Protocol and
@@ -65,6 +65,7 @@ public class YangApplicationBroker {
     private static final String GET = "get";
     private static final String SET = "set";
     private static final String AUGMENTED = "Augmented";
+    private static final String VOID = "void";
     private final YangSchemaRegistry schemaRegistry;
 
     /**
@@ -139,27 +140,57 @@ public class YangApplicationBroker {
     public YdtResponse processOperation(YdtBuilder ydtWorkBench)
             throws YabException {
         YangRequestWorkBench workBench = (YangRequestWorkBench) ydtWorkBench;
-        YdtContext ydtNode = ydtWorkBench.getRootNode().getFirstChild();
-
+        YdtAppContext appContext = workBench.getAppRootNode().getFirstChild();
+        YdtContext ydtNode = appContext.getModuleContext();
         while (ydtNode != null) {
             YdtContext childYdtNode = ydtNode.getFirstChild();
-            YangSchemaNode yangNode = ((YdtNode) childYdtNode)
-                    .getYangSchemaNode();
+            YangSchemaNode yangNode = ((YdtNode) childYdtNode).getYangSchemaNode();
             if (yangNode instanceof YangRpc) {
-                YdtContext inputYdtNode = getInputYdtNode(childYdtNode);
-                Object inputObject = getYangObject(inputYdtNode);
-                Object appObject = getApplicationObject(ydtNode);
-                Object outputObject = invokeApplicationsMethod(appObject,
-                                                               inputObject,
-                                                               yangNode.getName());
-                YdtBuilder responseYdt = buildRpcResponseYdt(outputObject,
-                                                             workBench);
-                return new YangResponseWorkBench(responseYdt.getRootNode(),
-                                                 EXECUTION_SUCCESS,
-                                                 ydtWorkBench.getYmsOperationType());
+                return processRpcOperationOfApplication(childYdtNode,
+                                                        appContext, yangNode,
+                                                        workBench);
             }
             ydtNode = ydtNode.getNextSibling();
         }
+        return new YangResponseWorkBench(null, EXECUTION_SUCCESS,
+                                         ydtWorkBench.getYmsOperationType());
+    }
+
+    /**
+     * Processes rpc request of an application.
+     *
+     * @param appContext application context
+     * @return response object from application
+     */
+    private YdtResponse processRpcOperationOfApplication(YdtContext rpcYdt,
+                                                         YdtAppContext appContext,
+                                                         YangSchemaNode yangRpc,
+                                                         YangRequestWorkBench workBench)
+            throws YabException {
+        Object inputObject = null;
+        YdtContext inputYdtNode = getInputYdtNode(rpcYdt);
+        if (inputYdtNode != null) {
+            inputObject = getYangObject(inputYdtNode);
+        }
+
+        Object appObject = getApplicationObjectForRpc(appContext);
+
+        String methodName = yangRpc.getJavaClassNameOrBuiltInType();
+        Object outputObject = invokeRpcApplicationsMethod(appObject,
+                                                          inputObject,
+                                                          methodName);
+
+        String returnType = getReturnTypeOfRpcResponse(appObject,
+                                                       inputObject, yangRpc);
+
+        if (!returnType.equals(VOID)) {
+            YdtBuilder responseYdt = buildRpcResponseYdt(outputObject,
+                                                         workBench);
+            return new YangResponseWorkBench(responseYdt.getRootNode(),
+                                             EXECUTION_SUCCESS,
+                                             workBench.getYmsOperationType());
+        }
+
         return new YangResponseWorkBench(null, EXECUTION_SUCCESS,
                                          workBench.getYmsOperationType());
     }
@@ -175,9 +206,9 @@ public class YangApplicationBroker {
         YdtContext ydtNode = appContext.getModuleContext();
 
         // Update application context tree if any node is augmented
-        YangNode yangNode = (YangNode) ((YdtNode) ydtNode).getYangSchemaNode();
+        YangNode yangNode = (YangNode) appContext.getYangSchemaNode();
         if (yangNode.isDescendantNodeAugmented()) {
-            processAugmentedNodesForQuery(appContext, yangNode);
+            processAugmentForChildNode(appContext, yangNode);
         }
 
         String appName = getCapitalCase(((YdtNode) appContext.getModuleContext())
@@ -212,7 +243,7 @@ public class YangApplicationBroker {
                 curTraversal = CHILD;
                 appContext = appContext.getFirstChild();
             } else if (appContext.getNextSibling() != null) {
-                curTraversal = SIBILING;
+                curTraversal = SIBLING;
                 appContext = appContext.getNextSibling();
             } else {
                 curTraversal = PARENT;
@@ -262,7 +293,7 @@ public class YangApplicationBroker {
                     String methodName = getApplicationMethodName(appContext,
                                                                  appName, SET);
 
-                    // invoke application's getter method
+                    // invoke application's setter method
                     invokeApplicationsMethod(appManagerObject, outputObject,
                                              methodName);
                 }
@@ -275,7 +306,7 @@ public class YangApplicationBroker {
                     curTraversal = CHILD;
                     appContext = appContext.getFirstChild();
                 } else if (appContext.getNextSibling() != null) {
-                    curTraversal = SIBILING;
+                    curTraversal = SIBLING;
                     appContext = appContext.getNextSibling();
                 } else {
                     curTraversal = PARENT;
@@ -322,7 +353,7 @@ public class YangApplicationBroker {
                                                     .getJavaClassNameOrBuiltInType());
 
             do {
-                if (curTraversal == ROOT || curTraversal == SIBILING) {
+                if (curTraversal == ROOT || curTraversal == SIBLING) {
                     while (appContext.getLastChild() != null) {
                         appContext = appContext.getLastChild();
                     }
@@ -339,7 +370,7 @@ public class YangApplicationBroker {
                 invokeApplicationsMethod(appManagerObject, inputObject, methodName);
 
                 if (appContext.getPreviousSibling() != null) {
-                    curTraversal = SIBILING;
+                    curTraversal = SIBLING;
                     appContext = appContext.getPreviousSibling();
                 } else if (appContext.getParent() != null) {
                     curTraversal = PARENT;
@@ -356,8 +387,8 @@ public class YangApplicationBroker {
      * @param curAppContext current application context
      * @param schemaNode    YANG data model node, either module or augment
      */
-    protected void processAugmentedNodesForQuery(YdtAppContext curAppContext,
-                                                 YangNode schemaNode) {
+    protected void processAugmentForChildNode(YdtAppContext curAppContext,
+                                              YangNode schemaNode) {
         YangNode yangNode = schemaNode.getChild();
         if (yangNode == null) {
             return;
@@ -365,7 +396,6 @@ public class YangApplicationBroker {
 
         TraversalType curTraversal = CHILD;
         while (!yangNode.equals(schemaNode)) {
-
             if (curTraversal != PARENT && yangNode instanceof YangAugmentableNode
                     && !((YangAugmentableNode) yangNode).getAugmentedInfoList()
                     .isEmpty()) {
@@ -377,7 +407,7 @@ public class YangApplicationBroker {
                 curTraversal = CHILD;
                 yangNode = yangNode.getChild();
             } else if (yangNode.getNextSibling() != null) {
-                curTraversal = SIBILING;
+                curTraversal = SIBLING;
                 yangNode = yangNode.getNextSibling();
             } else {
                 curTraversal = PARENT;
@@ -398,16 +428,37 @@ public class YangApplicationBroker {
         TraversalType curTraversal = ROOT;
         YdtContext ydtContext = deleteTree.getFirstChild();
 
+        if (ydtContext == null) {
+            /*
+             * Delete request is for module, so check all the nodes under
+             * module whether it is augmented.
+             */
+            YangNode yangNode = ((YangNode) ((YdtNode) deleteTree)
+                    .getYangSchemaNode());
+            if (yangNode.isDescendantNodeAugmented()) {
+                processAugmentForChildNode(appContext, yangNode);
+            }
+            return;
+        }
+
         while (!ydtContext.equals(deleteTree)) {
-            if (curTraversal != PARENT) {
-                updateYdtWithAugmentNodes(ydtContext, appContext);
+            if (curTraversal != PARENT && ((YdtNode) ydtContext)
+                    .getYdtContextOperationType() == DELETE) {
+                YangNode yangNode = ((YangNode) ((YdtNode) ydtContext)
+                        .getYangSchemaNode());
+                if (yangNode instanceof YangAugmentableNode) {
+                    updateAppTreeWithAugmentNodes(yangNode, appContext);
+                }
+                if (yangNode.isDescendantNodeAugmented()) {
+                    processAugmentForChildNode(appContext, yangNode);
+                }
             }
 
             if (curTraversal != PARENT && ydtContext.getFirstChild() != null) {
                 curTraversal = CHILD;
                 ydtContext = ydtContext.getFirstChild();
             } else if (ydtContext.getNextSibling() != null) {
-                curTraversal = SIBILING;
+                curTraversal = SIBLING;
                 ydtContext = ydtContext.getNextSibling();
             } else {
                 curTraversal = PARENT;
@@ -550,70 +601,6 @@ public class YangApplicationBroker {
     }
 
     /**
-     * Updates the ydt delete tree with augment nodes if node is augmented.
-     *
-     * @param ydtContext    current YDT node
-     * @param curAppContext current application context
-     */
-    private void updateYdtWithAugmentNodes(YdtContext ydtContext,
-                                           YdtAppContext curAppContext) {
-        YdtAppContext childAppContext;
-        YangSchemaNode yangSchemaNode = ((YdtNode) ydtContext).getYangSchemaNode();
-
-        if (yangSchemaNode instanceof YangAugmentableNode &&
-                !((YangAugmentableNode) yangSchemaNode).getAugmentedInfoList()
-                        .isEmpty()) {
-            for (YangAugment yangAugment : ((YangAugmentableNode) yangSchemaNode)
-                    .getAugmentedInfoList()) {
-                childAppContext = addChildToYdtAppTree(curAppContext, yangAugment);
-                addContentsOfAugmentToYdt(yangAugment, ydtContext, childAppContext);
-            }
-        }
-    }
-
-    /**
-     * Adds Contents of Augment to Ydt tree.
-     *
-     * @param augment       YANG augment data model node
-     * @param ydtContext    current YDT node
-     * @param curAppContext current application context
-     */
-    private void addContentsOfAugmentToYdt(YangNode augment,
-                                           YdtContext ydtContext,
-                                           YdtAppContext curAppContext) {
-        YdtContext curYdtNode = ydtContext;
-        YangNode yangNode = augment.getChild();
-        if (yangNode == null) {
-            return;
-        }
-
-        TraversalType curTraversal = CHILD;
-        while (!yangNode.equals(augment)) {
-            if (curTraversal == CHILD) {
-                curYdtNode = addChildToCurYdtNode(curYdtNode, yangNode);
-                updateYdtWithAugmentNodes(curYdtNode, curAppContext);
-            } else if (curTraversal == SIBILING) {
-                curYdtNode = curYdtNode.getParent();
-                curYdtNode = addChildToCurYdtNode(curYdtNode, yangNode);
-                updateYdtWithAugmentNodes(curYdtNode, curAppContext);
-            } else {
-                curYdtNode = curYdtNode.getParent();
-            }
-
-            if (curTraversal != PARENT && yangNode.getChild() != null) {
-                curTraversal = CHILD;
-                yangNode = yangNode.getChild();
-            } else if (yangNode.getNextSibling() != null) {
-                curTraversal = SIBILING;
-                yangNode = yangNode.getNextSibling();
-            } else {
-                curTraversal = PARENT;
-                yangNode = yangNode.getParent();
-            }
-        }
-    }
-
-    /**
      * Updates application context tree if any of the nodes in current
      * application context tree is augmented.
      *
@@ -625,23 +612,14 @@ public class YangApplicationBroker {
         YdtAppContext childAppContext;
         for (YangAugment yangAugment : ((YangAugmentableNode) yangNode)
                 .getAugmentedInfoList()) {
-            childAppContext = addChildToYdtAppTree(curAppContext, yangAugment);
-            processAugmentedNodesForQuery(childAppContext, yangAugment);
+            Object appManagerObject = schemaRegistry
+                    .getRegisteredApplication(yangAugment.getParent());
+            if (appManagerObject != null) {
+                childAppContext = addChildToYdtAppTree(curAppContext,
+                                                       yangAugment);
+                processAugmentForChildNode(childAppContext, yangAugment);
+            }
         }
-    }
-
-    /**
-     * Adds child to current YDT node.
-     *
-     * @param curYdtNode current YDT node
-     * @param yangNode   YANG schema node
-     * @return returns child node added
-     */
-    private YdtContext addChildToCurYdtNode(YdtContext curYdtNode,
-                                            YangSchemaNode yangNode) {
-        YdtExtendedBuilder builder = new YangRequestWorkBench((YdtNode) curYdtNode,
-                                                              EDIT_CONFIG_REQUEST);
-        return builder.addChild(DELETE, yangNode);
     }
 
     /**
@@ -653,7 +631,7 @@ public class YangApplicationBroker {
      */
     private YdtAppContext addChildToYdtAppTree(YdtAppContext curAppContext,
                                                YangNode augment) {
-        YdtAppContext childAppContext = new DefaultYdtAppContext();
+        DefaultYdtAppContext childAppContext = getAppContext(true);
         childAppContext.setParent(curAppContext);
         childAppContext.setOperationType(curAppContext.getOperationType());
         childAppContext.setAugmentingSchemaNode(augment);
@@ -726,13 +704,16 @@ public class YangApplicationBroker {
     /**
      * Returns application manager object for YDT node.
      *
-     * @param ydtNode YANG data node
+     * @param appContext YDT application context
      * @return application manager object
      */
-    private Object getApplicationObject(YdtContext ydtNode) {
-        checkNotNull(ydtNode);
-        YangSchemaNode yangSchemaNode = ((YdtNode) ydtNode).getYangSchemaNode();
-        return schemaRegistry.getRegisteredApplication(yangSchemaNode);
+    private Object getApplicationObjectForRpc(YdtAppContext appContext) {
+        checkNotNull(appContext);
+        while (appContext.getFirstChild() != null) {
+            appContext = appContext.getFirstChild();
+        }
+        return schemaRegistry.getRegisteredApplication(appContext.getAppData()
+                                                               .getRootSchemaNode());
     }
 
     /**
@@ -742,15 +723,8 @@ public class YangApplicationBroker {
      * @return application manager object
      */
     private Object getApplicationObject(YdtAppContext appContext) {
-        YangSchemaNode yangSchemaNode;
-        if (appContext.getModuleContext() == null) {
-            yangSchemaNode = ((YangNode) appContext.getAugmentingSchemaNode())
-                    .getParent();
-        } else {
-            yangSchemaNode = ((YdtNode) appContext.getModuleContext())
-                    .getYangSchemaNode();
-        }
-        return schemaRegistry.getRegisteredApplication(yangSchemaNode);
+        return schemaRegistry.getRegisteredApplication(appContext.getAppData()
+                                                               .getRootSchemaNode());
     }
 
     /**
@@ -773,15 +747,15 @@ public class YangApplicationBroker {
     private String getApplicationMethodName(YdtAppContext appContext,
                                             String appName,
                                             String operation) {
-        if (appContext.getModuleContext() != null) {
+        if (appContext.getYangSchemaNode() instanceof YangModule) {
             return operation + appName;
         }
 
-        String augmentNode = ((YangAugment) appContext
+        String augment = ((YangAugment) appContext
                 .getAugmentingSchemaNode()).getTargetNode().get(0)
                 .getResolvedNode().getJavaClassNameOrBuiltInType();
         return new StringBuilder().append(operation).append(AUGMENTED)
-                .append(appName).append(getCapitalCase(augmentNode)).toString();
+                .append(appName).append(getCapitalCase(augment)).toString();
     }
 
     /**
@@ -807,20 +781,87 @@ public class YangApplicationBroker {
      * Invokes application method for RPC request.
      *
      * @param appManagerObject application manager object
-     * @param inputParamObject input parameter object of method
+     * @param inputObject      input parameter object of method
      * @param methodName       method name which should be invoked
      * @return response object from application
+     * @throws YabException violation in execution of YAB
      */
     private Object invokeApplicationsMethod(Object appManagerObject,
-                                            Object inputParamObject,
+                                            Object inputObject,
                                             String methodName) throws YabException {
         checkNotNull(appManagerObject);
         Class<?> appClass = appManagerObject.getClass();
         try {
             Method methodObject = appClass.getDeclaredMethod(methodName,
-                                                             inputParamObject.getClass());
+                                                             inputObject.getClass());
             if (methodObject != null) {
-                return methodObject.invoke(appManagerObject, inputParamObject);
+                return methodObject.invoke(appManagerObject, inputObject);
+            }
+            throw new YabException("No such method in application");
+        } catch (IllegalAccessException | NoSuchMethodException |
+                InvocationTargetException e) {
+            throw new YabException(e);
+        }
+    }
+
+    /**
+     * Invokes application method for RPC request.
+     *
+     * @param appObject   application manager object
+     * @param inputObject input parameter object of method
+     * @param yangNode    method name which should be invoked
+     * @return response object from application
+     * @throws YabException violation in execution of YAB
+     */
+    private String getReturnTypeOfRpcResponse(Object appObject,
+                                              Object inputObject, YangSchemaNode
+                                                      yangNode) throws YabException {
+        Method methodObject = null;
+        try {
+            if (inputObject == null) {
+                methodObject = appObject.getClass()
+                        .getDeclaredMethod(yangNode.getJavaClassNameOrBuiltInType(),
+                                           null);
+            } else {
+                methodObject = appObject.getClass()
+                        .getDeclaredMethod(yangNode.getJavaClassNameOrBuiltInType(),
+                                           inputObject.getClass().getInterfaces());
+            }
+        } catch (NoSuchMethodException e) {
+            new YabException(e);
+        }
+        return methodObject.getReturnType().getSimpleName();
+    }
+
+    /**
+     * Invokes application method for RPC request.
+     *
+     * @param appManagerObject application manager object
+     * @param inputParamObject input parameter object of method
+     * @param methodName       method name which should be invoked
+     * @return response object from application
+     * @throws YabException violation in execution of YAB
+     */
+    private Object invokeRpcApplicationsMethod(Object appManagerObject,
+                                               Object inputParamObject,
+                                               String methodName) throws YabException {
+        checkNotNull(appManagerObject);
+        Class<?> appClass = appManagerObject.getClass();
+        try {
+            Method methodObject;
+            if (inputParamObject == null) {
+                methodObject = appClass.getDeclaredMethod(methodName, null);
+                if (methodObject != null) {
+                    return methodObject.invoke(appManagerObject);
+                }
+            } else {
+                methodObject = appClass.getDeclaredMethod(methodName,
+                                                          inputParamObject
+                                                                  .getClass()
+                                                                  .getInterfaces());
+                if (methodObject != null) {
+                    return methodObject.invoke(appManagerObject, inputParamObject);
+                }
             }
             throw new YabException("No such method in application");
         } catch (IllegalAccessException | NoSuchMethodException |

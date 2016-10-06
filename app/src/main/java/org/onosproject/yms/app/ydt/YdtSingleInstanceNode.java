@@ -17,8 +17,9 @@
 package org.onosproject.yms.app.ydt;
 
 import org.onosproject.yangutils.datamodel.YangSchemaNodeIdentifier;
-import org.onosproject.yms.app.ydt.exceptions.YdtException;
 
+import static org.onosproject.yms.app.ydt.YdtConstants.DUP_NAME;
+import static org.onosproject.yms.app.ydt.YdtConstants.getErrorString;
 import static org.onosproject.yms.ydt.YdtType.SINGLE_INSTANCE_NODE;
 
 /**
@@ -36,10 +37,8 @@ class YdtSingleInstanceNode extends YdtNode {
     }
 
     @Override
-    public void isDuplicateEntriesValid() {
-        // Free resources
-        freeRestResources();
-        throw new YdtException("Duplicate entry with name " +
-                                        getYdtNodeIdentifier().getName() + ".");
+    public void validDuplicateEntryProcessing() {
+        errorHandler(getErrorString(DUP_NAME, getYdtNodeIdentifier().getName()),
+                     this);
     }
 }

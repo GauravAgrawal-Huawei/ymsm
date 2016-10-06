@@ -23,9 +23,9 @@ import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.onosproject.yms.ydt.YdtContext;
 import org.onosproject.yms.ydt.YmsOperationType;
 
-import java.util.Iterator;
 import java.util.List;
 
+import static org.onosproject.yms.app.ytb.YtbUtil.emptyObjErrMsg;
 import static org.onosproject.yms.ydt.YmsOperationType.NOTIFICATION;
 import static org.onosproject.yms.ydt.YmsOperationType.RPC_REPLY;
 
@@ -36,6 +36,10 @@ import static org.onosproject.yms.ydt.YmsOperationType.RPC_REPLY;
  */
 public class DefaultYangTreeBuilder implements YangTreeBuilder {
 
+    private static final String OBJ_LIST = "object list";
+    private static final String EVENT_OBJ = "event object";
+    private static final String OUTPUT_OBJ = "output object";
+
     /**
      * Creates the YANG tree builder.
      */
@@ -44,82 +48,75 @@ public class DefaultYangTreeBuilder implements YangTreeBuilder {
 
     @Override
     public YdtExtendedBuilder getYdtBuilderForYo(
-            List<Object> moduleObject, String rootNodeName,
-            String rootNodeNameSpace, YmsOperationType operationType,
-            YangSchemaRegistry appSchemaRegistry) {
+            List<Object> moduleObj, String rootName,
+            String rootNameSpace, YmsOperationType opType,
+            YangSchemaRegistry registry) {
 
-        if (moduleObject == null || moduleObject.isEmpty()) {
-            throw new YtbException("The input module/sub-module object list, " +
-                                           "cannot be null.");
+        if (moduleObj == null || moduleObj.isEmpty()) {
+            throw new YtbException(emptyObjErrMsg(OBJ_LIST));
         }
 
-        YdtExtendedBuilder ydtExtendedBuilder = new YangRequestWorkBench(
-                rootNodeName, rootNodeNameSpace, operationType,
-                appSchemaRegistry, false);
+        YdtExtendedBuilder ydtBuilder = new YangRequestWorkBench(
+                rootName, rootNameSpace, opType, registry, false);
 
-        Iterator<Object> moduleObjectIterator = moduleObject.listIterator();
-        while (moduleObjectIterator.hasNext()) {
-            Object yangObject = moduleObjectIterator.next();
-            YdtBuilderFromYo moduleYdtBuilder = new YdtBuilderFromYo(
-                    ydtExtendedBuilder, yangObject, appSchemaRegistry);
+        for (Object yangObj : moduleObj) {
+            YdtBuilderFromYo moduleBuilder = new YdtBuilderFromYo(
+                    ydtBuilder, yangObj, registry);
 
-            moduleYdtBuilder.getModuleNodeFromYsr(yangObject);
-            moduleYdtBuilder.createYdtFromRootObject();
+            moduleBuilder.getModuleNodeFromYsr(yangObj);
+            moduleBuilder.createYdtFromRootObject();
         }
-        return ydtExtendedBuilder;
+        return ydtBuilder;
     }
 
     @Override
-    public YdtContext getYdtForNotification(
-            Object notificationObject, String rootNodeName,
-            YangSchemaRegistry appSchemaRegistry) {
+    public YdtContext getYdtForNotification(Object object, String rootName,
+                                            YangSchemaRegistry registry) {
 
-        if (notificationObject == null) {
-            throw new YtbException("The input module/sub-module object list, " +
-                                           "cannot be null.");
+        if (object == null) {
+            throw new YtbException(emptyObjErrMsg(EVENT_OBJ));
         }
 
-        YdtExtendedBuilder ydtExtendedBuilder = new YangRequestWorkBench(
-                rootNodeName, null, NOTIFICATION, appSchemaRegistry, false);
-        YdtBuilderFromYo moduleYdtBuilder = new YdtBuilderFromYo(
-                ydtExtendedBuilder, notificationObject, appSchemaRegistry);
+        YdtExtendedBuilder extBuilder = new YangRequestWorkBench(
+                rootName, null, NOTIFICATION, registry, false);
+        YdtBuilderFromYo moduleBuilder = new YdtBuilderFromYo(
+                extBuilder, object, registry);
 
-        moduleYdtBuilder.getRootYangNodeWithNotificationFromYsr(
-                notificationObject);
+        moduleBuilder.getRootNodeWithNotificationFromYsr(object);
         /*
-        Forms YDT in module, so that notification can further enhance the tree.
+         * Adds module to YDT, so that notification can further enhance the
+         * tree.
          */
-        moduleYdtBuilder.createModuleNodeInYdt();
-        moduleYdtBuilder.createYdtFromRootObject();
-        return ydtExtendedBuilder.getRootNode();
+        moduleBuilder.createModuleInYdt();
+        moduleBuilder.createYdtFromRootObject();
+        return extBuilder.getRootNode();
     }
 
     @Override
     public YdtExtendedBuilder getYdtForRpcResponse(
-            Object rpcOutputObject, YangRequestWorkBench rpcRequestWorkBench) {
+            Object outputObj, YangRequestWorkBench workBench) {
 
-        if (rpcOutputObject == null) {
-            throw new YtbException("The RPC response class object, cannot be " +
-                                           "null.");
+        if (outputObj == null) {
+            throw new YtbException(emptyObjErrMsg(OUTPUT_OBJ));
         }
 
         // Gets the logical root node from RPC request work bench.
-        YdtExtendedContext logicalRootNode = rpcRequestWorkBench.getRootNode();
+        YdtExtendedContext rootNode = workBench.getRootNode();
 
         /*
-         Creates a new work bench for RPC reply from the contents from request
-         work bench
+         * Creates a new work bench for RPC reply from the contents of the
+         * request work bench
          */
-        YdtExtendedBuilder ydtExtendedBuilder = new YangRequestWorkBench(
-                logicalRootNode.getName(), logicalRootNode.getNamespace(),
-                RPC_REPLY, rpcRequestWorkBench.getYangSchemaRegistry(), false);
-        YdtBuilderFromYo moduleYdtBuilder = new YdtBuilderFromYo(
-                ydtExtendedBuilder, rpcOutputObject,
-                rpcRequestWorkBench.getYangSchemaRegistry());
+        YdtExtendedBuilder ydtBuilder = new YangRequestWorkBench(
+                rootNode.getName(), rootNode.getNamespace(),
+                RPC_REPLY, workBench.getYangSchemaRegistry(), false);
+        YdtBuilderFromYo moduleBuilder = new YdtBuilderFromYo(
+                ydtBuilder, outputObj,
+                workBench.getYangSchemaRegistry());
 
         // Forms YDT till RPC, so that output can further enhance the tree.
-        moduleYdtBuilder.createModuleAndRpcNodeInYdt(logicalRootNode);
-        moduleYdtBuilder.createYdtFromRootObject();
-        return ydtExtendedBuilder;
+        moduleBuilder.createModuleAndRpcInYdt(rootNode);
+        moduleBuilder.createYdtFromRootObject();
+        return ydtBuilder;
     }
 }

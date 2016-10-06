@@ -17,13 +17,14 @@
 package org.onosproject.yms.app.ydt;
 
 
+import org.onosproject.yms.app.utils.TraversalType;
 import org.onosproject.yms.ydt.YdtContext;
 import org.onosproject.yms.ydt.YdtListener;
 
-import static org.onosproject.yms.app.ydt.TraversalType.CHILD;
-import static org.onosproject.yms.app.ydt.TraversalType.PARENT;
-import static org.onosproject.yms.app.ydt.TraversalType.ROOT;
-import static org.onosproject.yms.app.ydt.TraversalType.SIBLING;
+import static org.onosproject.yms.app.utils.TraversalType.CHILD;
+import static org.onosproject.yms.app.utils.TraversalType.PARENT;
+import static org.onosproject.yms.app.utils.TraversalType.ROOT;
+import static org.onosproject.yms.app.utils.TraversalType.SIBLING;
 
 /**
  * Represents implementation of YDT walker, which walks the YDT.
@@ -45,7 +46,6 @@ public class DefaultYdtWalker implements YdtExtendedWalker {
      * @param rootNode    root node of YDT
      * @param isExtended  flag denotes the call type
      */
-    @SuppressWarnings("RedundantCast")
     private void walkTree(YdtListener ydtListener, YdtContext rootNode,
                           boolean isExtended) {
         YdtContext curNode = rootNode;

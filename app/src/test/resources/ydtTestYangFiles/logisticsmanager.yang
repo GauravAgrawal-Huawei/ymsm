@@ -5,7 +5,7 @@ module logisticsmanager {
     namespace "ydt.logistics-manager";
 
     prefix "root";
-    
+
     organization "ON-LAB";
 
     description "This module defines for logistics-manager.";
