@@ -53,9 +53,10 @@ import static org.onosproject.yms.app.yob.YobConstants.L_FAIL_TO_BUILD;
 import static org.onosproject.yms.app.yob.YobConstants.L_FAIL_TO_GET_FIELD;
 import static org.onosproject.yms.app.yob.YobConstants.L_FAIL_TO_GET_METHOD;
 import static org.onosproject.yms.app.yob.YobConstants.L_FAIL_TO_INVOKE_METHOD;
-import static org.onosproject.yms.app.yob.YobConstants.OPERATION_TYPE;
+import static org.onosproject.yms.app.yob.YobConstants.ONOS_YANG_OP_TYPE;
 import static org.onosproject.yms.app.yob.YobConstants.OP_TYPE;
 import static org.onosproject.yms.app.yob.YobConstants.VALUE_OF;
+import static org.onosproject.yms.app.yob.YobConstants.YANG;
 import static org.onosproject.yms.ydt.YdtType.MULTI_INSTANCE_NODE;
 import static org.onosproject.yms.ydt.YdtType.SINGLE_INSTANCE_NODE;
 
@@ -233,22 +234,25 @@ class YobWorkBench {
 
         Object builderObject = builderOrBuiltObject.getBuilderObject();
         Class<?> defaultBuilderClass = builderOrBuiltObject.yangBuilderClass;
+        String className = getCapitalCase(ydtNode.getYangSchemaNode()
+                                                  .getJavaClassNameOrBuiltInType());
 
         // Setting the value into YANG node operation type from ydtContext
         // operation type.
         try {
-            Class<?> interfaceClass = builderOrBuiltObject.yangDefaultClass;
+            Class<?>[] interfaceClass = builderOrBuiltObject.yangDefaultClass
+                    .getInterfaces();
             Object operationType;
-            Class<?>[] innerClasses = interfaceClass.getClasses();
+            Class<?>[] innerClasses = interfaceClass[0].getClasses();
             for (Class<?> innerEnumClass : innerClasses) {
-                if (innerEnumClass.getSimpleName().equals(OP_TYPE)) {
+                if (innerEnumClass.getSimpleName().equals(ONOS_YANG_OP_TYPE)) {
                     Method valueOfMethod = innerEnumClass
                             .getDeclaredMethod(VALUE_OF, String.class);
                     if (ydtNode.getYdtContextOperationType() != null) {
                         operationType = valueOfMethod.invoke(null, ydtNode
                                 .getYdtContextOperationType().toString());
                         Field operationTypeField = defaultBuilderClass
-                                .getDeclaredField(OPERATION_TYPE);
+                                .getDeclaredField(YANG + className + OP_TYPE);
                         operationTypeField.setAccessible(true);
                         operationTypeField.set(builderObject, operationType);
                         break;

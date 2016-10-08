@@ -251,6 +251,7 @@ public final class DefaultYdtAppContext<T extends AppData> implements YdtAppCont
             if (switchedNode instanceof YangAugment) {
                 lastAugMod = switchedNode;
             }
+            System.out.println("switch node " + switchedNode.getName());
             try {
                 switchedNode = switchedNode.getChildSchema(id)
                         .getContextSwitchedNode();
@@ -258,6 +259,7 @@ public final class DefaultYdtAppContext<T extends AppData> implements YdtAppCont
                 throw new YdtException(e.getMessage());
             }
         }
+        System.out.println("done");
         return lastAugMod != null ? lastAugMod : null;
     }
 

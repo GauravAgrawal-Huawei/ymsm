@@ -17,7 +17,6 @@ package org.onosproject.yms.app.ydt;
 
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
-import org.onosproject.yms.app.ydt.exceptions.YdtException;
 import org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.onosproject.yms.ydt.YdtContext;
@@ -137,12 +136,25 @@ public class YdtTestUtils implements YdtListener {
 
     @Override
     public void enterYdtNode(YdtContext ydtContext) {
-        LOGGER.add("Entry Node is " + ydtContext.getName() + PERIOD);
+
+        String name;
+        if (ydtContext.getParent() == null) {
+            name = "logical-node";
+        } else {
+            name = ydtContext.getName();
+        }
+        LOGGER.add("Entry Node is " + name + PERIOD);
     }
 
     @Override
     public void exitYdtNode(YdtContext ydtContext) {
-        LOGGER.add("Exit Node is " + ydtContext.getName() + PERIOD);
+        String name;
+        if (ydtContext.getParent() == null) {
+            name = "logical-node";
+        } else {
+            name = ydtContext.getName();
+        }
+        LOGGER.add("Exit Node is " + name + PERIOD);
     }
 
     /**
@@ -1643,7 +1655,7 @@ public class YdtTestUtils implements YdtListener {
          */
         try {
             ydtBuilder.addLeaf(name, nameSpace, val);
-        } catch (YdtException e) {
+        } catch (Exception e) {
             isExpOccurred = true;
             assertEquals(e.getMessage(), getErrorString(val, type));
         }
@@ -1767,7 +1779,7 @@ public class YdtTestUtils implements YdtListener {
             YdtAppContext ydtAppNode, String name, String ns,
             YdtAppNodeOperationType opType) {
         assertEquals(ydtAppNode.getAugmentingSchemaNode().getName(), name);
-        assertEquals(ydtAppNode.getAugmentingSchemaNode().getNameSpace(), ns);
+        assertEquals(ydtAppNode.getAugmentingSchemaNode().getNameSpace().getModuleNamespace(), ns);
         assertEquals(ydtAppNode.getOperationType(), opType);
     }
 

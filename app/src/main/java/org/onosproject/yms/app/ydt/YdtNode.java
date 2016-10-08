@@ -120,10 +120,10 @@ public abstract class YdtNode<T> implements YdtExtendedContext, Cloneable {
      */
     private YdtContextOperationType ydtContextOperationType;
 
-    /*
-     * Key object for ydtNodeMap.
-     */
-    private YangSchemaNodeIdentifier id;
+//    /*
+//     * Key object for ydtNodeMap.
+//     */
+//    private YangSchemaNodeIdentifier id;
 
     /*
      * Ydt map to keep the track of application information object
@@ -153,12 +153,17 @@ public abstract class YdtNode<T> implements YdtExtendedContext, Cloneable {
 
     @Override
     public String getName() {
-        return id.getName();
+        return yangSchemaNode.getName();
     }
 
     @Override
     public String getNamespace() {
-        return id.getNameSpace();
+        return yangSchemaNode.getNameSpace().getModuleNamespace();
+    }
+
+    @Override
+    public String getModuleNameAsNameSpace() {
+        return yangSchemaNode.getNameSpace().getModuleName();
     }
 
     @Override
@@ -231,8 +236,7 @@ public abstract class YdtNode<T> implements YdtExtendedContext, Cloneable {
      * @param value value in a single instance node
      */
     public void addValue(String value) {
-        errorHandler(getErrorString(VAL_N, getYdtNodeIdentifier()
-                .getName(), NODE), this);
+        errorHandler(getErrorString(VAL_N, getName(), NODE), this);
     }
 
     /**
@@ -241,7 +245,7 @@ public abstract class YdtNode<T> implements YdtExtendedContext, Cloneable {
      */
     public void createKeyNodeList() {
         errorHandler(getErrorString(
-                KEY_LIST_STRING, getYdtNodeIdentifier().getName(), NODE), this);
+                KEY_LIST_STRING, getName(), NODE), this);
     }
 
     /**
@@ -256,8 +260,7 @@ public abstract class YdtNode<T> implements YdtExtendedContext, Cloneable {
      * @param value value in a single instance leaf node
      */
     public void addValueWithoutValidation(String value) {
-        errorHandler(getErrorString(VAL_N, getYdtNodeIdentifier()
-                .getName(), NODE), this);
+        errorHandler(getErrorString(VAL_N, getName(), NODE), this);
     }
 
     /**
@@ -270,8 +273,7 @@ public abstract class YdtNode<T> implements YdtExtendedContext, Cloneable {
      * @param valueSet valueSet in a multi instance leaf node
      */
     public void addValueSet(Set<String> valueSet) {
-        errorHandler(getErrorString(VAL_NS, getYdtNodeIdentifier()
-                .getName(), NODE), this);
+        errorHandler(getErrorString(VAL_NS, getName(), NODE), this);
     }
 
     /**
@@ -286,8 +288,7 @@ public abstract class YdtNode<T> implements YdtExtendedContext, Cloneable {
      * @param valueSet valueSet in a multi instance leaf node
      */
     public void addValueSetWithoutValidation(Set<String> valueSet) {
-        errorHandler(getErrorString(VAL_NS, getYdtNodeIdentifier()
-                .getName(), NODE), this);
+        errorHandler(getErrorString(VAL_NS, getName(), NODE), this);
     }
 
     /**
@@ -327,11 +328,11 @@ public abstract class YdtNode<T> implements YdtExtendedContext, Cloneable {
      * Creates a specific type of node.
      *
      * @param type of YDT node
-     * @param id   node identifier of the YDT node
+     * @param node schema node
      */
-    YdtNode(YdtType type, YangSchemaNodeIdentifier id) {
+    YdtNode(YdtType type, YangSchemaNode node) {
         ydtType = type;
-        setId(id);
+        yangSchemaNode = node;
     }
 
     /**
@@ -381,15 +382,13 @@ public abstract class YdtNode<T> implements YdtExtendedContext, Cloneable {
 
     @Override
     public String getValue() {
-        errorHandler(getErrorString(VAL_IN, getYdtNodeIdentifier()
-                .getName(), NODE), this);
+        errorHandler(getErrorString(VAL_IN, getName(), NODE), this);
         return null;
     }
 
     @Override
     public Set<String> getValueSet() {
-        errorHandler(getErrorString(VAL_INS, getYdtNodeIdentifier()
-                .getName(), NODE), this);
+        errorHandler(getErrorString(VAL_INS, getName(), NODE), this);
         return null;
     }
 
@@ -411,23 +410,23 @@ public abstract class YdtNode<T> implements YdtExtendedContext, Cloneable {
         lastChild = child;
     }
 
-    /**
-     * Returns object node identifier.
-     *
-     * @return node identifier
-     */
-    public YangSchemaNodeIdentifier getYdtNodeIdentifier() {
-        return id;
-    }
-
-    /**
-     * Sets object node identifier.
-     *
-     * @param id node identifier
-     */
-    public void setId(YangSchemaNodeIdentifier id) {
-        this.id = id;
-    }
+//    /**
+//     * Returns object node identifier.
+//     *
+//     * @return node identifier
+//     */
+//    public YangSchemaNodeIdentifier getYdtNodeIdentifier() {
+//        return id;
+//    }
+//
+//    /**
+//     * Sets object node identifier.
+//     *
+//     * @param id node identifier
+//     */
+//    public void setId(YangSchemaNodeIdentifier id) {
+//        this.id = id;
+//    }
 
     /**
      * Adds a child node.
@@ -591,8 +590,7 @@ public abstract class YdtNode<T> implements YdtExtendedContext, Cloneable {
                             .add(((YdtMultiInstanceNode) ydtNode)
                                          .getCompositeKey())) {
                         errorHandler(getErrorString(
-                                UNI_KEY, ydtNode.getYdtNodeIdentifier()
-                                        .getName()), this);
+                                UNI_KEY, ydtNode.getName()), this);
                     }
                 }
             }
@@ -695,7 +693,7 @@ public abstract class YdtNode<T> implements YdtExtendedContext, Cloneable {
      * @param curNode ydt node
      */
     public void errorHandler(String error, YdtNode curNode) {
-        curNode.freeRestResources(curNode);
+//        curNode.freeRestResources(curNode);
         throw new YdtException(error);
     }
 }

@@ -108,8 +108,7 @@ public class DefaultYangTreeBuilder implements YangTreeBuilder {
          * request work bench
          */
         YdtExtendedBuilder ydtBuilder = new YangRequestWorkBench(
-                rootNode.getName(), rootNode.getNamespace(),
-                RPC_REPLY, workBench.getYangSchemaRegistry(), false);
+                null, null, RPC_REPLY, workBench.getYangSchemaRegistry(), false);
         YdtBuilderFromYo moduleBuilder = new YdtBuilderFromYo(
                 ydtBuilder, outputObj,
                 workBench.getYangSchemaRegistry());

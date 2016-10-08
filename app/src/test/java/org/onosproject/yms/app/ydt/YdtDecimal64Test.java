@@ -34,7 +34,6 @@ import static org.onosproject.yms.app.ydt.YdtTestConstants.NIWMF;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.NWF;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.PIWMF;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.PWF;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.TYPE;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.decimal64Ydt;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.validateLeafContents;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.validateNodeContents;
@@ -103,7 +102,7 @@ public class YdtDecimal64Test {
         // assign root node to ydtNode for validating purpose.
         YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
         // Logical root node does not have operation type
-        validateNodeContents(ydtNode, TYPE, null);
+//        validateNodeContents(ydtNode, TYPE, null);
 
         ydtNode = ydtNode.getFirstChild();
         validateNodeContents(ydtNode, "decimal64", MERGE);

@@ -62,6 +62,10 @@ class YobSingleInstanceLeafHandler extends YobHandler {
 
         try {
             YangSchemaNode schemaNode = leafNode.getYangSchemaNode();
+            while (schemaNode.getReferredSchema() != null) {
+                schemaNode = schemaNode.getReferredSchema();
+            }
+
             String setterInParent = schemaNode.getJavaAttributeName();
             YdtExtendedContext parentNode =
                     (YdtExtendedContext) leafNode.getParent();

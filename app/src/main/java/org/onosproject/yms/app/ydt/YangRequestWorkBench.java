@@ -18,6 +18,7 @@ package org.onosproject.yms.app.ydt;
 
 import com.google.common.collect.ImmutableMap;
 import org.onosproject.yangutils.datamodel.YangList;
+import org.onosproject.yangutils.datamodel.YangNamespace;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeContextInfo;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeIdentifier;
@@ -40,7 +41,6 @@ import static org.onosproject.yms.app.ydt.RequestedCardinality.MULTI_INSTANCE;
 import static org.onosproject.yms.app.ydt.RequestedCardinality.MULTI_INSTANCE_LEAF;
 import static org.onosproject.yms.app.ydt.RequestedCardinality.SINGLE_INSTANCE;
 import static org.onosproject.yms.app.ydt.RequestedCardinality.UNKNOWN;
-import static org.onosproject.yms.app.ydt.YdtConstants.APP;
 import static org.onosproject.yms.app.ydt.YdtConstants.EXP_COUNT;
 import static org.onosproject.yms.app.ydt.YdtConstants.E_CREATE;
 import static org.onosproject.yms.app.ydt.YdtConstants.E_DEL;
@@ -49,10 +49,7 @@ import static org.onosproject.yms.app.ydt.YdtConstants.E_MULTI_INS;
 import static org.onosproject.yms.app.ydt.YdtConstants.E_USE_ADDLEAF;
 import static org.onosproject.yms.app.ydt.YdtConstants.F_KEY_PARA;
 import static org.onosproject.yms.app.ydt.YdtConstants.M_KEY_PARA;
-import static org.onosproject.yms.app.ydt.YdtConstants.NOT_EXIST;
-import static org.onosproject.yms.app.ydt.YdtConstants.PERIOD;
 import static org.onosproject.yms.app.ydt.YdtConstants.getErrorString;
-import static org.onosproject.yms.app.ydt.YdtConstants.getErrorStringWithQuote;
 import static org.onosproject.yms.app.ydt.YdtNodeFactory.getAppOpTypeFromYdtOpType;
 import static org.onosproject.yms.ydt.YdtContextOperationType.CREATE;
 import static org.onosproject.yms.ydt.YdtContextOperationType.DELETE;
@@ -144,9 +141,12 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
         YdtNode newNode;
         YangSchemaNodeIdentifier nodeIdentifier =
                 new YangSchemaNodeIdentifier();
+        YangNamespace yangNameSpace = new NameSpace(namespace);
         nodeIdentifier.setName(name);
-        nodeIdentifier.setNameSpace(namespace);
-        newNode = new YdtSingleInstanceNode(nodeIdentifier);
+        nodeIdentifier.setNameSpace(yangNameSpace);
+
+        //TODO: maintain the schema node identifier of logical root in workbench
+        newNode = new YdtSingleInstanceNode(null);
         setRootNode(newNode);
         this.registry = registry;
         ymsOperationType = opType;
@@ -213,25 +213,24 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
     /**
      * Returns the data tree for given node identifier.
      *
-     * @param id        Represents node identifier of YANG data tree node
+     * @param name      module name
      * @param namespace namespace of the application requested by user
      * @return YANG data tree node
      */
-    private YdtNode moduleHandler(YangSchemaNodeIdentifier id,
+    private YdtNode moduleHandler(String name,
                                   String namespace) {
 
         YangSchemaNode node = registry
-                .getYangSchemaNodeUsingSchemaName(id.getName());
+                .getYangSchemaNodeUsingSchemaName(name);
 
-        if (node == null ||
-                namespace != null && !namespace.equals(node.getNameSpace())) {
-            curNode.errorHandler(getErrorStringWithQuote(
-                    APP, id.getName(), NOT_EXIST, PERIOD), rootNode);
-        }
+//        if (node == null ||
+//                namespace != null && !namespace.equals(node.getNameSpace())) {
+//            curNode.errorHandler(getErrorStringWithQuote(
+//                    APP, name, NOT_EXIST, PERIOD), rootNode);
+//        }
 
-        YdtNode newNode = new YdtSingleInstanceNode(id);
+        YdtNode newNode = new YdtSingleInstanceNode(node);
         newNode.setYangSchemaNode(node);
-        id.setNameSpace(node.getNameSpace());
         return newNode;
     }
 
@@ -305,18 +304,22 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
 
         YangSchemaNodeIdentifier id = new YangSchemaNodeIdentifier();
         id.setName(name);
+        YangNamespace yangNameSpace = null;
+        if (namespace != null) {
+            yangNameSpace = new NameSpace(namespace);
+        }
 
         // Module/sub-module node handler.
         if (curNode.equals(rootNode)) {
-            childNode = moduleHandler(id, namespace);
+            childNode = moduleHandler(name, namespace);
         } else {
 
             // If namespace given by user null, then take namespace from parent.
-            if (namespace == null) {
-                namespace = curNode.getYdtNodeIdentifier().getNameSpace();
+            if (yangNameSpace == null) {
+                yangNameSpace = curNode.getYangSchemaNode().getNameSpace();
             }
 
-            id.setNameSpace(namespace);
+            id.setNameSpace(yangNameSpace);
 
             /*
              * Get the already exiting YDT node in YDT tree with same
@@ -712,10 +715,9 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
                 schemaNode.getYangSchemaNodeIdentifier();
 
         childNode = YdtNodeFactory
-                .getYangSchemaNodeTypeSpecificContext(
-                        id, schemaNode.getYangSchemaNodeType());
+                .getYangSchemaNodeTypeSpecificContext(schemaNode);
 
-        childNode.setId(id);
+//        childNode.setId(id);
 
         childNode.setYangSchemaNode(schemaNode);
 

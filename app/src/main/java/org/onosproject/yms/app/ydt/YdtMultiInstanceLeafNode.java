@@ -17,7 +17,7 @@
 package org.onosproject.yms.app.ydt;
 
 import com.google.common.collect.ImmutableSet;
-import org.onosproject.yangutils.datamodel.YangSchemaNodeIdentifier;
+import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
 
 import java.util.HashSet;
@@ -42,10 +42,10 @@ class YdtMultiInstanceLeafNode extends YdtNode {
     /**
      * Creates a YANG multi instance leaf node.
      *
-     * @param id node identifier of YDT multi instance node
+     * @param node schema node
      */
-    protected YdtMultiInstanceLeafNode(YangSchemaNodeIdentifier id) {
-        super(MULTI_INSTANCE_LEAF_VALUE_NODE, id);
+    protected YdtMultiInstanceLeafNode(YangSchemaNode node) {
+        super(MULTI_INSTANCE_LEAF_VALUE_NODE, node);
     }
 
     @Override
@@ -73,7 +73,7 @@ class YdtMultiInstanceLeafNode extends YdtNode {
     private void addValueToValueSet(String value) {
 
         if (!valueSet.add(value)) {
-            errorHandler(getErrorString(DUP, getYdtNodeIdentifier().getName(),
+            errorHandler(getErrorString(DUP, getName(),
                                         LIST_N), this);
         }
     }

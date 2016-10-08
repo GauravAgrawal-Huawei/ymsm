@@ -67,6 +67,10 @@ class YobMultiInstanceLeafHandler
                             YangSchemaRegistry schemaRegistry) {
         Class<?> parentBuilderClass = null;
         YangSchemaNode yangSchemaNode = leafListNode.getYangSchemaNode();
+        while (yangSchemaNode.getReferredSchema() != null) {
+            yangSchemaNode = yangSchemaNode.getReferredSchema();
+        }
+
         YdtExtendedContext parentYdtNode =
                 (YdtExtendedContext) leafListNode.getParent();
         YobWorkBench parentYobWorkBench =

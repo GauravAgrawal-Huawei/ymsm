@@ -18,6 +18,7 @@ package org.onosproject.yms.app.ydt;
 
 import com.google.common.collect.ImmutableList;
 import org.onosproject.yangutils.datamodel.YangList;
+import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeIdentifier;
 import org.onosproject.yms.ydt.YdtContext;
 
@@ -48,10 +49,10 @@ public class YdtMultiInstanceNode extends YdtNode {
     /**
      * Creates a YANG multi instance node object.
      *
-     * @param id node identifier of YDT multi instance node .
+     * @param node schema node
      */
-    protected YdtMultiInstanceNode(YangSchemaNodeIdentifier id) {
-        super(MULTI_INSTANCE_NODE, id);
+    protected YdtMultiInstanceNode(YangSchemaNode node) {
+        super(MULTI_INSTANCE_NODE, node);
     }
 
     /**
@@ -93,7 +94,7 @@ public class YdtMultiInstanceNode extends YdtNode {
         List<YdtContext> nodeList = new ArrayList<>();
 
         YangSchemaNodeIdentifier id = new YangSchemaNodeIdentifier();
-        id.setNameSpace(getYdtNodeIdentifier().getNameSpace());
+        id.setNameSpace(getYangSchemaNode().getNameSpace());
         // This loop should run while schema key list is not finished
         while (sklItr.hasNext()) {
             String name = sklItr.next();

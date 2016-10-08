@@ -39,7 +39,6 @@ import static org.onosproject.yms.app.ydt.YdtTestConstants.MRV;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.RUI;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.SMALLINT64;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.SMALLUINT64;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.TYPE;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.integer64Ydt;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.validateErrMsg;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.validateLeafContents;
@@ -124,7 +123,7 @@ public class YdtInteger64Test {
         // assign root node to ydtNode for validating purpose.
         YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
         // Logical root node does not have operation type
-        validateNodeContents(ydtNode, TYPE, null);
+//        validateNodeContents(ydtNode, TYPE, null);
 
         ydtNode = ydtNode.getFirstChild();
         validateNodeContents(ydtNode, "integer64", MERGE);

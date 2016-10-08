@@ -52,7 +52,7 @@ public class YobLogisticsManagerTest {
                 try {
                     Field field = aClass.getDeclaredField("supervisor");
                     Field onosYangNodeOperationType = aClass
-                            .getDeclaredField("onosYangNodeOperationType");
+                            .getDeclaredField("yangCustomssupervisorOpType");
                     field.setAccessible(true);
                     onosYangNodeOperationType.setAccessible(true);
                     try {

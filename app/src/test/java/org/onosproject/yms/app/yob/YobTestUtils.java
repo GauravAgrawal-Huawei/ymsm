@@ -36,6 +36,15 @@ final class YobTestUtils {
     static final String ROUTER_ID = "router-id";
     static final String ROUTER_IP = "router-ip";
     static final String STR_LEAF_VALUE = "leaf value";
+    static final String YMS_IETF_NETWORK = "yms-ietf-network";
+    static final String NETWORKS_STATE = "networks-state";
+    static final String NETWORK = "network";
+    static final String NETWORK_REF = "network-ref";
+    static final String IETF_TE_TOPOLOGY = "ietf-te-topology";
+    static final String TE_NODE_EVENT = "te-node-event";
+    static final String TE_NODE_ATTRIBUTES = "te-node-attributes";
+    static final String ADMIN_STATUS = "admin-status";
+    static final String UP = "up";
 
     private YobTestUtils() {
         TEST_SCHEMA_PROVIDER.processSchemaRegistry(null);

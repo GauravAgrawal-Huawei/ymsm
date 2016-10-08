@@ -132,7 +132,7 @@
               presence containers augmented into this container.";
          }
          leaf network-id {
-           type inet:uri;
+           type network-id;
            description
              "Identifies a network.";
          }

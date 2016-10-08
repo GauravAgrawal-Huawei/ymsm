@@ -34,5 +34,12 @@
         <module>api</module>
         <module>app</module>
     </modules>
+    <dependencies>
+        <dependency>
+            <groupId>org.onosproject</groupId>
+            <artifactId>onos-yang-datamodel</artifactId>
+            <version>1.9.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 </project>

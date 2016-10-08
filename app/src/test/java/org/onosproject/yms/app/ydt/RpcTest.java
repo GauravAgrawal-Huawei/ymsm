@@ -33,7 +33,7 @@ public class RpcTest {
     private final List<String> logger = new ArrayList<>();
 
     private static final String[] EXPECTED = {
-            "Entry Node is Hello-ONOS.",
+            "Entry Node is logical-node.",
             "Entry Node is Hello_ONOS.",
             "Entry Node is hello-world.",
             "Entry Node is input.",
@@ -50,7 +50,7 @@ public class RpcTest {
             "Exit Node is input.",
             "Exit Node is hello-world.",
             "Exit Node is Hello_ONOS.",
-            "Exit Node is Hello-ONOS."
+            "Exit Node is logical-node."
     };
 
     /**
@@ -72,7 +72,7 @@ public class RpcTest {
         // assign root node to ydtNode for validating purpose.
         YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
         // Logical root node does not have operation type
-        validateNodeContents(ydtNode, "Hello-ONOS", null);
+//        validateNodeContents(ydtNode, "Hello-ONOS", null);
         ydtNode = ydtNode.getFirstChild();
         validateNodeContents(ydtNode, "Hello_ONOS", MERGE);
         ydtNode = ydtNode.getFirstChild();

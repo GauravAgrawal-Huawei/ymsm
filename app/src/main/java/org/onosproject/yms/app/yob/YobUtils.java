@@ -19,7 +19,9 @@ package org.onosproject.yms.app.yob;
 import org.onosproject.yangutils.datamodel.RpcNotificationContainer;
 import org.onosproject.yangutils.datamodel.YangBit;
 import org.onosproject.yangutils.datamodel.YangBits;
+import org.onosproject.yangutils.datamodel.YangDerivedInfo;
 import org.onosproject.yangutils.datamodel.YangLeaf;
+import org.onosproject.yangutils.datamodel.YangLeafList;
 import org.onosproject.yangutils.datamodel.YangLeafRef;
 import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
@@ -42,6 +44,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_AUGMENT_NODE;
+import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.DERIVED;
 import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
 import static org.onosproject.yms.app.ydt.AppType.YOB;
 import static org.onosproject.yms.app.yob.YobConstants.DEFAULT;
@@ -49,6 +52,7 @@ import static org.onosproject.yms.app.yob.YobConstants.E_DATA_TYPE_NOT_SUPPORT;
 import static org.onosproject.yms.app.yob.YobConstants.E_FAIL_TO_LOAD_CONSTRUCTOR;
 import static org.onosproject.yms.app.yob.YobConstants.E_INVALID_DATA_TREE;
 import static org.onosproject.yms.app.yob.YobConstants.FROM_STRING;
+import static org.onosproject.yms.app.yob.YobConstants.JAVA_LANG;
 import static org.onosproject.yms.app.yob.YobConstants.L_FAIL_TO_LOAD_CLASS;
 import static org.onosproject.yms.app.yob.YobConstants.OF;
 import static org.onosproject.yms.app.yob.YobConstants.OP_PARAM;
@@ -202,6 +206,10 @@ final class YobUtils {
         Method childMethod = null;
 
         YangSchemaNode yangJavaModule = ydtExtendedContext.getYangSchemaNode();
+        while (yangJavaModule.getReferredSchema() != null) {
+            yangJavaModule = yangJavaModule.getReferredSchema();
+        }
+
         String qualifiedClassName = yangJavaModule.getJavaPackage() + PERIOD +
                 getCapitalCase(yangJavaModule.getJavaClassNameOrBuiltInType());
         ClassLoader classLoader = getClassLoader(null, qualifiedClassName,
@@ -269,9 +277,27 @@ final class YobUtils {
             NoSuchMethodException {
         YangSchemaNode schemaNode = ydtExtendedContext
                 .getYangSchemaNode();
-        YangLeafRef leafRef = (YangLeafRef) ((YangLeaf) schemaNode)
-                .getDataType().getDataTypeExtendedInfo();
-        YobUtils.setDataFromStringValue(leafRef.getEffectiveDataType(),
+        while (schemaNode.getReferredSchema() != null) {
+            schemaNode = schemaNode.getReferredSchema();
+        }
+        YangLeafRef leafRef;
+        if (schemaNode instanceof YangLeaf) {
+            leafRef = (YangLeafRef) ((YangLeaf) schemaNode)
+                    .getDataType().getDataTypeExtendedInfo();
+        } else {
+            leafRef = (YangLeafRef) ((YangLeafList) schemaNode)
+                    .getDataType().getDataTypeExtendedInfo();
+        }
+
+        YangType type = leafRef.getEffectiveDataType();
+        if (type.getDataType() == DERIVED &&
+                schemaNode.getJavaPackage().equals(JAVA_LANG)) {
+            YangDerivedInfo derivedInfo = (YangDerivedInfo) leafRef
+                    .getEffectiveDataType()
+                    .getDataTypeExtendedInfo();
+            type.setDataType(derivedInfo.getEffectiveBuiltInType());
+        }
+        YobUtils.setDataFromStringValue(type,
                                         leafValue, parentSetterMethod,
                                         parentBuilderObject, ydtExtendedContext);
     }

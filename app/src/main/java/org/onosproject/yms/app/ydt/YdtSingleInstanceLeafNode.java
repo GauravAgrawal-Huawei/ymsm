@@ -16,7 +16,7 @@
 
 package org.onosproject.yms.app.ydt;
 
-import org.onosproject.yangutils.datamodel.YangSchemaNodeIdentifier;
+import org.onosproject.yangutils.datamodel.YangSchemaNode;
 
 import static org.onosproject.yms.app.ydt.YdtConstants.DUP_NAME;
 import static org.onosproject.yms.app.ydt.YdtConstants.getErrorString;
@@ -36,10 +36,10 @@ class YdtSingleInstanceLeafNode extends YdtNode {
     /**
      * Creates a YANG single instance leaf node.
      *
-     * @param id node identifier of YDT single instance leaf node
+     * @param node node identifier of YDT single instance leaf node
      */
-    protected YdtSingleInstanceLeafNode(YangSchemaNodeIdentifier id) {
-        super(SINGLE_INSTANCE_LEAF_VALUE_NODE, id);
+    protected YdtSingleInstanceLeafNode(YangSchemaNode node) {
+        super(SINGLE_INSTANCE_LEAF_VALUE_NODE, node);
     }
 
     @Override
@@ -68,7 +68,7 @@ class YdtSingleInstanceLeafNode extends YdtNode {
 
     @Override
     public void validDuplicateEntryProcessing() {
-        errorHandler(getErrorString(DUP_NAME, getYdtNodeIdentifier().getName()),
+        errorHandler(getErrorString(DUP_NAME, getName()),
                      this);
     }
 }

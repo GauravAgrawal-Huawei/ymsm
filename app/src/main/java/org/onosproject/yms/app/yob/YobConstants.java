@@ -30,12 +30,14 @@ final class YobConstants {
     static final String DEFAULT = "Default";
     static final String ADD_TO = "addTo";
     static final String VALUE_OF = "valueOf";
-    static final String OPERATION_TYPE = "onosYangNodeOperationType";
-    static final String OP_TYPE = "OnosYangNodeOperationType";
+    static final String OP_TYPE = "OpType";
+    static final String ONOS_YANG_OP_TYPE = "OnosYangOpType";
     static final String OF = "of";
     static final String PERIOD = ".";
     static final String SPACE = " ";
     static final String ADD_AUGMENT_METHOD = "addYangAugmentedInfo";
+    static final String YANG = "yang";
+    static final String JAVA_LANG = "java.lang";
 
     //Error strings
     static final String E_NO_HANDLE_FOR_YDT = "No handler for YDT node";

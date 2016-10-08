@@ -95,10 +95,7 @@ public class YangApplicationBroker {
             responseObjects.add(responseObject);
         }
 
-        YdtContext rootYdtContext = workBench.getRootNode();
-        YdtBuilder responseYdt = buildResponseYdt(responseObjects,
-                                                  rootYdtContext.getName(),
-                                                  rootYdtContext.getNamespace());
+        YdtBuilder responseYdt = buildResponseYdt(responseObjects, null, null);
 
         return new YangResponseWorkBench(responseYdt.getRootNode(),
                                          EXECUTION_SUCCESS,

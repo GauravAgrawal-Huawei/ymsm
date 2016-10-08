@@ -47,6 +47,9 @@ abstract class YobHandler {
                               YangSchemaRegistry registry) {
         String setterName = null;
         YangSchemaNode node = curNode.getYangSchemaNode();
+        while (node.getReferredSchema() != null) {
+            node = node.getReferredSchema();
+        }
 
         String qualName = getQualifiedDefaultClass(node);
         ClassLoader classLoader = YobUtils.getClassLoader(registry, qualName,

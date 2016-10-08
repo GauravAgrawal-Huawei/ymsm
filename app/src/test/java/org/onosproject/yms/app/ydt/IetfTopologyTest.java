@@ -37,7 +37,7 @@ import static org.onosproject.yms.ydt.YdtContextOperationType.MERGE;
 public class IetfTopologyTest {
 
     private static final String[] EXPECTED = {
-            "Entry Node is yms-ietf-network.",
+            "Entry Node is logical-node.",
             "Entry Node is yms-ietf-network.",
             "Entry Node is networks.",
             "Entry Node is network.",
@@ -119,7 +119,7 @@ public class IetfTopologyTest {
             "Exit Node is network.",
             "Exit Node is networks-state.",
             "Exit Node is yms-ietf-network.",
-            "Exit Node is yms-ietf-network."
+            "Exit Node is logical-node."
     };
 
     /**
@@ -141,7 +141,7 @@ public class IetfTopologyTest {
         // Assign root node to ydtNode for validating purpose.
         YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
         // Logical root node does not have operation type
-        validateNodeContents(ydtNode, "yms-ietf-network", null);
+//        validateNodeContents(ydtNode, "yms-ietf-network", null);
         ydtNode = ydtNode.getFirstChild();
         validateNodeContents(ydtNode, "yms-ietf-network", MERGE);
         ydtNode = ydtNode.getFirstChild();

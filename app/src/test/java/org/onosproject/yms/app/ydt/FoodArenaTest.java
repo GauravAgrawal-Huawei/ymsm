@@ -34,14 +34,14 @@ public class FoodArenaTest {
     private final List<String> logger = new ArrayList<>();
 
     private static final String[] EXPECTED = {
-            "Entry Node is foodarena.",
+            "Entry Node is logical-node.",
             "Entry Node is food.",
             "Entry Node is food.",
             "Entry Node is chocolate.",
             "Exit Node is chocolate.",
             "Exit Node is food.",
             "Exit Node is food.",
-            "Exit Node is foodarena."
+            "Exit Node is logical-node."
     };
 
     /**
@@ -62,7 +62,7 @@ public class FoodArenaTest {
         // Assign root node to ydtNode for validating purpose.
         YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
         // Logical root node does not have operation type
-        validateNodeContents(ydtNode, "foodarena", null);
+//        validateNodeContents(ydtNode, "foodarena", null);
         ydtNode = ydtNode.getFirstChild();
         validateNodeContents(ydtNode, "food", MERGE);
         ydtNode = ydtNode.getFirstChild();
