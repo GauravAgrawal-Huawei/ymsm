@@ -78,7 +78,7 @@ public abstract class YtbErrMsgAndConstants {
      * Static attribute of name rpc.
      */
     public static final String RPC = "rpc";
-
+    public static final String HUNDRED = "hundred";
     /**
      * Created a schema node provider, which will register the app.
      */

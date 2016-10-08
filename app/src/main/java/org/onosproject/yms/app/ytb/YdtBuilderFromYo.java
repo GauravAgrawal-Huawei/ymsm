@@ -53,7 +53,8 @@ import static org.onosproject.yms.app.ytb.YtbUtil.getCapitalCase;
 import static org.onosproject.yms.app.ytb.YtbUtil.getClassLoaderForAugment;
 import static org.onosproject.yms.app.ytb.YtbUtil.getInterfaceClassFromImplClass;
 import static org.onosproject.yms.app.ytb.YtbUtil.getJavaName;
-import static org.onosproject.yms.app.ytb.YtbUtil.getOperationTypeOfTheNode;
+import static org.onosproject.yms.app.ytb.YtbUtil.getNodeOpType;
+import static org.onosproject.yms.app.ytb.YtbUtil.getOpTypeName;
 import static org.onosproject.yms.app.ytb.YtbUtil.getParentObjectOfNode;
 import static org.onosproject.yms.app.ytb.YtbUtil.getStringFromDataType;
 import static org.onosproject.yms.app.ytb.YtbUtil.isAugmentNode;
@@ -670,7 +671,8 @@ public class YdtBuilderFromYo {
      */
     private void addChildNodeInYdt(Object childObj, YangNode curNode,
                                    YtbNodeInfo curNodeInfo) {
-        YdtContextOperationType opType = getOperationTypeOfTheNode(childObj);
+        YdtContextOperationType opType =
+                getNodeOpType(childObj, getOpTypeName(curNode));
         extBuilder.addChild(opType, curNode);
         YdtExtendedContext curExtContext = (YdtExtendedContext) extBuilder
                 .getCurNode();
@@ -902,5 +904,4 @@ public class YdtBuilderFromYo {
         }
         return new YtbTraversalInfo(curNode.getParent(), PARENT);
     }
-
 }

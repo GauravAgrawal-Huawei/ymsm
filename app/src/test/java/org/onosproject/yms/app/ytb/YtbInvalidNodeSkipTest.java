@@ -17,6 +17,14 @@
 package org.onosproject.yms.app.ytb;
 
 import org.junit.Test;
+import org.onosproject.yang.gen.v1.yms.test.ytb.data.type.rev20160826.YtbDataType;
+import org.onosproject.yang.gen.v1.yms.test.ytb.data.type.rev20160826.YtbDataTypeOpParam;
+import org.onosproject.yang.gen.v1.yms.test.ytb.data.type.rev20160826.ytbdatatype.EnumDer1;
+import org.onosproject.yang.gen.v1.yms.test.ytb.data.type.rev20160826.ytbdatatype.EnumDer2;
+import org.onosproject.yang.gen.v1.yms.test.ytb.data.type.rev20160826.ytbdatatype.EnumLeafListUnion;
+import org.onosproject.yang.gen.v1.yms.test.ytb.data.type.rev20160826.ytbdatatype.UnionEnumUnion;
+import org.onosproject.yang.gen.v1.yms.test.ytb.data.type.rev20160826.ytbdatatype.enumder2.EnumDer2Enum;
+import org.onosproject.yang.gen.v1.yms.test.ytb.data.type.rev20160826.ytbdatatype.enumleaflistunion.EnumLeafListUnionEnum1;
 import org.onosproject.yang.gen.v1.yms.test.ytb.simple.rpc.response.rev20160826.YtbSimpleRpcResponse;
 import org.onosproject.yang.gen.v1.yms.test.ytb.simple.rpc.response.rev20160826.YtbSimpleRpcResponseOpParam;
 import org.onosproject.yang.gen.v1.yms.test.ytb.simple.rpc.response.rev20160826.ytbsimplerpcresponse.Cumulative;
@@ -27,6 +35,7 @@ import org.onosproject.yms.ydt.YdtContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -40,7 +49,15 @@ public class YtbInvalidNodeSkipTest extends YtbErrMsgAndConstants {
     private static final String CUMULATIVE = "cumulative";
     private static final String SUM = "sum";
     private static final String FIVE = "5";
-    private static final String TEN = "10";
+    private static final String TEN_NUM = "10";
+    private static final String DATA_TYPE = "YtbDataType";
+    private static final String ENUM = "enum";
+
+    private static final String THOUSAND = "thousand";
+    private static final String TEN = "ten";
+    private static final String ENUM_LEAF_LIST = "enum-leaf-list";
+    private static final String UNION_ENUM = "union-enum";
+    private static final String ENUM_LEAF_REF = "leaf-ref-enum";
 
     /**
      * Processes RPC node which is the sibling to the empty current node.
@@ -97,8 +114,95 @@ public class YtbInvalidNodeSkipTest extends YtbErrMsgAndConstants {
 
         YdtContext sum2 = list2.getFirstChild();
         assertThat(getInCrtName(LEAF, SUM), sum2.getName(), is(SUM));
-        assertThat(getInCrtLeafValue(SUM, TEN), sum2.getValue(), is(TEN));
+        assertThat(getInCrtLeafValue(SUM, TEN_NUM), sum2.getValue(), is(TEN_NUM));
     }
 
+    @Test
+    public void processEnumDataType() {
 
+        schemaProvider.processSchemaRegistry(null);
+        DefaultYangSchemaRegistry registry = schemaProvider
+                .getDefaultYangSchemaRegistry();
+
+        // As an application, creates the object.
+
+        // Creates the enum hundred for leaf enum.
+        EnumDer2 der2 = new EnumDer2(EnumDer2Enum.HUNDRED);
+        EnumDer1 der1 = new EnumDer1(der2);
+
+        // Creates the enum hundred and ten for leaf-list having union.
+        EnumLeafListUnion union1 = new EnumLeafListUnion
+                (EnumLeafListUnionEnum1.HUNDRED);
+        EnumLeafListUnion union2 = new EnumLeafListUnion
+                (EnumLeafListUnionEnum1.TEN);
+
+        List<EnumLeafListUnion> leafList = new ArrayList<>();
+        leafList.add(union1);
+        leafList.add(union2);
+
+        // Creates a leaf having typedef in union, where as the typedef is enum.
+        UnionEnumUnion enumUnion = new UnionEnumUnion(der1);
+
+        // Creates a leaf-list with leaf-ref pointing to leaf with enum.
+        EnumDer2 enum2 = new EnumDer2(EnumDer2Enum.THOUSAND);
+        EnumDer1 enum1 = new EnumDer1(enum2);
+        EnumDer2 enum4 = new EnumDer2(EnumDer2Enum.HUNDRED);
+        EnumDer1 enum3 = new EnumDer1(enum4);
+
+        List<EnumDer1> enumDer1 = new ArrayList<>();
+        enumDer1.add(enum1);
+        enumDer1.add(enum3);
+
+        YtbDataType dataType = new YtbDataTypeOpParam.YtbDataTypeBuilder()
+                .yangAutoPrefixEnum(der1).enumLeafList(leafList)
+                .unionEnum(enumUnion).leafRefEnum(enumDer1).build();
+
+        // As YSB or YAB protocol sets the value for YTB.
+        List<Object> objectList = new ArrayList<>();
+        objectList.add(dataType);
+
+        // Builds YANG tree in YTB.
+        DefaultYangTreeBuilder treeBuilder = new DefaultYangTreeBuilder();
+        YdtExtendedBuilder ydtBuilder = treeBuilder.getYdtBuilderForYo(
+                objectList, ROOT_NAME, ROOT_NAME_SPACE,
+                EDIT_CONFIG_REQUEST, registry);
+
+        // Receives YDT context and checks the tree that is built.
+        YdtContext context = ydtBuilder.getRootNode();
+
+        // Gets the first module from logical root node.
+        YdtContext module = context.getFirstChild();
+        assertThat(getInCrtName(MODULE, DATA_TYPE), module.getName(),
+                   is(DATA_TYPE));
+
+        // Gets the first list content of cumulative.
+        YdtContext leafEnum = module.getFirstChild();
+        assertThat(getInCrtName(LEAF, ENUM), leafEnum.getName(), is(ENUM));
+        assertThat(getInCrtLeafValue(ENUM, HUNDRED), leafEnum.getValue(),
+                   is(HUNDRED));
+
+        YdtContext unionEnum = leafEnum.getNextSibling();
+        assertThat(getInCrtName(LEAF_LIST, UNION_ENUM), unionEnum.getName(),
+                   is(UNION_ENUM));
+        assertThat(getInCrtLeafValue(UNION_ENUM, HUNDRED), unionEnum.getValue(),
+                   is(HUNDRED));
+
+        YdtContext leafListEnum = unionEnum.getNextSibling();
+        Set leafListVal = leafListEnum.getValueSet();
+        assertThat(getInCrtName(LEAF_LIST, ENUM_LEAF_LIST),
+                   leafListEnum.getName(), is(ENUM_LEAF_LIST));
+        assertThat(getInCrtLeafListValue(ENUM_LEAF_LIST, HUNDRED),
+                   leafListVal.contains(HUNDRED), is(true));
+        assertThat(getInCrtLeafListValue(ENUM_LEAF_LIST, TEN_NUM),
+                   leafListVal.contains(TEN), is(true));
+
+        YdtContext leafRef = leafListEnum.getNextSibling();
+        Set leafRefVal = leafRef.getValueSet();
+        assertThat(getInCrtName(LEAF_LIST, ENUM_LEAF_REF), leafRef.getName(),
+                   is(ENUM_LEAF_REF));
+        assertThat(getInCrtLeafListValue(ENUM_LEAF_REF, HUNDRED),
+                   leafRefVal.contains(HUNDRED), is(true));
+        assertThat(getInCrtLeafListValue(ENUM_LEAF_REF, TEN_NUM),
+                   leafRefVal.contains(THOUSAND), is(true));
+    }
 }

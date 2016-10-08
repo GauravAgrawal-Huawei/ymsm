@@ -71,7 +71,8 @@ public final class YtbUtil {
 
     private static final int ONE = 1;
     private static final String SCHEMA_NAME_IN_ENUM = "schemaName";
-    private static final String OPERATION_TYPE = "onosYangNodeOperationType";
+    private static final String YANG = "yang";
+    private static final String OP_TYPE = "OpType";
     private static final String STR_NONE = "NONE";
     private static final String EQUALS = "=";
     private static final String ENUM_LEAF_IDENTIFIER = "$LeafIdentifier";
@@ -80,6 +81,8 @@ public final class YtbUtil {
             new HashSet<>(Arrays.asList(INT8, INT16, INT32, INT64, UINT8,
                                         UINT16, UINT32, UINT64, DECIMAL64,
                                         BOOLEAN, EMPTY));
+    private static final char OPEN_BRACE = '{';
+    private static final String COMMA = ",";
 
     // No instantiation.
     private YtbUtil() {
@@ -184,11 +187,11 @@ public final class YtbUtil {
      * @param nodeObj node object
      * @return operation type of the class
      */
-    public static YdtContextOperationType getOperationTypeOfTheNode(
-            Object nodeObj) {
+    public static YdtContextOperationType getNodeOpType(
+            Object nodeObj, String typeName) {
         Object opTypeObj;
         try {
-            opTypeObj = getAttributeOfObject(nodeObj, OPERATION_TYPE);
+            opTypeObj = getAttributeOfObject(nodeObj, typeName);
         } catch (NoSuchMethodException e) {
             return YdtContextOperationType.valueOf(STR_NONE);
         }
@@ -294,12 +297,10 @@ public final class YtbUtil {
             case INSTANCE_IDENTIFIER:
             case DERIVED:
             case UNION:
-                //TODO: Generated code has to be changed, it must select
-                // the setting leaf and it must give back the corresponding
-                // toString of that type.
+            case ENUMERATION:
             case BOOLEAN:
             case BITS:
-                return getValueFromToStringHelper(String.valueOf(fieldObj));
+                return String.valueOf(fieldObj);
 
             case BINARY:
                 return Base64.getEncoder().encodeToString((byte[]) fieldObj);
@@ -309,15 +310,6 @@ public final class YtbUtil {
                         (YangLeafRef) dataType.getDataTypeExtendedInfo();
                 return getStringFromDataType(fieldObj,
                                              leafRef.getEffectiveDataType());
-
-            case ENUMERATION:
-                Object value;
-                try {
-                    value = getAttributeOfObject(fieldObj, SCHEMA_NAME_IN_ENUM);
-                } catch (NoSuchMethodException e) {
-                    throw new YtbException(e);
-                }
-                return getValueFromToStringHelper(String.valueOf(value));
 
             default:
                 throw new YtbException("Unsupported data type. Cannot be " +
@@ -337,13 +329,26 @@ public final class YtbUtil {
      */
     private static String getValueFromToStringHelper(String rawString) {
         if (rawString.contains(EQUALS)) {
-            int index = rawString.lastIndexOf(EQUALS);
-            int braceIndex = rawString.indexOf(CLOSE_BRACE);
-            if (index != -1) {
-                return rawString.substring(index + 1, braceIndex);
+            int openIdx = rawString.lastIndexOf(OPEN_BRACE);
+            int closeIdx = rawString.indexOf(CLOSE_BRACE);
+            String content = rawString.substring(openIdx + 1, closeIdx);
+            long equal = content.codePoints().filter(ch -> ch == '=').count();
+            if (equal > 1) {
+                String[] values = content.split(COMMA);
+                StringBuilder parsedStr = new StringBuilder();
+                for (String value : values) {
+                    parsedStr.append(" ").append(getSeparatedValue(value));
+                }
+                return String.valueOf(parsedStr).trim();
             }
+            return getSeparatedValue(content);
         }
         return rawString;
+    }
+
+    private static String getSeparatedValue(String rawString) {
+        String[] values = rawString.split(EQUALS);
+        return values[1];
     }
 
     /**
@@ -446,4 +451,8 @@ public final class YtbUtil {
                 curNode instanceof YangOutput;
     }
 
+    public static String getOpTypeName(YangNode curNode) {
+        return YANG + getCapitalCase(curNode.getJavaClassNameOrBuiltInType()) +
+                OP_TYPE;
+    }
 }
