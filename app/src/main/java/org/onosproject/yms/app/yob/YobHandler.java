@@ -74,8 +74,11 @@ abstract class YobHandler {
      */
     public void setInParent(YdtExtendedContext ydtNode,
                             YangSchemaRegistry schemaRegistry) {
-        YobWorkBench yobWorkBench = (YobWorkBench) ydtNode.getAppInfo(YOB);
-        yobWorkBench.setObjectInParent(ydtNode);
+        YdtExtendedContext parentNode = (YdtExtendedContext) ydtNode.getParent();
+        YobWorkBench parentWorkbench = (YobWorkBench) parentNode.getAppInfo(YOB);
+
+
+        parentWorkbench.setObject(ydtNode, schemaRegistry);
     }
 
     /**

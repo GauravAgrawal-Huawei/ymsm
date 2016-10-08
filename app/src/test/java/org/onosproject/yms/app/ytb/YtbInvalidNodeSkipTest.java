@@ -131,10 +131,10 @@ public class YtbInvalidNodeSkipTest extends YtbErrMsgAndConstants {
         EnumDer1 der1 = new EnumDer1(der2);
 
         // Creates the enum hundred and ten for leaf-list having union.
-        EnumLeafListUnion union1 = new EnumLeafListUnion
-                (EnumLeafListUnionEnum1.HUNDRED);
-        EnumLeafListUnion union2 = new EnumLeafListUnion
-                (EnumLeafListUnionEnum1.TEN);
+        EnumLeafListUnion union1 = new EnumLeafListUnion(EnumLeafListUnionEnum1
+                                                                 .HUNDRED);
+        EnumLeafListUnion union2 = new EnumLeafListUnion(EnumLeafListUnionEnum1
+                                                                 .TEN);
 
         List<EnumLeafListUnion> leafList = new ArrayList<>();
         leafList.add(union1);

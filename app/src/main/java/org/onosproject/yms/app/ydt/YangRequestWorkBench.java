@@ -41,6 +41,7 @@ import static org.onosproject.yms.app.ydt.RequestedCardinality.MULTI_INSTANCE;
 import static org.onosproject.yms.app.ydt.RequestedCardinality.MULTI_INSTANCE_LEAF;
 import static org.onosproject.yms.app.ydt.RequestedCardinality.SINGLE_INSTANCE;
 import static org.onosproject.yms.app.ydt.RequestedCardinality.UNKNOWN;
+import static org.onosproject.yms.app.ydt.YdtConstants.DUP_NAME;
 import static org.onosproject.yms.app.ydt.YdtConstants.EXP_COUNT;
 import static org.onosproject.yms.app.ydt.YdtConstants.E_CREATE;
 import static org.onosproject.yms.app.ydt.YdtConstants.E_DEL;
@@ -222,12 +223,25 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
 
         YangSchemaNode node = registry
                 .getYangSchemaNodeUsingSchemaName(name);
+        YangSchemaNodeIdentifier id = node.getYangSchemaNodeIdentifier();
 
+        /*
+         * Checking received schema node is having same namespace as
+         * requested by user or not.
+         */
+        //TODO will be handled later
 //        if (node == null ||
 //                namespace != null && !namespace.equals(node.getNameSpace())) {
 //            curNode.errorHandler(getErrorStringWithQuote(
 //                    APP, name, NOT_EXIST, PERIOD), rootNode);
 //        }
+
+        /*
+         * Checking whether requested node is already exiting in YDT or not.
+         */
+        if (curNode.getCollidingChild(id) != null) {
+            curNode.errorHandler(getErrorString(DUP_NAME, id.getName()), rootNode);
+        }
 
         YdtNode newNode = new YdtSingleInstanceNode(node);
         newNode.setYangSchemaNode(node);

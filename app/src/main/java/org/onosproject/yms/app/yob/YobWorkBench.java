@@ -459,4 +459,12 @@ class YobWorkBench {
                                 setterInParent);
     }
 
+    public void setObject(YdtExtendedContext childnode, YangSchemaRegistry schemaRegistry) {
+        Object builder = getParentBuilder(childnode, schemaRegistry);
+        YobWorkBench childWorkBench = (YobWorkBench) childnode.getAppInfo(YOB);
+
+        setObjectInBuilder(builder, childWorkBench.setterInParent,
+                           childnode.getYdtType(), childWorkBench
+                                   .builderOrBuiltObject.getBuiltObject());
+    }
 }
