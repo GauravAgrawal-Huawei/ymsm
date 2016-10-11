@@ -336,6 +336,15 @@ public abstract class YdtNode<T> implements YdtExtendedContext, Cloneable {
     }
 
     /**
+     * Creates a specific type of node.
+     *
+     * @param type of YDT node
+     */
+    YdtNode(YdtType type) {
+        ydtType = type;
+    }
+
+    /**
      * Sets the parent of node.
      *
      * @param parent node

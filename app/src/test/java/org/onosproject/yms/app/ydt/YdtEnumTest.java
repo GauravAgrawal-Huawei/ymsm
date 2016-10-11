@@ -21,6 +21,7 @@ import org.onosproject.yms.app.ydt.exceptions.YdtException;
 
 import static org.onosproject.yms.app.ydt.YdtTestConstants.ENUM;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.ENUMNS;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.TYPE;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.enumYdt;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.validateErrMsg;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.validateLeafContents;
@@ -57,7 +58,7 @@ public class YdtEnumTest {
         // assign root node to ydtNode for validating purpose.
         YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
         // Logical root node does not have operation type
-//        validateNodeContents(ydtNode, TYPE, null);
+        validateNodeContents(ydtNode, TYPE, null);
 
         ydtNode = ydtNode.getFirstChild();
         validateNodeContents(ydtNode, "enumtest", MERGE);

@@ -148,7 +148,7 @@ public class ListTest {
         // assign root node to ydtNode for validating purpose.
         YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
         // Logical root node does not have operation type
-//        validateNodeContents(ydtNode, "list", null);
+        validateNodeContents(ydtNode, "list", null);
 
         ydtNode = ydtNode.getFirstChild();
         validateNodeContents(ydtNode, "rootlist", MERGE);

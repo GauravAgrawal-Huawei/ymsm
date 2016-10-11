@@ -140,21 +140,14 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
                                 YangSchemaRegistry registry,
                                 boolean isValidate) {
         YdtNode newNode;
-        YangSchemaNodeIdentifier nodeIdentifier =
-                new YangSchemaNodeIdentifier();
-        YangNamespace yangNameSpace = new NameSpace(namespace);
-        nodeIdentifier.setName(name);
-        nodeIdentifier.setNameSpace(yangNameSpace);
-
         //TODO: maintain the schema node identifier of logical root in workbench
-        newNode = new YdtSingleInstanceNode(null);
+        newNode = new YdtLogicalNode(name, namespace);
         setRootNode(newNode);
         this.registry = registry;
         ymsOperationType = opType;
         validate = isValidate;
         // Set the logical root node for yang data app tree.
         DefaultYdtAppContext appNode = getAppContext(true);
-
         setAppRootNode(appNode);
     }
 
@@ -221,8 +214,7 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
     private YdtNode moduleHandler(String name,
                                   String namespace) {
 
-        YangSchemaNode node = registry
-                .getYangSchemaNodeUsingSchemaName(name);
+        YangSchemaNode node = registry.getYangSchemaNodeUsingSchemaName(name);
         YangSchemaNodeIdentifier id = node.getYangSchemaNodeIdentifier();
 
         /*

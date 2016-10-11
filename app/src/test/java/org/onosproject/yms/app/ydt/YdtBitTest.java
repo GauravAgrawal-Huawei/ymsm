@@ -54,7 +54,7 @@ public class YdtBitTest {
         // assign root node to ydtNode for validating purpose.
         YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
         // Logical root node does not have operation type
-//        validateNodeContents(ydtNode, "builtInType", null);
+        validateNodeContents(ydtNode, "builtInType", null);
         ydtNode = ydtNode.getFirstChild();
         validateNodeContents(ydtNode, "bit", MERGE);
         ydtNode = ydtNode.getFirstChild();

@@ -79,7 +79,7 @@ public class IetfNetworkTest {
         // Assign root node to ydtNode for validating purpose.
         YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
         // Logical root node does not have operation type
-//        validateNodeContents(ydtNode, "yms-ietf-network", null);
+        validateNodeContents(ydtNode, "yms-ietf-network", null);
         ydtNode = ydtNode.getFirstChild();
         validateNodeContents(ydtNode, "yms-ietf-network", MERGE);
         ydtNode = ydtNode.getFirstChild();

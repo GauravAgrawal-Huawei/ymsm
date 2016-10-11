@@ -62,7 +62,7 @@ public class FoodArenaTest {
         // Assign root node to ydtNode for validating purpose.
         YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
         // Logical root node does not have operation type
-//        validateNodeContents(ydtNode, "foodarena", null);
+        validateNodeContents(ydtNode, "foodarena", null);
         ydtNode = ydtNode.getFirstChild();
         validateNodeContents(ydtNode, "food", MERGE);
         ydtNode = ydtNode.getFirstChild();

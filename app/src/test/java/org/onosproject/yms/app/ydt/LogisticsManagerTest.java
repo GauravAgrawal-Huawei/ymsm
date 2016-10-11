@@ -107,7 +107,7 @@ public class LogisticsManagerTest {
         // assign root node to ydtNode for validating purpose.
         YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
         // Logical root node does not have operation type
-//        validateNodeContents(ydtNode, "logisticsmanager", null);
+        validateNodeContents(ydtNode, "logisticsmanager", null);
 
         ydtNode = ydtNode.getFirstChild();
         // Logical root node does not have operation type
