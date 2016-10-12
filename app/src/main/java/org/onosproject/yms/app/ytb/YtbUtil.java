@@ -23,6 +23,7 @@ import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangNotification;
 import org.onosproject.yangutils.datamodel.YangOutput;
 import org.onosproject.yangutils.datamodel.YangRpc;
+import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangType;
 import org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes;
 import org.onosproject.yangutils.translator.tojava.javamodel.JavaLeafInfoContainer;
@@ -246,7 +247,8 @@ public final class YtbUtil {
      * @return string value of the boolean method
      */
     public static String isValueOrSelectLeafSet(
-            Object nodeObj, String javaName, String methodName) {
+            Object nodeObj, String javaName, String methodName)
+            throws NoSuchMethodException {
 
         Class<?> nodeClass = nodeObj.getClass();
         Class<?> interfaceClass = getInterfaceClassFromImplClass(nodeObj);
@@ -264,7 +266,7 @@ public final class YtbUtil {
             // Invokes the method with the value of enum as param.
             return String.valueOf(getterMethod.invoke(nodeObj, value));
         } catch (IllegalAccessException | InvocationTargetException |
-                NoSuchMethodException | ClassNotFoundException e) {
+                ClassNotFoundException e) {
             throw new YtbException(e);
         }
     }
@@ -278,8 +280,9 @@ public final class YtbUtil {
      * @param dataType type of the leaf/leaf-list
      * @return string value from the type
      */
-    public static String getStringFromDataType(Object fieldObj,
-                                               YangType dataType) {
+    public static String getStringFromDataType(
+            Object fieldObj, YangSchemaNode holder, String name,
+            Object holderObj, YangType dataType) {
         YangDataTypes type = dataType.getDataType();
         switch (type) {
             case INT8:
@@ -299,8 +302,10 @@ public final class YtbUtil {
             case UNION:
             case ENUMERATION:
             case BOOLEAN:
+                return String.valueOf(fieldObj).trim();
+
             case BITS:
-                return String.valueOf(fieldObj);
+                return getBitsValue(fieldObj, holder, name, holderObj).trim();
 
             case BINARY:
                 return Base64.getEncoder().encodeToString((byte[]) fieldObj);
@@ -308,42 +313,31 @@ public final class YtbUtil {
             case LEAFREF:
                 YangLeafRef leafRef =
                         (YangLeafRef) dataType.getDataTypeExtendedInfo();
-                return getStringFromDataType(fieldObj,
+                return getStringFromDataType(fieldObj, holder, name, holderObj,
                                              leafRef.getEffectiveDataType());
-
             default:
                 throw new YtbException("Unsupported data type. Cannot be " +
                                                "processed.");
         }
     }
 
-    /**
-     * Returns the value, from the toString value which uses toStringHelper.
-     * It gives values in non-usable format(e.g., {value = 5}). But the value
-     * that has to be returned is only 5.So it parses the string and returns
-     * only the value. In certain toString, to string helper is not used, so
-     * the original value is sent without parsing.
-     *
-     * @param rawString raw string
-     * @return parsed value
-     */
-    private static String getValueFromToStringHelper(String rawString) {
-        if (rawString.contains(EQUALS)) {
-            int openIdx = rawString.lastIndexOf(OPEN_BRACE);
-            int closeIdx = rawString.indexOf(CLOSE_BRACE);
-            String content = rawString.substring(openIdx + 1, closeIdx);
-            long equal = content.codePoints().filter(ch -> ch == '=').count();
-            if (equal > 1) {
-                String[] values = content.split(COMMA);
-                StringBuilder parsedStr = new StringBuilder();
-                for (String value : values) {
-                    parsedStr.append(" ").append(getSeparatedValue(value));
-                }
-                return String.valueOf(parsedStr).trim();
-            }
-            return getSeparatedValue(content);
+    private static String getBitsValue(Object fieldObj, YangSchemaNode holder,
+                                       String name, Object holderObj) {
+        Class<?> holderClass = holderObj.getClass();
+        String interfaceName = holder.getJavaClassNameOrBuiltInType();
+        String className = getCapitalCase(interfaceName) + getCapitalCase(name);
+        String pkgName = holder.getJavaPackage() + PERIOD + className;
+        ClassLoader classLoader = holderClass.getClassLoader();
+        Class<?> bitClass;
+        try {
+            bitClass = classLoader.loadClass(pkgName);
+            Method getterMethod = bitClass.getDeclaredMethod(
+                    "toString", fieldObj.getClass());
+            return String.valueOf(getterMethod.invoke(null, fieldObj));
+        } catch (ClassNotFoundException | NoSuchMethodException |
+                InvocationTargetException | IllegalAccessException e) {
+            throw new YtbException(e);
         }
-        return rawString;
     }
 
     private static String getSeparatedValue(String rawString) {

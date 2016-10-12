@@ -20,13 +20,17 @@ import org.onosproject.yangutils.datamodel.YangAugment;
 import org.onosproject.yangutils.datamodel.YangAugmentableNode;
 import org.onosproject.yangutils.datamodel.YangCase;
 import org.onosproject.yangutils.datamodel.YangChoice;
+import org.onosproject.yangutils.datamodel.YangDerivedInfo;
 import org.onosproject.yangutils.datamodel.YangLeaf;
 import org.onosproject.yangutils.datamodel.YangLeafList;
+import org.onosproject.yangutils.datamodel.YangLeafRef;
 import org.onosproject.yangutils.datamodel.YangLeavesHolder;
 import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeIdentifier;
+import org.onosproject.yangutils.datamodel.YangType;
 import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
+import org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes;
 import org.onosproject.yms.app.utils.TraversalType;
 import org.onosproject.yms.app.ydt.YdtExtendedBuilder;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
@@ -40,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.EMPTY;
 import static org.onosproject.yms.app.utils.TraversalType.CHILD;
 import static org.onosproject.yms.app.utils.TraversalType.PARENT;
 import static org.onosproject.yms.app.utils.TraversalType.ROOT;
@@ -80,6 +85,7 @@ public class YdtBuilderFromYo {
     private static final String OUTPUT = "output";
     private static final String YANG_AUGMENTED_INFO_MAP =
             "yangAugmentedInfoMap";
+    private static final String FALSE = "false";
 
     /**
      * Application YANG schema registry.
@@ -704,7 +710,7 @@ public class YdtBuilderFromYo {
                         throw new YtbException(e);
                     }
 
-                    addLeafWithValue(yangLeaf, parentObj, leafType);
+                    addLeafWithValue(yangLeaf, parentObj, leafType, yangNode);
                     addLeafWithoutValue(yangLeaf, parentObj);
                 }
             }
@@ -744,13 +750,27 @@ public class YdtBuilderFromYo {
                      * Adds this set to the YDT, and traverse to parent.
                      */
                     if (leafListObj != null) {
+                        boolean isPresent = false;
                         for (Object object : leafListObj) {
                             String objValue = getStringFromDataType(
-                                    object, yangLeafList.getDataType());
+                                    object, yangNode, getJavaName(yangLeafList),
+                                    parentObj, yangLeafList.getDataType());
+                            isPresent = addChildForEmpty(
+                                    objValue, yangLeafList.getDataType());
+                            if (isPresent) {
+                                if (objValue.equals(TRUE)) {
+                                    extBuilder.addLeafList(leafListValue,
+                                                           yangLeafList);
+                                    extBuilder.traverseToParentWithoutValidation();
+                                }
+                                break;
+                            }
                             leafListValue.add(objValue);
                         }
-                        extBuilder.addLeafList(leafListValue, yangLeafList);
-                        extBuilder.traverseToParentWithoutValidation();
+                        if (!isPresent) {
+                            extBuilder.addLeafList(leafListValue, yangLeafList);
+                            extBuilder.traverseToParentWithoutValidation();
+                        }
                     }
                 }
             }
@@ -831,23 +851,57 @@ public class YdtBuilderFromYo {
      * @param leafType  object of leaf type
      */
     private void addLeafWithValue(YangLeaf yangLeaf, Object parentObj,
-                                  Object leafType) {
+                                  Object leafType, YangSchemaNode holder) {
         String fieldValue = null;
         if (isTypePrimitive(yangLeaf.getDataType())) {
             fieldValue = getLeafValueFromValueSetFlag(parentObj, yangLeaf,
-                                                      leafType);
+                                                      leafType, holder);
             /*
              * Checks the object is present or not, when type is
              * non-primitive. And adds the value from the respective data type.
              */
         } else if (leafType != null) {
-            fieldValue = getStringFromDataType(leafType,
-                                               yangLeaf.getDataType());
+            fieldValue = getStringFromDataType(
+                    leafType, holder, getJavaName(yangLeaf),
+                    parentObj, yangLeaf.getDataType());
         }
+
         if (isNonEmpty(fieldValue)) {
+            boolean emptyPresent = addChildForEmpty(fieldValue,
+                                                    yangLeaf.getDataType());
+            if (emptyPresent) {
+                if (!fieldValue.equals(TRUE)) {
+                    return;
+                }
+                fieldValue = null;
+            }
             extBuilder.addLeaf(fieldValue, yangLeaf);
             extBuilder.traverseToParentWithoutValidation();
         }
+    }
+
+    private boolean addChildForEmpty(String fieldValue, YangType<?> dataType) {
+        if (fieldValue.equals(TRUE) || fieldValue.equals(FALSE)) {
+            switch (dataType.getDataType()) {
+                case EMPTY:
+                    return true;
+
+                case LEAFREF:
+                    YangLeafRef leafRef =
+                            (YangLeafRef) dataType.getDataTypeExtendedInfo();
+                    return addChildForEmpty(fieldValue,
+                                            leafRef.getEffectiveDataType());
+                case DERIVED:
+                    YangDerivedInfo info =
+                            (YangDerivedInfo) dataType
+                                    .getDataTypeExtendedInfo();
+                    YangDataTypes type = info.getEffectiveBuiltInType();
+                    return type == EMPTY;
+                default:
+                    return false;
+            }
+        }
+        return false;
     }
 
     /**
@@ -857,8 +911,13 @@ public class YdtBuilderFromYo {
      * @param parentObj leaf holder object
      */
     private void addLeafWithoutValue(YangLeaf yangLeaf, Object parentObj) {
-        String selectLeaf = isValueOrSelectLeafSet(
-                parentObj, getJavaName(yangLeaf), IS_SELECT_LEAF_SET_METHOD);
+        String selectLeaf;
+        try {
+            selectLeaf = isValueOrSelectLeafSet(
+                    parentObj, getJavaName(yangLeaf), IS_SELECT_LEAF_SET_METHOD);
+        } catch (NoSuchMethodException e) {
+            selectLeaf = FALSE;
+        }
         if (selectLeaf.equals(TRUE)) {
             extBuilder.addLeaf(null, yangLeaf);
             extBuilder.traverseToParentWithoutValidation();
@@ -875,11 +934,19 @@ public class YdtBuilderFromYo {
      * @return value of type
      */
     private String getLeafValueFromValueSetFlag(
-            Object parentObj, YangLeaf yangLeaf, Object leafType) {
-        String valueOfLeaf = isValueOrSelectLeafSet(
-                parentObj, getJavaName(yangLeaf), IS_LEAF_VALUE_SET_METHOD);
+            Object parentObj, YangLeaf yangLeaf, Object leafType,
+            YangSchemaNode holder) {
+        String valueOfLeaf;
+        try {
+            valueOfLeaf = isValueOrSelectLeafSet(
+                    parentObj, getJavaName(yangLeaf), IS_LEAF_VALUE_SET_METHOD);
+        } catch (NoSuchMethodException e) {
+            throw new YtbException(e);
+        }
         if (valueOfLeaf.equals(TRUE)) {
-            return getStringFromDataType(leafType, yangLeaf.getDataType());
+            return getStringFromDataType(
+                    leafType, holder, getJavaName(yangLeaf),
+                    parentObj, yangLeaf.getDataType());
         }
         return null;
     }

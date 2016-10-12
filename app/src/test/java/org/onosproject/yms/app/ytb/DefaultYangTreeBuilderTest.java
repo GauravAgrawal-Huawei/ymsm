@@ -156,6 +156,19 @@ public class DefaultYangTreeBuilderTest extends YtbErrMsgAndConstants {
     private static final String FOR_BITS_LIST = "forbitslist";
     private static final String FOR_UNION = "forunion";
     private static final String BIN_VAL_5 = "AAAA";
+    private static final String BIT_VAL_1 = "leaf1 leaf2";
+    private static final String BIN_VAL_6 = "AQYD";
+    private static final String BIN_VAL_7 = "AgcE";
+    private static final String BIN_VAL_8 = "BQYB";
+    private static final String BIN_VAL_9 = "AwgE";
+    private static final String BIN_VAL_10 = "AQAA";
+    private static final String BIN_VAL_11 = "AAAB";
+    private static final String BIN_VAL_12 = "BwcH";
+    private static final String BIN_VAL_13 = "AAE=";
+    private static final String BIT_VAL_2 = "index signature";
+    private static final String BIT_VAL_3 = "index";
+    private static final String BIT_VAL_4 = "index name";
+    private static final String BIT_VAL_5 = "index name signature";
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -367,19 +380,19 @@ public class DefaultYangTreeBuilderTest extends YtbErrMsgAndConstants {
 
         YdtContext enum1Leaf = timeLeaf.getNextSibling();
         assertThat(getInCrtName(LEAF, ENUM_1), enum1Leaf.getName(), is(ENUM_1));
-//        assertThat(getInCrtLeafValue(ENUM_1, HUNDRED),
-//                   enum1Leaf.getValue(), is(HUNDRED));
+        assertThat(getInCrtLeafValue(ENUM_1, HUNDRED),
+                   enum1Leaf.getValue(), is(HUNDRED));
 
         YdtContext enum2LeafList = enum1Leaf.getNextSibling();
         assertThat(getInCrtName(LEAF_LIST, ENUM_2),
                    enum2LeafList.getName(), is(ENUM_2));
         Set<String> valueSet = enum2LeafList.getValueSet();
-//        assertThat(getInCrtLeafListValue(ENUM_2, HUNDRED_100),
-//                   valueSet.contains(HUNDRED_100), is(true));
-//        assertThat(getInCrtLeafListValue(ENUM_2, TEN_10),
-//                   valueSet.contains(TEN_10), is(true));
-//        assertThat(getInCrtLeafListValue(ENUM_2, THOUSAND_1000),
-//                   valueSet.contains(THOUSAND_1000), is(true));
+        assertThat(getInCrtLeafListValue(ENUM_2, HUNDRED_100),
+                   valueSet.contains(HUNDRED_100), is(true));
+        assertThat(getInCrtLeafListValue(ENUM_2, TEN_10),
+                   valueSet.contains(TEN_10), is(true));
+        assertThat(getInCrtLeafListValue(ENUM_2, THOUSAND_1000),
+                   valueSet.contains(THOUSAND_1000), is(true));
     }
 
     /**
@@ -617,7 +630,8 @@ public class DefaultYangTreeBuilderTest extends YtbErrMsgAndConstants {
         YdtContext leafInCont = container.getFirstChild();
         assertThat(getInCrtName(LEAF, NOTIFY_LEAF), leafInCont.getName(),
                    is(NOTIFY_LEAF));
-        //assertThat(leafInCont.getValue(), is(""));
+        assertThat(getInCrtLeafValue(NOTIFY_LEAF, BIT_VAL_1),
+                   leafInCont.getValue(), is(BIT_VAL_1));
     }
 
     /**
@@ -888,8 +902,8 @@ public class DefaultYangTreeBuilderTest extends YtbErrMsgAndConstants {
         // Checks enum leaf under multiplex of content1.
         YdtContext enumLeaf1 = mtx1.getFirstChild();
         assertThat(getInCrtName(LEAF, TYPES), enumLeaf1.getName(), is(TYPES));
-//        assertThat(getInCrtLeafValue(TYPES, TIME_DIVISION),
-//                   enumLeaf1.getValue(), is(TIME_DIVISION));
+        assertThat(getInCrtLeafValue(TYPES, TIME_DIVISION),
+                   enumLeaf1.getValue(), is(TIME_DIVISION));
 
         // Checks list app area content 1 under multiplex content 1.
         YdtContext appAreaList1 = enumLeaf1.getNextSibling();
@@ -900,7 +914,10 @@ public class DefaultYangTreeBuilderTest extends YtbErrMsgAndConstants {
         assertThat(getInCrtName(LEAF_LIST, DEST_AREA), leafList1.getName(),
                    is(DEST_AREA));
         Set value1 = leafList1.getValueSet();
-        // TODO: check the leaf-list value.
+        assertThat(getInCrtLeafListValue(DEST_AREA, BIN_VAL_6),
+                   value1.contains(BIN_VAL_6), is(true));
+        assertThat(getInCrtLeafListValue(DEST_AREA, BIN_VAL_7),
+                   value1.contains(BIN_VAL_7), is(true));
 
         // Checks list app area content 2 under multiplex content 1.
         YdtContext appAreaList2 = appAreaList1.getNextSibling();
@@ -910,8 +927,11 @@ public class DefaultYangTreeBuilderTest extends YtbErrMsgAndConstants {
         YdtContext leafList2 = appAreaList2.getFirstChild();
         assertThat(getInCrtName(LEAF_LIST, DEST_AREA), leafList2.getName(),
                    is(DEST_AREA));
-        Set value2 = leafList1.getValueSet();
-        // TODO: check the leaf-list value.
+        Set value2 = leafList2.getValueSet();
+        assertThat(getInCrtLeafListValue(DEST_AREA, BIN_VAL_8),
+                   value2.contains(BIN_VAL_8), is(true));
+        assertThat(getInCrtLeafListValue(DEST_AREA, BIN_VAL_9),
+                   value2.contains(BIN_VAL_9), is(true));
 
         // Checks the list node with content 2 of multiplex.
         YdtContext mtx2 = mtx1.getNextSibling();
@@ -921,8 +941,8 @@ public class DefaultYangTreeBuilderTest extends YtbErrMsgAndConstants {
         // Checks enum leaf under multiplex of content2.
         YdtContext enumLeaf2 = mtx2.getFirstChild();
         assertThat(getInCrtName(LEAF, TYPES), enumLeaf2.getName(), is(TYPES));
-//        assertThat(getInCrtLeafValue(TYPES, FREQUENCY_DIV),
-//                   enumLeaf2.getValue(), is(FREQUENCY_DIV));
+        assertThat(getInCrtLeafValue(TYPES, FREQUENCY_DIV),
+                   enumLeaf2.getValue(), is(FREQUENCY_DIV));
 
         // Checks list app area content 1 under multiplex content 2.
         YdtContext appAreaList3 = enumLeaf2.getNextSibling();
@@ -933,7 +953,10 @@ public class DefaultYangTreeBuilderTest extends YtbErrMsgAndConstants {
         assertThat(getInCrtName(LEAF_LIST, DEST_AREA), leafList3.getName(),
                    is(DEST_AREA));
         Set value3 = leafList3.getValueSet();
-        // TODO: check the leaf-list value.
+        assertThat(getInCrtLeafListValue(DEST_AREA, BIN_VAL_10),
+                   value3.contains(BIN_VAL_10), is(true));
+        assertThat(getInCrtLeafListValue(DEST_AREA, BIN_VAL_11),
+                   value3.contains(BIN_VAL_11), is(true));
 
         // Checks list app area content 2 under multiplex content 2.
         YdtContext appAreaList4 = appAreaList3.getNextSibling();
@@ -944,7 +967,10 @@ public class DefaultYangTreeBuilderTest extends YtbErrMsgAndConstants {
         assertThat(getInCrtName(LEAF_LIST, DEST_AREA), leafList4.getName(),
                    is(DEST_AREA));
         Set value4 = leafList4.getValueSet();
-        // TODO: check the leaf-list value.
+        assertThat(getInCrtLeafListValue(DEST_AREA, BIN_VAL_12),
+                   value4.contains(BIN_VAL_12), is(true));
+        assertThat(getInCrtLeafListValue(DEST_AREA, BIN_VAL_13),
+                   value4.contains(BIN_VAL_13), is(true));
     }
 
     /**
@@ -1051,14 +1077,13 @@ public class DefaultYangTreeBuilderTest extends YtbErrMsgAndConstants {
                    is(FOR_BINARY));
         assertThat(getInCrtLeafValue(FOR_BINARY, BIN_VAL_1),
                    binaryLeaf.getValue(), is(BIN_VAL_1));
-        // TODO: The typedef binary is changed.
 
         // Checks the leaf for bits.
         YdtContext bitsLeaf = binaryLeaf.getNextSibling();
         assertThat(getInCrtName(LEAF, FOR_BITS), bitsLeaf.getName(),
                    is(FOR_BITS));
-        //assertThat(getInCrtLeafValue(FOR_BITS, BIN_VAL_1),
-        //            bitsLeaf.getValue(), is("index signature"));
+        assertThat(getInCrtLeafValue(FOR_BITS, BIT_VAL_2),
+                   bitsLeaf.getValue(), is(BIT_VAL_2));
 
         // Checks the leaf-list for binary.
         YdtContext binaryLeafList = bitsLeaf.getNextSibling();
@@ -1077,8 +1102,13 @@ public class DefaultYangTreeBuilderTest extends YtbErrMsgAndConstants {
         YdtContext bitsLeafList = binaryLeafList.getNextSibling();
         assertThat(getInCrtName(LEAF_LIST, FOR_BITS_LIST),
                    bitsLeafList.getName(), is(FOR_BITS_LIST));
-        // TODO: The value of bits should be mapped text string.
         Set value3 = bitsLeafList.getValueSet();
+        assertThat(getInCrtLeafListValue(FOR_BITS_LIST, BIT_VAL_3),
+                   value3.contains(BIT_VAL_3), is(true));
+        assertThat(getInCrtLeafListValue(FOR_BITS_LIST, BIT_VAL_4),
+                   value3.contains(BIT_VAL_4), is(true));
+        assertThat(getInCrtLeafListValue(FOR_BITS_LIST, BIT_VAL_5),
+                   value3.contains(BIT_VAL_5), is(true));
     }
 
     /**

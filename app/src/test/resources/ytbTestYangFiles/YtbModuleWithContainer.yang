@@ -6,7 +6,7 @@ module YtbModuleWithContainer {
     container sched {
         leaf predict {
             type decimal64 {
-            fraction-digits 2;
+                fraction-digits 2;
             }
         }
     }

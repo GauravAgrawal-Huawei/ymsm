@@ -25,6 +25,10 @@ import org.onosproject.yang.gen.v1.yms.test.ytb.data.type.rev20160826.ytbdatatyp
 import org.onosproject.yang.gen.v1.yms.test.ytb.data.type.rev20160826.ytbdatatype.UnionEnumUnion;
 import org.onosproject.yang.gen.v1.yms.test.ytb.data.type.rev20160826.ytbdatatype.enumder2.EnumDer2Enum;
 import org.onosproject.yang.gen.v1.yms.test.ytb.data.type.rev20160826.ytbdatatype.enumleaflistunion.EnumLeafListUnionEnum1;
+import org.onosproject.yang.gen.v1.yms.test.ytb.empty.type.rev20160826.YtbEmptyType;
+import org.onosproject.yang.gen.v1.yms.test.ytb.empty.type.rev20160826.YtbEmptyTypeOpParam;
+import org.onosproject.yang.gen.v1.yms.test.ytb.empty.type.rev20160826.ytbemptytype.EmpType;
+import org.onosproject.yang.gen.v1.yms.test.ytb.empty.type.rev20160826.ytbemptytype.EmpType2;
 import org.onosproject.yang.gen.v1.yms.test.ytb.simple.rpc.response.rev20160826.YtbSimpleRpcResponse;
 import org.onosproject.yang.gen.v1.yms.test.ytb.simple.rpc.response.rev20160826.YtbSimpleRpcResponseOpParam;
 import org.onosproject.yang.gen.v1.yms.test.ytb.simple.rpc.response.rev20160826.ytbsimplerpcresponse.Cumulative;
@@ -39,6 +43,7 @@ import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.onosproject.yms.ydt.YmsOperationType.EDIT_CONFIG_REQUEST;
 
 /**
@@ -52,12 +57,16 @@ public class YtbInvalidNodeSkipTest extends YtbErrMsgAndConstants {
     private static final String TEN_NUM = "10";
     private static final String DATA_TYPE = "YtbDataType";
     private static final String ENUM = "enum";
-
+    private static final String EMPTY = "empty";
     private static final String THOUSAND = "thousand";
     private static final String TEN = "ten";
     private static final String ENUM_LEAF_LIST = "enum-leaf-list";
     private static final String UNION_ENUM = "union-enum";
     private static final String ENUM_LEAF_REF = "leaf-ref-enum";
+    private static final String EMPTY_MOD = "YtbEmptyType";
+    private static final String EMPTY_REF_LIST = "empty-list-ref";
+    private static final String EMPTY_TYPE = "empty-type";
+    private static final String EMP_LIST_REF_TYPE = "empty-list-ref-type";
 
     /**
      * Processes RPC node which is the sibling to the empty current node.
@@ -204,5 +213,85 @@ public class YtbInvalidNodeSkipTest extends YtbErrMsgAndConstants {
                    leafRefVal.contains(HUNDRED), is(true));
         assertThat(getInCrtLeafListValue(ENUM_LEAF_REF, TEN_NUM),
                    leafRefVal.contains(THOUSAND), is(true));
+    }
+
+    @Test
+    public void processEmptyDataType() {
+
+        schemaProvider.processSchemaRegistry(null);
+        DefaultYangSchemaRegistry registry = schemaProvider
+                .getDefaultYangSchemaRegistry();
+
+        // As an application, creates the object.
+
+        // For leaf-list empty-list.
+        List<Boolean> empList = new ArrayList<>();
+        empList.add(false);
+        empList.add(true);
+
+        // For leaf-list empty-list-ref-type and emp-ref-list.
+        List<Boolean> empRefList = new ArrayList<>();
+        empRefList.add(true);
+        empRefList.add(false);
+
+        // For leaf empty-type with typedef emp-type
+        EmpType2 type2 = new EmpType2(true);
+        EmpType type1 = new EmpType(type2);
+
+        // For leaf-list empty-list-type with typedef emp-type
+        EmpType2 type4 = new EmpType2(false);
+        EmpType type3 = new EmpType(type4);
+        EmpType2 type6 = new EmpType2(true);
+        EmpType type5 = new EmpType(type6);
+
+        List<EmpType> typeList = new ArrayList<>();
+        typeList.add(type3);
+        typeList.add(type5);
+
+        YtbEmptyType emType = new YtbEmptyTypeOpParam.YtbEmptyTypeBuilder()
+                .empty(true).emptyList(empList).emptyRef(false)
+                .emptyListRef(empRefList).emptyType(type1)
+                .emptyListType(typeList).emptyRefType(false)
+                .emptyListRefType(empRefList).build();
+
+        // As YSB or YAB protocol sets the value for YTB.
+        List<Object> objectList = new ArrayList<>();
+        objectList.add(emType);
+
+        // Builds YANG tree in YTB.
+        DefaultYangTreeBuilder treeBuilder = new DefaultYangTreeBuilder();
+        YdtExtendedBuilder ydtBuilder = treeBuilder.getYdtBuilderForYo(
+                objectList, ROOT_NAME, ROOT_NAME_SPACE,
+                EDIT_CONFIG_REQUEST, registry);
+
+        // Receives YDT context and checks the tree that is built.
+        YdtContext context = ydtBuilder.getRootNode();
+
+        // Gets the first module from logical root node.
+        YdtContext module = context.getFirstChild();
+        assertThat(getInCrtName(MODULE, EMPTY_MOD), module.getName(),
+                   is(EMPTY_MOD));
+
+        // Gets the first list content of cumulative.
+        YdtContext empty = module.getFirstChild();
+        assertThat(getInCrtName(LEAF, EMPTY), empty.getName(), is(EMPTY));
+        assertThat(empty.getValue(), nullValue());
+
+        YdtContext emptyType = empty.getNextSibling();
+        assertThat(getInCrtName(LEAF_LIST, EMPTY_TYPE), emptyType.getName(),
+                   is(EMPTY_TYPE));
+        assertThat(emptyType.getValue(), nullValue());
+
+        YdtContext emptyRefList = emptyType.getNextSibling();
+        assertThat(getInCrtName(LEAF_LIST, EMPTY_REF_LIST),
+                   emptyRefList.getName(), is(EMPTY_REF_LIST));
+        Set valueSet = emptyRefList.getValueSet();
+        assertThat(valueSet.isEmpty(), is(true));
+
+        YdtContext emptyListRefType = emptyRefList.getNextSibling();
+        assertThat(getInCrtName(LEAF_LIST, EMP_LIST_REF_TYPE),
+                   emptyListRefType.getName(), is(EMP_LIST_REF_TYPE));
+        Set valueSet1 = emptyListRefType.getValueSet();
+        assertThat(valueSet1.isEmpty(), is(true));
     }
 }

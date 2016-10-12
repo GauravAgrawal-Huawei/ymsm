@@ -139,7 +139,6 @@ public class YtbContextSwitchTest extends YtbErrMsgAndConstants {
     private static final String CHOICE_ROOT_NAME = "choiceContainerRootName";
     private static final String CHOICE_ROOT_NAMESPACE =
             "choiceContainerRootNamespace";
-    private static final String ROOT = "root";
     private static final String CHOICE_CONT =
             "YtbChoiceWithContainerAndLeafList";
     private static final String CONT_CHOICE = "choice-container";
@@ -581,10 +580,6 @@ public class YtbContextSwitchTest extends YtbErrMsgAndConstants {
 
         // Receives YDT context and check the tree that is built.
         YdtContext context = ydtBuilder.getRootNode();
-//        assertThat(getInCrtName(ROOT, CHOICE_ROOT_NAME), context.getName(),
-//                   is(CHOICE_ROOT_NAME));
-//        assertThat(getInCrtName(ROOT, CHOICE_ROOT_NAMESPACE), context.getNamespace(),
-//                   is(CHOICE_ROOT_NAMESPACE));
 
         // Gets the first module from logical root node.
         YdtContext module = context.getFirstChild();
@@ -661,10 +656,6 @@ public class YtbContextSwitchTest extends YtbErrMsgAndConstants {
 
         // Receives YDT context and check the tree that is built.
         YdtContext context = ydtBuilder.getRootNode();
-//        assertThat(getInCrtName(ROOT, RPC_RT_NAME), context.getName(),
-//                   is(RPC_RT_NAME));
-//        assertThat(getInCrtName(ROOT, RPC_RT_NAMESPACE), context.getNamespace(),
-//                   is(RPC_RT_NAMESPACE));
 
         // Gets the first module from logical root node.
         YdtContext module = context.getFirstChild();
@@ -714,10 +705,6 @@ public class YtbContextSwitchTest extends YtbErrMsgAndConstants {
 
         // Receives YDT context and check the tree that is built.
         YdtContext context = ydtBuilder.getRootNode();
-//        assertThat(getInCrtName(ROOT, RPC_ADV_NAME), context.getName(),
-//                   is(RPC_ADV_NAME));
-//        assertThat(getInCrtName(ROOT, RPC_ADV_NAMESPACE), context.getNamespace(),
-//                   is(RPC_ADV_NAMESPACE));
 
         // Gets the first module from logical root node.
         YdtContext module = context.getFirstChild();
@@ -843,9 +830,6 @@ public class YtbContextSwitchTest extends YtbErrMsgAndConstants {
 
         // Receives YDT context and check the tree that is built.
         YdtContext context = ydtBuilder.getRootNode();
-//        assertThat(getInCrtName(ROOT, SIM_AUG), context.getName(), is(SIM_AUG));
-//        assertThat(getInCrtName(ROOT, SIM_AUG_NAMESPACE),
-//                   context.getNamespace(), is(SIM_AUG_NAMESPACE));
 
         // Gets the first module from logical root node.
         YdtContext module = context.getFirstChild();
@@ -904,10 +888,6 @@ public class YtbContextSwitchTest extends YtbErrMsgAndConstants {
 
         // Receives YDT context and check the tree that is built.
         YdtContext context = ydtBuilder.getRootNode();
-//        assertThat(getInCrtName(ROOT, INTER_AUG), context.getName(),
-//                   is(INTER_AUG));
-//        assertThat(getInCrtName(ROOT, INTER_AUG_NAMESPACE), context.getNamespace(),
-//                   is(INTER_AUG_NAMESPACE));
 
         // Checks the first module from logical root node.
         YdtContext module = context.getFirstChild();
@@ -1150,10 +1130,6 @@ public class YtbContextSwitchTest extends YtbErrMsgAndConstants {
 
         // Receives YDT context and check the tree that is built.
         YdtContext context = ydtBuilder.getRootNode();
-//        assertThat(getInCrtName(ROOT, RPC_ADV_NAME), context.getName(),
-//                   is(RPC_ADV_NAME));
-//        assertThat(getInCrtName(ROOT, RPC_ADV_NAMESPACE),
-//                   context.getNamespace(), is(RPC_ADV_NAMESPACE));
 
         // Checks the first module from logical root node.
         YdtContext module = context.getFirstChild();
