@@ -23,6 +23,7 @@ import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.yob.exception.YobException;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
+import org.onosproject.yms.ydt.YdtContextOperationType;
 import org.onosproject.yms.ydt.YdtType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +58,8 @@ import static org.onosproject.yms.app.yob.YobConstants.ONOS_YANG_OP_TYPE;
 import static org.onosproject.yms.app.yob.YobConstants.OP_TYPE;
 import static org.onosproject.yms.app.yob.YobConstants.VALUE_OF;
 import static org.onosproject.yms.app.yob.YobConstants.YANG;
+import static org.onosproject.yms.app.yob.YobUtils.getModuleInterface;
+import static org.onosproject.yms.app.yob.YobUtils.getQualifiedDefaultClass;
 import static org.onosproject.yms.ydt.YdtType.MULTI_INSTANCE_NODE;
 import static org.onosproject.yms.ydt.YdtType.SINGLE_INSTANCE_NODE;
 
@@ -190,15 +193,16 @@ class YobWorkBench {
      *
      * @param ydtNode data tree node
      */
-    void buildObject(YdtExtendedContext ydtNode) {
+    void buildObject(YdtContextOperationType operationType,
+                     YangSchemaRegistry schemaRegistry) {
 
-        buildNonSchemaAttributes(ydtNode);
+        buildNonSchemaAttributes(operationType, schemaRegistry);
 
         Object builderObject = builderOrBuiltObject.getBuilderObject();
         Class<?> defaultBuilderClass = builderOrBuiltObject.yangBuilderClass;
 
         //set the operation type
-        setOperationType(ydtNode);
+        setOperationType(operationType, schemaRegistry);
 
         // Invoking the build method to get built object from build method.
         try {
@@ -230,37 +234,42 @@ class YobWorkBench {
      *
      * @param ydtNode schema data tree node
      */
-    private void setOperationType(YdtExtendedContext ydtNode) {
+    private void setOperationType(YdtContextOperationType ydtoperation,
+                                  YangSchemaRegistry schemaRegistry) {
+
+        if (ydtoperation == null) {
+            return;
+        }
 
         Object builderObject = builderOrBuiltObject.getBuilderObject();
         Class<?> defaultBuilderClass = builderOrBuiltObject.yangBuilderClass;
-        String className = getCapitalCase(ydtNode.getYangSchemaNode()
-                                                  .getJavaClassNameOrBuiltInType());
+        Class<?>[] intfClass = builderOrBuiltObject.yangDefaultClass
+                .getInterfaces();
+        String setterName = YANG + intfClass[0].getSimpleName() + OP_TYPE;
 
         // Setting the value into YANG node operation type from ydtContext
         // operation type.
         try {
-            Class<?>[] interfaceClass = builderOrBuiltObject.yangDefaultClass
-                    .getInterfaces();
+            Class<?> interfaceClass = getModuleInterface(yangSchemaNode,
+                                                         schemaRegistry);
             Object operationType;
-            Class<?>[] innerClasses = interfaceClass[0].getClasses();
+            Class<?>[] innerClasses = interfaceClass.getClasses();
             for (Class<?> innerEnumClass : innerClasses) {
                 if (innerEnumClass.getSimpleName().equals(ONOS_YANG_OP_TYPE)) {
                     Method valueOfMethod = innerEnumClass
                             .getDeclaredMethod(VALUE_OF, String.class);
-                    if (ydtNode.getYdtContextOperationType() != null) {
-                        operationType = valueOfMethod.invoke(null, ydtNode
-                                .getYdtContextOperationType().toString());
-                        Field operationTypeField = defaultBuilderClass
-                                .getDeclaredField(YANG + className + OP_TYPE);
-                        operationTypeField.setAccessible(true);
-                        operationTypeField.set(builderObject, operationType);
-                        break;
-                    }
+                    operationType = valueOfMethod.invoke(null, ydtoperation.
+                            toString());
+                    Field operationTypeField = defaultBuilderClass
+                            .getDeclaredField(setterName);
+                    operationTypeField.setAccessible(true);
+                    operationTypeField.set(builderObject, operationType);
+                    break;
                 }
             }
         } catch (NoSuchFieldException | NoSuchMethodException |
-                InvocationTargetException | IllegalAccessException e) {
+                InvocationTargetException | IllegalAccessException |
+                IllegalArgumentException e) {
             log.error(E_SET_OP_TYPE_FAIL);
             throw new YobException(E_SET_OP_TYPE_FAIL);
         }
@@ -272,11 +281,12 @@ class YobWorkBench {
      *
      * @param ydtNode contained schema node
      */
-    private void buildNonSchemaAttributes(YdtExtendedContext ydtNode) {
+    private void buildNonSchemaAttributes(YdtContextOperationType operationType,
+                                          YangSchemaRegistry schemaRegistry) {
         for (Map.Entry<YangSchemaNodeIdentifier, YobWorkBench> entry :
                 attributeMap.entrySet()) {
             YobWorkBench childWorkBench = entry.getValue();
-            childWorkBench.buildObject(ydtNode);
+            childWorkBench.buildObject(operationType, schemaRegistry);
 
             if (childWorkBench.yangSchemaNode.getYangSchemaNodeType() ==
                     YANG_AUGMENT_NODE) {
@@ -436,7 +446,7 @@ class YobWorkBench {
             try {
                 childContext = ctxSwitchedNode.getChildSchema(targetNode);
                 ctxSwitchedNode = childContext.getContextSwitchedNode();
-                name = YobUtils.getQualifiedDefaultClass(
+                name = getQualifiedDefaultClass(
                         childContext.getContextSwitchedNode());
 
             } catch (DataModelException e) {
@@ -446,10 +456,10 @@ class YobWorkBench {
             }
         } else if (ctxSwitchedNode.getYangSchemaNodeType() ==
                 YANG_AUGMENT_NODE) {
-            name = YobUtils.getQualifiedDefaultClass(ctxSwitchedNode);
+            name = getQualifiedDefaultClass(ctxSwitchedNode);
             setterInParent = YobUtils.getQualifiedinterface(ctxSwitchedNode);
         } else {
-            name = YobUtils.getQualifiedDefaultClass(childContext.getSchemaNode());
+            name = getQualifiedDefaultClass(childContext.getSchemaNode());
         }
 
         ClassLoader newClassesLoader = YobUtils.getTargetClassLoader(

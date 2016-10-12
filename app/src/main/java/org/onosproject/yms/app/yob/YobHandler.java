@@ -94,6 +94,6 @@ abstract class YobHandler {
                             YdtExtendedContext ydtRootNode,
                             YangSchemaRegistry schemaRegistry) {
         YobWorkBench yobWorkBench = (YobWorkBench) ydtNode.getAppInfo(YOB);
-        yobWorkBench.buildObject(ydtNode);
+        yobWorkBench.buildObject(ydtNode.getYdtContextOperationType(), schemaRegistry);
     }
 }

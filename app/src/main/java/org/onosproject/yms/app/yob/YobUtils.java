@@ -316,7 +316,6 @@ final class YobUtils {
                                       YdtExtendedContext curNode,
                                       YdtExtendedContext rootNode) {
 
-
         if (rootNode != null && curNode == rootNode) {
             YangSchemaNode curSchemaNode = curNode.getYangSchemaNode();
             while (!(curSchemaNode instanceof RpcNotificationContainer)) {
@@ -367,6 +366,23 @@ final class YobUtils {
         }
 
         return curLoader;
+    }
+
+    public static Class<?> getModuleInterface(YangSchemaNode schemaNode,
+                                              YangSchemaRegistry schemaRegistry) {
+        YangNode yangNode = (YangNode) schemaNode;
+        while (yangNode.getParent() != null) {
+            yangNode = yangNode.getParent();
+        }
+        String qualName = getQualifiedinterface(yangNode);
+        Class<?> regClass = schemaRegistry.getRegisteredClass(yangNode,
+                                                              qualName);
+        try {
+            return regClass.getClassLoader().loadClass(qualName);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
