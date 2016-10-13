@@ -77,13 +77,10 @@ public final class YtbUtil {
     private static final String STR_NONE = "NONE";
     private static final String EQUALS = "=";
     private static final String ENUM_LEAF_IDENTIFIER = "$LeafIdentifier";
-    private static final char CLOSE_BRACE = '}';
     private static final Set<YangDataTypes> PRIMITIVE_TYPES =
             new HashSet<>(Arrays.asList(INT8, INT16, INT32, INT64, UINT8,
                                         UINT16, UINT32, UINT64, DECIMAL64,
                                         BOOLEAN, EMPTY));
-    private static final char OPEN_BRACE = '{';
-    private static final String COMMA = ",";
 
     // No instantiation.
     private YtbUtil() {
@@ -325,7 +322,8 @@ public final class YtbUtil {
                                        String name, Object holderObj) {
         Class<?> holderClass = holderObj.getClass();
         String interfaceName = holder.getJavaClassNameOrBuiltInType();
-        String className = getCapitalCase(interfaceName) + getCapitalCase(name);
+        String className = interfaceName.toLowerCase() + PERIOD +
+                getCapitalCase(name);
         String pkgName = holder.getJavaPackage() + PERIOD + className;
         ClassLoader classLoader = holderClass.getClassLoader();
         Class<?> bitClass;
