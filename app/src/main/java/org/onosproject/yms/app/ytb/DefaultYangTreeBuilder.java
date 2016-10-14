@@ -52,7 +52,7 @@ public class DefaultYangTreeBuilder implements YangTreeBuilder {
             String rootNameSpace, YmsOperationType opType,
             YangSchemaRegistry registry) {
 
-        if (moduleObj == null || moduleObj.isEmpty()) {
+        if (moduleObj == null) {
             throw new YtbException(emptyObjErrMsg(OBJ_LIST));
         }
 

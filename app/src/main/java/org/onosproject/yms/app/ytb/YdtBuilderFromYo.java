@@ -711,7 +711,7 @@ public class YdtBuilderFromYo {
                     }
 
                     addLeafWithValue(yangLeaf, parentObj, leafType, yangNode);
-                    addLeafWithoutValue(yangLeaf, parentObj);
+                    addLeafWithoutValue(yangLeaf, parentObj, yangNode);
                 }
             }
         }
@@ -910,11 +910,13 @@ public class YdtBuilderFromYo {
      * @param yangLeaf  YANG leaf node
      * @param parentObj leaf holder object
      */
-    private void addLeafWithoutValue(YangLeaf yangLeaf, Object parentObj) {
+    private void addLeafWithoutValue(YangLeaf yangLeaf,
+                                     Object parentObj, YangSchemaNode holder) {
         String selectLeaf;
         try {
             selectLeaf = isValueOrSelectLeafSet(
-                    parentObj, getJavaName(yangLeaf), IS_SELECT_LEAF_SET_METHOD);
+                    holder, parentObj, getJavaName(yangLeaf),
+                    IS_SELECT_LEAF_SET_METHOD);
         } catch (NoSuchMethodException e) {
             selectLeaf = FALSE;
         }
@@ -939,7 +941,8 @@ public class YdtBuilderFromYo {
         String valueOfLeaf;
         try {
             valueOfLeaf = isValueOrSelectLeafSet(
-                    parentObj, getJavaName(yangLeaf), IS_LEAF_VALUE_SET_METHOD);
+                    holder, parentObj, getJavaName(yangLeaf),
+                    IS_LEAF_VALUE_SET_METHOD);
         } catch (NoSuchMethodException e) {
             throw new YtbException(e);
         }

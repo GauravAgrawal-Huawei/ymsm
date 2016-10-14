@@ -244,16 +244,18 @@ public final class YtbUtil {
      * @return string value of the boolean method
      */
     public static String isValueOrSelectLeafSet(
-            Object nodeObj, String javaName, String methodName)
+            YangSchemaNode holder, Object nodeObj, String javaName,
+            String methodName)
             throws NoSuchMethodException {
 
         Class<?> nodeClass = nodeObj.getClass();
-        Class<?> interfaceClass = getInterfaceClassFromImplClass(nodeObj);
 
         // Appends the enum inner package to the interface class package.
-        String enumPackage = interfaceClass.getName() + ENUM_LEAF_IDENTIFIER;
+        String enumPackage = holder.getJavaPackage() + PERIOD +
+                getCapitalCase(holder.getJavaClassNameOrBuiltInType()) +
+                ENUM_LEAF_IDENTIFIER;
 
-        ClassLoader classLoader = interfaceClass.getClassLoader();
+        ClassLoader classLoader = nodeClass.getClassLoader();
         Class leafEnum;
         try {
             leafEnum = classLoader.loadClass(enumPackage);
