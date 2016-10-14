@@ -92,10 +92,15 @@ public class YangApplicationBroker {
         for (YdtAppContext appContext = workBench.getAppRootNode().getFirstChild();
              appContext != null; appContext = appContext.getNextSibling()) {
             Object responseObject = processQueryOfApplication(appContext);
-            responseObjects.add(responseObject);
+            if (responseObject != null) {
+                responseObjects.add(responseObject);
+            }
         }
 
-        YdtBuilder responseYdt = buildResponseYdt(responseObjects, null, null);
+        YdtContext rootYdtContext = workBench.getRootNode();
+        YdtBuilder responseYdt = buildResponseYdt(responseObjects,
+                                                  rootYdtContext.getName(),
+                                                  rootYdtContext.getNamespace());
 
         return new YangResponseWorkBench(responseYdt.getRootNode(),
                                          EXECUTION_SUCCESS,
@@ -226,10 +231,13 @@ public class YangApplicationBroker {
                 String methodName = getApplicationMethodName(appContext,
                                                              appName, GET);
 
+                String moduleName = appContext.getAppData()
+                        .getRootSchemaNode().getName();
+
                 // invoke application's getter method
                 outputObject = invokeApplicationsMethod(appManagerObject,
                                                         outputObject,
-                                                        methodName);
+                                                        methodName, moduleName);
             }
 
             /*
@@ -290,9 +298,12 @@ public class YangApplicationBroker {
                     String methodName = getApplicationMethodName(appContext,
                                                                  appName, SET);
 
+                    String moduleName = appContext.getAppData()
+                            .getRootSchemaNode().getName();
+
                     // invoke application's setter method
                     invokeApplicationsMethod(appManagerObject, outputObject,
-                                             methodName);
+                                             methodName, moduleName);
                 }
 
                 /*
@@ -363,8 +374,12 @@ public class YangApplicationBroker {
                 String methodName = getApplicationMethodName(appContext,
                                                              appName, SET);
 
+                String moduleName = appContext.getAppData().getRootSchemaNode()
+                        .getName();
+
                 // invoke application's setter method
-                invokeApplicationsMethod(appManagerObject, inputObject, methodName);
+                invokeApplicationsMethod(appManagerObject, inputObject,
+                                         methodName, moduleName);
 
                 if (appContext.getPreviousSibling() != null) {
                     curTraversal = SIBLING;
@@ -785,7 +800,8 @@ public class YangApplicationBroker {
      */
     private Object invokeApplicationsMethod(Object appManagerObject,
                                             Object inputObject,
-                                            String methodName) throws YabException {
+                                            String methodName, String appName)
+            throws YabException {
         checkNotNull(appManagerObject);
         Class<?> appClass = appManagerObject.getClass();
         try {
@@ -795,9 +811,11 @@ public class YangApplicationBroker {
                 return methodObject.invoke(appManagerObject, inputObject);
             }
             throw new YabException("No such method in application");
-        } catch (IllegalAccessException | NoSuchMethodException |
-                InvocationTargetException e) {
+        } catch (IllegalAccessException | NoSuchMethodException e) {
             throw new YabException(e);
+        } catch (InvocationTargetException e) {
+            throw new YabException("Invocation exception in service " + appName +
+                                           " cause", e.getCause());
         }
     }
 

@@ -29,6 +29,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class YobListTest {
@@ -61,7 +62,8 @@ public class YobListTest {
                     yangObject.getClass().getDeclaredField("listwithcontainer");
             field.setAccessible(true);
             List listwithcontainer = (List) field.get(yangObject);
-            assertEquals(true, listwithcontainer.isEmpty());
+            assertNull(listwithcontainer);
+//            assertEquals(true, listwithcontainer.isEmpty());
             Field field1 = yangObject.getClass()
                     .getDeclaredField("listwithoutcontainer");
             field1.setAccessible(true);
@@ -106,7 +108,7 @@ public class YobListTest {
                     .getDeclaredField("listwithoutcontainer");
             field.setAccessible(true);
             List listwithoutcontainer = (List) field.get(yangObject);
-            assertEquals(true, listwithoutcontainer.isEmpty());
+            assertNull(listwithoutcontainer);
             Field listwithcontainerField =
                     yangObject.getClass().getDeclaredField("listwithcontainer");
             listwithcontainerField.setAccessible(true);
