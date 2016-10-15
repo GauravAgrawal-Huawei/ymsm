@@ -372,8 +372,18 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
                 }
                 schemaNode = childNode.getYangSchemaNode();
             }
-            childNode = YdtNodeFactory.getNode(id, schemaNode, cardinality,
-                                               callType);
+
+            /*
+             * For yms query request node specific validation are not
+             * required as restconf can call addChild api for leaf/leaf-list
+             * node addition also.
+             */
+            if (ymsOperationType == YmsOperationType.QUERY_REQUEST) {
+                childNode = YdtNodeFactory.getYangSchemaNodeTypeSpecificContext(schemaNode);
+            } else {
+                childNode = YdtNodeFactory.getNode(id, schemaNode, cardinality,
+                                                   callType);
+            }
         }
 
         opType = getValidOpType(opType, callType, schemaNode);
