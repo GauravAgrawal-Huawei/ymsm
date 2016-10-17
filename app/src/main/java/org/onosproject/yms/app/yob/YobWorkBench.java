@@ -37,7 +37,6 @@ import java.util.Map;
 
 import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_AUGMENT_NODE;
 import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_CHOICE_NODE;
-import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
 import static org.onosproject.yms.app.ydt.AppType.YOB;
 import static org.onosproject.yms.app.yob.YobConstants.ADD_AUGMENT_METHOD;
 import static org.onosproject.yms.app.yob.YobConstants.ADD_TO;
@@ -58,6 +57,7 @@ import static org.onosproject.yms.app.yob.YobConstants.ONOS_YANG_OP_TYPE;
 import static org.onosproject.yms.app.yob.YobConstants.OP_TYPE;
 import static org.onosproject.yms.app.yob.YobConstants.VALUE_OF;
 import static org.onosproject.yms.app.yob.YobConstants.YANG;
+import static org.onosproject.yms.app.yob.YobUtils.getCapitalCase;
 import static org.onosproject.yms.app.yob.YobUtils.getModuleInterface;
 import static org.onosproject.yms.app.yob.YobUtils.getQualifiedDefaultClass;
 import static org.onosproject.yms.ydt.YdtType.MULTI_INSTANCE_NODE;
@@ -369,7 +369,7 @@ class YobWorkBench {
      * schema YDT nodes, non schema node without the YDT node should not
      * invoke this, as it is not applicable to it.
      *
-     * @param ydtNode schema data tree node
+     * @param ydtoperation schema data tree node
      */
     private void setOperationType(YdtContextOperationType ydtoperation,
                                   YangSchemaRegistry schemaRegistry) {
@@ -419,7 +419,7 @@ class YobWorkBench {
      * build the non schema objects and maintain it in the contained schema
      * node.
      *
-     * @param ydtNode contained schema node
+     * @param operationType contained schema node
      */
     private void buildNonSchemaAttributes(YdtContextOperationType operationType,
                                           YangSchemaRegistry schemaRegistry) {

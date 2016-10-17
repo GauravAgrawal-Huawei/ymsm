@@ -45,10 +45,10 @@ import java.util.regex.Pattern;
 
 import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_AUGMENT_NODE;
 import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.DERIVED;
-import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getCapitalCase;
 import static org.onosproject.yms.app.ydt.AppType.YOB;
 import static org.onosproject.yms.app.yob.YobConstants.DEFAULT;
 import static org.onosproject.yms.app.yob.YobConstants.E_DATA_TYPE_NOT_SUPPORT;
+import static org.onosproject.yms.app.yob.YobConstants.E_FAIL_TO_LOAD_CLASS;
 import static org.onosproject.yms.app.yob.YobConstants.E_FAIL_TO_LOAD_CONSTRUCTOR;
 import static org.onosproject.yms.app.yob.YobConstants.E_INVALID_DATA_TREE;
 import static org.onosproject.yms.app.yob.YobConstants.FROM_STRING;
@@ -138,10 +138,8 @@ final class YobUtils {
                 break;
 
             case BITS:
-                YangBits yangBits = (YangBits) type.getDataTypeExtendedInfo();
-                parentSetterMethod.invoke(parentBuilderObject,
-                                          getBitSetValueFromString(yangBits,
-                                                                   leafValue));
+                parseBitSetTypeInfo(ydtExtendedContext, parentSetterMethod,
+                                    parentBuilderObject, leafValue);
                 break;
 
             case DECIMAL64:
@@ -228,6 +226,7 @@ final class YobUtils {
             if (childConstructor != null) {
                 childConstructor.setAccessible(true);
             }
+
             try {
                 if (childConstructor != null) {
                     childObject = childConstructor.newInstance();
@@ -245,6 +244,63 @@ final class YobUtils {
             }
             //leafValue = JavaIdentifierSyntax.getEnumJavaAttribute(leafValue);
             //leafValue = leafValue.toUpperCase();
+        }
+        if (childMethod != null) {
+            childValue = childMethod.invoke(childObject, leafValue);
+        }
+
+        parentSetterMethod.invoke(parentBuilderObject, childValue);
+    }
+
+    /**
+     * To set data into parent setter method from string value for bits type.
+     *
+     * @param leafValue           leafValue argument is used to set the value
+     *                            in method
+     * @param parentSetterMethod  Invokes the underlying method represented
+     *                            by this parentSetterMethod
+     * @param parentBuilderObject the parentBuilderObject is to invoke the
+     *                            underlying method
+     * @param ydtExtendedContext  ydtExtendedContext is used to get
+     *                            application related
+     *                            information maintained in YDT
+     * @throws InvocationTargetException throws InvocationTargetException
+     * @throws IllegalAccessException    throws IllegalAccessException
+     * @throws NoSuchMethodException     throws NoSuchMethodException
+     */
+    private static void parseBitSetTypeInfo(YdtExtendedContext
+                                                    ydtExtendedContext,
+                                            Method parentSetterMethod,
+                                            Object parentBuilderObject,
+                                            String leafValue)
+            throws InvocationTargetException, IllegalAccessException,
+            NoSuchMethodException {
+        Class<?> childSetClass = null;
+        Object childValue = null;
+        Object childObject = null;
+        Method childMethod = null;
+
+        YangSchemaNode yangJavaModule = ydtExtendedContext.getYangSchemaNode();
+        while (yangJavaModule.getReferredSchema() != null) {
+            yangJavaModule = yangJavaModule.getReferredSchema();
+        }
+
+        YangSchemaNode parentSchema = ((YdtExtendedContext) ydtExtendedContext
+                .getParent()).getYangSchemaNode();
+        String qualifiedClassName = parentSchema.getJavaPackage() + PERIOD +
+                parentSchema.getJavaAttributeName().toLowerCase() +
+                PERIOD + getCapitalCase(yangJavaModule.getJavaAttributeName());
+
+        ClassLoader classLoader = getClassLoader(null, qualifiedClassName,
+                                                 ydtExtendedContext, null);
+        try {
+            childSetClass = classLoader.loadClass(qualifiedClassName);
+        } catch (ClassNotFoundException e) {
+            log.error(L_FAIL_TO_LOAD_CLASS, qualifiedClassName);
+        }
+
+        if (childSetClass != null) {
+            childMethod = childSetClass.getDeclaredMethod(FROM_STRING, String.class);
         }
         if (childMethod != null) {
             childValue = childMethod.invoke(childObject, leafValue);
@@ -299,7 +355,8 @@ final class YobUtils {
         }
         YobUtils.setDataFromStringValue(type,
                                         leafValue, parentSetterMethod,
-                                        parentBuilderObject, ydtExtendedContext);
+                                        parentBuilderObject,
+                                        ydtExtendedContext);
     }
 
     /**
@@ -360,11 +417,13 @@ final class YobUtils {
                     ((YangNode) augmentSchemaNode).getParent();
 
             Class<?> moduleClass = registry.getRegisteredClass(
-                    moduleNode, getCapitalCase(
-                            moduleNode.getJavaClassNameOrBuiltInType()));
+                    moduleNode, getCapitalCase(moduleNode.getJavaClassNameOrBuiltInType()));
+            if (moduleClass == null) {
+                throw new YobException(E_FAIL_TO_LOAD_CLASS + moduleNode
+                        .getJavaClassNameOrBuiltInType());
+            }
             return moduleClass.getClassLoader();
         }
-
         return curLoader;
     }
 
@@ -440,5 +499,17 @@ final class YobUtils {
             bitDataSet.set(bit.getPosition());
         }
         return bitDataSet;
+    }
+
+    /**
+     * Returns the capital cased first letter of the given string.
+     *
+     * @param name string to be capital cased
+     * @return capital cased string
+     */
+    public static String getCapitalCase(String name) {
+        // TODO: It will be removed if common util is committed.
+        return name.substring(0, 1).toUpperCase() +
+                name.substring(1);
     }
 }

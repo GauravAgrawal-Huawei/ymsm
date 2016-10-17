@@ -814,8 +814,8 @@ public class YangApplicationBroker {
         } catch (IllegalAccessException | NoSuchMethodException e) {
             throw new YabException(e);
         } catch (InvocationTargetException e) {
-            throw new YabException("Invocation exception in service " + appName +
-                                           " cause", e.getCause());
+            throw new YabException("Invocation exception in service " + appName,
+                                   e.getCause());
         }
     }
 
