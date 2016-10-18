@@ -22,24 +22,19 @@ package org.onosproject.yms.app.ydt;
  */
 public final class AppNodeFactory {
 
-    /**
-     * No instantiation.
-     */
+    // No instantiation
     private AppNodeFactory() {
     }
 
     /**
-     * Returns the application context by creating an instance of the
-     * application context for requested node based on the isContextSwitch flag,
-     * if it is set that means its an augmented node so augmented application
-     * context will be sent else it will be treated as new application module
-     * node request.
+     * Returns the appropriate application context on the basis of provided
+     * isAugmented flag for given request.
      *
-     * @param flag to identify request type is augment/module
+     * @param flag true for augmented context; false for module context
      * @return appContext application context
      */
     public static DefaultYdtAppContext getAppContext(boolean flag) {
-        return flag ? DefaultYdtAppContext.getAugmentAppContext() :
-                DefaultYdtAppContext.getModuleAppContext();
+        return flag ? new DefaultYdtAppContext(new AugmentedSchemaData()) :
+                new DefaultYdtAppContext(new ModuleSchemaData());
     }
 }

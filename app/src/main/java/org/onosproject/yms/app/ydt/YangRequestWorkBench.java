@@ -18,10 +18,10 @@ package org.onosproject.yms.app.ydt;
 
 import com.google.common.collect.ImmutableMap;
 import org.onosproject.yangutils.datamodel.YangList;
-import org.onosproject.yangutils.datamodel.YangNamespace;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeContextInfo;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeIdentifier;
+import org.onosproject.yms.app.ydt.exceptions.YdtException;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.onosproject.yms.ydt.YdtContext;
 import org.onosproject.yms.ydt.YdtContextOperationType;
@@ -33,25 +33,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_MULTI_INSTANCE_LEAF_NODE;
 import static org.onosproject.yms.app.ydt.AppNodeFactory.getAppContext;
 import static org.onosproject.yms.app.ydt.RequestedCallType.LEAF;
-import static org.onosproject.yms.app.ydt.RequestedCallType.OTHER;
+import static org.onosproject.yms.app.ydt.RequestedCallType.NON_LEAF;
 import static org.onosproject.yms.app.ydt.RequestedCardinality.MULTI_INSTANCE;
 import static org.onosproject.yms.app.ydt.RequestedCardinality.MULTI_INSTANCE_LEAF;
 import static org.onosproject.yms.app.ydt.RequestedCardinality.SINGLE_INSTANCE;
 import static org.onosproject.yms.app.ydt.RequestedCardinality.UNKNOWN;
-import static org.onosproject.yms.app.ydt.YdtConstants.DUP_NAME;
-import static org.onosproject.yms.app.ydt.YdtConstants.EXP_COUNT;
-import static org.onosproject.yms.app.ydt.YdtConstants.E_CREATE;
-import static org.onosproject.yms.app.ydt.YdtConstants.E_DEL;
-import static org.onosproject.yms.app.ydt.YdtConstants.E_INVOKE_PARENT;
-import static org.onosproject.yms.app.ydt.YdtConstants.E_MULTI_INS;
-import static org.onosproject.yms.app.ydt.YdtConstants.E_USE_ADDLEAF;
-import static org.onosproject.yms.app.ydt.YdtConstants.F_KEY_PARA;
-import static org.onosproject.yms.app.ydt.YdtConstants.M_KEY_PARA;
-import static org.onosproject.yms.app.ydt.YdtConstants.getErrorString;
-import static org.onosproject.yms.app.ydt.YdtNodeFactory.getAppOpTypeFromYdtOpType;
+import static org.onosproject.yms.app.ydt.YdtConstants.errorMsg;
+import static org.onosproject.yms.app.ydt.YdtUtils.getAppOpTypeFromYdtOpType;
 import static org.onosproject.yms.ydt.YdtContextOperationType.CREATE;
 import static org.onosproject.yms.ydt.YdtContextOperationType.DELETE;
 import static org.onosproject.yms.ydt.YdtContextOperationType.MERGE;
@@ -66,27 +56,42 @@ import static org.onosproject.yms.ydt.YdtType.MULTI_INSTANCE_NODE;
  */
 public class YangRequestWorkBench implements YdtExtendedBuilder {
 
+    // Ydt formatted error string
+    private static final String FMT_TOO_FEW =
+            "Too few key parameters in %s. Expected %d; actual %d.";
+    private static final String FMT_TOO_MANY =
+            "Too many key parameters in %s. Expected %d; actual %d.";
+    private static final String FMT_NOT_EXIST =
+            "Application with name \"%s\" doesn't exist.";
+
+    // Ydt error strings.
+    private static final String E_USE_ADDLEAF =
+            "Requested Node should be created using addLeaf interface.";
+    private static final String E_CREATE =
+            "Create request is not allowed under delete operation.";
+    private static final String E_DEL =
+            "Delete request is not allowed under create operation.";
+    private static final String E_INVOKE_PARENT =
+            "Can't invoke get parent at logical root node.";
+    private static final String FMT_MANY_INS =
+            "Too many instances of %s. Expected maximum instances %d.";
     /*
-     * Current node in YANG data tree, kept to maintain the
-     * current context in YDT.
+     * Reference for the current context node in YANG data tree.
      */
     private YdtNode curNode;
 
     /*
-     * Root node in YANG data tree, kept to maintain the root context in
-     * YDT.
+     * Reference for the logical root node in YANG data tree.
      */
     private YdtNode rootNode;
 
     /*
-     * Current node in YANG data tree, kept to maintain the current context
-     * in ydt application tree.
+     * Reference for the current context in ydt application tree.
      */
     private YdtAppContext appCurNode;
 
     /*
-     * Root node in YANG data tree, kept to maintain the root context in ydt
-     * application tree.
+     * Reference for the logical root node context in ydt application tree.
      */
     private YdtAppContext appRootNode;
 
@@ -131,43 +136,39 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
      * @param namespace  namespace of logical container
      * @param opType     type of operation done by using YANG
      *                   interface
-     * @param registry   Yang schema registry
+     * @param reg        Yang schema registry
      * @param isValidate Flag to identify data validation need to be
      *                   done by YDT or not
      */
     public YangRequestWorkBench(String name, String namespace,
                                 YmsOperationType opType,
-                                YangSchemaRegistry registry,
+                                YangSchemaRegistry reg,
                                 boolean isValidate) {
-        YdtNode newNode;
-        //TODO: maintain the schema node identifier of logical root in workbench
-        newNode = new YdtLogicalNode(name, namespace);
-        setRootNode(newNode);
-        this.registry = registry;
+
+        setRootNode(new YdtLogicalNode(name, namespace));
+        registry = reg;
         ymsOperationType = opType;
         validate = isValidate;
-        // Set the logical root node for yang data app tree.
-        DefaultYdtAppContext appNode = getAppContext(true);
-        setAppRootNode(appNode);
+
+        setAppRootNode(getAppContext(true));
     }
 
     /**
      * Creates an instance of YANG request work bench which is used to build YDT
      * tree in YAB.
      *
-     * @param curNode       current YDT node
-     * @param operationType YMS operation type
+     * @param node   current YDT node
+     * @param opType YMS operation type
      */
-    public YangRequestWorkBench(YdtNode curNode,
-                                YmsOperationType operationType) {
-        this.curNode = curNode;
-        ymsOperationType = operationType;
+    public YangRequestWorkBench(YdtNode node, YmsOperationType opType) {
+        curNode = node;
+        ymsOperationType = opType;
     }
 
     /**
-     * Sets the logical root context information available in YDT node.
+     * Sets the logical root node for ydt.
      *
-     * @param node logical root node
+     * @param node ydt logical root node
      */
     private void setRootNode(YdtNode node) {
         rootNode = node;
@@ -175,9 +176,9 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
     }
 
     /**
-     * Sets the app context tree logical root node  for ydt application tree.
+     * Sets the logical root node for ydt application tree.
      *
-     * @param node application tree's logical root node
+     * @param node ydt application context logical root node
      */
     private void setAppRootNode(YdtAppContext node) {
         appRootNode = node;
@@ -195,44 +196,46 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
     }
 
     /**
-     * Returns the app context tree root node for ydt application tree.
-     * This method will be used by yab.
+     * Returns the ydt app context tree logical root node.
+     * This method will be used by yab and ytb.
      *
-     * @return YdtAppContext refers to root node of ydt application tree
+     * @return YdtAppContext app tree logical root node
      */
     public YdtAppContext getAppRootNode() {
         return appRootNode;
     }
 
     /**
-     * Returns the data tree for given node identifier.
+     * Returns the ydt module node with requested node identifier.
      *
-     * @param name      module name
-     * @param namespace namespace of the application requested by user
+     * @param id module/application node identifier
      * @return YANG data tree node
      */
-    private YdtNode moduleHandler(String name,
-                                  String namespace) {
+    private YdtNode moduleHandler(YangSchemaNodeIdentifier id) {
 
-        YangSchemaNode node = registry.getYangSchemaNodeUsingSchemaName(name);
-        YangSchemaNodeIdentifier id = node.getYangSchemaNodeIdentifier();
+        YangSchemaNode node =
+                registry.getYangSchemaNodeUsingSchemaName(id.getName());
+
+        String namespace = id.getNameSpace().getModuleNamespace();
 
         /*
          * Checking received schema node is having same namespace as
          * requested by user or not.
          */
-        //TODO will be handled later
-//        if (node == null ||
-//                namespace != null && !namespace.equals(node.getNameSpace())) {
-//            curNode.errorHandler(getErrorStringWithQuote(
-//                    APP, name, NOT_EXIST, PERIOD), rootNode);
-//        }
+        if (node == null || namespace != null &&
+                !namespace.equals(node.getYangSchemaNodeIdentifier()
+                                          .getNameSpace()
+                                          .getModuleNamespace())) {
+            throw new YdtException(errorMsg(FMT_NOT_EXIST, id.getName()));
+        }
 
         /*
-         * Checking whether requested node is already exiting in YDT or not.
+         * If yms operation is for query then no validation need to be
+         * performed.
          */
-        if (curNode.getCollidingChild(id) != null) {
-            curNode.errorHandler(getErrorString(DUP_NAME, id.getName()), rootNode);
+        if (ymsOperationType == YmsOperationType.QUERY_REQUEST) {
+            // Checking whether module node is already exits in YDT or not.
+            curNode.getCollidingChild(id);
         }
 
         YdtNode newNode = new YdtSingleInstanceNode(node);
@@ -255,7 +258,7 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
 
     @Override
     public void addChild(String name, String namespace) {
-        addChild(name, namespace, UNKNOWN, null, OTHER);
+        addChild(name, namespace, UNKNOWN, null, NON_LEAF);
     }
 
     @Override
@@ -266,7 +269,7 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
     @Override
     public void addChild(String name, String namespace,
                          YdtContextOperationType opType) {
-        addChild(name, namespace, UNKNOWN, opType, OTHER);
+        addChild(name, namespace, UNKNOWN, opType, NON_LEAF);
     }
 
     @Override
@@ -283,7 +286,7 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
             default:
                 curNode.errorHandler(E_USE_ADDLEAF, rootNode);
         }
-        addChild(name, namespace, cardinality, opType, OTHER);
+        addChild(name, namespace, cardinality, opType, NON_LEAF);
     }
 
     /**
@@ -303,29 +306,23 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
                           RequestedCallType callType) {
 
         YdtNode childNode;
-        boolean isContextSwitch = false;
-        YangSchemaNode schemaNode = null;
-        YangSchemaNodeContextInfo contextInfo;
+        boolean contextSwitch = false;
         YangSchemaNode augmentingSchema = null;
 
-        YangSchemaNodeIdentifier id = new YangSchemaNodeIdentifier();
-        id.setName(name);
-        YangNamespace yangNameSpace = null;
-        if (namespace != null) {
-            yangNameSpace = new NameSpace(namespace);
-        }
+        YangSchemaNodeIdentifier id = getNodeIdentifier(name, namespace);
 
         // Module/sub-module node handler.
         if (curNode.equals(rootNode)) {
-            childNode = moduleHandler(name, namespace);
+            childNode = moduleHandler(id);
         } else {
 
-            // If namespace given by user null, then take namespace from parent.
-            if (yangNameSpace == null) {
-                yangNameSpace = curNode.getYangSchemaNode().getNameSpace();
-            }
+            YangSchemaNode schemaNode;
+            YangSchemaNodeContextInfo contextInfo;
 
-            id.setNameSpace(yangNameSpace);
+            // If namespace given by user null, then take namespace from parent.
+            if (namespace == null) {
+                id.setNameSpace(curNode.getYangSchemaNode().getNameSpace());
+            }
 
             /*
              * Get the already exiting YDT node in YDT tree with same
@@ -355,13 +352,13 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
                          * ydtApp tree also need to be traversed back to parent
                          * or not with YDT tree traverse to parent call.
                          */
-                        isContextSwitch = true;
+                        contextSwitch = true;
                     }
                 }
                 schemaNode = contextInfo.getSchemaNode();
             } else {
                 /*
-                 * If colliding child exist , then will be leaf-list or list
+                 * If colliding child exist , then it will be leaf-list or list.
                  * If its leaf-list then return and add new requested
                  * value/valueSet in same node else take yang data model
                  * information from colliding child.
@@ -375,30 +372,45 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
 
             /*
              * For yms query request node specific validation are not
-             * required as restconf can call addChild api for leaf/leaf-list
-             * node addition also.
+             * required as rest-conf can call addChild api for leaf/leaf-list
+             * node addition also in ydt.
              */
             if (ymsOperationType == YmsOperationType.QUERY_REQUEST) {
-                childNode = YdtNodeFactory.getYangSchemaNodeTypeSpecificContext(schemaNode);
+                childNode = YdtNodeFactory.getYangSchemaNodeTypeSpecificContext(
+                        schemaNode);
             } else {
                 childNode = YdtNodeFactory.getNode(id, schemaNode, cardinality,
                                                    callType);
             }
         }
 
-        opType = getValidOpType(opType, callType, schemaNode);
+        opType = getValidOpType(opType, childNode);
 
         childNode.setYdtContextOperationType(opType);
 
         curNode.addChild(childNode, true);
 
         // Update parent ydt node map.
-        curNode.updateYdtMap(id, childNode);
+        curNode.updateYdtMap(childNode);
 
-        processAppTree(opType, childNode, augmentingSchema, isContextSwitch);
+        processAppTree(opType, childNode, augmentingSchema, contextSwitch);
 
-        // Updating the curNode.
         curNode = childNode;
+    }
+
+    /**
+     * Returns the yang node identifier with requested name and namespace.
+     *
+     * @param name      name of the node
+     * @param namespace namespace of the node
+     * @return yang node identifier
+     */
+    private YangSchemaNodeIdentifier getNodeIdentifier(String name,
+                                                       String namespace) {
+        YangSchemaNodeIdentifier id = new YangSchemaNodeIdentifier();
+        id.setName(name);
+        id.setNameSpace(new NameSpace(namespace));
+        return id;
     }
 
     /**
@@ -407,16 +419,22 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
      * @param opType           user requested operation type
      * @param childNode        requested ydt node
      * @param augmentingSchema schema of last augmenting node
+     * @param contextSwitch    true, for module node call; false for modules
+     *                         sub-node calls
      */
     private void processAppTree(
             YdtContextOperationType opType, YdtNode childNode,
-            YangSchemaNode augmentingSchema, boolean isContextSwitch) {
+            YangSchemaNode augmentingSchema, boolean contextSwitch) {
 
+        /*
+         * This is to avoid multiple entries of single augmented target.
+         */
         if (augmentingSchema != null) {
             if (!appCurNode.addSchemaToAppSet(augmentingSchema)) {
                 return;
             }
         }
+
         if (opType == null) {
             opType = curNode.getYdtContextOperationType();
         } else {
@@ -429,9 +447,9 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
          * Or if context switch happened then also add entry for same ydt
          * node in the ydt application tree.
          */
-        if (curNode.equals(rootNode) || isContextSwitch) {
+        if (curNode.equals(rootNode) || contextSwitch) {
             addChildInAppTree(childNode, augmentingSchema, opType,
-                              isContextSwitch);
+                              contextSwitch);
 
             // Setting app tree node operation.
             appCurNode.setOperationType(getAppOpTypeFromYdtOpType(opType));
@@ -447,32 +465,37 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
      * Returns the valid operation type for requested ydt node after performing
      * validation.
      *
-     * @param opType     user requested operation type
-     * @param callType   to identify the whether its a leaf or other node
-     * @param schemaNode schema node of user requested ydt node
+     * @param opType user requested operation type
+     * @param node   new requested ydt node
      * @return operation type
      */
     private YdtContextOperationType getValidOpType(
-            YdtContextOperationType opType, RequestedCallType callType,
-            YangSchemaNode schemaNode) {
+            YdtContextOperationType opType, YdtNode node) {
 
-        // Operation type not supported for leaf node.
-        if (callType == LEAF || (callType == RequestedCallType.MULTI_INSTANCE &&
-                schemaNode.getYangSchemaNodeType() ==
-                        YANG_MULTI_INSTANCE_LEAF_NODE)) {
-            return null;
+        switch (node.getYdtType()) {
+
+            case SINGLE_INSTANCE_NODE:
+            case MULTI_INSTANCE_NODE:
+
+                // Reference for parent node operation type.
+                YdtContextOperationType parentOpType =
+                        curNode.getYdtContextOperationType();
+
+                if (opType == null) {
+                    opType = getOperationType(parentOpType);
+                } else if (parentOpType != null) {
+                    validateOperationType(parentOpType, opType);
+                }
+
+                return opType;
+
+            /*
+             * Nodes other then single/multi instance node does not support
+             * operation type so no need of validation for those.
+             */
+            default:
+                return null;
         }
-
-        // Reference for parent node operation type.
-        YdtContextOperationType parentOpType = curNode
-                .getYdtContextOperationType();
-
-        if (opType != null && parentOpType != null) {
-            validateOperationType(parentOpType, opType);
-        } else if (opType == null) {
-            opType = getOperationType(parentOpType);
-        }
-        return opType;
     }
 
     /**
@@ -501,8 +524,8 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
      * @param childNode       node to be added in tree
      * @param schemaNode      last augmenting module node
      * @param childOpType     operation type of node
-     * @param isContextSwitch to distinguish the call whether it
-     *                        module node call all its subNode call
+     * @param isContextSwitch true, for module node call; false for modules
+     *                        sub-node calls
      */
     private void addChildInAppTree(YdtNode childNode,
                                    YangSchemaNode schemaNode,
@@ -515,10 +538,9 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
 
         // Add context switched child in ydt App tree.
         appCurNode.addChild(appContext);
-        //Updating the curNode.
+
         appCurNode = appContext;
 
-        // Get the app tree operation type from ydt operation type.
         opType = getAppOpTypeFromYdtOpType(childOpType);
 
         appCurNode.setAppData(childNode, schemaNode);
@@ -597,7 +619,7 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
     public void traverseToParent() {
         // If traverse back to parent for logical root node comes
         if (curNode.equals(rootNode)) {
-            curNode.errorHandler(E_INVOKE_PARENT, rootNode);
+            throw new YdtException(E_INVOKE_PARENT);
         }
 
         // If node is of multiInstanceNode type then check key uniqueness.
@@ -662,25 +684,39 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
         addChild(name, namespace, UNKNOWN, opType,
                  RequestedCallType.MULTI_INSTANCE);
         int inputCount = keysValueList.size();
-        int actualCount;
+
         if (curNode.getYdtType() == MULTI_INSTANCE_LEAF_VALUE_NODE) {
-            // After successful addition of child node updating
-            // the values in same.
-            // inputCount = curNode.getValueSet().size() + inputCount;
-            // checkElementCount(actualCount, inputCount);
-            // TODO check the element count
+
+            /*
+             * Calculating the current leaf-list node array size by adding
+             * existing elements count and new supplied elements by user for
+             * the same.
+             */
+            // TODO instance count for leaf list need to be handled.
+//            if (curNode.getValueSet().size() + inputCount > expectedCount) {
+//                curNode.errorHandler(
+//                        errorMsg(FMT_MANY_INS, name, expectedCount), rootNode);
+//            }
+
+            /*
+             * After successful addition of child node updating
+             * the values in same.
+             */
             for (String value : keysValueList) {
                 curNode.addValue(value);
             }
         } else if (curNode.getYdtType() == MULTI_INSTANCE_NODE) {
+
             YangList yangListHolder = (YangList) curNode.getYangSchemaNode();
             List<String> schemaKeyList = yangListHolder.getKeyList();
-            actualCount = schemaKeyList.size();
-            checkElementCount(name, actualCount, inputCount);
+            int expectedCount = schemaKeyList.size();
+            checkElementCount(name, expectedCount, inputCount);
 
+            //After validation adding the key nodes under the list node.
             Iterator<String> sklIter = schemaKeyList.iterator();
             Iterator<String> kvlIter = keysValueList.iterator();
             String keyEleName;
+
             while (kvlIter.hasNext()) {
                 String value = kvlIter.next();
                 keyEleName = sklIter.next();
@@ -689,9 +725,8 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
                     traverseToParentWithoutValidation();
                 }
             }
+
             curNode = curNode.getParent();
-        } else {
-            curNode.errorHandler(E_MULTI_INS, rootNode);
         }
     }
 
@@ -699,20 +734,16 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
      * Checks the user supplied list of argument match's the expected value
      * or not.
      *
-     * @param name        name of the parent list/leaf-list node
-     * @param actualCount count suppose to be
-     * @param inputCount  user supplied values count
+     * @param name     name of the parent list/leaf-list node
+     * @param expected count suppose to be
+     * @param actual   user supplied values count
      */
-    private void checkElementCount(String name, int actualCount,
-                                   int inputCount) {
-        if (actualCount < inputCount) {
-            curNode.errorHandler(
-                    getErrorString(M_KEY_PARA, name, EXP_COUNT,
-                                   String.valueOf(actualCount)), rootNode);
-        } else if (actualCount > inputCount) {
-            curNode.errorHandler(
-                    getErrorString(F_KEY_PARA, name, EXP_COUNT,
-                                   String.valueOf(actualCount)), rootNode);
+    private void checkElementCount(String name, int expected,
+                                   int actual) {
+        if (expected < actual) {
+            throw new YdtException(errorMsg(FMT_TOO_MANY, name, expected, actual));
+        } else if (expected > actual) {
+            throw new YdtException(errorMsg(FMT_TOO_FEW, name, expected, actual));
         }
     }
 
@@ -727,13 +758,9 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
                                          YangSchemaNode schemaNode) {
 
         YdtNode childNode;
-        YangSchemaNodeIdentifier id =
-                schemaNode.getYangSchemaNodeIdentifier();
 
         childNode = YdtNodeFactory
                 .getYangSchemaNodeTypeSpecificContext(schemaNode);
-
-//        childNode.setId(id);
 
         childNode.setYangSchemaNode(schemaNode);
 
@@ -757,7 +784,10 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
                                           YangSchemaNode schemaNode) {
         YdtNode childNode = addExtendedChildNode(null, schemaNode);
 
-        // After successful addition of child node updating the values in same.
+        /*
+         * After successful addition of child node updating the values in
+         * valueSet.
+         */
         childNode.addValueSetWithoutValidation(valueSet);
         return childNode;
     }
@@ -774,9 +804,9 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
 
     @Override
     public void traverseToParentWithoutValidation() {
-        // If traverse back to parent for logical root node comes
+        // If traverse back to parent for logical root node comes.
         if (curNode.equals(rootNode)) {
-            curNode.errorHandler(E_INVOKE_PARENT, rootNode);
+            throw new YdtException(E_INVOKE_PARENT);
         }
         curNode = curNode.getParent();
     }

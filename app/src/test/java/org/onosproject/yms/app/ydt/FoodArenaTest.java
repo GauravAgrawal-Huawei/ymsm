@@ -34,14 +34,14 @@ public class FoodArenaTest {
     private final List<String> logger = new ArrayList<>();
 
     private static final String[] EXPECTED = {
-            "Entry Node is logical-node.",
+            "Entry Node is foodarena.",
             "Entry Node is food.",
             "Entry Node is food.",
             "Entry Node is chocolate.",
             "Exit Node is chocolate.",
             "Exit Node is food.",
             "Exit Node is food.",
-            "Exit Node is logical-node."
+            "Exit Node is foodarena."
     };
 
     /**

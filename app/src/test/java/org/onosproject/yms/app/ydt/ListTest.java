@@ -56,8 +56,10 @@ public class ListTest {
             "rootlist is missing some of the keys of listwithcontainer.",
             "Duplicate entry with name invalid.",
             "Some of the key elements are not unique in listwithcontainer.",
-            "Too few key parameter in listwithcontainer. Expected count 2.",
-            "Too many key parameter in listwithcontainer. Expected count 2.",
+            "Too few key parameters in listwithcontainer." +
+                    " Expected 2; actual 1.",
+            "Too many key parameters in listwithcontainer." +
+                    " Expected 2; actual 3.",
             "Application with name \"" + "invalid\" doesn't exist.",
             "Too many instances of listwithcontainer. Expected maximum " +
                     "instances 3.",
@@ -66,14 +68,14 @@ public class ListTest {
     };
 
     private static final String[] EXPECTED = {
-            "Entry Node is logical-node.",
+            "Entry Node is list.",
             "Entry Node is rootlist.",
             "Entry Node is listwithoutcontainer.",
             "Entry Node is invalidinterval.",
             "Exit Node is invalidinterval.",
             "Exit Node is listwithoutcontainer.",
             "Exit Node is rootlist.",
-            "Exit Node is logical-node."
+            "Exit Node is list."
     };
 
     List<String> keysValueList = new ArrayList<>();
@@ -127,7 +129,7 @@ public class ListTest {
         // assign root node to ydtNode for validating purpose.
         YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
         // Logical root node does not have operation type
-//        validateNodeContents(ydtNode, "list", null);
+        validateNodeContents(ydtNode, "list", null);
 
         ydtNode = ydtNode.getFirstChild();
         validateNodeContents(ydtNode, "rootlist", MERGE);
@@ -174,6 +176,7 @@ public class ListTest {
      */
 //    @Test
 //    public void negative1Test() {
+// TODO need to handle
 //        thrown.expect(YdtException.class);
 //        thrown.expectMessage(ERROR[5]);
 //        getYdtBuilder("list", "invalid", "ydt.invalid", MERGE);

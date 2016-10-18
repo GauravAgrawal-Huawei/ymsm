@@ -11,9 +11,9 @@ package org.onosproject.yms.app.yob;
 import org.junit.Test;
 import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.YmsIetfNetworkOpParam;
 import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network.rev20151208.ymsietfnetwork.networksstate.Network;
-import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.te.topology.rev20160317.IetfTeTopologyOpParam;
-import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.te.topology.rev20160317.ietftetopology.TeAdminStatus;
-import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.te.topology.rev20160317.ietftetopology.teadminstatus.TeAdminStatusEnum;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.te.topology.rev20160317.YmsIetfTeTopologyOpParam;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.te.topology.rev20160317.ymsietftetopology.TeAdminStatus;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.te.topology.rev20160317.ymsietftetopology.teadminstatus.TeAdminStatusEnum;
 import org.onosproject.yms.app.ydt.YangRequestWorkBench;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.ydt.YdtContext;
@@ -81,7 +81,7 @@ public class YobGroupingUsesTest {
         Object yangObject = yobBuilder.getYangObject(appRoot,
                                                      utils.schemaRegistry());
         assertThat(yangObject, is(notNullValue()));
-        IetfTeTopologyOpParam ietfTeTopology = (IetfTeTopologyOpParam) yangObject;
+        YmsIetfTeTopologyOpParam ietfTeTopology = (YmsIetfTeTopologyOpParam) yangObject;
         TeAdminStatus adminStatus = ietfTeTopology.teNodeEvent()
                 .teNodeAttributes()
                 .adminStatus();

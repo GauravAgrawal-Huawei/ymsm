@@ -1,4 +1,4 @@
-  module ietf-yang-types {
+  module yms-ietf-yang-types {
 
     yang-version 1;
 

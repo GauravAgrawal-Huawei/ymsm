@@ -17,6 +17,7 @@ package org.onosproject.yms.app.ydt;
 
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
+import org.onosproject.yms.app.ydt.exceptions.YdtException;
 import org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.onosproject.yms.ydt.YdtContext;
@@ -80,6 +81,7 @@ import static org.onosproject.yms.app.ydt.YdtTestConstants.MAXUINT8;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.MERCHNS;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.MINVALUE;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.MRV;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.NETNS;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.NIWMF;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.NWF;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.PERIOD;
@@ -136,25 +138,12 @@ public class YdtTestUtils implements YdtListener {
 
     @Override
     public void enterYdtNode(YdtContext ydtContext) {
-
-        String name;
-        if (ydtContext.getParent() == null) {
-            name = "logical-node";
-        } else {
-            name = ydtContext.getName();
-        }
-        LOGGER.add("Entry Node is " + name + PERIOD);
+        LOGGER.add("Entry Node is " + ydtContext.getName() + PERIOD);
     }
 
     @Override
     public void exitYdtNode(YdtContext ydtContext) {
-        String name;
-        if (ydtContext.getParent() == null) {
-            name = "logical-node";
-        } else {
-            name = ydtContext.getName();
-        }
-        LOGGER.add("Exit Node is " + name + PERIOD);
+        LOGGER.add("Exit Node is " + ydtContext.getName() + PERIOD);
     }
 
     /**
@@ -571,6 +560,37 @@ public class YdtTestUtils implements YdtListener {
         ydtBuilder.traverseToParent();
         ydtBuilder.traverseToParent();
         ydtBuilder.traverseToParent();
+
+        augmentNetworkYdt(ydtBuilder);
+    }
+
+    /**
+     * Adds augmented module augment-network under logical node ietf-network.
+     *
+     * @param ydtBuilder ydt builder which need to be updated
+     */
+    private static void augmentNetworkYdt(YangRequestWorkBench ydtBuilder) {
+        ydtBuilder.addChild("augmentNetwork", NETNS);
+
+        //adding list with name node under module node
+        ydtBuilder.addChild("node", null);
+
+        //adding key leaf for node
+        ydtBuilder.addLeaf("name", null, "node1");
+        ydtBuilder.traverseToParent();
+
+        // adding augmented container cont1s under list
+        ydtBuilder.addChild("cont1s", null);
+        // adding container cont1s under cont1s
+        ydtBuilder.addChild("cont1s", null);
+        //adding leaf under cont1s
+        ydtBuilder.addLeaf("fine", null, "leaf");
+
+        //adding augmented list node bu augment-topology1 under container
+        ydtBuilder.traverseToParent();
+        ydtBuilder.addChild("augment1", A1, DELETE);
+        //adding key leaf for list node augment1
+        ydtBuilder.addLeaf("value1", null, "1");
     }
 
     /**
@@ -1655,7 +1675,7 @@ public class YdtTestUtils implements YdtListener {
          */
         try {
             ydtBuilder.addLeaf(name, nameSpace, val);
-        } catch (Exception e) {
+        } catch (YdtException e) {
             isExpOccurred = true;
             assertEquals(e.getMessage(), getErrorString(val, type));
         }
@@ -1779,7 +1799,8 @@ public class YdtTestUtils implements YdtListener {
             YdtAppContext ydtAppNode, String name, String ns,
             YdtAppNodeOperationType opType) {
         assertEquals(ydtAppNode.getAugmentingSchemaNode().getName(), name);
-        assertEquals(ydtAppNode.getAugmentingSchemaNode().getNameSpace().getModuleNamespace(), ns);
+        assertEquals(ydtAppNode.getAugmentingSchemaNode().getNameSpace()
+                             .getModuleNamespace(), ns);
         assertEquals(ydtAppNode.getOperationType(), opType);
     }
 

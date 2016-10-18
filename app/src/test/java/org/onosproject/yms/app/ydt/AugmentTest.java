@@ -27,6 +27,7 @@ import static org.onosproject.yms.app.ydt.YdtTestConstants.A5L;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.A6;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.A6L;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG1;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG10;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG2;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG3;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG4;
@@ -36,6 +37,7 @@ import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG7;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG8;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG9;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.IETF;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.NETNS;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.SLINK;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.STP;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.TOPONS;
@@ -55,7 +57,7 @@ public class AugmentTest {
     private Set<String> valueSet = new HashSet();
 
     private static final String[] EXPECTED = {
-            "Entry Node is logical-node.",
+            "Entry Node is yms-ietf-network.",
             "Entry Node is yms-ietf-network.",
             "Entry Node is networks.",
             "Entry Node is network.",
@@ -220,7 +222,28 @@ public class AugmentTest {
             "Exit Node is network.",
             "Exit Node is networks-state.",
             "Exit Node is yms-ietf-network.",
-            "Exit Node is logical-node."
+
+            "Entry Node is augmentNetwork.",
+            "Entry Node is node.",
+            "Entry Node is name.",
+            "Exit Node is name.",
+            "Entry Node is cont1s.",
+            "Entry Node is cont1s.",
+            "Entry Node is fine.",
+            "Exit Node is fine.",
+
+            // augmenting node augment1 under cont1s
+            "Entry Node is augment1.",
+            "Entry Node is value1.",
+            "Exit Node is value1.",
+            "Exit Node is augment1.",
+
+            "Exit Node is cont1s.",
+            "Exit Node is cont1s.",
+            "Exit Node is node.",
+            "Exit Node is augmentNetwork.",
+
+            "Exit Node is yms-ietf-network."
     };
 
     /**
@@ -242,7 +265,7 @@ public class AugmentTest {
         // Assign root node to ydtNode for validating purpose.
         YdtNode ydtNode = (YdtNode) ydtBuilder.getRootNode();
         // Logical root node does not have operation type
-//        validateNodeContents(ydtNode, "yms-ietf-network", null);
+        validateNodeContents(ydtNode, "yms-ietf-network", null);
         ydtNode = ydtNode.getFirstChild();
         validateNodeContents(ydtNode, "yms-ietf-network", MERGE);
         ydtNode = ydtNode.getFirstChild();
@@ -448,6 +471,35 @@ public class AugmentTest {
         validateLeafContents(ydtNode, "network-ref", "network5");
         ydtNode = ydtNode.getNextSibling();
         validateLeafContents(ydtNode, "server-provided", "true");
+        ydtNode = ydtNode.getParent().getParent().getParent();
+
+        validateAugmentNetworkModule(ydtNode);
+    }
+
+    /**
+     * Validates the given built ydt for augment network module.
+     */
+    private void validateAugmentNetworkModule(YdtNode ydtNode) {
+
+        ydtNode = ydtNode.getNextSibling();
+        //augmenting network module node
+        validateNodeContents(ydtNode, "augmentNetwork", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "node", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "name", "node1");
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, "cont1s", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateNodeContents(ydtNode, "cont1s", MERGE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "fine", "leaf");
+
+        // checking augmenting node augment1
+        ydtNode = ydtNode.getNextSibling();
+        validateNodeContents(ydtNode, "augment1", DELETE);
+        ydtNode = ydtNode.getFirstChild();
+        validateLeafContents(ydtNode, "value1", "1");
     }
 
     /**
@@ -516,5 +568,32 @@ public class AugmentTest {
         validateAppNodeContents(ydtAppContext, AUG6, A4, OTHER_EDIT);
         assertNull(ydtAppContext.getFirstChild());
         assertNull(ydtAppContext.getNextSibling());
+
+        // traversing to logical application root node
+        ydtAppContext = ydtAppContext.getParent().getParent().getParent();
+
+        validateAugmentNetworkAppTree(ydtAppContext);
+    }
+
+    /**
+     * Validates the given built ydt application tree for augmenting network
+     * module.
+     */
+    private void validateAugmentNetworkAppTree(YdtAppContext ydtAppContext) {
+
+        ydtAppContext = ydtAppContext.getNextSibling();
+        //augmenting network module node
+        validateAppModuleNodeContents(ydtAppContext, "augmentNetwork", BOTH);
+        ydtAppContext = ydtAppContext.getFirstChild();
+        validateAppNodeContents(ydtAppContext, "/node", NETNS, BOTH);
+        //augmenting node augment1
+
+        ydtAppContext = ydtAppContext.getFirstChild();
+        validateAppNodeContents(ydtAppContext, AUG10, A1, DELETE_ONLY);
+        assertNull(ydtAppContext.getFirstChild());
+        assertNull(ydtAppContext.getNextSibling());
+
+        // traversing to logical application root node
+        ydtAppContext.getParent().getParent().getParent();
     }
 }

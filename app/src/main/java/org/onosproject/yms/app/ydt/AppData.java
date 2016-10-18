@@ -53,7 +53,7 @@ public interface AppData {
      *
      * @param moduleNode application's ydtContext
      */
-    void setModuleContext(YdtContext moduleNode);
+    void setModuleContext(YdtExtendedContext moduleNode);
 
     /**
      * Returns the YangSchemaNode of augmenting application.

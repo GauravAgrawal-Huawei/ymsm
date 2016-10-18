@@ -28,10 +28,14 @@ import java.util.List;
  * the module (sub-module).
  */
 public class ModuleSchemaData implements AppData {
+
+    private static final String E_NOT_MAINTAINED =
+            "Augmented info is not maintained.";
+
     /*
      * Reference for application's root ydtContext.
      */
-    private YdtContext moduleContext;
+    private YdtExtendedContext moduleContext;
 
     /*
      * Reference for list of nodes with operation type delete.
@@ -55,29 +59,27 @@ public class ModuleSchemaData implements AppData {
     }
 
     @Override
-    public void setModuleContext(YdtContext moduleContext) {
+    public void setModuleContext(YdtExtendedContext moduleContext) {
         this.moduleContext = moduleContext;
     }
 
     @Override
     public YangSchemaNode getAugmentingSchemaNode() {
-        throw new YdtException("Augmented info is not maintained");
+        throw new YdtException(E_NOT_MAINTAINED);
     }
 
     @Override
     public void setAugmentingSchemaNode(YangSchemaNode schemaNode) {
-        if (schemaNode != null) {
-            throw new YdtException("augment info is not maintained");
-        }
+        throw new YdtException(E_NOT_MAINTAINED);
     }
 
     @Override
     public YangSchemaNode getSchemaNode() {
-        return ((YdtExtendedContext) moduleContext).getYangSchemaNode();
+        return moduleContext.getYangSchemaNode();
     }
 
     @Override
     public YangSchemaNode getRootSchemaNode() {
-        return getSchemaNode();
+        return moduleContext.getYangSchemaNode();
     }
 }

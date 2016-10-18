@@ -143,7 +143,7 @@ public interface YdtAppContext {
      *
      * @param moduleNode application's ydtContext
      */
-    void setModuleContext(YdtContext moduleNode);
+    void setModuleContext(YdtExtendedContext moduleNode);
 
     /**
      * Returns the YangSchemaNode of augmenting application.
@@ -190,8 +190,9 @@ public interface YdtAppContext {
     void updateAppOperationType(YdtContextOperationType opType);
 
     /**
-     * Sets the application data for given request with appropriate
-     * information.
+     * Sets the application data for given request. If in requested parameters
+     * schemaNode is not null then appData will be set with
+     * augmentedSchemaData else with moduleSchemaData object.
      *
      * @param moduleNode module node of requested app
      * @param schemaNode augmented schema node of requested context
@@ -216,7 +217,7 @@ public interface YdtAppContext {
      * Adds the given schema node in to application set.
      *
      * @param schemaNode schema node to be added
-     * @return true for success else false
+     * @return true for success; false otherwise
      */
     boolean addSchemaToAppSet(YangSchemaNode schemaNode);
 }

@@ -1,4 +1,4 @@
-   module ietf-te-types {
+   module yms-ietf-te-types {
 
      namespace "urn:ietf:params:xml:ns:yang:ietf-te-types";
 

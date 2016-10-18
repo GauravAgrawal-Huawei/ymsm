@@ -29,6 +29,13 @@ import java.util.List;
  */
 public class AugmentedSchemaData implements AppData {
 
+    private static final String E_NOT_ROOT_APP =
+            "Augmented application depends on root app.";
+    private static final String E_NOT_EXIST =
+            "Augmented nodes are not part of the schema.";
+    private static final String E_NOT_MAINTAINED =
+            "Module context is not maintained.";
+
     /*
      * Reference for schema node of augmenting application.
      */
@@ -36,7 +43,7 @@ public class AugmentedSchemaData implements AppData {
 
     @Override
     public List<YdtContext> getDeleteNodes() {
-        throw new YdtException("Augmented application depends on root app");
+        throw new YdtException(E_NOT_ROOT_APP);
     }
 
     @Override
@@ -45,14 +52,12 @@ public class AugmentedSchemaData implements AppData {
 
     @Override
     public YdtContext getModuleContext() {
-        throw new YdtException("Augmented nodes are not part of the schema");
+        throw new YdtException(E_NOT_EXIST);
     }
 
     @Override
-    public void setModuleContext(YdtContext moduleContext) {
-        if (moduleContext != null) {
-            throw new YdtException("module context is not maintained");
-        }
+    public void setModuleContext(YdtExtendedContext moduleContext) {
+        throw new YdtException(E_NOT_MAINTAINED);
     }
 
     @Override

@@ -14,6 +14,10 @@ module augment-topology1 {
         prefix topo;
     }
 
+    import augmentNetwork {
+        prefix aug;
+    }
+
     organization "ON-LAB";
 
     description "This module defines for augment-topology1 classifier.";
@@ -47,5 +51,16 @@ module augment-topology1 {
             type string;
         }
 
+    }
+
+    augment "/aug:node/aug:cont1s/aug:cont1s" {
+        description
+        "Add augment1 to the link model.";
+        list augment1 {
+            key "value1";
+            leaf value1 {
+                  type int8;
+            }
+        }
     }
 }

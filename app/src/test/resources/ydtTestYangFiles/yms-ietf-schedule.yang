@@ -1,11 +1,11 @@
-   module ietf-schedule {
+   module yms-ietf-schedule {
      yang-version 1;
      namespace "urn:ietf:params:xml:ns:yang:ietf-schedule";
      // replace with IANA namespace when assigned
 
      prefix "sch";
 
-     import ietf-yang-types {
+     import yms-ietf-yang-types {
        prefix "yang";
      }
 

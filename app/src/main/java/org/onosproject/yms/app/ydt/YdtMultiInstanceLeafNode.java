@@ -23,9 +23,7 @@ import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.onosproject.yms.app.ydt.YdtConstants.DUP;
-import static org.onosproject.yms.app.ydt.YdtConstants.LIST_N;
-import static org.onosproject.yms.app.ydt.YdtConstants.getErrorString;
+import static org.onosproject.yms.app.ydt.YdtConstants.errorMsg;
 import static org.onosproject.yms.ydt.YdtType.MULTI_INSTANCE_LEAF_VALUE_NODE;
 
 /**
@@ -33,6 +31,10 @@ import static org.onosproject.yms.ydt.YdtType.MULTI_INSTANCE_LEAF_VALUE_NODE;
  * is atomic element and doesn't have any child.
  */
 class YdtMultiInstanceLeafNode extends YdtNode {
+
+    // ydt formatted error string
+    private static final String FMT_DUP_ENTRY =
+            "Duplicate entry found under %s leaf-list node.";
 
     /**
      * Set of values.
@@ -42,7 +44,7 @@ class YdtMultiInstanceLeafNode extends YdtNode {
     /**
      * Creates a YANG multi instance leaf node.
      *
-     * @param node schema node
+     * @param node schema of YDT multi instance node
      */
     protected YdtMultiInstanceLeafNode(YangSchemaNode node) {
         super(MULTI_INSTANCE_LEAF_VALUE_NODE, node);
@@ -73,8 +75,7 @@ class YdtMultiInstanceLeafNode extends YdtNode {
     private void addValueToValueSet(String value) {
 
         if (!valueSet.add(value)) {
-            errorHandler(getErrorString(DUP, getName(),
-                                        LIST_N), this);
+            errorHandler(errorMsg(FMT_DUP_ENTRY, getName()), this);
         }
     }
 

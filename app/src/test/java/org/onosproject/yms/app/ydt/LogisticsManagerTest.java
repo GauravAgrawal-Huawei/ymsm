@@ -38,7 +38,7 @@ public class LogisticsManagerTest {
     private Set<String> valueSet = new HashSet();
 
     private static final String[] EXPECTED = {
-            "Entry Node is logical-node.",
+            "Entry Node is logisticsmanager.",
             "Entry Node is customssupervisor.",
             "Entry Node is supervisor.",
             "Exit Node is supervisor.",
@@ -81,7 +81,7 @@ public class LogisticsManagerTest {
             "Entry Node is employeeid.",
             "Exit Node is employeeid.",
             "Exit Node is employeeid.",
-            "Exit Node is logical-node."
+            "Exit Node is logisticsmanager."
     };
 
     /**

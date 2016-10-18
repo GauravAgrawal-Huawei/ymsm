@@ -21,9 +21,7 @@ package org.onosproject.yms.app.ydt;
  */
 final class YdtTestConstants {
 
-    /**
-     * No instantiation.
-     */
+    // No instantiation.
     private YdtTestConstants() {
     }
 
@@ -125,6 +123,7 @@ final class YdtTestConstants {
             "aug2:augment2/aug3:augment3/aug5:augment5";
     public static final String AUG9 = "/nd:networks/nd:network/topo:link/" +
             "aug2:augment2/aug5:augment5";
+    public static final String AUG10 = "/aug:node/aug:cont1s/aug:cont1s";
     public static final String NETNS = "ydt.augmentNetwork";
     public static final String IETFNS =
             "urn:ietf:params:xml:ns:yang:ietf-network";

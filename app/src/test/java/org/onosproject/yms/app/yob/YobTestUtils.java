@@ -40,7 +40,7 @@ final class YobTestUtils {
     static final String NETWORKS_STATE = "networks-state";
     static final String NETWORK = "network";
     static final String NETWORK_REF = "network-ref";
-    static final String IETF_TE_TOPOLOGY = "ietf-te-topology";
+    static final String IETF_TE_TOPOLOGY = "yms-ietf-te-topology";
     static final String TE_NODE_EVENT = "te-node-event";
     static final String TE_NODE_ATTRIBUTES = "te-node-attributes";
     static final String ADMIN_STATUS = "admin-status";

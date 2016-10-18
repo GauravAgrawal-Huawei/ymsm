@@ -20,17 +20,12 @@ import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeIdentifier;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeType;
 import org.onosproject.yms.app.ydt.exceptions.YdtException;
-import org.onosproject.yms.ydt.YdtContextOperationType;
 
 import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_MULTI_INSTANCE_LEAF_NODE;
 import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_MULTI_INSTANCE_NODE;
 import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_SINGLE_INSTANCE_LEAF_NODE;
 import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_SINGLE_INSTANCE_NODE;
-import static org.onosproject.yms.app.ydt.YdtAppNodeOperationType.DELETE_ONLY;
-import static org.onosproject.yms.app.ydt.YdtAppNodeOperationType.OTHER_EDIT;
-import static org.onosproject.yms.app.ydt.YdtConstants.NOT_EXIST;
-import static org.onosproject.yms.app.ydt.YdtConstants.SCHEMA;
-import static org.onosproject.yms.app.ydt.YdtConstants.getErrorString;
+import static org.onosproject.yms.app.ydt.YdtConstants.errorMsg;
 
 /**
  * Represents an YANG node factory to create different types of YANG data tree
@@ -38,9 +33,14 @@ import static org.onosproject.yms.app.ydt.YdtConstants.getErrorString;
  */
 final class YdtNodeFactory {
 
-    /**
-     * No instantiation.
-     */
+    // ydt formatted error string
+    private static final String FMT_NOT_EXIST =
+            "Schema node with name %s doesn't exist.";
+    private static final String E_MULTI_INS =
+            "Requested interface adds an instance of type list or " +
+                    "leaf-list node only.";
+
+    // No instantiation
     private YdtNodeFactory() {
     }
 
@@ -153,7 +153,7 @@ final class YdtNodeFactory {
                         throwNotExistError(node);
                 }
 
-            case OTHER:
+            case NON_LEAF:
                 switch (nodeType) {
 
                     case YANG_SINGLE_INSTANCE_NODE:
@@ -165,6 +165,7 @@ final class YdtNodeFactory {
                     default:
                         throwNotExistError(node);
                 }
+
             case MULTI_INSTANCE:
                 switch (nodeType) {
 
@@ -175,12 +176,13 @@ final class YdtNodeFactory {
                         return new YdtMultiInstanceNode(node);
 
                     default:
-                        throw new YdtException(getErrorString(
-                                SCHEMA, node.getName(), NOT_EXIST));
+                        throw new YdtException(E_MULTI_INS);
                 }
+
             default:
                 throwNotExistError(node);
         }
+
         return null;
     }
 
@@ -211,30 +213,8 @@ final class YdtNodeFactory {
             default:
                 throwNotExistError(node);
         }
-        return null;
-    }
 
-    /**
-     * Returns the app tree operation type with the help of YdtOperation type.
-     *
-     * @param opType ydt operation type
-     * @return app tree operation type
-     */
-    protected static YdtAppNodeOperationType getAppOpTypeFromYdtOpType(
-            YdtContextOperationType opType) {
-        // Get the app tree operation type.
-        switch (opType) {
-            case CREATE:
-            case MERGE:
-            case REPLACE:
-                return OTHER_EDIT;
-            case DELETE:
-            case REMOVE:
-                return DELETE_ONLY;
-            default:
-                return null;
-            //TODO handle the default data type.
-        }
+        return null;
     }
 
     /**
@@ -244,6 +224,6 @@ final class YdtNodeFactory {
      * @param node schema node
      */
     private static void throwNotExistError(YangSchemaNode node) {
-        throw new YdtException(getErrorString(SCHEMA, node.getName(), NOT_EXIST));
+        throw new YdtException(errorMsg(FMT_NOT_EXIST, node.getName()));
     }
 }
