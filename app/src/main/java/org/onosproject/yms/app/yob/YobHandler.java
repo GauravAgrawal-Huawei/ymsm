@@ -59,7 +59,7 @@ abstract class YobHandler {
             setterName = node.getJavaAttributeName();
         }
 
-        Object workBench = new YobWorkBench(node, classLoader, qualName,
+        Object workBench = new YobWorkBench(curNode.getYangSchemaNode(), classLoader, qualName,
                                             setterName);
 
         curNode.addAppInfo(YOB, workBench);
@@ -76,8 +76,6 @@ abstract class YobHandler {
                             YangSchemaRegistry schemaRegistry) {
         YdtExtendedContext parentNode = (YdtExtendedContext) ydtNode.getParent();
         YobWorkBench parentWorkbench = (YobWorkBench) parentNode.getAppInfo(YOB);
-
-
         parentWorkbench.setObject(ydtNode, schemaRegistry);
     }
 

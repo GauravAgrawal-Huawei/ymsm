@@ -430,16 +430,22 @@ final class YobUtils {
     public static Class<?> getModuleInterface(YangSchemaNode schemaNode,
                                               YangSchemaRegistry schemaRegistry) {
         YangNode yangNode = (YangNode) schemaNode;
+        while (yangNode.getReferredSchema() != null) {
+            yangNode = (YangNode) yangNode.getReferredSchema();
+        }
         while (yangNode.getParent() != null) {
             yangNode = yangNode.getParent();
         }
         String qualName = getQualifiedinterface(yangNode);
         Class<?> regClass = schemaRegistry.getRegisteredClass(yangNode,
                                                               qualName);
+        if (regClass == null) {
+            throw new YobException(E_FAIL_TO_LOAD_CLASS + qualName);
+        }
         try {
             return regClass.getClassLoader().loadClass(qualName);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            log.error(L_FAIL_TO_LOAD_CLASS, qualName);
         }
         return null;
     }

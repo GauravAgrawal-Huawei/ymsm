@@ -283,8 +283,8 @@ class YobWorkBench {
             YangSchemaNodeContextInfo schemaContext;
             try {
                 //Find the new schema context node.
-                schemaContext = curWorkBench.yangSchemaNode.getChildSchema(
-                        targetNode);
+                schemaContext = curWorkBench.yangSchemaNode
+                        .getChildSchema(targetNode);
 
             } catch (DataModelException e) {
                 throw new YobException(yangSchemaNode.getName() +
@@ -387,9 +387,9 @@ class YobWorkBench {
         // Setting the value into YANG node operation type from ydtContext
         // operation type.
         try {
-            Class<?> interfaceClass = getModuleInterface(yangSchemaNode,
-                                                         schemaRegistry);
-            System.out.println(yangSchemaNode.getName());
+            Class<?> interfaceClass = null;
+            interfaceClass = getModuleInterface(yangSchemaNode,
+                                                schemaRegistry);
             Object operationType;
             Class<?>[] innerClasses = interfaceClass.getClasses();
             for (Class<?> innerEnumClass : innerClasses) {
