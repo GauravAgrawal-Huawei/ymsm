@@ -53,11 +53,14 @@ import static org.onosproject.yms.app.yob.YobConstants.E_FAIL_TO_LOAD_CONSTRUCTO
 import static org.onosproject.yms.app.yob.YobConstants.E_INVALID_DATA_TREE;
 import static org.onosproject.yms.app.yob.YobConstants.FROM_STRING;
 import static org.onosproject.yms.app.yob.YobConstants.JAVA_LANG;
+import static org.onosproject.yms.app.yob.YobConstants.LEAF_IDENTIFIER;
 import static org.onosproject.yms.app.yob.YobConstants.L_FAIL_TO_LOAD_CLASS;
 import static org.onosproject.yms.app.yob.YobConstants.OF;
 import static org.onosproject.yms.app.yob.YobConstants.OP_PARAM;
 import static org.onosproject.yms.app.yob.YobConstants.PERIOD;
+import static org.onosproject.yms.app.yob.YobConstants.SELECT_LEAF;
 import static org.onosproject.yms.app.yob.YobConstants.SPACE;
+import static org.onosproject.yms.app.yob.YobConstants.VALUE_OF;
 
 /**
  * Utils to support object creation.
@@ -169,6 +172,58 @@ final class YobUtils {
 
             default:
                 log.error(E_DATA_TYPE_NOT_SUPPORT);
+        }
+    }
+
+    /**
+     * Sets data from string value in parent method.
+     *
+     * @throws InvocationTargetException failed to invoke method
+     * @throws IllegalAccessException    cannot access the member
+     * @throws NoSuchMethodException     method not found
+     */
+    static void setSelectLeaf(Class builderClass,
+                              YdtExtendedContext leafNode,
+                              YangSchemaRegistry schemaRegistry,
+                              Object builderObject) throws NoSuchMethodException,
+            InvocationTargetException, IllegalAccessException {
+
+        YangSchemaNode parentSchema = ((YdtExtendedContext) leafNode
+                .getParent()).getYangSchemaNode();
+        while (parentSchema.getReferredSchema() != null) {
+            parentSchema = parentSchema.getReferredSchema();
+        }
+
+        String qualName = getQualifiedinterface(parentSchema);
+        while (((YangNode) parentSchema).getParent() != null) {
+            parentSchema = ((YangNode) parentSchema).getParent();
+        }
+        Class<?> regClass = schemaRegistry.getRegisteredClass(parentSchema,
+                                                              qualName);
+        if (regClass == null) {
+            throw new YobException(E_FAIL_TO_LOAD_CLASS + qualName);
+        }
+
+        Class<?> interfaceClass = null;
+        try {
+            interfaceClass = regClass.getClassLoader().loadClass(qualName);
+        } catch (ClassNotFoundException e) {
+            log.info(E_FAIL_TO_LOAD_CLASS, qualName);
+        }
+
+        Class<?>[] innerClasses = interfaceClass.getClasses();
+        for (Class<?> innerEnumClass : innerClasses) {
+            if (innerEnumClass.getSimpleName().equals(LEAF_IDENTIFIER)) {
+                Method valueOfMethod = innerEnumClass
+                        .getDeclaredMethod(VALUE_OF, String.class);
+                String leafName = leafNode.getYangSchemaNode()
+                        .getJavaAttributeName().toUpperCase();
+                Object obj = valueOfMethod.invoke(null, leafName);
+                Method selectLeafMethod = builderClass
+                        .getDeclaredMethod(SELECT_LEAF, innerEnumClass);
+                selectLeafMethod.invoke(builderObject, obj);
+                break;
+            }
         }
     }
 

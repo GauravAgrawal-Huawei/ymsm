@@ -73,13 +73,19 @@ class YobSingleInstanceLeafHandler extends YobHandler {
             Object builderObject = workBench
                     .getParentBuilder(leafNode, schemaRegistry);
             builderClass = builderObject.getClass();
-            Field leafName = builderClass.getDeclaredField(setterInParent);
-            Method setterMethod = builderClass
-                    .getDeclaredMethod(setterInParent, leafName.getType());
-            YangType<?> yangType = ((YangLeaf) schemaNode).getDataType();
-            YobUtils.setDataFromStringValue(yangType, leafNode.getValue(),
-                                            setterMethod, builderObject,
-                                            leafNode);
+            if (leafNode.getValue() != null) {
+                Field leafName = builderClass.getDeclaredField(setterInParent);
+                Method setterMethod = builderClass
+                        .getDeclaredMethod(setterInParent, leafName.getType());
+                YangType<?> yangType = ((YangLeaf) schemaNode).getDataType();
+                YobUtils.setDataFromStringValue(yangType, leafNode.getValue(),
+                                                setterMethod, builderObject,
+                                                leafNode);
+            } else {
+                YobUtils.setSelectLeaf(builderClass, leafNode,
+                                       schemaRegistry, builderObject);
+            }
+
         } catch (NoSuchMethodException | InvocationTargetException |
                 IllegalAccessException | NoSuchFieldException e) {
             log.error(L_FAIL_TO_INVOKE_METHOD, builderClass.getName());

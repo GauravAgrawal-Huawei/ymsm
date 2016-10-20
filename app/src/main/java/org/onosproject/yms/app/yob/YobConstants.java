@@ -38,6 +38,8 @@ final class YobConstants {
     static final String ADD_AUGMENT_METHOD = "addYangAugmentedInfo";
     static final String YANG = "yang";
     static final String JAVA_LANG = "java.lang";
+    static final String LEAF_IDENTIFIER = "LeafIdentifier";
+    static final String SELECT_LEAF = "selectLeaf";
 
     //Error strings
     static final String E_NO_HANDLE_FOR_YDT = "No handler for YDT node";
