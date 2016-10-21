@@ -57,7 +57,7 @@
         <dependency>
             <groupId>org.onosproject</groupId>
             <artifactId>onos-yang-maven-plugin</artifactId>
-            <version>1.9</version>
+            <version>1.10-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.onosproject</groupId>
@@ -104,7 +104,7 @@
             <plugin>
                 <groupId>org.onosproject</groupId>
                 <artifactId>onos-yang-maven-plugin</artifactId>
-                <version>1.9</version>
+                <version>1.10-SNAPSHOT</version>
                 <configuration>
                     <yangFilesDir>src/test/resources/</yangFilesDir>
                 </configuration>

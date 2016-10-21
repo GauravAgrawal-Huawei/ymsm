@@ -36,17 +36,17 @@ import org.onosproject.yang.gen.v1.yms.test.ytb.augment.from.another.file.rev201
 import org.onosproject.yang.gen.v1.yms.test.ytb.augment.from.another.file.rev20160826.ytbaugmentfromanotherfile.networks.network.node.augmentedndnode.TerminationPoint;
 import org.onosproject.yang.gen.v1.yms.test.ytb.augment.from.another.file.rev20160826.ytbaugmentfromanotherfile.networks.network.node.augmentedndnode.terminationpoint.DefaultSupportingTerminationPoint;
 import org.onosproject.yang.gen.v1.yms.test.ytb.augment.from.another.file.rev20160826.ytbaugmentfromanotherfile.networks.network.node.augmentedndnode.terminationpoint.SupportingTerminationPoint;
-import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.list.rev20160826.YtbChoiceWithContainerAndLeafList;
-import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.list.rev20160826.YtbChoiceWithContainerAndLeafListOpParam;
-import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.list.rev20160826.ytbchoicewithcontainerandleaflist.ContentTest;
-import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.list.rev20160826.ytbchoicewithcontainerandleaflist.CurrentValue;
-import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.list.rev20160826.ytbchoicewithcontainerandleaflist.contenttest.DefaultChoiceContainer;
-import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.list.rev20160826.ytbchoicewithcontainerandleaflist.contenttest.choicecontainer.ChoiceContainer;
-import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.list.rev20160826.ytbchoicewithcontainerandleaflist.contenttest.choicecontainer.choicecontainer.DefaultPredict;
-import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.list.rev20160826.ytbchoicewithcontainerandleaflist.contenttest.choicecontainer.choicecontainer.Predict;
-import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.list.rev20160826.ytbchoicewithcontainerandleaflist.contenttest.choicecontainer.choicecontainer.predict.DefaultReproduce;
-import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.list.rev20160826.ytbchoicewithcontainerandleaflist.contenttest.choicecontainer.choicecontainer.predict.Reproduce;
-import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.list.rev20160826.ytbchoicewithcontainerandleaflist.currentvalue.DefaultYtbAbsent;
+import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.yangautoprefixlist.rev20160826.YtbChoiceWithContainerAndLeafList;
+import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.yangautoprefixlist.rev20160826.YtbChoiceWithContainerAndLeafListOpParam;
+import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.yangautoprefixlist.rev20160826.ytbchoicewithcontainerandleaflist.ContentTest;
+import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.yangautoprefixlist.rev20160826.ytbchoicewithcontainerandleaflist.CurrentValue;
+import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.yangautoprefixlist.rev20160826.ytbchoicewithcontainerandleaflist.contenttest.DefaultChoiceContainer;
+import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.yangautoprefixlist.rev20160826.ytbchoicewithcontainerandleaflist.contenttest.choicecontainer.ChoiceContainer;
+import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.yangautoprefixlist.rev20160826.ytbchoicewithcontainerandleaflist.contenttest.choicecontainer.choicecontainer.DefaultPredict;
+import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.yangautoprefixlist.rev20160826.ytbchoicewithcontainerandleaflist.contenttest.choicecontainer.choicecontainer.Predict;
+import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.yangautoprefixlist.rev20160826.ytbchoicewithcontainerandleaflist.contenttest.choicecontainer.choicecontainer.predict.DefaultReproduce;
+import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.yangautoprefixlist.rev20160826.ytbchoicewithcontainerandleaflist.contenttest.choicecontainer.choicecontainer.predict.Reproduce;
+import org.onosproject.yang.gen.v1.yms.test.ytb.choice.with.container.and.leaf.yangautoprefixlist.rev20160826.ytbchoicewithcontainerandleaflist.currentvalue.DefaultYtbAbsent;
 import org.onosproject.yang.gen.v1.yms.test.ytb.rpc.response.with.advanced.input.and.output.rev20160826.ytbrpcresponsewithadvancedinputandoutput.activatesoftwareimage.ActivateSoftwareImageOutput;
 import org.onosproject.yang.gen.v1.yms.test.ytb.rpc.response.with.advanced.input.and.output.rev20160826.ytbrpcresponsewithadvancedinputandoutput.activatesoftwareimage.DefaultActivateSoftwareImageOutput;
 import org.onosproject.yang.gen.v1.yms.test.ytb.rpc.response.with.advanced.input.and.output.rev20160826.ytbrpcresponsewithadvancedinputandoutput.activatesoftwareimage.activatesoftwareimageoutput.DefaultOutputList;
@@ -532,9 +532,9 @@ public class YtbContextSwitchTest extends YtbErrMsgAndConstants {
 
         // Case container is added to the choice content-test.
         ChoiceContainer containerCase = new org.onosproject.yang.gen.v1.yms
-                .test.ytb.choice.with.container.and.leaf.list.rev20160826
-                .ytbchoicewithcontainerandleaflist.contenttest.choicecontainer
-                .DefaultChoiceContainer.ChoiceContainerBuilder()
+                .test.ytb.choice.with.container.and.leaf.yangautoprefixlist
+                .rev20160826.ytbchoicewithcontainerandleaflist.contenttest
+                .choicecontainer.DefaultChoiceContainer.ChoiceContainerBuilder()
                 .predict(predictList).build();
 
         // Case container is added to the choice content-test.
