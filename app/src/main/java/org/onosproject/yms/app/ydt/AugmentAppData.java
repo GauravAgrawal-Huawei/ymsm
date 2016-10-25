@@ -19,22 +19,21 @@ package org.onosproject.yms.app.ydt;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 
 /**
- * Maintains application data, which will be used by Application broker to
- * interact with applications.
+ * Represents an augmented node in application tree.
  */
-public interface AppData {
+interface AugmentAppData extends AppData {
 
     /**
-     * Returns the schema node current context.
+     * Returns the YangSchemaNode of augmenting application.
      *
-     * @return schema node
+     * @return YangSchemaNode of augmenting application
      */
-    YangSchemaNode getSchemaNode();
+    YangSchemaNode getAugmentingSchemaNode();
 
     /**
-     * Returns the root/module schema node current application.
+     * Sets the YangSchemaNode of augmenting application root node.
      *
-     * @return schema node
+     * @param schemaNode YangSchemaNode of augmenting application module
      */
-    YangSchemaNode getRootSchemaNode();
+    void setAugmentingSchemaNode(YangSchemaNode schemaNode);
 }

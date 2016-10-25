@@ -16,12 +16,7 @@
 
 package org.onosproject.yms.app.ydt;
 
-import org.onosproject.yangutils.datamodel.YangAugment;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
-import org.onosproject.yangutils.datamodel.YangSchemaNodeContextInfo;
-import org.onosproject.yangutils.datamodel.YangSchemaNodeIdentifier;
-import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
-import org.onosproject.yms.app.ydt.exceptions.YdtException;
 import org.onosproject.yms.ydt.YdtContext;
 import org.onosproject.yms.ydt.YdtContextOperationType;
 
@@ -68,7 +63,7 @@ public final class DefaultYdtAppContext<T extends AppData>
     /*
      * YDT application tree extended information.
      */
-    private T appData;
+    private final T appData;
 
     /*
      * Reference for operation type for application root node.
@@ -79,13 +74,13 @@ public final class DefaultYdtAppContext<T extends AppData>
      * Reference application node set. This is to maintain single entry
      * in YDT application tree for all augmented nodes under a single XPATH.
      */
-    private Set<YangSchemaNode> appSet;
+    private final Set<YangSchemaNode> appSet;
 
     /**
      * Creates an instance of YANG application tree which is used by all node
      * needs delete list.
      */
-    protected DefaultYdtAppContext(T data) {
+    DefaultYdtAppContext(T data) {
         appSet = new HashSet<>();
         appData = data;
     }
@@ -121,9 +116,9 @@ public final class DefaultYdtAppContext<T extends AppData>
     @Override
     public void setAppData(YdtNode moduleNode, YangSchemaNode augmentNode) {
         if (augmentNode != null) {
-            appData.setAugmentingSchemaNode(augmentNode);
+            ((AugmentAppData) appData).setAugmentingSchemaNode(augmentNode);
         } else {
-            appData.setModuleContext(moduleNode);
+            ((ModuleAppData) appData).setModuleContext(moduleNode);
         }
     }
 
@@ -147,8 +142,12 @@ public final class DefaultYdtAppContext<T extends AppData>
         return child;
     }
 
-    @Override
-    public void setChild(YdtAppContext child) {
+    /**
+     * Sets the context of first child.
+     *
+     * @param child node
+     */
+    private void setChild(YdtAppContext child) {
         this.child = child;
     }
 
@@ -184,9 +183,8 @@ public final class DefaultYdtAppContext<T extends AppData>
 
     @Override
     public List<YdtContext> getDeleteNodes() {
-        return appData.getDeleteNodes();
+        return ((ModuleAppData) appData).getDeleteNodes();
     }
-
 
     @Override
     public void addDeleteNode(YdtNode node) {
@@ -194,56 +192,22 @@ public final class DefaultYdtAppContext<T extends AppData>
         while (curNode.getParent().getParent() != null) {
             curNode = (DefaultYdtAppContext<?>) curNode.getParent();
         }
-
-        curNode.appData.addDeleteNodes(node);
+        ((ModuleAppData) curNode.appData).addDeleteNodes(node);
     }
 
     @Override
     public YdtContext getModuleContext() {
-        return appData.getModuleContext();
-    }
-
-    /**
-     * Sets the application's ydtContext.
-     *
-     * @param moduleNode application's ydtContext
-     */
-    public void setModuleContext(YdtExtendedContext moduleNode) {
-        appData.setModuleContext(moduleNode);
+        return ((ModuleAppData) appData).getModuleContext();
     }
 
     @Override
     public YangSchemaNode getAugmentingSchemaNode() {
-        return appData.getAugmentingSchemaNode();
+        return ((AugmentAppData) appData).getAugmentingSchemaNode();
     }
 
     @Override
     public void setAugmentingSchemaNode(YangSchemaNode schemaNode) {
-        appData.setAugmentingSchemaNode(schemaNode);
-    }
-
-
-    @Override
-    public YangSchemaNode getAugmentingSchemaNode(
-            YangSchemaNodeIdentifier id,
-            YangSchemaNodeContextInfo contextInfo) {
-        YangSchemaNode lastAugMod = null;
-        YangSchemaNode switchedNode =
-                contextInfo.getContextSwitchedNode();
-
-        // Finding the last augmenting schema for case/choice scenario.
-        while (switchedNode != null) {
-            if (switchedNode instanceof YangAugment) {
-                lastAugMod = switchedNode;
-            }
-            try {
-                switchedNode = switchedNode.getChildSchema(id)
-                        .getContextSwitchedNode();
-            } catch (DataModelException e) {
-                throw new YdtException(e.getMessage());
-            }
-        }
-        return lastAugMod;
+        ((AugmentAppData) appData).setAugmentingSchemaNode(schemaNode);
     }
 
     @Override
@@ -251,9 +215,13 @@ public final class DefaultYdtAppContext<T extends AppData>
         return lastChild;
     }
 
-    @Override
-    public void setLastChild(YdtAppContext lastChild) {
-        this.lastChild = lastChild;
+    /**
+     * Sets the context of last child.
+     *
+     * @param child node
+     */
+    private void setLastChild(YdtAppContext child) {
+        lastChild = child;
     }
 
     @Override

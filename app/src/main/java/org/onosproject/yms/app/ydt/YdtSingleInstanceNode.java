@@ -17,6 +17,7 @@
 package org.onosproject.yms.app.ydt;
 
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
+import org.onosproject.yms.app.ydt.exceptions.YdtException;
 
 import static org.onosproject.yms.app.ydt.YdtConstants.FMT_DUP_ENTRY;
 import static org.onosproject.yms.app.ydt.YdtConstants.errorMsg;
@@ -37,7 +38,7 @@ class YdtSingleInstanceNode extends YdtNode {
     }
 
     @Override
-    public void validDuplicateEntryProcessing() {
-        errorHandler(errorMsg(FMT_DUP_ENTRY, getName()), this);
+    public void validDuplicateEntryProcessing() throws YdtException {
+        throw new YdtException(errorMsg(FMT_DUP_ENTRY, getName()));
     }
 }

@@ -41,7 +41,7 @@ public interface YdtContext {
     String getNamespace();
 
     /**
-     * Returns module name.
+     * Returns module name as namespace.
      *
      * @return module name
      */

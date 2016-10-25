@@ -17,7 +17,6 @@ package org.onosproject.yms.app.ydt;
 
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
-import org.onosproject.yms.app.ydt.exceptions.YdtException;
 import org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.onosproject.yms.ydt.YdtContext;
@@ -1675,7 +1674,7 @@ public class YdtTestUtils implements YdtListener {
          */
         try {
             ydtBuilder.addLeaf(name, nameSpace, val);
-        } catch (YdtException e) {
+        } catch (IllegalArgumentException e) {
             isExpOccurred = true;
             assertEquals(e.getMessage(), getErrorString(val, type));
         }

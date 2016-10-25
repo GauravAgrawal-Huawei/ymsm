@@ -35,6 +35,7 @@ import static org.onosproject.yms.app.ydt.YdtTestConstants.INV;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.LISTNS;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.LWC;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.getTestYdtBuilder;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.getYdtBuilder;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.listWithContainer1Ydt;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.listWithContainer2Ydt;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.listWithContainerYdt;
@@ -44,6 +45,7 @@ import static org.onosproject.yms.app.ydt.YdtTestUtils.validateLeafListContents;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.validateNodeContents;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.walkINTree;
 import static org.onosproject.yms.ydt.YdtContextOperationType.MERGE;
+import static org.onosproject.yms.ydt.YdtType.SINGLE_INSTANCE_NODE;
 
 public class ListTest {
 
@@ -64,7 +66,8 @@ public class ListTest {
             "Too many instances of listwithcontainer. Expected maximum " +
                     "instances 3.",
             "Duplicate entry found under invalidinterval leaf-list node.",
-            "YANG file error : Input value \"string\" is not a valid uint16."
+            "YANG file error : Input value \"string\" is not a valid uint16.",
+            "Schema node with name listwithcontainer doesn't exist."
     };
 
     private static final String[] EXPECTED = {
@@ -174,13 +177,12 @@ public class ListTest {
      * Tests the negative error scenario when application name for ydt is
      * invalid.
      */
-//    @Test
-//    public void negative1Test() {
-// TODO need to handle
-//        thrown.expect(YdtException.class);
-//        thrown.expectMessage(ERROR[5]);
-//        getYdtBuilder("list", "invalid", "ydt.invalid", MERGE);
-//    }
+    @Test
+    public void negative1Test() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage(ERROR[5]);
+        getYdtBuilder("list", "invalid", "ydt.invalid", MERGE);
+    }
 
     /**
      * Tests the negative error scenario when list node is not having all
@@ -350,7 +352,7 @@ public class ListTest {
         ydtBuilder.traverseToParent();
         ydtBuilder.addLeaf(INV, LISTNS, "12");
         ydtBuilder.traverseToParent();
-        thrown.expect(YdtException.class);
+        thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage(ERROR[7]);
         ydtBuilder.addLeaf(INV, LISTNS, valueSet);
     }
@@ -377,6 +379,18 @@ public class ListTest {
     }
 
     /**
+     * Tests the negative error scenario when list node addition requested
+     * with single instance request type.
+     */
+    @Test
+    public void negative12Test() {
+        YangRequestWorkBench ydtBuilder = getTestYdtBuilder(LISTNS);
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage(ERROR[9]);
+        ydtBuilder.addChild(LWC, LISTNS, SINGLE_INSTANCE_NODE, MERGE);
+    }
+
+    /**
      * Validate the error message obtained by adding multi instance node in
      * current context against the given error string.
      *
@@ -393,7 +407,7 @@ public class ListTest {
         boolean isExpOccurred = false;
         try {
             bldr.addMultiInstanceChild(LWC, LISTNS, list, null);
-        } catch (YdtException e) {
+        } catch (IllegalArgumentException e) {
             isExpOccurred = true;
             assertEquals(e.getMessage(), error);
         }
@@ -416,7 +430,7 @@ public class ListTest {
         boolean isExpOccurred = false;
         try {
             ydtBuilder.traverseToParent();
-        } catch (YdtException e) {
+        } catch (IllegalStateException e) {
             isExpOccurred = true;
             assertEquals(e.getMessage(), error);
         }
@@ -441,7 +455,7 @@ public class ListTest {
         boolean isExpOccurred = false;
         try {
             bldr.addLeaf(name, LISTNS, val);
-        } catch (YdtException e) {
+        } catch (IllegalArgumentException e) {
             isExpOccurred = true;
             assertEquals(e.getMessage(), error);
         }

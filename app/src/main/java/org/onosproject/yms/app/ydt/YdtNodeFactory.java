@@ -17,7 +17,6 @@
 package org.onosproject.yms.app.ydt;
 
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
-import org.onosproject.yangutils.datamodel.YangSchemaNodeIdentifier;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeType;
 import org.onosproject.yms.app.ydt.exceptions.YdtException;
 
@@ -33,7 +32,7 @@ import static org.onosproject.yms.app.ydt.YdtConstants.errorMsg;
  */
 final class YdtNodeFactory {
 
-    // ydt formatted error string
+    // YDT formatted error string
     private static final String FMT_NOT_EXIST =
             "Schema node with name %s doesn't exist.";
     private static final String E_MULTI_INS =
@@ -48,19 +47,18 @@ final class YdtNodeFactory {
      * Returns a YANG data tree node for a given name, set of values and
      * instance type.
      *
-     * @param id          dataNodeIdentifier of data tree node
-     * @param schemaNode  data node as per YANG schema metadata
+     * @param node        data node as per YANG schema metadata
      * @param cardinality requested cardinality of node
      * @param callType    identify the call type
      * @return YANG data tree node
+     * @throws YdtException when user requested node type doesn't exist
      */
-    protected static YdtNode getNode(YangSchemaNodeIdentifier id,
-                                     YangSchemaNode schemaNode,
-                                     RequestedCardinality cardinality,
-                                     RequestedCallType callType) {
+    static YdtNode getNode(
+            YangSchemaNode node, RequestedCardinality cardinality,
+            RequestedCallType callType) throws YdtException {
 
-        YdtNode newNode = null;
-        YangSchemaNodeType nodeType = schemaNode.getYangSchemaNodeType();
+        YdtNode newNode;
+        YangSchemaNodeType type = node.getYangSchemaNodeType();
 
         switch (cardinality) {
 
@@ -69,7 +67,7 @@ final class YdtNodeFactory {
                  * if requested node type is UNKNOWN, check corresponding
                  * yang data node type and create respective type node.
                  */
-                newNode = getYangSchemaNodeTypeSpecificContext(schemaNode, nodeType,
+                newNode = getYangSchemaNodeTypeSpecificContext(node, type,
                                                                callType);
                 break;
 
@@ -78,34 +76,34 @@ final class YdtNodeFactory {
              * other type in data model then throw exception
              */
             case SINGLE_INSTANCE:
-                validateNodeType(schemaNode, nodeType, YANG_SINGLE_INSTANCE_NODE);
-                newNode = new YdtSingleInstanceNode(schemaNode);
+                validateNodeType(node, type, YANG_SINGLE_INSTANCE_NODE);
+                newNode = new YdtSingleInstanceNode(node);
                 break;
 
             case MULTI_INSTANCE:
 
-                validateNodeType(schemaNode, nodeType, YANG_MULTI_INSTANCE_NODE);
-                newNode = new YdtMultiInstanceNode(schemaNode);
+                validateNodeType(node, type, YANG_MULTI_INSTANCE_NODE);
+                newNode = new YdtMultiInstanceNode(node);
                 break;
 
             case SINGLE_INSTANCE_LEAF:
 
-                validateNodeType(schemaNode, nodeType, YANG_SINGLE_INSTANCE_LEAF_NODE);
-                newNode = new YdtSingleInstanceLeafNode(schemaNode);
+                validateNodeType(node, type, YANG_SINGLE_INSTANCE_LEAF_NODE);
+                newNode = new YdtSingleInstanceLeafNode(node);
                 break;
 
             case MULTI_INSTANCE_LEAF:
 
-                validateNodeType(schemaNode, nodeType, YANG_MULTI_INSTANCE_LEAF_NODE);
-                newNode = new YdtMultiInstanceLeafNode(schemaNode);
+                validateNodeType(node, type, YANG_MULTI_INSTANCE_LEAF_NODE);
+                newNode = new YdtMultiInstanceLeafNode(node);
                 break;
 
             default:
-                throwNotExistError(schemaNode);
+                throw new YdtException(errorMsg(FMT_NOT_EXIST, node.getName()));
         }
 
         // set reference of yang data node in the requested node.
-        newNode.setYangSchemaNode(schemaNode);
+        newNode.setYangSchemaNode(node);
 
         return newNode;
     }
@@ -117,12 +115,14 @@ final class YdtNodeFactory {
      * @param node          schema node
      * @param nodeType      actual node type
      * @param requestedType user requested node type
+     * @throws YdtException when user requested node type doesn't exist
      */
-    private static void validateNodeType(YangSchemaNode node,
-                                         YangSchemaNodeType nodeType,
-                                         YangSchemaNodeType requestedType) {
+    private static void validateNodeType(
+            YangSchemaNode node, YangSchemaNodeType nodeType,
+            YangSchemaNodeType requestedType) throws YdtException {
+
         if (nodeType != requestedType) {
-            throwNotExistError(node);
+            throw new YdtException(errorMsg(FMT_NOT_EXIST, node.getName()));
         }
     }
 
@@ -134,11 +134,11 @@ final class YdtNodeFactory {
      * @param nodeType schema node type as per YANG schema metadata
      * @param callType identify the call type
      * @return YANG data tree node
+     * @throws YdtException when user requested node type doesn't exist
      */
     private static YdtNode getYangSchemaNodeTypeSpecificContext(
-            YangSchemaNode node,
-            YangSchemaNodeType nodeType,
-            RequestedCallType callType) {
+            YangSchemaNode node, YangSchemaNodeType nodeType,
+            RequestedCallType callType) throws YdtException {
         switch (callType) {
             case LEAF:
                 switch (nodeType) {
@@ -150,7 +150,8 @@ final class YdtNodeFactory {
                         return new YdtMultiInstanceLeafNode(node);
 
                     default:
-                        throwNotExistError(node);
+                        throw new YdtException(
+                                errorMsg(FMT_NOT_EXIST, node.getName()));
                 }
 
             case NON_LEAF:
@@ -163,7 +164,8 @@ final class YdtNodeFactory {
                         return new YdtMultiInstanceNode(node);
 
                     default:
-                        throwNotExistError(node);
+                        throw new YdtException(
+                                errorMsg(FMT_NOT_EXIST, node.getName()));
                 }
 
             case MULTI_INSTANCE:
@@ -180,10 +182,8 @@ final class YdtNodeFactory {
                 }
 
             default:
-                throwNotExistError(node);
+                throw new YdtException(errorMsg(FMT_NOT_EXIST, node.getName()));
         }
-
-        return null;
     }
 
     /**
@@ -193,8 +193,7 @@ final class YdtNodeFactory {
      * @param node schema node
      * @return YANG data tree node
      */
-    protected static YdtNode getYangSchemaNodeTypeSpecificContext(
-            YangSchemaNode node) {
+    static YdtNode getYangSchemaNodeTypeSpecificContext(YangSchemaNode node) {
 
         switch (node.getYangSchemaNodeType()) {
 
@@ -211,19 +210,7 @@ final class YdtNodeFactory {
                 return new YdtMultiInstanceNode(node);
 
             default:
-                throwNotExistError(node);
+                return null;
         }
-
-        return null;
-    }
-
-    /**
-     * Throws exception for requested ydt node by preparing error message with
-     * given node identifier.
-     *
-     * @param node schema node
-     */
-    private static void throwNotExistError(YangSchemaNode node) {
-        throw new YdtException(errorMsg(FMT_NOT_EXIST, node.getName()));
     }
 }

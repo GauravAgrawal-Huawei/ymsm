@@ -18,12 +18,12 @@ package org.onosproject.yms.app.ydt;
 
 import org.onosproject.yangutils.datamodel.YangNamespace;
 
-public class NameSpace implements YangNamespace {
+class NameSpace implements YangNamespace {
 
     /*
      * Reference for namespace.
      */
-    String nameSpace;
+    private final String nameSpace;
 
     /**
      * Creates an instance of namespace which is used to initialize the

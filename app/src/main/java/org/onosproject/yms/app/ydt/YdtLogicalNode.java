@@ -16,6 +16,8 @@
 
 package org.onosproject.yms.app.ydt;
 
+import org.onosproject.yms.app.ydt.exceptions.YdtException;
+
 import static org.onosproject.yms.app.ydt.YdtConstants.FMT_DUP_ENTRY;
 import static org.onosproject.yms.app.ydt.YdtConstants.errorMsg;
 import static org.onosproject.yms.ydt.YdtType.LOGICAL_ROOT_NODE;
@@ -25,11 +27,11 @@ import static org.onosproject.yms.ydt.YdtType.LOGICAL_ROOT_NODE;
  */
 class YdtLogicalNode extends YdtNode {
 
-    String name;
-    String namespace;
+    private final String name;
+    private final String namespace;
 
     /**
-     * Creates a YANG single instance node object.
+     * Creates a YANG logical node object.
      */
     public YdtLogicalNode(String name, String namespace) {
         super(LOGICAL_ROOT_NODE);
@@ -53,7 +55,7 @@ class YdtLogicalNode extends YdtNode {
     }
 
     @Override
-    public void validDuplicateEntryProcessing() {
-        errorHandler(errorMsg(FMT_DUP_ENTRY, getName()), this);
+    public void validDuplicateEntryProcessing() throws YdtException {
+        throw new YdtException(errorMsg(FMT_DUP_ENTRY, getName()));
     }
 }

@@ -19,6 +19,7 @@ package org.onosproject.yms.app.ydt;
 import com.google.common.collect.ImmutableSet;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
+import org.onosproject.yms.app.ydt.exceptions.YdtException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -46,7 +47,7 @@ class YdtMultiInstanceLeafNode extends YdtNode {
      *
      * @param node schema of YDT multi instance node
      */
-    protected YdtMultiInstanceLeafNode(YangSchemaNode node) {
+    YdtMultiInstanceLeafNode(YangSchemaNode node) {
         super(MULTI_INSTANCE_LEAF_VALUE_NODE, node);
     }
 
@@ -56,12 +57,12 @@ class YdtMultiInstanceLeafNode extends YdtNode {
     }
 
     @Override
-    public void addValue(String value) {
+    public void addValue(String value) throws YdtException {
         // check the value against corresponding data-type.
         try {
             getYangSchemaNode().isValueValid(value);
         } catch (Exception e) {
-            errorHandler(e.getLocalizedMessage(), this);
+            throw new YdtException(e.getLocalizedMessage());
         }
         addValueToValueSet(value);
     }
@@ -71,16 +72,16 @@ class YdtMultiInstanceLeafNode extends YdtNode {
      * the value.
      *
      * @param value value to be added
+     * @throws YdtException when the duplicate entry found in leaf-list node
      */
-    private void addValueToValueSet(String value) {
-
+    private void addValueToValueSet(String value) throws YdtException {
         if (!valueSet.add(value)) {
-            errorHandler(errorMsg(FMT_DUP_ENTRY, getName()), this);
+            throw new YdtException(errorMsg(FMT_DUP_ENTRY, getName()));
         }
     }
 
     @Override
-    public void addValueSet(Set valueSet) {
+    public void addValueSet(Set valueSet) throws YdtException {
         String value = null;
         // Check the value against corresponding data-type.
         for (Object aValueSet : valueSet) {
@@ -89,7 +90,7 @@ class YdtMultiInstanceLeafNode extends YdtNode {
                 value = String.valueOf(aValueSet);
                 getYangSchemaNode().isValueValid(value);
             } catch (DataModelException e) {
-                errorHandler(e.getLocalizedMessage(), this);
+                throw new YdtException(e.getLocalizedMessage());
             }
             addValueToValueSet(value);
         }
