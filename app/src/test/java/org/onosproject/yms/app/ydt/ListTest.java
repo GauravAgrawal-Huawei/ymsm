@@ -67,7 +67,8 @@ public class ListTest {
                     "instances 3.",
             "Duplicate entry found under invalidinterval leaf-list node.",
             "YANG file error : Input value \"string\" is not a valid uint16.",
-            "Schema node with name listwithcontainer doesn't exist."
+            "Schema node with name listwithcontainer doesn't exist.",
+            "Duplicate entry with name rootlist."
     };
 
     private static final String[] EXPECTED = {
@@ -388,6 +389,19 @@ public class ListTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage(ERROR[9]);
         ydtBuilder.addChild(LWC, LISTNS, SINGLE_INSTANCE_NODE, MERGE);
+    }
+
+    /**
+     * Tests the negative error scenario when application with requested
+     * name is already part of tree.
+     */
+    @Test
+    public void negative13Test() {
+        YangRequestWorkBench ydtBuilder = getTestYdtBuilder(LISTNS);
+        ydtBuilder.traverseToParent();
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage(ERROR[10]);
+        ydtBuilder.addChild("rootlist", LISTNS, MERGE);
     }
 
     /**

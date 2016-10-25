@@ -221,7 +221,7 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
          * If yms operation is for query then no validation need to be
          * performed.
          */
-        if (ymsOperationType == YmsOperationType.QUERY_REQUEST) {
+        if (ymsOperationType != YmsOperationType.QUERY_REQUEST) {
             // Checking whether module node is already exits in YDT or not.
             try {
                 curNode.getCollidingChild(id);
