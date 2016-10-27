@@ -326,6 +326,7 @@ public class YdtBuilderFromYo {
                     continue;
                 }
                 curTraversal = SIBLING;
+                augmentNodeInfo = null;
                 traverseToParent(curNode);
                 curNode = curNode.getNextSibling();
                 if (isNonProcessableNode(curNode)) {
