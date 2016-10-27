@@ -194,10 +194,10 @@ final class YobUtils {
             parentSchema = parentSchema.getReferredSchema();
         }
 
-        String qualName = getQualifiedinterface(parentSchema);
         while (((YangNode) parentSchema).getParent() != null) {
             parentSchema = ((YangNode) parentSchema).getParent();
         }
+        String qualName = getQualifiedinterface(parentSchema);
         Class<?> regClass = schemaRegistry.getRegisteredClass(parentSchema,
                                                               qualName);
         if (regClass == null) {
