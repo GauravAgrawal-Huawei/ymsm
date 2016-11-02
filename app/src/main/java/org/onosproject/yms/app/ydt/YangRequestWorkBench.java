@@ -438,9 +438,6 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
         if (augmentingSchema != null) {
             if (!augGenMethodSet.add(((YangAugment) augmentingSchema)
                                              .getSetterMethodName())) {
-//                if (!appCurNode.addSchemaToAppSet(augmentingSchema)) {
-//                    return;
-//                }
                 return;
             }
         }
