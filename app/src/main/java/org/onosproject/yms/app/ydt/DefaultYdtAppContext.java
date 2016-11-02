@@ -20,9 +20,7 @@ import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yms.ydt.YdtContext;
 import org.onosproject.yms.ydt.YdtContextOperationType;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.onosproject.yms.app.ydt.YdtAppNodeOperationType.BOTH;
 import static org.onosproject.yms.app.ydt.YdtUtils.getAppOpTypeFromYdtOpType;
@@ -70,30 +68,12 @@ public final class DefaultYdtAppContext<T extends AppData>
      */
     private YdtAppNodeOperationType operationType;
 
-    /*
-     * Reference application node set. This is to maintain single entry
-     * in YDT application tree for all augmented nodes under a single XPATH.
-     */
-    private final Set<YangSchemaNode> appSet;
-
     /**
      * Creates an instance of YANG application tree which is used by all node
      * needs delete list.
      */
     DefaultYdtAppContext(T data) {
-        appSet = new HashSet<>();
         appData = data;
-    }
-
-    /**
-     * Adds schema node of new requested augmented node in current context of
-     * application tree.
-     *
-     * @param schemaNode schema node of requested node
-     * @return addition result(true/false)
-     */
-    public boolean addSchemaToAppSet(YangSchemaNode schemaNode) {
-        return appSet.add(schemaNode);
     }
 
     @Override

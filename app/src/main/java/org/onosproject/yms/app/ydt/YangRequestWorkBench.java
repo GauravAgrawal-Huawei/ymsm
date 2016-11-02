@@ -17,6 +17,7 @@
 package org.onosproject.yms.app.ydt;
 
 import com.google.common.collect.ImmutableMap;
+import org.onosproject.yangutils.datamodel.YangAugment;
 import org.onosproject.yangutils.datamodel.YangList;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeContextInfo;
@@ -28,6 +29,7 @@ import org.onosproject.yms.ydt.YdtContextOperationType;
 import org.onosproject.yms.ydt.YdtType;
 import org.onosproject.yms.ydt.YmsOperationType;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -123,6 +125,13 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
     // TODO validate need to be handle later with interaction type basis in
     // future when it will be supported
 
+    /*
+     * Reference for application tree node set.
+     * This set contains the method name's generated for an augmented
+     * target node to avoid the duplicate entries in YDT application tree for
+     * multiple augmented nodes under a single XPATH.
+     */
+    private Set<String> augGenMethodSet;
 
     /**
      * Creates an instance of YANG request work bench which is use to initialize
@@ -412,13 +421,8 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
             YdtContextOperationType opType, YdtNode childNode,
             YangSchemaNode augmentingSchema, boolean contextSwitch) {
 
-        /*
-         * This is to avoid multiple entries of single augmented target.
-         */
-        if (augmentingSchema != null) {
-            if (!appCurNode.addSchemaToAppSet(augmentingSchema)) {
-                return;
-            }
+        if (curNode == rootNode) {
+            augGenMethodSet = new HashSet<>();
         }
 
         if (opType == null) {
@@ -429,9 +433,22 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
         }
 
         /*
+         * This is to avoid multiple entries of single augmented target.
+         */
+        if (augmentingSchema != null) {
+            if (!augGenMethodSet.add(((YangAugment) augmentingSchema)
+                                             .getSetterMethodName())) {
+//                if (!appCurNode.addSchemaToAppSet(augmentingSchema)) {
+//                    return;
+//                }
+                return;
+            }
+        }
+
+        /*
          * Create entry of module node in ydt app tree.
-         * Or if context switch happened then also add entry for same ydt
-         * node in the ydt application tree.
+         * Or if context switch happened then also add entry for same
+         * augmented ydt node in the ydt application tree.
          */
         if (curNode.equals(rootNode) || contextSwitch) {
             addChildInAppTree(childNode, augmentingSchema, opType,

@@ -340,45 +340,79 @@ public class YdtInteger8Test {
     */
 
     /**
-     * Tests all the negative scenario's for integer8 data type.
+     * Tests all the minimum and maximum value's negative scenario's for
+     * signed integer8 data type.
      */
     @Test
-    public void negativeTest() throws YdtException {
+    public void negative1Test() throws YdtException {
         validateErrMsg("posInt", INT8NS, "integer", SMALLINT8, null);
         validateErrMsg("posInt", INT8NS, "127.0", SMALLINT8, null);
-        validateErrMsg("maxUInt", INT8NS, "integer", SMALLUINT8, null);
-        validateErrMsg("maxUInt", INT8NS, "127.0", SMALLUINT8, null);
         validateErrMsg("negInt", INT8NS, "-129", SMALLINT8, null);
         validateErrMsg("posInt", INT8NS, "128", SMALLINT8, null);
-        validateErrMsg("minUInt", INT8NS, "-128", MINVALUE, null);
-        validateErrMsg("maxUInt", INT8NS, "256", MAXUINT8, null);
         validateErrMsg(MINIWR, INT8NS, "9", CAPSINT8, null);
         validateErrMsg(MAXIWR, INT8NS, "101", CAPSINT8, null);
+    }
+
+    /**
+     * Tests all the minimum and maximum value's negative scenario's for
+     * unsigned integer8 data type.
+     */
+    @Test
+    public void negative2Test() throws YdtException {
+        validateErrMsg("maxUInt", INT8NS, "integer", SMALLUINT8, null);
+        validateErrMsg("maxUInt", INT8NS, "127.0", SMALLUINT8, null);
+        validateErrMsg("minUInt", INT8NS, "-128", MINVALUE, null);
+        validateErrMsg("maxUInt", INT8NS, "256", MAXUINT8, null);
         validateErrMsg(MINUIWR, INT8NS, "9", CAPSUINT8, null);
         validateErrMsg(MAXUIWR, INT8NS, "101", CAPSUINT8, null);
+    }
 
+    /**
+     * Tests all possible negative scenario's for signed integer8 data type
+     * with range "10..40 | 50..100".
+     */
+    @Test
+    public void negative3Test() throws YdtException {
         validateErrMsg("integer", INT8NS, "9", CAPSINT8, MRV);
         validateErrMsg("integer", INT8NS, "41", CAPSINT8, MRV);
         validateErrMsg("integer", INT8NS, "49", CAPSINT8, MRV);
         validateErrMsg("integer", INT8NS, "101", CAPSINT8, MRV);
+    }
+
+    /**
+     * Tests all possible negative scenario's for unsigned integer8 data type
+     * with range "10..40 | 50..100".
+     */
+    @Test
+    public void negative4Test() throws YdtException {
         validateErrMsg("UnInteger", INT8NS, "9", CAPSUINT8, MRV);
         validateErrMsg("UnInteger", INT8NS, "41", CAPSUINT8, MRV);
         validateErrMsg("UnInteger", INT8NS, "49", CAPSUINT8, MRV);
         validateErrMsg("UnInteger", INT8NS, "101", CAPSUINT8, MRV);
-        validateErrMsg("UnInteger", INT8NS, "9", CAPSUINT8, MRV);
-        validateErrMsg("UnInteger", INT8NS, "41", CAPSUINT8, MRV);
-        validateErrMsg("UnInteger", INT8NS, "49", CAPSUINT8, MRV);
-        validateErrMsg("UnInteger", INT8NS, "101", CAPSUINT8, MRV);
-        validateErrMsg("UnInteger", INT8NS, "9", CAPSUINT8, MRV);
-        validateErrMsg("UnInteger", INT8NS, "41", CAPSUINT8, MRV);
-        validateErrMsg("UnInteger", INT8NS, "49", CAPSUINT8, MRV);
-        validateErrMsg("UnInteger", INT8NS, "101", CAPSUINT8, MRV);
+    }
+
+    /**
+     * Tests all possible negative scenario's for signed integer8 data type
+     * with range "min .. 2 | 10 | 20..max".
+     */
+    @Test
+    public void negative5Test() throws YdtException {
+        // multi range validation
         validateErrMsg("revInteger", INT8NS, "-129", SMALLINT8, MRV);
         validateErrMsg("revInteger", INT8NS, "128", SMALLINT8, MRV);
         validateErrMsg("revInteger", INT8NS, "4", CAPSINT8, MRV);
         validateErrMsg("revInteger", INT8NS, "11", CAPSINT8, MRV);
         validateErrMsg("revInteger", INT8NS, "9", CAPSINT8, MRV);
         validateErrMsg("revInteger", INT8NS, "19", CAPSINT8, MRV);
+    }
+
+    /**
+     * Tests all possible negative scenario's for unsigned integer8 data type
+     * with range "min .. 2 | 10 | 20..max".
+     */
+    @Test
+    public void negative6Test() throws YdtException {
+        // multi range validation
         validateErrMsg(RUI, INT8NS, "-129", MINVALUE, MRV);
         validateErrMsg(RUI, INT8NS, "4", CAPSUINT8, MRV);
         validateErrMsg(RUI, INT8NS, "9", CAPSUINT8, MRV);

@@ -342,46 +342,79 @@ public class YdtInteger16Test {
     */
 
     /**
-     * Tests all the negative scenario's for integer8 data type.
+     * Tests all the minimum and maximum value's negative scenario's for
+     * signed integer16 data type.
      */
     @Test
     public void negative1Test() throws YdtException {
         validateErrMsg("posInt", INT16NS, "integer", SINT16, null);
-        validateErrMsg("posInt", INT16NS, "integer", SINT16, null);
         validateErrMsg("posInt", INT16NS, "127.0", SINT16, null);
-        validateErrMsg("maxUInt", INT16NS, "integer", SUINT16, null);
-        validateErrMsg("maxUInt", INT16NS, "127.0", SUINT16, null);
         validateErrMsg("negInt", INT16NS, "-32769", SINT16, null);
         validateErrMsg("posInt", INT16NS, "32768", SINT16, null);
-        validateErrMsg("minUInt", INT16NS, "-32769", MINVALUE, null);
-        validateErrMsg("maxUInt", INT16NS, "65536", MAXUINT16, null);
         validateErrMsg(MINIWR, INT16NS, "9", CAPSINT16, null);
         validateErrMsg(MAXIWR, INT16NS, "101", CAPSINT16, null);
+    }
+
+    /**
+     * Tests all the minimum and maximum value's negative scenario's for
+     * unsigned integer16 data type.
+     */
+    @Test
+    public void negative2Test() throws YdtException {
+        validateErrMsg("maxUInt", INT16NS, "integer", SUINT16, null);
+        validateErrMsg("maxUInt", INT16NS, "127.0", SUINT16, null);
+        validateErrMsg("minUInt", INT16NS, "-32769", MINVALUE, null);
+        validateErrMsg("maxUInt", INT16NS, "65536", MAXUINT16, null);
         validateErrMsg(MINUIWR, INT16NS, "9", CAPSUINT16, null);
         validateErrMsg(MAXUIWR, INT16NS, "101", CAPSUINT16, null);
+    }
 
+    /**
+     * Tests all possible negative scenario's for signed integer16 data type
+     * with range "10..40 | 50..100".
+     */
+    @Test
+    public void negative3Test() throws YdtException {
         validateErrMsg("integer", INT16NS, "9", CAPSINT16, MRV);
         validateErrMsg("integer", INT16NS, "41", CAPSINT16, MRV);
         validateErrMsg("integer", INT16NS, "49", CAPSINT16, MRV);
         validateErrMsg("integer", INT16NS, "101", CAPSINT16, MRV);
+    }
+
+    /**
+     * Tests all possible negative scenario's for unsigned integer16 data type
+     * with range "10..40 | 50..100".
+     */
+    @Test
+    public void negative4Test() throws YdtException {
         validateErrMsg("UnInteger", INT16NS, "9", CAPSUINT16, MRV);
         validateErrMsg("UnInteger", INT16NS, "41", CAPSUINT16, MRV);
         validateErrMsg("UnInteger", INT16NS, "49", CAPSUINT16, MRV);
         validateErrMsg("UnInteger", INT16NS, "101", CAPSUINT16, MRV);
-        validateErrMsg("UnInteger", INT16NS, "9", CAPSUINT16, MRV);
-        validateErrMsg("UnInteger", INT16NS, "41", CAPSUINT16, MRV);
-        validateErrMsg("UnInteger", INT16NS, "49", CAPSUINT16, MRV);
-        validateErrMsg("UnInteger", INT16NS, "101", CAPSUINT16, MRV);
-        validateErrMsg("UnInteger", INT16NS, "9", CAPSUINT16, MRV);
-        validateErrMsg("UnInteger", INT16NS, "41", CAPSUINT16, MRV);
-        validateErrMsg("UnInteger", INT16NS, "49", CAPSUINT16, MRV);
-        validateErrMsg("UnInteger", INT16NS, "101", CAPSUINT16, MRV);
+    }
+
+    /**
+     * Tests all possible negative scenario's for signed integer16 data type
+     * with range "min .. 2 | 10 | 20..max".
+     */
+    @Test
+    public void negative5Test() throws YdtException {
+        // multi range validation
         validateErrMsg("revInteger", INT16NS, "-32769", SINT16, MRV);
         validateErrMsg("revInteger", INT16NS, "19", CAPSINT16, MRV);
         validateErrMsg("revInteger", INT16NS, "4", CAPSINT16, MRV);
         validateErrMsg("revInteger", INT16NS, "32768", SINT16, MRV);
         validateErrMsg("revInteger", INT16NS, "9", CAPSINT16, MRV);
         validateErrMsg("revInteger", INT16NS, "11", CAPSINT16, MRV);
+    }
+
+    /**
+     * Tests all possible negative scenario's for unsigned integer16 data type
+     * with range "min .. 2 | 10 | 20..max".
+     */
+    @Test
+    public void negative6Test() throws YdtException {
+        // multi range validation
         validateErrMsg(RUI, INT16NS, "-32769", MINVALUE, MRV);
         validateErrMsg(RUI, INT16NS, "4", CAPSUINT16, MRV);
         validateErrMsg(RUI, INT16NS, "9", CAPSUINT16, MRV);

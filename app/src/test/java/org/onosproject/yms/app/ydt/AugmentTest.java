@@ -13,29 +13,11 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertNull;
 import static org.onosproject.yms.app.ydt.YdtAppNodeOperationType.BOTH;
-import static org.onosproject.yms.app.ydt.YdtAppNodeOperationType.DELETE_ONLY;
-import static org.onosproject.yms.app.ydt.YdtAppNodeOperationType.OTHER_EDIT;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.A1;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.A2;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.A2L;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.A3;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.A4;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.A5;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.A5L;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.A6;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.A6L;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG1;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG10;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG2;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG3;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG4;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG5;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG6;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG7;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG8;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG9;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.IETF;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.NETNS;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.SLINK;
@@ -517,61 +499,8 @@ public class AugmentTest {
 
         //Inside link node
         validateAppNodeContents(ydtAppContext, AUG1, TOPONS, BOTH);
-        ydtAppContext = ydtAppContext.getFirstChild();
-        validateAppNodeContents(ydtAppContext, AUG3, A1, OTHER_EDIT);
-        assertNull(ydtAppContext.getFirstChild());
-        assertNull(ydtAppContext.getPreviousSibling());
-        ydtAppContext = ydtAppContext.getNextSibling();
-        validateAppNodeContents(ydtAppContext, AUG3, A2, BOTH);
-
-        ydtAppContext = ydtAppContext.getFirstChild();
-        validateAppNodeContents(ydtAppContext, AUG5, A5, DELETE_ONLY);
-
-        ydtAppContext = ydtAppContext.getFirstChild();
-        validateAppNodeContents(ydtAppContext, AUG9, A6, DELETE_ONLY);
-        ydtAppContext = ydtAppContext.getParent();
-
-        ydtAppContext = ydtAppContext.getNextSibling();
-        validateAppNodeContents(ydtAppContext, AUG5, A3, BOTH);
-
-        ydtAppContext = ydtAppContext.getFirstChild();
-        validateAppNodeContents(ydtAppContext, AUG7, A4, DELETE_ONLY);
-
-        ydtAppContext = ydtAppContext.getNextSibling();
-        validateAppNodeContents(ydtAppContext, AUG7, A5, OTHER_EDIT);
-
-        ydtAppContext = ydtAppContext.getFirstChild();
-        validateAppNodeContents(ydtAppContext, AUG8, A6, OTHER_EDIT);
-        ydtAppContext = ydtAppContext.getParent();
-
-        ydtAppContext = ydtAppContext.getNextSibling();
-        validateAppNodeContents(ydtAppContext, AUG7, A6, DELETE_ONLY);
 
         ydtAppContext = ydtAppContext.getParent();
-        ydtAppContext = ydtAppContext.getParent();
-        ydtAppContext = ydtAppContext.getParent();
-
-        ydtAppContext = ydtAppContext.getNextSibling();
-
-        validateAppNodeContents(ydtAppContext, AUG2, TOPONS, OTHER_EDIT);
-        ydtAppContext = ydtAppContext.getFirstChild();
-        validateAppNodeContents(ydtAppContext, AUG4, A1, OTHER_EDIT);
-        assertNull(ydtAppContext.getFirstChild());
-        assertNull(ydtAppContext.getPreviousSibling());
-        ydtAppContext = ydtAppContext.getNextSibling();
-        validateAppNodeContents(ydtAppContext, AUG4, A2, OTHER_EDIT);
-        assertNull(ydtAppContext.getNextSibling());
-        ydtAppContext = ydtAppContext.getFirstChild();
-        validateAppNodeContents(ydtAppContext, AUG6, A3, OTHER_EDIT);
-
-        ydtAppContext = ydtAppContext.getNextSibling();
-        validateAppNodeContents(ydtAppContext, AUG6, A4, OTHER_EDIT);
-        assertNull(ydtAppContext.getFirstChild());
-        assertNull(ydtAppContext.getNextSibling());
-
-        // traversing to logical application root node
-        ydtAppContext = ydtAppContext.getParent().getParent().getParent();
-
         validateAugmentNetworkAppTree(ydtAppContext);
     }
 
@@ -586,14 +515,5 @@ public class AugmentTest {
         validateAppModuleNodeContents(ydtAppContext, "augmentNetwork", BOTH);
         ydtAppContext = ydtAppContext.getFirstChild();
         validateAppNodeContents(ydtAppContext, "/node", NETNS, BOTH);
-        //augmenting node augment1
-
-        ydtAppContext = ydtAppContext.getFirstChild();
-        validateAppNodeContents(ydtAppContext, AUG10, A1, DELETE_ONLY);
-        assertNull(ydtAppContext.getFirstChild());
-        assertNull(ydtAppContext.getNextSibling());
-
-        // traversing to logical application root node
-        ydtAppContext.getParent().getParent().getParent();
     }
 }

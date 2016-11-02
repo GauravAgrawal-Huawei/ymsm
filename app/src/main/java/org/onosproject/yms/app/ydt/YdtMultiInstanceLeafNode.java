@@ -82,7 +82,7 @@ class YdtMultiInstanceLeafNode extends YdtNode {
 
     @Override
     public void addValueSet(Set valueSet) throws YdtException {
-        String value = null;
+        String value;
         // Check the value against corresponding data-type.
         for (Object aValueSet : valueSet) {
 

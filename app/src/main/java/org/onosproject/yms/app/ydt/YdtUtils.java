@@ -84,8 +84,8 @@ final class YdtUtils {
      * @throws YdtException when user requested node operation type is
      *                      not valid as per parent node operation type
      */
-    static void validateOperationType(YdtContextOperationType parentOpType,
-                                      YdtContextOperationType childOpType)
+    private static void validateOperationType(YdtContextOperationType parentOpType,
+                                              YdtContextOperationType childOpType)
             throws YdtException {
 
         switch (parentOpType) {
@@ -119,7 +119,7 @@ final class YdtUtils {
      * @param defType YDT default operation type
      * @return operation type for current non leaf node
      */
-    static YdtContextOperationType getOperationType(
+    private static YdtContextOperationType getOperationType(
             YdtContextOperationType type, YdtContextOperationType defType) {
         return type != null ? type : (defType != null ? defType : MERGE);
     }

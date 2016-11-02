@@ -136,15 +136,14 @@ public class YdtMultiInstanceNode extends YdtNode {
      * instance count and key element uniqueness.
      *
      * @param keyStringSet set to validate the key element uniqueness
-     * @param nodelist     list of instance's of same list
+     * @param list     list of instance's of same list
      * @throws YdtException when user requested multi instance node instance's
      *                      count doesn't fit into the allowed instance's limit
      *                      or doesn't have unique key's
      */
-    public void validateInstances(Set keyStringSet, List nodelist)
+    public void validateInstances(Set keyStringSet, List list)
             throws YdtException {
 
-        List<YdtNode<YdtMultiInstanceNode>> ydtNodeList = nodelist;
         // Clearing the set.
         keyStringSet.clear();
 
@@ -152,17 +151,18 @@ public class YdtMultiInstanceNode extends YdtNode {
          * Storing the number of multiInstance node for number
          * if instance validation.
          */
-        int instanceCount = nodelist.size();
+        int instanceCount = list.size();
 
-        YangList list = (YangList) ydtNodeList.get(0).getYangSchemaNode();
-        validateInstanceCount(instanceCount, list);
-        if (list.isConfig() && instanceCount > 1) {
+        YangList listSchema = (YangList) ((YdtMultiInstanceNode) list.get(0))
+                .getYangSchemaNode();
+        validateInstanceCount(instanceCount, listSchema);
+        if (listSchema.isConfig() && instanceCount > 1) {
 
             /*
              * Iterating over values in ydtNodeList of
              * multiInstanceNode and compare the key string.
              */
-            for (YdtNode ydtNode : ydtNodeList) {
+            for (YdtNode ydtNode : (List<YdtNode<YdtMultiInstanceNode>>) list) {
                 if (!keyStringSet.add(((YdtMultiInstanceNode) ydtNode)
                                               .getCompositeKey())) {
                     throw new YdtException(

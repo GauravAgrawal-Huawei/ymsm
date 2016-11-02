@@ -176,12 +176,4 @@ public interface YdtAppContext {
      * @return schema node
      */
     YangSchemaNode getYangSchemaNode();
-
-    /**
-     * Adds the given schema node in to application set.
-     *
-     * @param schemaNode schema node to be added
-     * @return true for success; false otherwise
-     */
-    boolean addSchemaToAppSet(YangSchemaNode schemaNode);
 }

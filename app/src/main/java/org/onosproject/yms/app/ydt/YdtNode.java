@@ -92,7 +92,7 @@ public abstract class YdtNode<T> implements YdtExtendedContext, Cloneable {
     /*
      * Type of node.
      */
-    private YdtType ydtType;
+    private final YdtType ydtType;
 
     /*
      * Flag to keep the track of context switch,

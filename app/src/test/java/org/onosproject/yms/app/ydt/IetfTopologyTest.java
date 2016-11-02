@@ -20,7 +20,6 @@ import org.junit.Test;
 
 import static org.onosproject.yms.app.ydt.YdtAppNodeOperationType.OTHER_EDIT;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG1;
-import static org.onosproject.yms.app.ydt.YdtTestConstants.AUG2;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.IETF;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.SLINK;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.STP;
@@ -261,8 +260,5 @@ public class IetfTopologyTest {
 
         //Inside link node
         validateAppNodeContents(ydtAppContext, AUG1, TOPONS, OTHER_EDIT);
-        ydtAppContext = ydtAppContext.getNextSibling();
-
-        validateAppNodeContents(ydtAppContext, AUG2, TOPONS, OTHER_EDIT);
     }
 }

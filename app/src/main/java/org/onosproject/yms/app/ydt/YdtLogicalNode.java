@@ -23,7 +23,7 @@ import static org.onosproject.yms.app.ydt.YdtConstants.errorMsg;
 import static org.onosproject.yms.ydt.YdtType.LOGICAL_ROOT_NODE;
 
 /**
- * Represents a single instance YANG data tree node.
+ * Represents a logical YANG data tree node.
  */
 class YdtLogicalNode extends YdtNode {
 

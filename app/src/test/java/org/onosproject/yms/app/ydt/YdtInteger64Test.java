@@ -347,46 +347,79 @@ public class YdtInteger64Test {
     */
 
     /**
-     * Tests all the negative scenario's for integer8 data type.
+     * Tests all the minimum and maximum value's negative scenario's for
+     * signed integer64 data type.
      */
     @Test
-    public void negativeTest() throws YdtException {
-        validateErrMsg("posInt", INT64NS, "integer", SMALLINT64, null);
+    public void negative1Test() throws YdtException {
         validateErrMsg("posInt", INT64NS, "integer", SMALLINT64, null);
         validateErrMsg("posInt", INT64NS, "127.0", SMALLINT64, null);
-        validateErrMsg("maxUInt", INT64NS, "integer", SMALLUINT64, null);
-        validateErrMsg("maxUInt", INT64NS, "127.0", SMALLUINT64, null);
         validateErrMsg("negInt", INT64NS, L, SMALLINT64, null);
         validateErrMsg("posInt", INT64NS, I, SMALLINT64, null);
-        validateErrMsg("minUInt", INT64NS, L, MINVALUE, null);
-        validateErrMsg("maxUInt", INT64NS, M, MAXUINT64, null);
         validateErrMsg(MINIWR, INT64NS, "9", CAPSINT64, null);
         validateErrMsg(MAXIWR, INT64NS, "101", CAPSINT64, null);
+    }
+
+    /**
+     * Tests all the minimum and maximum value's negative scenario's for
+     * unsigned integer64 data type.
+     */
+    @Test
+    public void negative2Test() throws YdtException {
+        validateErrMsg("maxUInt", INT64NS, "integer", SMALLUINT64, null);
+        validateErrMsg("maxUInt", INT64NS, "127.0", SMALLUINT64, null);
+        validateErrMsg("minUInt", INT64NS, L, MINVALUE, null);
+        validateErrMsg("maxUInt", INT64NS, M, MAXUINT64, null);
         validateErrMsg(MINUIWR, INT64NS, "9", CAPSUINT64, null);
         validateErrMsg(MAXUIWR, INT64NS, "101", CAPSUINT64, null);
+    }
 
+    /**
+     * Tests all possible negative scenario's for signed integer64 data type
+     * with range "10..40 | 50..100".
+     */
+    @Test
+    public void negative3Test() throws YdtException {
         validateErrMsg("integer", INT64NS, "9", CAPSINT64, MRV);
         validateErrMsg("integer", INT64NS, "41", CAPSINT64, MRV);
         validateErrMsg("integer", INT64NS, "49", CAPSINT64, MRV);
         validateErrMsg("integer", INT64NS, "101", CAPSINT64, MRV);
+    }
+
+    /**
+     * Tests all possible negative scenario's for unsigned integer64 data type
+     * with range "10..40 | 50..100".
+     */
+    @Test
+    public void negative4Test() throws YdtException {
         validateErrMsg("UnInteger", INT64NS, "9", CAPSUINT64, MRV);
         validateErrMsg("UnInteger", INT64NS, "41", CAPSUINT64, MRV);
         validateErrMsg("UnInteger", INT64NS, "49", CAPSUINT64, MRV);
         validateErrMsg("UnInteger", INT64NS, "101", CAPSUINT64, MRV);
-        validateErrMsg("UnInteger", INT64NS, "9", CAPSUINT64, MRV);
-        validateErrMsg("UnInteger", INT64NS, "41", CAPSUINT64, MRV);
-        validateErrMsg("UnInteger", INT64NS, "49", CAPSUINT64, MRV);
-        validateErrMsg("UnInteger", INT64NS, "101", CAPSUINT64, MRV);
-        validateErrMsg("UnInteger", INT64NS, "9", CAPSUINT64, MRV);
-        validateErrMsg("UnInteger", INT64NS, "41", CAPSUINT64, MRV);
-        validateErrMsg("UnInteger", INT64NS, "49", CAPSUINT64, MRV);
-        validateErrMsg("UnInteger", INT64NS, "101", CAPSUINT64, MRV);
+    }
+
+    /**
+     * Tests all possible negative scenario's for signed integer64 data type
+     * with range "min .. 2 | 10 | 20..max".
+     */
+    @Test
+    public void negative5Test() throws YdtException {
+        // multi range validation
         validateErrMsg("revInteger", INT64NS, L, SMALLINT64, MRV);
         validateErrMsg("revInteger", INT64NS, "11", CAPSINT64, MRV);
         validateErrMsg("revInteger", INT64NS, "4", CAPSINT64, MRV);
         validateErrMsg("revInteger", INT64NS, "9", CAPSINT64, MRV);
         validateErrMsg("revInteger", INT64NS, "19", CAPSINT64, MRV);
         validateErrMsg("revInteger", INT64NS, I, SMALLINT64, MRV);
+    }
+
+    /**
+     * Tests all possible negative scenario's for unsigned integer64 data type
+     * with range "min .. 2 | 10 | 20..max".
+     */
+    @Test
+    public void negative6Test() throws YdtException {
+        // multi range validation
         validateErrMsg(RUI, INT64NS, L, MINVALUE, MRV);
         validateErrMsg(RUI, INT64NS, "4", CAPSUINT64, MRV);
         validateErrMsg(RUI, INT64NS, "9", CAPSUINT64, MRV);
