@@ -398,7 +398,7 @@ public class YdtInteger32Test {
      */
     @Test
     public void negative5Test() throws YdtException {
-        // multi range validation
+        // Multi range validation
         validateErrMsg("revInteger", INT32NS, "-2147483649", SINT32, MRV);
         validateErrMsg("revInteger", INT32NS, "4", CAPSINT32, MRV);
         validateErrMsg("revInteger", INT32NS, "9", CAPSINT32, MRV);
@@ -413,7 +413,7 @@ public class YdtInteger32Test {
      */
     @Test
     public void negative6Test() throws YdtException {
-        // multi range validation
+        // Multi range validation
         validateErrMsg(RUI, INT32NS, "-2147483649", MINVALUE, MRV);
         validateErrMsg(RUI, INT32NS, "4", CAPSUINT32, MRV);
         validateErrMsg(RUI, INT32NS, "9", CAPSUINT32, MRV);
