@@ -19,8 +19,12 @@ package org.onosproject.yms.app.ysr;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network1.rev20151208.IetfNetwork1Service;
+import org.onosproject.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.network2.rev20151208.IetfNetwork2Service;
+import org.onosproject.yang.gen.v1.ydt.test.rev20160524.TestService;
 import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
+import org.onosproject.yms.app.yab.TestManager;
 
 import java.io.IOException;
 
@@ -367,7 +371,7 @@ public class DefaultYangSchemaRegistryTest {
      *
      * @throws IOException when fails to do IO operation
      */
-
+    @Test
     public void testForGetSchemaNodeWhenNoRevision()
             throws IOException {
 
@@ -380,7 +384,7 @@ public class DefaultYangSchemaRegistryTest {
                 registry.getYangSchemaNodeUsingAppName(SERVICE_NAME_REV_15);
         assertThat(true, is(SCHEMA_NAME_4.equals(yangNode.getName())));
 
-        yangNode = registry.getYangSchemaNodeUsingSchemaName(SCHEMA_NAME_4);
+        yangNode = registry.getYangSchemaNodeUsingSchemaName(SCHEMA_NAME_4_15);
         assertThat(true, is(SCHEMA_NAME_4.equals(yangNode.getName())));
 
         yangNode =
@@ -408,7 +412,7 @@ public class DefaultYangSchemaRegistryTest {
         //Here the yangNode should be the node which does not have revision.
         // asset should pass with false.
         yangNode = registry.getYangSchemaNodeUsingSchemaName(SCHEMA_NAME_4);
-        assertThat(true, is(((YangNode) yangNode).getRevision() != null));
+        assertThat(true, is(((YangNode) yangNode).getRevision() == null));
 
         //Service no revision.
         yangNode = registry.getYangSchemaNodeUsingAppName(SERVICE_NAME_NO_REV);
@@ -440,7 +444,8 @@ public class DefaultYangSchemaRegistryTest {
 
         //Here the yangNode should be the node which have different revision.
         yangNode = registry.getYangSchemaNodeUsingSchemaName(SCHEMA_NAME_4);
-        assertThat(true, is(((YangNode) yangNode).getRevision() == null));
+        assertThat(true, is(yangNode != null));
+        assertThat(true, is(((YangNode) yangNode).getRevision() != null));
     }
 
     /**
@@ -449,7 +454,7 @@ public class DefaultYangSchemaRegistryTest {
      *
      * @throws IOException when fails to do IO operation
      */
-
+    @Test
     public void testForGetSchemaNodeWhenMultiRevision()
             throws IOException {
 
@@ -458,7 +463,7 @@ public class DefaultYangSchemaRegistryTest {
                 testYangSchemaNodeProvider.getDefaultYangSchemaRegistry();
 
         //Service with rev.
-        /*YangSchemaNode yangNode =
+        YangSchemaNode yangNode =
                 registry.getYangSchemaNodeUsingAppName(SERVICE_NAME_REV_15);
         assertThat(true, is(SCHEMA_NAME_4.equals(yangNode.getName())));
 
@@ -489,11 +494,11 @@ public class DefaultYangSchemaRegistryTest {
 
         //Here the yangNode should be the node which does not have revision.
         // asset should pass with false.
-        yangNode = registry.getYangSchemaNodeUsingSchemaName(SCHEMA_NAME_4_15);
-        assertThat(true, is(((YangNode) yangNode).getRevision() != null));*/
+        yangNode = registry.getYangSchemaNodeUsingSchemaName(SCHEMA_NAME_4);
+        assertThat(true, is(((YangNode) yangNode).getRevision() == null));
 
         //Service with different revision.
-        YangSchemaNode yangNode = registry
+        yangNode = registry
                 .getYangSchemaNodeUsingAppName(SERVICE_NAME_REV_16);
         assertThat(true, is(SCHEMA_NAME_4.equals(yangNode.getName())));
 
@@ -514,7 +519,7 @@ public class DefaultYangSchemaRegistryTest {
         assertThat(true, is(SCHEMA_NAME_4.equals(yangNode.getName())));
 
         //As we have not registered an  application this object should be null.
-        Object object = registry.getRegisteredApplication(yangNode);
+        object = registry.getRegisteredApplication(yangNode);
         assertThat(true, is(object == null));
         testYangSchemaNodeProvider.unregisterService(SERVICE_NAME_REV_16);
 
@@ -522,8 +527,8 @@ public class DefaultYangSchemaRegistryTest {
         assertThat(true, is(yangNode == null));
 
         //Here the yangNode should be the node which have different revision.
-        yangNode = registry.getYangSchemaNodeUsingSchemaName(SCHEMA_NAME_4_16);
-        assertThat(true, is(((YangNode) yangNode).getRevision() != null));
+        yangNode = registry.getYangSchemaNodeUsingSchemaName(SCHEMA_NAME_4);
+        assertThat(true, is(((YangNode) yangNode).getRevision() == null));
 
         //Service with different revision.
         yangNode = registry.getYangSchemaNodeUsingAppName(SERVICE_NAME_REV_17);
@@ -555,7 +560,40 @@ public class DefaultYangSchemaRegistryTest {
         assertThat(true, is(yangNode == null));
 
         //Here the yangNode should be the node which have different revision.
-        yangNode = registry.getYangSchemaNodeUsingSchemaName(SCHEMA_NAME_4_17);
+        yangNode = registry.getYangSchemaNodeUsingSchemaName(SCHEMA_NAME_4);
+        assertThat(true, is(((YangNode) yangNode).getRevision() == null));
+
+        //Service no revision.
+        yangNode = registry.getYangSchemaNodeUsingAppName(SERVICE_NAME_NO_REV);
+        assertThat(true, is(SCHEMA_NAME_4.equals(yangNode.getName())));
+
+        yangNode = registry.getYangSchemaNodeUsingSchemaName(SCHEMA_NAME_4);
+        assertThat(true, is(SCHEMA_NAME_4.equals(yangNode.getName())));
+
+        yangNode =
+                registry.getYangSchemaNodeUsingGeneratedRootNodeInterfaceFileName(
+                        INTERFACE_NAME_NO_REV);
+        assertThat(true, is(SCHEMA_NAME_4.equals(yangNode.getName())));
+
+        yangNode =
+                registry.getYangSchemaNodeUsingGeneratedRootNodeOpPramFileName(
+                        OP_PARAM_NAME_NO_REV);
+        assertThat(true, is(SCHEMA_NAME_4.equals(yangNode.getName())));
+
+        yangNode = registry.getRootYangSchemaNodeForNotification(EVENT_NAME_NO_REV);
+        assertThat(true, is(SCHEMA_NAME_4.equals(yangNode.getName())));
+
+        //As we have not registered an  application this object should be null.
+        object = registry.getRegisteredApplication(yangNode);
+        assertThat(true, is(object == null));
+        testYangSchemaNodeProvider.unregisterService(SERVICE_NAME_NO_REV);
+
+        yangNode = registry.getYangSchemaNodeUsingAppName(SERVICE_NAME_NO_REV);
+        assertThat(true, is(yangNode == null));
+
+        //Here the yangNode should be the node which have different revision.
+        yangNode = registry.getYangSchemaNodeUsingSchemaName(SCHEMA_NAME_4);
+        assertThat(true, is(yangNode != null));
         assertThat(true, is(((YangNode) yangNode).getRevision() != null));
 
         //Service with different revision.
@@ -586,11 +624,6 @@ public class DefaultYangSchemaRegistryTest {
 
         yangNode = registry.getYangSchemaNodeUsingAppName(SERVICE_NAME_REV_14);
         assertThat(true, is(yangNode == null));
-
-        //Here the yangNode should be the node which does not have revision.
-        // asset should pass with false.
-        yangNode = registry.getYangSchemaNodeUsingSchemaName(SCHEMA_NAME_4);
-        assertThat(true, is(yangNode != null));
     }
 
     /**
@@ -624,50 +657,22 @@ public class DefaultYangSchemaRegistryTest {
     /**
      * Unit test case should not generate any exceptions
      * verify notification should be checked for registration.
-
-     @Test public void testNotification() {
-     MockIetfManager manager = new MockIetfManager();
-     testYangSchemaNodeProvider.processSchemaRegistry(manager);
-     boolean isRegWithNotification =
-     testYangSchemaNodeProvider.getDefaultYangSchemaRegistry()
-     .verifyNotificationObject(manager);
-     assertThat(true, is(isRegWithNotification));
-     isRegWithNotification = testYangSchemaNodeProvider
-     .getDefaultYangSchemaRegistry()
-     .verifyNotificationObject(manager);
-     assertThat(false, is(isRegWithNotification));
-     isRegWithNotification = testYangSchemaNodeProvider
-     .getDefaultYangSchemaRegistry()
-     .verifyNotificationObject(new TestManager());
-     assertThat(true, is(isRegWithNotification));
-     }
-
-     /**
-      * Unit test case should not generate any exceptions.
-
-     @Test public void testNotificationRegistrationInYnh() {
-     testYangSchemaNodeProvider.processSchemaRegistry(null);
-     testYangSchemaNodeProvider.getDefaultYangSchemaRegistry()
-     .verifyNotificationObject(IetfNetwork1Service.class);
-     testYangSchemaNodeProvider.getDefaultYangSchemaRegistry()
-     .verifyNotificationObject(IetfNetwork1.class);
-     testYangSchemaNodeProvider.getDefaultYangSchemaRegistry()
-     .verifyNotificationObject(IetfNetwork1OpParam.class);
-
-     boolean isRegWithNotification = testYangSchemaNodeProvider
-     .getDefaultYangSchemaRegistry()
-     .verifyNotificationObject(IetfNetwork2Service.class);
-
-     //Register should work.
-     assertThat(true, is(isRegWithNotification));
-     isRegWithNotification = testYangSchemaNodeProvider
-     .getDefaultYangSchemaRegistry()
-     .verifyNotificationObject(IetfNetwork2Service.class);
-
-     //Re register should not happen
-     assertThat(false, is(isRegWithNotification));
-     }
      */
+    @Test
+    public void testNotification() {
+        MockIetfManager manager = new MockIetfManager();
+        testYangSchemaNodeProvider.processSchemaRegistry(manager);
+        boolean isRegWithNotification =
+                testYangSchemaNodeProvider.getDefaultYangSchemaRegistry()
+                        .verifyNotificationObject(manager, IetfNetwork1Service.class);
+        assertThat(true, is(isRegWithNotification));
+        isRegWithNotification = testYangSchemaNodeProvider
+                .getDefaultYangSchemaRegistry()
+                .verifyNotificationObject(manager, IetfNetwork2Service.class);
+        assertThat(false, is(isRegWithNotification));
+        isRegWithNotification = testYangSchemaNodeProvider
+                .getDefaultYangSchemaRegistry()
+                .verifyNotificationObject(new TestManager(), TestService.class);
+        assertThat(false, is(isRegWithNotification));
+    }
 }
-
-
