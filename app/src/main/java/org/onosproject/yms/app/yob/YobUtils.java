@@ -51,6 +51,7 @@ import static org.onosproject.yms.app.yob.YobConstants.E_DATA_TYPE_NOT_SUPPORT;
 import static org.onosproject.yms.app.yob.YobConstants.E_FAIL_TO_LOAD_CLASS;
 import static org.onosproject.yms.app.yob.YobConstants.E_FAIL_TO_LOAD_CONSTRUCTOR;
 import static org.onosproject.yms.app.yob.YobConstants.E_INVALID_DATA_TREE;
+import static org.onosproject.yms.app.yob.YobConstants.E_INVALID_EMPTY_DATA;
 import static org.onosproject.yms.app.yob.YobConstants.FROM_STRING;
 import static org.onosproject.yms.app.yob.YobConstants.JAVA_LANG;
 import static org.onosproject.yms.app.yob.YobConstants.LEAF_IDENTIFIER;
@@ -126,6 +127,13 @@ final class YobUtils {
                 break;
 
             case EMPTY:
+                if (leafValue == null) {
+                    parentSetterMethod.invoke(parentBuilderObject,
+                                              Boolean.parseBoolean(leafValue));
+                } else {
+                    log.error(E_INVALID_EMPTY_DATA);
+                }
+                break;
             case BOOLEAN:
                 parentSetterMethod.invoke(parentBuilderObject,
                                           Boolean.parseBoolean(leafValue));

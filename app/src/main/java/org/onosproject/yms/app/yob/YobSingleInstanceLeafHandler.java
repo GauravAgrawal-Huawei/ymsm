@@ -19,6 +19,7 @@ package org.onosproject.yms.app.yob;
 import org.onosproject.yangutils.datamodel.YangLeaf;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangType;
+import org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.yob.exception.YobException;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
@@ -73,7 +74,8 @@ class YobSingleInstanceLeafHandler extends YobHandler {
             Object builderObject = workBench
                     .getParentBuilder(leafNode, schemaRegistry);
             builderClass = builderObject.getClass();
-            if (leafNode.getValue() != null) {
+            if (leafNode.getValue() != null || ((YangLeaf) schemaNode)
+                    .getDataType().getDataType() == YangDataTypes.EMPTY) {
                 Field leafName = builderClass.getDeclaredField(setterInParent);
                 Method setterMethod = builderClass
                         .getDeclaredMethod(setterInParent, leafName.getType());

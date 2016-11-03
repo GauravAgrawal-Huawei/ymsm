@@ -96,4 +96,6 @@ final class YobConstants {
             "ERROR: YANG data tree is missing the data required for YOB";
     static final String E_INVALID_DATA_TREE =
             "ERROR: YANG tree does not have a application root";
+    static final String E_INVALID_EMPTY_DATA =
+            "ERROR: Value for empty data type is invalid";
 }
