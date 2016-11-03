@@ -129,7 +129,7 @@ final class YobUtils {
             case EMPTY:
                 if (leafValue == null) {
                     parentSetterMethod.invoke(parentBuilderObject,
-                                              Boolean.parseBoolean(leafValue));
+                                              true);
                 } else {
                     log.error(E_INVALID_EMPTY_DATA);
                 }

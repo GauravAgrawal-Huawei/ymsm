@@ -79,7 +79,7 @@ public final class YtbUtil {
     private static final String ENUM_LEAF_IDENTIFIER = "$LeafIdentifier";
     private static final Set<YangDataTypes> PRIMITIVE_TYPES =
             new HashSet<>(Arrays.asList(INT8, INT16, INT32, INT64, UINT8,
-                                        UINT16, UINT32, UINT64, DECIMAL64,
+                                        UINT16, UINT32,
                                         BOOLEAN, EMPTY));
 
     // No instantiation.
