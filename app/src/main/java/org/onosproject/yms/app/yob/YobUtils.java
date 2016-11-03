@@ -206,8 +206,8 @@ final class YobUtils {
             parentSchema = ((YangNode) parentSchema).getParent();
         }
         String qualName = getQualifiedinterface(parentSchema);
-        Class<?> regClass = schemaRegistry.getRegisteredClass(parentSchema,
-                                                              qualName);
+        Class<?> regClass = schemaRegistry.getRegisteredClass(parentSchema
+        );
         if (regClass == null) {
             throw new YobException(E_FAIL_TO_LOAD_CLASS + qualName);
         }
@@ -447,8 +447,8 @@ final class YobUtils {
 
             }
 
-            Class<?> regClass = registry.getRegisteredClass(curSchemaNode,
-                                                            qualifiedClassName);
+            Class<?> regClass = registry.getRegisteredClass(curSchemaNode
+            );
             return regClass.getClassLoader();
 
         }
@@ -480,7 +480,7 @@ final class YobUtils {
                     ((YangNode) augmentSchemaNode).getParent();
 
             Class<?> moduleClass = registry.getRegisteredClass(
-                    moduleNode, getCapitalCase(moduleNode.getJavaClassNameOrBuiltInType()));
+                    moduleNode);
             if (moduleClass == null) {
                 throw new YobException(E_FAIL_TO_LOAD_CLASS + moduleNode
                         .getJavaClassNameOrBuiltInType());
@@ -500,8 +500,8 @@ final class YobUtils {
             yangNode = yangNode.getParent();
         }
         String qualName = getQualifiedinterface(yangNode);
-        Class<?> regClass = schemaRegistry.getRegisteredClass(yangNode,
-                                                              qualName);
+        Class<?> regClass = schemaRegistry.getRegisteredClass(yangNode
+        );
         if (regClass == null) {
             throw new YobException(E_FAIL_TO_LOAD_CLASS + qualName);
         }

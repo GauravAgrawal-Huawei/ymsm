@@ -30,6 +30,7 @@ import org.onosproject.yms.ych.YangProtocolEncodingFormat;
 import org.onosproject.yms.ydt.YdtBuilder;
 import org.onosproject.yms.ydt.YdtContext;
 import org.onosproject.yms.ydt.YmsOperationType;
+import org.onosproject.yms.ysr.YangModuleLibrary;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +53,7 @@ public class DefaultYangCodecHandler implements YangCodecHandler {
      * Schema registry for driver.
      */
     private final YangSchemaRegistry schemaRegistry;
+    private YangModuleLibrary library;
 
     /**
      * Default codecs.
@@ -100,7 +102,8 @@ public class DefaultYangCodecHandler implements YangCodecHandler {
 
     @Override
     public void addDeviceSchema(Class<?> yangModule) {
-        schemaRegistry.registerApplication(null, yangModule, null);
+        schemaRegistry.registerApplication(null, yangModule);
+        schemaRegistry.processModuleLibrary(yangModule.getName(), library);
     }
 
     @Override
@@ -254,5 +257,23 @@ public class DefaultYangCodecHandler implements YangCodecHandler {
         }
 
         return objectList;
+    }
+
+    /**
+     * Returns module library for YSR.
+     *
+     * @return module library for YSR
+     */
+    public YangModuleLibrary getLibrary() {
+        return library;
+    }
+
+    /**
+     * Sets module library for YSR.
+     *
+     * @param library module library for YSR
+     */
+    public void setLibrary(YangModuleLibrary library) {
+        this.library = library;
     }
 }

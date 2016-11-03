@@ -88,12 +88,14 @@ public class YangNotificationManager
      * Representation of YANG notification handler's abstract listener. It
      * listens for events from application(s).
      */
-    private class YnhAbstractListener implements EventListener {
+    private class YnhAbstractListener<E extends Event> implements
+            EventListener<E> {
 
         @Override
         public void event(Event event) {
             executor.execute(() -> {
                 try {
+                    log.info("Event received in ynh " + event.type());
                     /*
                      * Obtain YANG data tree corresponding to notification with
                      * logical root node as yangnotification, followed by
@@ -101,7 +103,7 @@ public class YangNotificationManager
                      */
                     YangTreeBuilder builder = new DefaultYangTreeBuilder();
                     YdtContext context = builder.getYdtForNotification(
-                                    event, YANG_NOTIFICATION, schemaRegistry);
+                            event, YANG_NOTIFICATION, schemaRegistry);
                     /*
                      * Create YANG notification from obtained data tree and
                      * send it to registered protocols.

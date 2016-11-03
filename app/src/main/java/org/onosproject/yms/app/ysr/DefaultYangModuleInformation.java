@@ -56,7 +56,6 @@ class DefaultYangModuleInformation implements YangModuleInformation {
         return moduleIdentifier;
     }
 
-    @Override
     public YangNamespace namespace() {
         return nameSpace;
     }

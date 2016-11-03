@@ -33,6 +33,7 @@
     <modules>
         <module>api</module>
         <module>app</module>
+        <module>ut</module>
     </modules>
     <dependencies>
         <dependency>

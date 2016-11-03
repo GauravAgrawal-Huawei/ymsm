@@ -18,7 +18,6 @@ package org.onosproject.yms.app.ydt;
 
 import com.google.common.collect.ImmutableSet;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
-import org.onosproject.yangutils.datamodel.exceptions.DataModelException;
 import org.onosproject.yms.app.ydt.exceptions.YdtException;
 
 import java.util.HashSet;
@@ -85,13 +84,13 @@ class YdtMultiInstanceLeafNode extends YdtNode {
         String value;
         // Check the value against corresponding data-type.
         for (Object aValueSet : valueSet) {
-
-            try {
-                value = String.valueOf(aValueSet);
-                getYangSchemaNode().isValueValid(value);
-            } catch (DataModelException e) {
-                throw new YdtException(e.getLocalizedMessage());
-            }
+            value = String.valueOf(aValueSet);
+//            try {
+//                value = String.valueOf(aValueSet);
+//                getYangSchemaNode().isValueValid(value);
+//            } catch (DataModelException e) {
+//                throw new YdtException(e.getLocalizedMessage());
+//            }
             addValueToValueSet(value);
         }
     }
