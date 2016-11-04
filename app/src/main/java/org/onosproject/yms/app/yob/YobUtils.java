@@ -90,13 +90,13 @@ final class YobUtils {
      * @throws IllegalAccessException    cannot access the member
      * @throws NoSuchMethodException     method not found
      */
-    static void setDataFromStringValue(YangType<?> type, String leafValue,
+    static void setDataFromStringValue(YangDataTypes type, String leafValue,
                                        Method parentSetterMethod,
                                        Object parentBuilderObject,
                                        YdtExtendedContext ydtExtendedContext)
             throws InvocationTargetException, IllegalAccessException,
             NoSuchMethodException {
-        switch (type.getDataType()) {
+        switch (type) {
             case INT8:
                 parentSetterMethod.invoke(parentBuilderObject,
                                           Byte.parseByte(leafValue));
@@ -127,8 +127,7 @@ final class YobUtils {
 
             case EMPTY:
                 if (leafValue == null) {
-                    parentSetterMethod.invoke(parentBuilderObject,
-                                              true);
+                    parentSetterMethod.invoke(parentBuilderObject, true);
                 } else {
                     log.error(E_INVALID_EMPTY_DATA);
                 }
@@ -408,24 +407,22 @@ final class YobUtils {
         }
 
         YangType type = leafRef.getEffectiveDataType();
-        YangType clonedType = null;
         if (type.getDataType() == YangDataTypes.DERIVED &&
                 schemaNode.getJavaPackage().equals(YobConstants.JAVA_LANG)) {
-            try {
-                clonedType = type.clone();
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
+            /*
+             * If leaf is inside grouping, then its return type will be of type
+             * Object and if its actual type is derived type then get the
+             * effective built-in type and set the value.
+             */
             YangDerivedInfo derivedInfo = (YangDerivedInfo) leafRef
                     .getEffectiveDataType()
                     .getDataTypeExtendedInfo();
-            clonedType.setDataType(derivedInfo.getEffectiveBuiltInType());
-            YobUtils.setDataFromStringValue(clonedType,
+            YobUtils.setDataFromStringValue(derivedInfo.getEffectiveBuiltInType(),
                                             leafValue, parentSetterMethod,
                                             parentBuilderObject,
                                             ydtExtendedContext);
         } else {
-            YobUtils.setDataFromStringValue(type,
+            YobUtils.setDataFromStringValue(type.getDataType(),
                                             leafValue, parentSetterMethod,
                                             parentBuilderObject,
                                             ydtExtendedContext);

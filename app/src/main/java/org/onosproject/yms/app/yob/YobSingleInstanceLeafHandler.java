@@ -80,7 +80,8 @@ class YobSingleInstanceLeafHandler extends YobHandler {
                 Method setterMethod = builderClass
                         .getDeclaredMethod(setterInParent, leafName.getType());
                 YangType<?> yangType = ((YangLeaf) schemaNode).getDataType();
-                YobUtils.setDataFromStringValue(yangType, leafNode.getValue(),
+                YobUtils.setDataFromStringValue(yangType.getDataType(), leafNode
+                                                        .getValue(),
                                                 setterMethod, builderObject,
                                                 leafNode);
             } else {

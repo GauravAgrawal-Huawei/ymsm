@@ -97,7 +97,8 @@ class YobMultiInstanceLeafHandler
                         (JavaQualifiedTypeInfoContainer) yangSchemaNode;
                 YangType<?> yangType =
                         ((YangLeafList) javaQualifiedType).getDataType();
-                YobUtils.setDataFromStringValue(yangType, value, setterMethod,
+                YobUtils.setDataFromStringValue(yangType.getDataType(), value,
+                                                setterMethod,
                                                 builderObject, leafListNode);
             } catch (NoSuchMethodException | InvocationTargetException
                     | IllegalAccessException | NoSuchFieldException e) {
