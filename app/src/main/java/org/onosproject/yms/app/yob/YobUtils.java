@@ -27,6 +27,7 @@ import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeContextInfo;
 import org.onosproject.yangutils.datamodel.YangType;
+import org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes;
 import org.onosproject.yms.app.ydt.YdtExtendedContext;
 import org.onosproject.yms.app.yob.exception.YobException;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
@@ -44,7 +45,6 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_AUGMENT_NODE;
-import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.DERIVED;
 import static org.onosproject.yms.app.ydt.AppType.YOB;
 import static org.onosproject.yms.app.yob.YobConstants.DEFAULT;
 import static org.onosproject.yms.app.yob.YobConstants.E_DATA_TYPE_NOT_SUPPORT;
@@ -53,7 +53,6 @@ import static org.onosproject.yms.app.yob.YobConstants.E_FAIL_TO_LOAD_CONSTRUCTO
 import static org.onosproject.yms.app.yob.YobConstants.E_INVALID_DATA_TREE;
 import static org.onosproject.yms.app.yob.YobConstants.E_INVALID_EMPTY_DATA;
 import static org.onosproject.yms.app.yob.YobConstants.FROM_STRING;
-import static org.onosproject.yms.app.yob.YobConstants.JAVA_LANG;
 import static org.onosproject.yms.app.yob.YobConstants.LEAF_IDENTIFIER;
 import static org.onosproject.yms.app.yob.YobConstants.L_FAIL_TO_LOAD_CLASS;
 import static org.onosproject.yms.app.yob.YobConstants.OF;
@@ -409,17 +408,28 @@ final class YobUtils {
         }
 
         YangType type = leafRef.getEffectiveDataType();
-        if (type.getDataType() == DERIVED &&
-                schemaNode.getJavaPackage().equals(JAVA_LANG)) {
+        YangType clonedType = null;
+        if (type.getDataType() == YangDataTypes.DERIVED &&
+                schemaNode.getJavaPackage().equals(YobConstants.JAVA_LANG)) {
+            try {
+                clonedType = type.clone();
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
             YangDerivedInfo derivedInfo = (YangDerivedInfo) leafRef
                     .getEffectiveDataType()
                     .getDataTypeExtendedInfo();
-            type.setDataType(derivedInfo.getEffectiveBuiltInType());
+            clonedType.setDataType(derivedInfo.getEffectiveBuiltInType());
+            YobUtils.setDataFromStringValue(clonedType,
+                                            leafValue, parentSetterMethod,
+                                            parentBuilderObject,
+                                            ydtExtendedContext);
+        } else {
+            YobUtils.setDataFromStringValue(type,
+                                            leafValue, parentSetterMethod,
+                                            parentBuilderObject,
+                                            ydtExtendedContext);
         }
-        YobUtils.setDataFromStringValue(type,
-                                        leafValue, parentSetterMethod,
-                                        parentBuilderObject,
-                                        ydtExtendedContext);
     }
 
     /**
