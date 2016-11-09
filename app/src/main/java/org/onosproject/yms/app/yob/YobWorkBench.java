@@ -434,7 +434,7 @@ class YobWorkBench {
                                   childWorkBench.setterInParent,
                                   childWorkBench.getBuilderOrBuiltObject()
                                           .getBuiltObject());
-                return;
+                continue;
             }
 
             setObjectInBuilder(
