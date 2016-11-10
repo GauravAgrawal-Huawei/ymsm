@@ -108,6 +108,7 @@ final class YdtTestConstants {
     public static final String MERCHNS = "ydt.Merchandiser-supervisor";
     public static final String STP = "supporting-termination-point";
     public static final String SLINK = "supporting-link";
+    public static final String AUGSE = "/aug:l1";
     public static final String AUG1 = "/nd:networks/nd:network";
     public static final String AUG2 = "/nd:networks/nd:network/nd:node";
     public static final String AUG3 = "/nd:networks/nd:network/topo:link";
@@ -125,6 +126,7 @@ final class YdtTestConstants {
             "aug2:augment2/aug5:augment5";
     public static final String AUG10 = "/aug:node/aug:cont1s/aug:cont1s";
     public static final String NETNS = "ydt.augmentNetwork";
+    public static final String AUGNS = "ydt.augmentSequence1";
     public static final String IETFNS =
             "urn:ietf:params:xml:ns:yang:ietf-network";
     public static final String IETF = "yms-ietf-network";

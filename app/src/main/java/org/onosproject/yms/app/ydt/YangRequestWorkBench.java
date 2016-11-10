@@ -18,6 +18,7 @@ package org.onosproject.yms.app.ydt;
 
 import com.google.common.collect.ImmutableMap;
 import org.onosproject.yangutils.datamodel.YangAugment;
+import org.onosproject.yangutils.datamodel.YangLeaf;
 import org.onosproject.yangutils.datamodel.YangList;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yangutils.datamodel.YangSchemaNodeContextInfo;
@@ -716,10 +717,12 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
 
     @Override
     public YdtExtendedContext addLeaf(String value, YangSchemaNode schemaNode) {
+
         YdtNode childNode = addExtendedChildNode(null, schemaNode);
 
         // After successful addition of child node updating the values in same.
-        childNode.addValueWithoutValidation(value);
+        childNode.addValueWithoutValidation(value, ((YangLeaf) schemaNode)
+                .isKeyLeaf());
         return childNode;
     }
 

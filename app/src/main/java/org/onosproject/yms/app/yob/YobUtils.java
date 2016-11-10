@@ -161,6 +161,11 @@ final class YobUtils {
                                      parentBuilderObject, leafValue, false);
                 break;
 
+            case IDENTITYREF:
+                parseIdentityRefInfo(ydtExtendedContext, parentSetterMethod,
+                                     parentBuilderObject, leafValue, false);
+                break;
+
             case UNION:
                 parseDerivedTypeInfo(ydtExtendedContext, parentSetterMethod,
                                      parentBuilderObject, leafValue, false);
@@ -451,13 +456,11 @@ final class YobUtils {
                     throw new YobException(E_INVALID_DATA_TREE);
                 }
                 curSchemaNode = curNode.getYangSchemaNode();
-
             }
 
             Class<?> regClass = registry.getRegisteredClass(curSchemaNode
             );
             return regClass.getClassLoader();
-
         }
 
         YdtExtendedContext parent =
@@ -587,5 +590,72 @@ final class YobUtils {
         // TODO: It will be removed if common util is committed.
         return name.substring(0, 1).toUpperCase() +
                 name.substring(1);
+    }
+
+    /**
+     * To set data into parent setter method from string value for identity ref.
+     *
+     * @param leafValue           leafValue argument is used to set the value
+     *                            in method
+     * @param parentSetterMethod  Invokes the underlying method represented
+     *                            by this parentSetterMethod
+     * @param parentBuilderObject the parentBuilderObject is to invoke the
+     *                            underlying method
+     * @param ydtExtendedContext  ydtExtendedContext is used to get
+     *                            application related
+     *                            information maintained in YDT
+     * @param isEnum              isEnum parameter is used to check whether
+     *                            type is enum or derived
+     *                            information maintained in YDT
+     * @throws InvocationTargetException throws InvocationTargetException
+     * @throws IllegalAccessException    throws IllegalAccessException
+     * @throws NoSuchMethodException     throws NoSuchMethodException
+     */
+    private static void parseIdentityRefInfo(YdtExtendedContext
+                                                     ydtExtendedContext,
+                                             Method parentSetterMethod,
+                                             Object parentBuilderObject,
+                                             String leafValue, boolean isEnum)
+            throws InvocationTargetException, IllegalAccessException,
+            NoSuchMethodException {
+        Class<?> childSetClass = null;
+        Constructor<?> childConstructor = null;
+        Object childValue = null;
+        Object childObject = null;
+        Method childMethod = null;
+
+        YangSchemaNode yangJavaModule = ydtExtendedContext.getYangSchemaNode();
+        while (yangJavaModule.getReferredSchema() != null) {
+            yangJavaModule = yangJavaModule.getReferredSchema();
+        }
+
+        String qualifiedClassName = yangJavaModule.getJavaPackage() + PERIOD +
+                getCapitalCase(yangJavaModule.getJavaClassNameOrBuiltInType());
+        ClassLoader classLoader = getClassLoader(null, qualifiedClassName,
+                                                 ydtExtendedContext, null);
+        try {
+            childSetClass = classLoader.loadClass(qualifiedClassName);
+        } catch (ClassNotFoundException e) {
+            log.error(L_FAIL_TO_LOAD_CLASS, qualifiedClassName);
+        }
+        if (!isEnum) {
+
+            if (childSetClass != null) {
+                childMethod = childSetClass
+                        .getDeclaredMethod(FROM_STRING, String.class);
+            }
+        } else {
+            if (childSetClass != null) {
+                childMethod = childSetClass.getDeclaredMethod(FROM_STRING,
+                                                              String.class);
+            }
+            //leafValue = JavaIdentifierSyntax.getEnumJavaAttribute(leafValue);
+            //leafValue = leafValue.toUpperCase();
+        }
+        if (childMethod != null) {
+            childValue = childMethod.invoke(null, leafValue);
+        }
+
+        parentSetterMethod.invoke(parentBuilderObject, childValue);
     }
 }

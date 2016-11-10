@@ -862,6 +862,62 @@ public class YdtTestUtils implements YdtListener {
     }
 
     /**
+     * Returns the ydt builder for augmentSequence module.
+     *
+     * @return ydt builder
+     */
+    public static YangRequestWorkBench augmentSequenceYdt() {
+
+        YangRequestWorkBench ydtBuilder;
+        ydtBuilder = getYdtBuilder(
+                "augment", "augmentSequence", "ydt.augmentSequence", MERGE);
+        ydtBuilder.addChild("l1", null);
+        ydtBuilder.addLeaf("leaf1", null, "1");
+        ydtBuilder.traverseToParent();
+
+        ydtBuilder.addChild("c1", "ydt.augmentSequence1");
+        ydtBuilder.addLeaf("leaf2", null, "2");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.traverseToParent();
+
+        ydtBuilder.addChild("c2", "ydt.augmentSequence2");
+        ydtBuilder.addLeaf("leaf2", null, "3");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.traverseToParent();
+
+        return ydtBuilder;
+    }
+
+    /**
+     * Returns the ydt builder for crypto-base module.
+     *
+     * @return ydt builder
+     */
+    public static YangRequestWorkBench identityRefYdt() {
+
+        Set<String> valueSet = new HashSet();
+        valueSet.add("crypto-alg");
+        YangRequestWorkBench ydtBuilder;
+        ydtBuilder = getYdtBuilder(
+                "identityref", "crypto-base", "ydt.crypto-base", MERGE);
+        ydtBuilder.addLeaf("crypto", null, "crypto-alg");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.addLeaf("abc-zeunion", null, "crypto-alg");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.addLeaf("level2", null, "crypto-alg2");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.addLeaf("level3", null, "crypto-alg3");
+        ydtBuilder.traverseToParent();
+        ydtBuilder.addLeaf("level4", null, "crypto-alg3");
+        ydtBuilder.traverseToParent();
+
+        ydtBuilder.addLeaf("abc-type", null, valueSet);
+        ydtBuilder.traverseToParent();
+
+        return ydtBuilder;
+    }
+
+    /**
      * Returns the ydt builder for builtin type integer8 module.
      *
      * @return ydt builder

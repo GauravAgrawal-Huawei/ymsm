@@ -90,8 +90,9 @@ public class DefaultYangCodecHandler implements YangCodecHandler {
             YangProtocolEncodingFormat dataFormat) {
         YangDataTreeCodec codec = defaultCodecs.get(dataFormat);
 
+        int size = overrideCodecs.size();
         // Check over ridden codec handler is exist or not.
-        if (overrideCodecs != null) {
+        if (size != 0) {
             YangDataTreeCodec overrideCodec = overrideCodecs.get(dataFormat);
             if (overrideCodec != null) {
                 codec = overrideCodec;
@@ -167,7 +168,6 @@ public class DefaultYangCodecHandler implements YangCodecHandler {
                                            opType,
                                            schemaRegistry);
 
-
         // Get the composite response from codec handler.
         return codec.encodeYdtToCompositeProtocolFormat(extBuilder);
     }
@@ -177,15 +177,20 @@ public class DefaultYangCodecHandler implements YangCodecHandler {
                                YangProtocolEncodingFormat dataFormat,
                                YmsOperationType opType) {
 
+        YdtBuilder ydtBuilder;
         YangDataTreeCodec codec = getAppropriateCodec(dataFormat);
         if (codec == null) {
             throw new YchException(E_DATA_TREE_CODEC);
         }
 
-        // Get the YANG data tree
-        YdtBuilder ydtBuilder = codec.decodeProtocolDataToYdt(inputString,
-                                                              schemaRegistry,
-                                                              opType);
+        try {
+            // Get the YANG data tree
+            ydtBuilder = codec.decodeProtocolDataToYdt(inputString,
+                                                       schemaRegistry,
+                                                       opType);
+        } catch (Exception e) {
+            throw new YchException(e.getLocalizedMessage());
+        }
 
         if (ydtBuilder != null) {
             return getObjectList(ydtBuilder.getRootNode());

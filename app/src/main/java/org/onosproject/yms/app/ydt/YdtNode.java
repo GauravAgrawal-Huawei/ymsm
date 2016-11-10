@@ -295,9 +295,11 @@ public abstract class YdtNode<T> implements YdtExtendedContext, Cloneable {
      * This will be applicable in case of call from SBI so no need
      * to validate the value.
      *
-     * @param value value in a single instance leaf node
+     * @param value     value in a single instance leaf node
+     * @param isKeyLeaf true, for key leaf; false non key leaf
      */
-    public void addValueWithoutValidation(String value) throws YdtException {
+    public void addValueWithoutValidation(String value, boolean isKeyLeaf)
+            throws YdtException {
         throw new YdtException(errorMsg(FMT_VAL_N, getName()));
     }
 

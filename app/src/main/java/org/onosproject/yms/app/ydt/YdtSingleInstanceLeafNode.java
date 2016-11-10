@@ -34,6 +34,11 @@ class YdtSingleInstanceLeafNode extends YdtNode {
      */
     private String value;
 
+    /*
+     * Value of the leaf.
+     */
+    private Boolean isKeyLeaf = false;
+
     /**
      * Creates a YANG single instance leaf node.
      *
@@ -41,6 +46,15 @@ class YdtSingleInstanceLeafNode extends YdtNode {
      */
     YdtSingleInstanceLeafNode(YangSchemaNode node) {
         super(SINGLE_INSTANCE_LEAF_VALUE_NODE, node);
+    }
+
+    /**
+     * Returns the flag indicating that requested leaf is key-leaf or not.
+     *
+     * @return isKeyLeaf true, for key leaf; false non key leaf
+     */
+    public Boolean isKeyLeaf() {
+        return isKeyLeaf;
     }
 
     @Override
@@ -63,8 +77,9 @@ class YdtSingleInstanceLeafNode extends YdtNode {
 
 
     @Override
-    public void addValueWithoutValidation(String value) {
+    public void addValueWithoutValidation(String value, boolean isKeyLeaf) {
         this.value = value;
+        this.isKeyLeaf = isKeyLeaf;
     }
 
     @Override

@@ -100,7 +100,9 @@ public class NetconfCodec {
         try {
             validateOpType(elementName, opType);
             // If config tag name is found then set the root element node.
-            if (ALLOWABLE_NAMES.contains(elementName)) {
+            if(DATA.equals(elementName)
+                    || CONFIG.equals(elementName)
+                    || FILTER.equals(elementName)) {
                 return rootElement;
             }
 

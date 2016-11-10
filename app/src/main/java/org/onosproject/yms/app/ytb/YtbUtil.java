@@ -18,6 +18,8 @@ package org.onosproject.yms.app.ytb;
 
 import org.onosproject.yangutils.datamodel.YangAugment;
 import org.onosproject.yangutils.datamodel.YangCase;
+import org.onosproject.yangutils.datamodel.YangIdentity;
+import org.onosproject.yangutils.datamodel.YangIdentityRef;
 import org.onosproject.yangutils.datamodel.YangLeafRef;
 import org.onosproject.yangutils.datamodel.YangNode;
 import org.onosproject.yangutils.datamodel.YangNotification;
@@ -42,7 +44,6 @@ import java.util.Set;
 import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_AUGMENT_NODE;
 import static org.onosproject.yangutils.datamodel.YangSchemaNodeType.YANG_MULTI_INSTANCE_NODE;
 import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.BOOLEAN;
-import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.DECIMAL64;
 import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.EMPTY;
 import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.INT16;
 import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.INT32;
@@ -51,8 +52,8 @@ import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangData
 import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.LEAFREF;
 import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.UINT16;
 import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.UINT32;
-import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.UINT64;
 import static org.onosproject.yangutils.datamodel.utils.builtindatatype.YangDataTypes.UINT8;
+import static org.onosproject.yangutils.utils.io.impl.YangIoUtils.getSmallCase;
 import static org.onosproject.yms.app.utils.TraversalType.PARENT;
 
 /**
@@ -293,7 +294,6 @@ public final class YtbUtil {
             case UINT32:
             case UINT64:
             case EMPTY:
-            case IDENTITYREF:
             case STRING:
             case DECIMAL64:
             case INSTANCE_IDENTIFIER:
@@ -308,6 +308,18 @@ public final class YtbUtil {
 
             case BINARY:
                 return Base64.getEncoder().encodeToString((byte[]) fieldObj);
+
+            case IDENTITYREF:
+                YangIdentityRef ir = (YangIdentityRef) dataType
+                        .getDataTypeExtendedInfo();
+                if (ir.isInGrouping()) {
+                    return String.valueOf(fieldObj).trim();
+                }
+                YangIdentity identity = ir.getReferredIdentity();
+                String idName = identity.getJavaPackage() + PERIOD +
+                        getCapitalCase(identity.getJavaClassNameOrBuiltInType
+                                ());
+                return getIdentityRefValue(fieldObj, idName, holderObj);
 
             case LEAFREF:
                 YangLeafRef leafRef =
@@ -334,6 +346,27 @@ public final class YtbUtil {
             Method getterMethod = bitClass.getDeclaredMethod(
                     "toString", fieldObj.getClass());
             return String.valueOf(getterMethod.invoke(null, fieldObj));
+        } catch (ClassNotFoundException | NoSuchMethodException |
+                InvocationTargetException | IllegalAccessException e) {
+            throw new YtbException(e);
+        }
+    }
+
+    private static String getIdentityRefValue(
+            Object fieldObj, String name, Object holderObj) {
+        Class<?> holderClass = holderObj.getClass();
+        ClassLoader classLoader = holderClass.getClassLoader();
+        Class<?> identityClass;
+        try {
+            identityClass = classLoader.loadClass(name);
+            String idName = "";
+            if (identityClass != null) {
+                idName = getSmallCase(identityClass.getSimpleName());
+            }
+
+            Method method = identityClass.getDeclaredMethod(
+                    idName + "ToString", null);
+            return String.valueOf(method.invoke(fieldObj, null));
         } catch (ClassNotFoundException | NoSuchMethodException |
                 InvocationTargetException | IllegalAccessException e) {
             throw new YtbException(e);

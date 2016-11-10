@@ -175,7 +175,6 @@ public interface YdtBuilder extends Ydt {
      * @param namespace namespace of child to be added, if it's null, parent's
      *                  namespace will be applied to child
      * @param value     value of the child
-     * @throws
      * @throws IllegalArgumentException when method has been passed an illegal
      *                                  or inappropriate argument.
      */

@@ -96,7 +96,7 @@ class YdtMultiInstanceLeafNode extends YdtNode {
     }
 
     @Override
-    public void addValueWithoutValidation(String value) {
+    public void addValueWithoutValidation(String value, boolean isKeyLeaf) {
         valueSet.add(value);
     }
 
