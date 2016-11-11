@@ -82,7 +82,6 @@ public class NetconfCodec {
                 //TODO
             }
         }
-
     }
 
     /**
@@ -100,7 +99,7 @@ public class NetconfCodec {
         try {
             validateOpType(elementName, opType);
             // If config tag name is found then set the root element node.
-            if(DATA.equals(elementName)
+            if (DATA.equals(elementName)
                     || CONFIG.equals(elementName)
                     || FILTER.equals(elementName)) {
                 return rootElement;
@@ -115,7 +114,6 @@ public class NetconfCodec {
                     retElement = getDataRootElement(childElement, opType);
                 }
             }
-
         } catch (Exception e) {
             // TODO
         }

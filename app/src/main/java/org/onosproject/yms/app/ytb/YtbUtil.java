@@ -317,8 +317,8 @@ public final class YtbUtil {
                 }
                 YangIdentity identity = ir.getReferredIdentity();
                 String idName = identity.getJavaPackage() + PERIOD +
-                        getCapitalCase(identity.getJavaClassNameOrBuiltInType
-                                ());
+                        getCapitalCase(
+                                identity.getJavaClassNameOrBuiltInType());
                 return getIdentityRefValue(fieldObj, idName, holderObj);
 
             case LEAFREF:
