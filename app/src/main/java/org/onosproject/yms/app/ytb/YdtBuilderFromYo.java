@@ -38,8 +38,8 @@ import org.onosproject.yms.app.ysr.YangSchemaRegistry;
 import org.onosproject.yms.ydt.YdtContextOperationType;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -745,7 +745,7 @@ public class YdtBuilderFromYo {
                     } catch (NoSuchMethodException e) {
                         throw new YtbException(e);
                     }
-                    Set<String> leafListValue = new HashSet<>();
+                    Set<String> leafListValue = new LinkedHashSet<>();
                     /*
                      * If list is present, then adds each object value in set.
                      * Adds this set to the YDT, and traverse to parent.

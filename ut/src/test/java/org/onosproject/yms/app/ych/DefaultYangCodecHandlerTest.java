@@ -263,10 +263,10 @@ public class DefaultYangCodecHandlerTest {
         return "<config xmlns=\"ydt.root\">" +
                 "<employeeid xmlns=\"ydt.employee-id\">" +
                 "<employeeid>Employ1</employeeid>" +
-                "<employeeid>Employ5</employeeid>" +
-                "<employeeid>Employ4</employeeid>" +
-                "<employeeid>Employ3</employeeid>" +
                 "<employeeid>Employ2</employeeid>" +
+                "<employeeid>Employ3</employeeid>" +
+                "<employeeid>Employ4</employeeid>" +
+                "<employeeid>Employ5</employeeid>" +
                 "</employeeid>" +
                 "</config>";
     }
@@ -279,11 +279,11 @@ public class DefaultYangCodecHandlerTest {
     private static String wareHseXml() {
         return "<config xmlns=\"ydt.root\">" +
                 "<warehousesupervisor xmlns=\"ydt.warehouse-supervisor\">" +
-                "<supervisor>supervisor4</supervisor>" +
-                "<supervisor>supervisor5</supervisor>" +
                 "<supervisor>supervisor1</supervisor>" +
                 "<supervisor>supervisor2</supervisor>" +
                 "<supervisor>supervisor3</supervisor>" +
+                "<supervisor>supervisor4</supervisor>" +
+                "<supervisor>supervisor5</supervisor>" +
                 "</warehousesupervisor>" +
                 "</config>";
     }
@@ -331,21 +331,21 @@ public class DefaultYangCodecHandlerTest {
                 "</ych-purchasing-supervisor>" +
                 "</ych-purchasingsupervisor>" +
                 "<warehousesupervisor xmlns=\"ydt.warehouse-supervisor\">" +
-                "<supervisor>supervisor4</supervisor>" +
-                "<supervisor>supervisor5</supervisor>" +
                 "<supervisor>supervisor1</supervisor>" +
                 "<supervisor>supervisor2</supervisor>" +
                 "<supervisor>supervisor3</supervisor>" +
+                "<supervisor>supervisor4</supervisor>" +
+                "<supervisor>supervisor5</supervisor>" +
                 "</warehousesupervisor>" +
                 "<tradingsupervisor xmlns=\"ydt.trading-supervisor\">" +
                 "<supervisor>Tradingsupervisor</supervisor>" +
                 "</tradingsupervisor>" +
                 "<employeeid xmlns=\"ydt.employee-id\">" +
                 "<employeeid>Employ1</employeeid>" +
-                "<employeeid>Employ5</employeeid>" +
-                "<employeeid>Employ4</employeeid>" +
-                "<employeeid>Employ3</employeeid>" +
                 "<employeeid>Employ2</employeeid>" +
+                "<employeeid>Employ3</employeeid>" +
+                "<employeeid>Employ4</employeeid>" +
+                "<employeeid>Employ5</employeeid>" +
                 "</employeeid>" +
                 "</config>";
     }

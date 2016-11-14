@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableSet;
 import org.onosproject.yangutils.datamodel.YangSchemaNode;
 import org.onosproject.yms.app.ydt.exceptions.YdtException;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.onosproject.yms.app.ydt.YdtConstants.errorMsg;
@@ -39,7 +39,7 @@ class YdtMultiInstanceLeafNode extends YdtNode {
     /**
      * Set of values.
      */
-    private final Set<String> valueSet = new HashSet<>();
+    private final Set<String> valueSet = new LinkedHashSet<>();
 
     /**
      * Creates a YANG multi instance leaf node.
