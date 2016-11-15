@@ -283,6 +283,12 @@ public final class YtbUtil {
     public static String getStringFromDataType(
             Object fieldObj, YangSchemaNode holder, String name,
             Object holderObj, YangType dataType) {
+
+        if (fieldObj == null) {
+            throw new YtbException("Value for " + holder.getName() + " " +
+                                           "is null");
+        }
+
         YangDataTypes type = dataType.getDataType();
         switch (type) {
             case INT8:
