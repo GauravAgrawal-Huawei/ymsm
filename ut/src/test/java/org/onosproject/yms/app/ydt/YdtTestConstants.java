@@ -109,6 +109,7 @@ final class YdtTestConstants {
     public static final String STP = "supporting-termination-point";
     public static final String SLINK = "supporting-link";
     public static final String AUGSE = "/aug:l1";
+    public static final String ELNS = "ydt.Empty.leafList";
     public static final String AUG1 = "/nd:networks/nd:network";
     public static final String AUG2 = "/nd:networks/nd:network/nd:node";
     public static final String AUG3 = "/nd:networks/nd:network/topo:link";
@@ -138,4 +139,6 @@ final class YdtTestConstants {
             "invalid node addition with the name ";
     public static final String E_TOPARENT = "Exception has not occurred " +
             "in traverse back to parent for multi instance node.";
+    public static final String E_D64 = "YANG file error : value is not in" +
+            " decimal64 range.";
 }

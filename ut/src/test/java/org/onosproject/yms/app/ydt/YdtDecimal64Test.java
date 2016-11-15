@@ -16,7 +16,9 @@
 
 package org.onosproject.yms.app.ydt;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.onosproject.yms.app.ydt.exceptions.YdtException;
 
 import static org.onosproject.yms.app.ydt.YdtTestConstants.A;
@@ -38,9 +40,13 @@ import static org.onosproject.yms.app.ydt.YdtTestConstants.TYPE;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.decimal64Ydt;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.validateLeafContents;
 import static org.onosproject.yms.app.ydt.YdtTestUtils.validateNodeContents;
+import static org.onosproject.yms.app.ydt.YdtTestUtils.validateYangObject;
 import static org.onosproject.yms.ydt.YdtContextOperationType.MERGE;
 
 public class YdtDecimal64Test {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     /*
 
@@ -93,6 +99,10 @@ public class YdtDecimal64Test {
     public void positiveTest() throws YdtException {
         YangRequestWorkBench ydtBuilder = decimal64Ydt();
         validateTree(ydtBuilder);
+
+        YangRequestWorkBench sbiYdt = validateYangObject(
+                ydtBuilder, "builtInType", "ydt.decimal64");
+        validateTree(sbiYdt);
     }
 
     /**
@@ -190,4 +200,27 @@ public class YdtDecimal64Test {
         ydtNode = ydtNode.getFirstChild();
         validateLeafContents(ydtNode, "revDecimal", A);
     }
+
+    //TODO negative scenario will be handled later
+    /*
+        Negative scenario
+
+        input with position 0
+        input with position 1
+        input with position 2
+    */
+
+//    /**
+//     * Tests all the negative scenario's for bit data type.
+//     */
+//    @Test
+//    public void negativeTest() {
+//        thrown.expect(IllegalArgumentException.class);
+//        thrown.expectMessage(E_D64);
+//        YangRequestWorkBench ydtBuilder;
+//        ydtBuilder = getYdtBuilder("builtInType", "decimal64", "ydt.decimal64",
+//                                   MERGE);
+//        ydtBuilder.addLeaf("l1", null, "-9.1999999999e17");
+//        ydtBuilder.traverseToParent();
+//    }
 }

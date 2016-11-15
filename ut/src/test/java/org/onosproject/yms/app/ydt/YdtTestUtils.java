@@ -17,8 +17,10 @@ package org.onosproject.yms.app.ydt;
 
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
+import org.onosproject.yms.app.yob.DefaultYobBuilder;
 import org.onosproject.yms.app.ysr.TestYangSchemaNodeProvider;
 import org.onosproject.yms.app.ysr.YangSchemaRegistry;
+import org.onosproject.yms.app.ytb.DefaultYangTreeBuilder;
 import org.onosproject.yms.ydt.YdtContext;
 import org.onosproject.yms.ydt.YdtContextOperationType;
 import org.onosproject.yms.ydt.YdtListener;
@@ -26,6 +28,7 @@ import org.onosproject.yms.ydt.YdtType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -56,6 +59,7 @@ import static org.onosproject.yms.app.ydt.YdtTestConstants.CAPSUINT32;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.CAPSUINT64;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.CAPSUINT8;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.COUSTOMNS;
+import static org.onosproject.yms.app.ydt.YdtTestConstants.ELNS;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.EMPNS;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.EMPTY;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.EMPTYNS;
@@ -103,6 +107,7 @@ import static org.onosproject.yms.app.ydt.YdtTestConstants.TYPE;
 import static org.onosproject.yms.app.ydt.YdtTestConstants.WAREHNS;
 import static org.onosproject.yms.ydt.YdtContextOperationType.DELETE;
 import static org.onosproject.yms.ydt.YdtContextOperationType.MERGE;
+import static org.onosproject.yms.ydt.YmsOperationType.EDIT_CONFIG_REPLY;
 
 public class YdtTestUtils implements YdtListener {
 
@@ -176,6 +181,32 @@ public class YdtTestUtils implements YdtListener {
 //        ydtBuilder.addChild("snack", null, "ydt.food");
 //        ydtBuilder.addChild("latenight", null, "ydt.food");
         ydtBuilder.addLeaf("chocolate", "ydt.food", "dark");
+
+        return ydtBuilder;
+    }
+
+    /**
+     * Returns the ydt builder for empty leaf list module.
+     *
+     * @return ydt builder
+     */
+    public static YangRequestWorkBench emptyLeafListYdt() {
+
+        YangRequestWorkBench ydtBuilder;
+        ydtBuilder = getYdtBuilder("empty", "EmptyLeafList", ELNS, MERGE);
+        ydtBuilder.addChild("l1", ELNS);
+        ydtBuilder.traverseToParent();
+        ydtBuilder.addChild("l2", ELNS);
+        ydtBuilder.traverseToParent();
+        ydtBuilder.addChild("l3", ELNS);
+        ydtBuilder.traverseToParent();
+
+        ydtBuilder.addChild("list1", ELNS);
+        ydtBuilder.traverseToParent();
+        ydtBuilder.addChild("list2", ELNS);
+        ydtBuilder.traverseToParent();
+        ydtBuilder.addChild("list3", ELNS);
+        ydtBuilder.traverseToParent();
 
         return ydtBuilder;
     }
@@ -1876,5 +1907,32 @@ public class YdtTestUtils implements YdtListener {
         for (int i = 0; i < expected.length; i++) {
             assertEquals(expected[i], logger.get(i));
         }
+    }
+
+    /**
+     * Creates Ydt from YO using YTB.
+     */
+    static YangRequestWorkBench validateYangObject(
+            YangRequestWorkBench ydtBuilder, String name, String namespace) {
+
+        YdtContext rootCtx = ydtBuilder.getRootNode();
+
+        YdtContext childCtx = rootCtx.getFirstChild();
+
+        DefaultYobBuilder builder = new DefaultYobBuilder();
+
+        Object yangObject = builder.getYangObject(
+                (YdtExtendedContext) childCtx, YdtTestUtils
+                        .getSchemaRegistry());
+
+        List<Object> list = new LinkedList<>();
+        list.add(yangObject);
+        // Builds YANG tree in YTB.
+        DefaultYangTreeBuilder treeBuilder = new DefaultYangTreeBuilder();
+        YangRequestWorkBench defaultYdtBuilder =
+                (YangRequestWorkBench) treeBuilder.getYdtBuilderForYo(
+                        list, name, namespace, EDIT_CONFIG_REPLY, YdtTestUtils
+                                .getSchemaRegistry());
+        return defaultYdtBuilder;
     }
 }
