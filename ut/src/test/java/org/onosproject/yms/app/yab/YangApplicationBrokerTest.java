@@ -959,6 +959,7 @@ public class YangApplicationBrokerTest {
 
         YangApplicationBroker yab = new YangApplicationBroker(defaultYdtBuilder.
                 getYangSchemaRegistry());
+        yab.setAugGenMethodSet(defaultYdtBuilder.getAugGenMethodSet());
         yab.processAugmentForChildNode(appContext, yangNode);
 
         assertThat(appContext.getModuleContext().getName(), is("test"));
@@ -970,11 +971,6 @@ public class YangApplicationBrokerTest {
                 .getResolvedNode().getJavaClassNameOrBuiltInType();
         assertThat(augmentName, is("cont4"));
 
-        appContext = appContext.getFirstChild();
-        augmentName = ((YangAugment) appContext
-                .getAugmentingSchemaNode()).getTargetNode().get(0)
-                .getResolvedNode().getJavaClassNameOrBuiltInType();
-        assertThat(augmentName, is("cont4"));
         assertThat(appContext.getFirstChild(), nullValue());
         assertThat(appContext.getLastChild(), nullValue());
     }
@@ -1003,6 +999,7 @@ public class YangApplicationBrokerTest {
 
         YangApplicationBroker yab = new YangApplicationBroker(defaultYdtBuilder.
                 getYangSchemaRegistry());
+        yab.setAugGenMethodSet(defaultYdtBuilder.getAugGenMethodSet());
         YdtContext deleteTree = yab.buildDeleteTree(appContext.getDeleteNodes());
         yab.processAugmentedNodesForDelete(deleteTree.getFirstChild(),
                                            appContext);
@@ -1015,11 +1012,6 @@ public class YangApplicationBrokerTest {
                 .getResolvedNode().getJavaClassNameOrBuiltInType();
         assertThat(augmentName, is("cont4"));
 
-        appContext = appContext.getFirstChild();
-        augmentName = ((YangAugment) appContext
-                .getAugmentingSchemaNode()).getTargetNode().get(0)
-                .getResolvedNode().getJavaClassNameOrBuiltInType();
-        assertThat(augmentName, is("cont4"));
         assertThat(appContext.getFirstChild(), nullValue());
         assertThat(appContext.getLastChild(), nullValue());
 

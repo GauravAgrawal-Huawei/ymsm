@@ -736,4 +736,12 @@ public class YangRequestWorkBench implements YdtExtendedBuilder {
         }
         curNode = curNode.getParent();
     }
+
+    public Set<String> getAugGenMethodSet() {
+        return augGenMethodSet;
+    }
+
+    public void setAugGenMethodSet(Set<String> augGenMethodSet) {
+        this.augGenMethodSet = augGenMethodSet;
+    }
 }

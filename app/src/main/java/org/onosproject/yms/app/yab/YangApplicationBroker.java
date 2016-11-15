@@ -44,6 +44,7 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.onosproject.yms.app.utils.TraversalType.CHILD;
@@ -67,6 +68,7 @@ public class YangApplicationBroker {
     private static final String AUGMENTED = "Augmented";
     private static final String VOID = "void";
     private final YangSchemaRegistry schemaRegistry;
+    private Set<String> augGenMethodSet;
 
     /**
      * Creates a new YANG application broker.
@@ -88,6 +90,7 @@ public class YangApplicationBroker {
             throws YabException {
         List<Object> responseObjects = new LinkedList<>();
         YangRequestWorkBench workBench = (YangRequestWorkBench) ydtWorkBench;
+        augGenMethodSet = ((YangRequestWorkBench) ydtWorkBench).getAugGenMethodSet();
 
         for (YdtAppContext appContext = workBench.getAppRootNode().getFirstChild();
              appContext != null; appContext = appContext.getNextSibling()) {
@@ -118,7 +121,7 @@ public class YangApplicationBroker {
     public YdtResponse processEdit(YdtBuilder ydtWorkBench)
             throws CloneNotSupportedException, YabException {
         YangRequestWorkBench workBench = (YangRequestWorkBench) ydtWorkBench;
-
+        augGenMethodSet = ((YangRequestWorkBench) ydtWorkBench).getAugGenMethodSet();
         for (YdtAppContext appContext = workBench.getAppRootNode().getFirstChild();
              appContext != null; appContext = appContext.getNextSibling()) {
             processEditOfApplication(appContext);
@@ -626,7 +629,8 @@ public class YangApplicationBroker {
                 .getAugmentedInfoList()) {
             Object appManagerObject = schemaRegistry
                     .getRegisteredApplication(yangAugment.getParent());
-            if (appManagerObject != null) {
+            if (appManagerObject != null
+                    && augGenMethodSet.add(yangAugment.getSetterMethodName())) {
                 childAppContext = addChildToYdtAppTree(curAppContext,
                                                        yangAugment);
                 processAugmentForChildNode(childAppContext, yangAugment);
@@ -883,5 +887,13 @@ public class YangApplicationBroker {
                 InvocationTargetException e) {
             throw new YabException(e);
         }
+    }
+
+    public Set<String> getAugGenMethodSet() {
+        return augGenMethodSet;
+    }
+
+    public void setAugGenMethodSet(Set<String> augGenMethodSet) {
+        this.augGenMethodSet = augGenMethodSet;
     }
 }
