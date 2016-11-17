@@ -164,36 +164,38 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
     @Override
     public void unRegisterApplication(Object managerObject,
                                       Class<?> serviceClass) {
-        YangSchemaNode curNode;
-        String serviceName = serviceClass.getName();
+        synchronized (serviceClass) {
+            YangSchemaNode curNode;
+            String serviceName = serviceClass.getName();
 
-        //Check if service should be unregistered?
-        if (managerObject != null) {
-            verifyApplicationRegistration(managerObject, serviceClass);
-        }
-        //Remove registered class from store.
-        registerClassStore.remove(serviceName);
-        //check if service is in app store.
-        curNode = appNameKeyStore.get(serviceName);
-        if (curNode == null) {
-            curNode = interfaceNameKeyStore.get(serviceName);
-        }
+            //Check if service should be unregistered?
+            if (managerObject != null) {
+                verifyApplicationRegistration(managerObject, serviceClass);
+            }
+            //Remove registered class from store.
+            registerClassStore.remove(serviceName);
+            //check if service is in app store.
+            curNode = appNameKeyStore.get(serviceName);
+            if (curNode == null) {
+                curNode = interfaceNameKeyStore.get(serviceName);
+            }
 
-        if (curNode != null) {
-            removeSchemaNode(curNode);
-            eventNameKeyStore.remove(getEventClassName(curNode));
-            appObjectStore.remove(serviceName);
-            interfaceNameKeyStore.remove(getInterfaceClassName(curNode));
-            opParamNameKeyStore.remove(getOpParamClassName(curNode));
-            yangFileStore.remove(getModuleIdentifier(curNode));
-            appNameKeyStore.remove(serviceName);
-            removeYsrGeneratedTemporaryResources(jarPathStore.get(serviceName),
-                                                 serviceName);
-            log.info(" service {} is unregistered.",
-                     serviceClass.getSimpleName());
-        } else {
-            throw new RuntimeException(serviceClass.getSimpleName() +
-                                               " service was not registered.");
+            if (curNode != null) {
+                removeSchemaNode(curNode);
+                eventNameKeyStore.remove(getEventClassName(curNode));
+                appObjectStore.remove(serviceName);
+                interfaceNameKeyStore.remove(getInterfaceClassName(curNode));
+                opParamNameKeyStore.remove(getOpParamClassName(curNode));
+                yangFileStore.remove(getModuleIdentifier(curNode));
+                appNameKeyStore.remove(serviceName);
+                removeYsrGeneratedTemporaryResources(jarPathStore.get(serviceName),
+                                                     serviceName);
+                log.info(" service {} is unregistered.",
+                         serviceClass.getSimpleName());
+            } else {
+                throw new RuntimeException(serviceClass.getSimpleName() +
+                                                   " service was not registered.");
+            }
         }
     }
 
@@ -276,22 +278,29 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
 
     @Override
     public boolean verifyNotificationObject(Object appObj, Class<?> service) {
-        YangSchemaNode node = appNameKeyStore.get(service.getName());
-        try {
-            if (node.isNotificationPresent()) {
-                if (appObj != null) {
-                    Boolean ifPresent = ynhRegistrationStore.get(appObj);
-                    if (ifPresent == null) {
-                        ynhRegistrationStore.put(appObj, true);
-                        return true;
+        synchronized (service) {
+            YangSchemaNode node = appNameKeyStore.get(service.getName());
+            if (node == null) {
+                log.error("application is not registered with YMS {}",
+                          service.getName());
+                return false;
+            }
+            try {
+                if (node.isNotificationPresent()) {
+                    if (appObj != null) {
+                        Boolean ifPresent = ynhRegistrationStore.get(appObj);
+                        if (ifPresent == null) {
+                            ynhRegistrationStore.put(appObj, true);
+                            return true;
+                        }
                     }
                 }
+            } catch (DataModelException e) {
+                log.error("notification registration error: {} {}", e
+                        .getLocalizedMessage(), e);
             }
-        } catch (DataModelException e) {
-            log.error("notification registration error: {} {}", e
-                    .getLocalizedMessage(), e);
+            return false;
         }
-        return false;
     }
 
     @Override
@@ -308,16 +317,18 @@ public class DefaultYangSchemaRegistry implements YangSchemaRegistry {
     @Override
     public void processModuleLibrary(String serviceName,
                                      YangModuleLibrary library) {
-        YangSchemaNode node = appNameKeyStore.get(serviceName);
-        if (node != null) {
-            YangModuleInformation moduleInformation =
-                    new DefaultYangModuleInformation(getModuleIdentifier(node),
-                                                     node.getNameSpace());
-            addSubModuleIdentifier(node, (
-                    DefaultYangModuleInformation) moduleInformation);
-            //TODO: add feature list to module information.
-            ((DefaultYangModuleLibrary) library)
-                    .addModuleInformation(moduleInformation);
+        synchronized (serviceName) {
+            YangSchemaNode node = appNameKeyStore.get(serviceName);
+            if (node != null) {
+                YangModuleInformation moduleInformation =
+                        new DefaultYangModuleInformation(getModuleIdentifier(node),
+                                                         node.getNameSpace());
+                addSubModuleIdentifier(node, (
+                        DefaultYangModuleInformation) moduleInformation);
+                //TODO: add feature list to module information.
+                ((DefaultYangModuleLibrary) library)
+                        .addModuleInformation(moduleInformation);
+            }
         }
     }
 

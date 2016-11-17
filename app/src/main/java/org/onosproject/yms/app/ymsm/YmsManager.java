@@ -201,9 +201,11 @@ public class YmsManager
      * @param service service class
      */
     private void processNotificationRegistration(Object manager, Class<?> service) {
-        if (manager != null && manager instanceof ListenerService) {
-            if (schemaRegistry.verifyNotificationObject(manager, service)) {
-                ynhExtendedService.registerAsListener((ListenerService) manager);
+        synchronized (service) {
+            if (manager != null && manager instanceof ListenerService) {
+                if (schemaRegistry.verifyNotificationObject(manager, service)) {
+                    ynhExtendedService.registerAsListener((ListenerService) manager);
+                }
             }
         }
     }
