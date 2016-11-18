@@ -58,11 +58,11 @@ class YdtMultiInstanceLeafNode extends YdtNode {
     @Override
     public void addValue(String value) throws YdtException {
         // check the value against corresponding data-type.
-        try {
-            getYangSchemaNode().isValueValid(value);
-        } catch (Exception e) {
-            throw new YdtException(e.getLocalizedMessage());
-        }
+//        try {
+//            getYangSchemaNode().isValueValid(value);
+//        } catch (Exception e) {
+//            throw new YdtException(e.getLocalizedMessage());
+//        }
         addValueToValueSet(value);
     }
 

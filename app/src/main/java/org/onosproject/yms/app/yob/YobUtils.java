@@ -126,10 +126,10 @@ final class YobUtils {
                 break;
 
             case EMPTY:
-                if (leafValue == null) {
+                if (leafValue == null || leafValue.equals("")) {
                     parentSetterMethod.invoke(parentBuilderObject, true);
                 } else {
-                    log.error(E_INVALID_EMPTY_DATA);
+                    log.info(E_INVALID_EMPTY_DATA);
                 }
                 break;
             case BOOLEAN:

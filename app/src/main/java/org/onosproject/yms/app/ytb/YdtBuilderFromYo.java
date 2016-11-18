@@ -766,9 +766,12 @@ public class YdtBuilderFromYo {
                                 }
                                 break;
                             }
-                            leafListValue.add(objValue);
+
+                            if (!isPresent && !objValue.equals("")) {
+                                leafListValue.add(objValue);
+                            }
                         }
-                        if (!isPresent) {
+                        if (!isPresent && !leafListValue.isEmpty()) {
                             extBuilder.addLeafList(leafListValue, yangLeafList);
                             extBuilder.traverseToParentWithoutValidation();
                         }

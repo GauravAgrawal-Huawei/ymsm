@@ -37,9 +37,9 @@ final class YdtNodeFactory {
     private static final String FMT_NOT_EXIST =
             "Schema node with name %s doesn't exist.";
     //TODO need to handle later
-//    private static final String E_MULTI_INS =
-//            "Requested interface adds an instance of type list or " +
-//                    "leaf-list node only.";
+    private static final String E_MULTI_INS =
+            "Requested interface adds an instance of type list or " +
+                    "leaf-list node only.";
 
     // No instantiation
     private YdtNodeFactory() {
@@ -148,7 +148,17 @@ final class YdtNodeFactory {
             RequestedCallType callType) throws YdtException, DataModelException {
         switch (callType) {
             case LEAF:
-                return getYdtLeafNode(node, nodeType);
+                switch (nodeType) {
+
+                    case YANG_SINGLE_INSTANCE_LEAF_NODE:
+                        return new YdtSingleInstanceLeafNode(node);
+
+                    case YANG_MULTI_INSTANCE_LEAF_NODE:
+                        return new YdtMultiInstanceLeafNode(node);
+
+                    default:
+                        return null;
+                }
 
             case NON_LEAF:
                 switch (nodeType) {
@@ -160,15 +170,6 @@ final class YdtNodeFactory {
                         return new YdtMultiInstanceNode(node);
 
                     default:
-
-                        /*
-                         * Check if addChild is called to add a empty data-type
-                         * leaf/leaf-list node.
-                         */
-                        if (node.isEmptyDataType()) {
-                            return getYdtLeafNode(node, nodeType);
-                        }
-
                         return null;
                 }
 
@@ -182,30 +183,8 @@ final class YdtNodeFactory {
                         return new YdtMultiInstanceNode(node);
 
                     default:
-                        return null;
+                        throw new YdtException(E_MULTI_INS);
                 }
-
-            default:
-                return null;
-        }
-    }
-
-    /**
-     * Returns the YANG data tree node for requested leaf/leaf-list node type.
-     *
-     * @param node     schema node
-     * @param nodeType schema node type
-     * @return YANG data tree node
-     */
-    private static YdtNode getYdtLeafNode(YangSchemaNode node,
-                                          YangSchemaNodeType nodeType) {
-        switch (nodeType) {
-
-            case YANG_SINGLE_INSTANCE_LEAF_NODE:
-                return new YdtSingleInstanceLeafNode(node);
-
-            case YANG_MULTI_INSTANCE_LEAF_NODE:
-                return new YdtMultiInstanceLeafNode(node);
 
             default:
                 return null;

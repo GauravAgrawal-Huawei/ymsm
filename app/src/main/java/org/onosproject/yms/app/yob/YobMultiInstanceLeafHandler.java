@@ -94,7 +94,6 @@ class YobMultiInstanceLeafHandler
                     ParameterizedType type = (ParameterizedType)
                             genericListType.getActualTypeArguments()[0];
                     genericListClass = type.getClass().getClass();
-
                 } else {
                     genericListClass = (Class<?>) genericListType.getActualTypeArguments()[0];
                 }
