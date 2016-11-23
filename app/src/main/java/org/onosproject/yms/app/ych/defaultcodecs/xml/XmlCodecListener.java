@@ -55,7 +55,8 @@ class XmlCodecListener implements XmlListener {
 
         YdtContextOperationType opType = null;
 
-        for (Iterator iter = element.attributeIterator(); iter.hasNext(); ) {
+        for (Iterator iter = element.attributeIterator(); iter.hasNext();
+             iter = iter) {
             Attribute attr = (Attribute) iter.next();
             if (attr.getName().equals(OPERATION)) {
                 opType =

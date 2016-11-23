@@ -20,6 +20,8 @@ import org.onosproject.yangutils.datamodel.RpcNotificationContainer;
 import org.onosproject.yangutils.datamodel.YangBit;
 import org.onosproject.yangutils.datamodel.YangBits;
 import org.onosproject.yangutils.datamodel.YangDerivedInfo;
+import org.onosproject.yangutils.datamodel.YangIdentity;
+import org.onosproject.yangutils.datamodel.YangIdentityRef;
 import org.onosproject.yangutils.datamodel.YangLeaf;
 import org.onosproject.yangutils.datamodel.YangLeafList;
 import org.onosproject.yangutils.datamodel.YangLeafRef;
@@ -163,7 +165,7 @@ final class YobUtils {
 
             case IDENTITYREF:
                 parseIdentityRefInfo(ydtExtendedContext, parentSetterMethod,
-                                     parentBuilderObject, leafValue, false);
+                                     parentBuilderObject, leafValue);
                 break;
 
             case UNION:
@@ -604,9 +606,6 @@ final class YobUtils {
      * @param ydtExtendedContext  ydtExtendedContext is used to get
      *                            application related
      *                            information maintained in YDT
-     * @param isEnum              isEnum parameter is used to check whether
-     *                            type is enum or derived
-     *                            information maintained in YDT
      * @throws InvocationTargetException throws InvocationTargetException
      * @throws IllegalAccessException    throws IllegalAccessException
      * @throws NoSuchMethodException     throws NoSuchMethodException
@@ -615,13 +614,11 @@ final class YobUtils {
                                                      ydtExtendedContext,
                                              Method parentSetterMethod,
                                              Object parentBuilderObject,
-                                             String leafValue, boolean isEnum)
+                                             String leafValue)
             throws InvocationTargetException, IllegalAccessException,
             NoSuchMethodException {
         Class<?> childSetClass = null;
-        Constructor<?> childConstructor = null;
         Object childValue = null;
-        Object childObject = null;
         Method childMethod = null;
 
         YangSchemaNode yangJavaModule = ydtExtendedContext.getYangSchemaNode();
@@ -629,8 +626,31 @@ final class YobUtils {
             yangJavaModule = yangJavaModule.getReferredSchema();
         }
 
-        String qualifiedClassName = yangJavaModule.getJavaPackage() + PERIOD +
-                getCapitalCase(yangJavaModule.getJavaClassNameOrBuiltInType());
+        String qualifiedClassName = null;
+
+        YangType type;
+        if (yangJavaModule instanceof YangLeaf) {
+            type = ((YangLeaf) yangJavaModule).getDataType();
+        } else {
+            type = ((YangLeafList) yangJavaModule).getDataType();
+        }
+
+        if (type.getDataType() == YangDataTypes.LEAFREF && yangJavaModule
+                .getJavaPackage().equals(YobConstants.JAVA_LANG)) {
+            YangLeafRef leafref = ((YangLeafRef) type.getDataTypeExtendedInfo());
+            YangType effectiveType = leafref.getEffectiveDataType();
+            if (effectiveType.getDataType() == YangDataTypes.IDENTITYREF) {
+                YangIdentityRef identityref = ((YangIdentityRef) effectiveType
+                        .getDataTypeExtendedInfo());
+                YangIdentity identity = identityref.getReferredIdentity();
+                qualifiedClassName = identity.getJavaPackage() + PERIOD +
+                        getCapitalCase(identity.getJavaClassNameOrBuiltInType());
+            }
+        } else {
+            qualifiedClassName = yangJavaModule.getJavaPackage() + PERIOD +
+                    getCapitalCase(yangJavaModule.getJavaClassNameOrBuiltInType());
+        }
+
         ClassLoader classLoader = getClassLoader(null, qualifiedClassName,
                                                  ydtExtendedContext, null);
         try {
@@ -638,20 +658,12 @@ final class YobUtils {
         } catch (ClassNotFoundException e) {
             log.error(L_FAIL_TO_LOAD_CLASS, qualifiedClassName);
         }
-        if (!isEnum) {
 
-            if (childSetClass != null) {
-                childMethod = childSetClass
-                        .getDeclaredMethod(FROM_STRING, String.class);
-            }
-        } else {
-            if (childSetClass != null) {
-                childMethod = childSetClass.getDeclaredMethod(FROM_STRING,
-                                                              String.class);
-            }
-            //leafValue = JavaIdentifierSyntax.getEnumJavaAttribute(leafValue);
-            //leafValue = leafValue.toUpperCase();
+        if (childSetClass != null) {
+            childMethod = childSetClass
+                    .getDeclaredMethod(FROM_STRING, String.class);
         }
+
         if (childMethod != null) {
             childValue = childMethod.invoke(null, leafValue);
         }
